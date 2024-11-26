@@ -27,11 +27,34 @@ export interface ShowcaseProject {
   title?: string
 }
 
+export interface HeroButton {
+  text: string
+  ariaLabel: string
+  link: string
+}
+
+export interface HeroBadge {
+  text: string
+  ariaLabel: string
+}
+
+export interface HeroSection {
+  image?: {
+    asset: Image
+    alt: string
+  }
+  badge?: HeroBadge
+  title?: string
+  subtitle?: string
+  ctaButton?: HeroButton
+}
+
 // Page payloads
 
 export interface HomePagePayload {
   footer?: PortableTextBlock[]
   overview?: PortableTextBlock[]
+  hero?: HeroSection
   showcaseProjects?: ShowcaseProject[]
   title?: string
 }

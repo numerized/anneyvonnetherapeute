@@ -4,6 +4,23 @@ export const homePageQuery = groq`
   *[_type == "home"][0]{
     _id,
     overview,
+    hero {
+      image {
+        asset->,
+        alt,
+      },
+      badge {
+        text,
+        ariaLabel,
+      },
+      title,
+      subtitle,
+      ctaButton {
+        text,
+        ariaLabel,
+        link,
+      },
+    },
     showcaseProjects[]->{
       _type,
       coverImage,
