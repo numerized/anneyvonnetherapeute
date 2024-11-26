@@ -16,6 +16,14 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
   const { overview = [], showcaseProjects = [], title = '', hero } = data ?? {}
 
+  console.log('Full data from Sanity:', data)
+  console.log('Hero data:', hero)
+  console.log('Hero image:', hero?.image)
+  console.log('Hero image asset:', hero?.image?.asset)
+
+  const imageUrl = hero?.image?.asset ? urlFor(hero.image.asset).width(1920).height(1080).url() : null
+  console.log('Generated image URL:', imageUrl)
+
   return (
     <div>
       {/* Hero Section */}
@@ -31,16 +39,22 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             aria-hidden="true"
           />
           {hero?.image?.asset ? (
-            <img 
-              src={urlFor(hero.image.asset).width(1920).height(1080).url()}
-              alt={hero.image.alt || 'Hero background'}
-              className="w-full h-full object-cover"
-              loading="eager"
-              width="1920"
-              height="1080"
-            />
+            <>
+              {console.log('Rendering image with URL:', imageUrl)}
+              <img 
+                src={imageUrl}
+                alt={hero.image.alt || 'Hero background'}
+                className="w-full h-full object-cover"
+                loading="eager"
+                width="1920"
+                height="1080"
+              />
+            </>
           ) : (
-            <div className="w-full h-full bg-primary-dark" />
+            <>
+              {console.log('No image asset found, rendering fallback')}
+              <div className="w-full h-full bg-primary-dark" />
+            </>
           )}
         </div>
         
