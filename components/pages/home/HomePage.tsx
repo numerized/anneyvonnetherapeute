@@ -4,6 +4,7 @@ import { urlFor } from '../../../sanity/lib/image'
 
 import { ProjectListItem } from '@/components/pages/home/ProjectListItem'
 import { Header } from '@/components/shared/Header'
+import { Stats } from '@/components/shared/Stats'
 import { resolveHref } from '@/sanity/lib/utils'
 import type { HomePagePayload } from '@/types'
 
@@ -93,6 +94,29 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
           </div>
         </div>
       </main>
+
+      {/* Stats Section */}
+      <Stats 
+        title="Une approche unique de la thérapie relationnelle"
+        items={[
+          {
+            value: "95%",
+            label: "Taux de satisfaction client"
+          },
+          {
+            value: "500+",
+            label: "Couples accompagnés"
+          },
+          {
+            value: "20",
+            label: "Années d'expérience"
+          },
+          {
+            value: "85%",
+            label: "Amélioration des relations"
+          }
+        ]}
+      />
 
       <div className="space-y-20">
         {/* Header */}
