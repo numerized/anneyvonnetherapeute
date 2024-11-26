@@ -12,10 +12,13 @@ const imageBuilder = createImageUrlBuilder({
 
 export const urlFor = (source: Image | undefined) => {
   console.log('urlFor received source:', source)
-  if (!source) {
-    console.log('No source provided to urlFor')
-    return undefined
+  
+  // Check if source has asset with _ref
+  if (!source?.asset?._ref && !source?.asset?._id) {
+    console.log('No valid image reference found:', source)
+    return null
   }
+
   const builder = imageBuilder?.image(source)
   console.log('Image builder created:', builder)
   return builder

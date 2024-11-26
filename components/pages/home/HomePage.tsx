@@ -19,9 +19,12 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   console.log('Full data from Sanity:', data)
   console.log('Hero data:', hero)
   console.log('Hero image:', hero?.image)
-  console.log('Hero image asset:', hero?.image?.asset)
 
-  const imageUrl = hero?.image?.asset ? urlFor(hero.image.asset).width(1920).height(1080).url() : null
+  // Generate image URL only if we have a valid image reference
+  const imageBuilder = hero?.image ? urlFor(hero.image) : null
+  const imageUrl = imageBuilder?.width(1920).height(1080).url()
+  
+  console.log('Image builder:', imageBuilder)
   console.log('Generated image URL:', imageUrl)
 
   return (
@@ -38,12 +41,12 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 to-transparent z-10" 
             aria-hidden="true"
           />
-          {hero?.image?.asset ? (
+          {imageUrl ? (
             <>
               {console.log('Rendering image with URL:', imageUrl)}
               <img 
                 src={imageUrl}
-                alt={hero.image.alt || 'Hero background'}
+                alt={hero?.image?.alt || 'Hero background'}
                 className="w-full h-full object-cover"
                 loading="eager"
                 width="1920"
@@ -52,7 +55,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             </>
           ) : (
             <>
-              {console.log('No image asset found, rendering fallback')}
+              {console.log('No valid image URL, rendering fallback')}
               <div className="w-full h-full bg-primary-dark" />
             </>
           )}

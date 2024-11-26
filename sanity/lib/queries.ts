@@ -3,11 +3,14 @@ import { groq } from 'next-sanity'
 export const homePageQuery = groq`
   *[_type == "home"][0]{
     _id,
+    title,
     overview,
     hero {
-      image {
-        asset->,
-        alt,
+      "image": {
+        "asset": image.asset->,
+        "alt": image.alt,
+        "hotspot": image.hotspot,
+        "crop": image.crop,
       },
       badge {
         text,
@@ -29,7 +32,6 @@ export const homePageQuery = groq`
       tags,
       title,
     },
-    title,
   }
 `
 

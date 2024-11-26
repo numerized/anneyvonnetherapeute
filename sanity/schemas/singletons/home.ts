@@ -17,14 +17,11 @@ export default defineType({
         defineField({
           name: 'image',
           title: 'Hero Image',
-          type: 'object',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
           fields: [
-            defineField({
-              name: 'asset',
-              type: 'image',
-              title: 'Image',
-              validation: (rule) => rule.required(),
-            }),
             defineField({
               name: 'alt',
               type: 'string',
