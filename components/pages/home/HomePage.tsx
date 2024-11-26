@@ -30,9 +30,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 to-transparent z-10" 
             aria-hidden="true"
           />
-          {hero?.image ? (
+          {hero?.image?.asset ? (
             <img 
-              src={urlFor(hero.image).width(1920).height(1080).url()}
+              src={urlFor(hero.image.asset).width(1920).height(1080).url()}
               alt={hero.image.alt || 'Hero background'}
               className="w-full h-full object-cover"
               loading="eager"
@@ -49,9 +49,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             {hero?.badge && (
               <div 
                 className="inline-block bg-primary-teal/90 text-primary-cream px-3 py-1 rounded-full text-sm mb-6"
-                aria-label={hero.badge}
+                aria-label={hero.badge.ariaLabel}
               >
-                {hero.badge}
+                {hero.badge.text}
               </div>
             )}
             <h1 

@@ -10,6 +10,90 @@ export default defineType({
   // liveEdit: true,
   fields: [
     defineField({
+      name: 'hero',
+      title: 'Hero Section',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'image',
+          title: 'Hero Image',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'asset',
+              type: 'image',
+              title: 'Image',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+              description: 'Important for SEO and accessibility.',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+        }),
+        defineField({
+          name: 'badge',
+          title: 'Badge',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'text',
+              type: 'string',
+              title: 'Badge Text',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'ariaLabel',
+              type: 'string',
+              title: 'Aria Label',
+              description: 'Accessibility description for screen readers',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+        }),
+        defineField({
+          name: 'title',
+          type: 'string',
+          title: 'Hero Title',
+          validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: 'subtitle',
+          type: 'string',
+          title: 'Hero Subtitle',
+        }),
+        defineField({
+          name: 'ctaButton',
+          title: 'Call to Action Button',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'text',
+              type: 'string',
+              title: 'Button Text',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'ariaLabel',
+              type: 'string',
+              title: 'Aria Label',
+              description: 'Accessibility description for screen readers',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'link',
+              type: 'string',
+              title: 'Button Link',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
       name: 'title',
       description: 'This field is the title of your personal website.',
       title: 'Title',
