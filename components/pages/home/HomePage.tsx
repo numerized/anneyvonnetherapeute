@@ -15,7 +15,7 @@ export interface HomePageProps {
 
 export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
-  const { overview = [], showcaseProjects = [], title = '', hero } = data ?? {}
+  const { overview = [], showcaseProjects = [], title = '', hero, statistics = [] } = data ?? {}
 
   console.log('Full data from Sanity:', data)
   console.log('Hero data:', hero)
@@ -96,27 +96,15 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
       </main>
 
       {/* Stats Section */}
-      <Stats 
-        title="Une approche unique de la thérapie relationnelle"
-        items={[
-          {
-            value: "95%",
-            label: "Taux de satisfaction client"
-          },
-          {
-            value: "500+",
-            label: "Couples accompagnés"
-          },
-          {
-            value: "20",
-            label: "Années d'expérience"
-          },
-          {
-            value: "85%",
-            label: "Amélioration des relations"
-          }
-        ]}
-      />
+      {statistics && statistics.length > 0 && (
+        <Stats 
+          title="Une approche unique de la thérapie relationnelle"
+          items={statistics.map(stat => ({
+            value: stat.number,
+            label: stat.label
+          }))}
+        />
+      )}
 
       <div className="space-y-20">
         {/* Header */}

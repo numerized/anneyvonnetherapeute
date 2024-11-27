@@ -2,6 +2,7 @@ import { StatItem } from './StatItem'
 import { StatsProps } from './types'
 
 export function Stats({ title, items }: StatsProps) {
+  console.log(items)
   return (
     <section 
       className="bg-primary-dark py-20"

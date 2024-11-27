@@ -7,6 +7,12 @@ export interface MenuItem {
   title?: string
 }
 
+export interface StatisticItem {
+  _key: string
+  number: string
+  label: string
+}
+
 export interface MilestoneItem {
   description?: string
   duration?: {
@@ -49,14 +55,13 @@ export interface HeroSection {
   ctaButton?: HeroButton
 }
 
-// Page payloads
-
 export interface HomePagePayload {
   footer?: PortableTextBlock[]
   overview?: PortableTextBlock[]
   hero?: HeroSection
   showcaseProjects?: ShowcaseProject[]
   title?: string
+  statistics?: StatisticItem[]
 }
 
 export interface PagePayload {

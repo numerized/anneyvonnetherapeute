@@ -5,6 +5,11 @@ export const homePageQuery = groq`
     _id,
     title,
     overview,
+    statistics[] {
+      _key,
+      number,
+      label
+    },
     hero {
       "image": {
         "asset": image.asset->,
