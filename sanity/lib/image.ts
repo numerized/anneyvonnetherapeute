@@ -14,7 +14,7 @@ export const urlFor = (source: Image | undefined) => {
   console.log('urlFor received source:', source)
   
   // Check if source has asset with _ref
-  if (!source?.asset?._ref && !source?.asset?._id) {
+  if (!source?.asset?._ref) {
     console.log('No valid image reference found:', source)
     return null
   }
