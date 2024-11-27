@@ -7,7 +7,7 @@ export function StatItem({ value, label }: StatItemProps) {
       role="listitem"
     >
       <div 
-        className="text-primary-coral text-5xl font-black mb-2"
+        className="text-primary-coral text-5xl font-nove font-black mb-2"
         aria-hidden="true"
       >
         {value}

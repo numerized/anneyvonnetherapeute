@@ -3,17 +3,17 @@ const { theme } = require('@sanity/demo/tailwind')
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './app/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-    './intro-template/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     ...theme,
-    // Overriding fontFamily to use @next/font loaded families
     fontFamily: {
-      mono: 'var(--font-mono)',
-      sans: 'var(--font-sans)',
-      serif: 'var(--font-serif)',
+      sans: ['var(--font-montserrat)', 'sans-serif'],
+      mono: ['var(--font-mono)', 'monospace'],
+      serif: ['var(--font-serif)', 'serif'],
+      nove: ['var(--font-nove)', 'sans-serif'],
     },
     extend: {
       colors: {

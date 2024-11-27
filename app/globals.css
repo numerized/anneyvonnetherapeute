@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply font-sans text-primary-dark bg-primary-cream;
+  }
+
+  h1 {
+    @apply font-nove font-bold;
+  }
+
+  h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold;
+  }
+}
+
 /* Remove default margin */
 body {
   margin: 0;
