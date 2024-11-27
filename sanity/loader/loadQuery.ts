@@ -69,10 +69,14 @@ export function loadSettings() {
 }
 
 export function loadHomePage() {
-  return loadQuery<HomePagePayload | null>(
+  return loadQuery<HomePagePayload>(
     homePageQuery,
     {},
-    { next: { tags: ['home'] } },
+    {
+      next: {
+        tags: ['home', 'hero', 'settings'],
+      },
+    }
   )
 }
 
