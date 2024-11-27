@@ -1,5 +1,6 @@
+import { Facebook, Instagram, Linkedin, Music, Youtube } from 'lucide-react'
 import type { PortableTextBlock } from 'next-sanity'
-import { Facebook, Instagram, Linkedin, Youtube, Music } from 'lucide-react'
+
 import { CustomPortableText } from '@/components//shared/CustomPortableText'
 import type { SettingsPayload } from '@/types'
 
