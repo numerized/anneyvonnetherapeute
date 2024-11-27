@@ -48,9 +48,9 @@ export default function Footer(props: FooterProps) {
           {/* Column 2 - Newsletter */}
           <div>
             <div className="bg-primary-forest/30 rounded-xl p-6">
-              <h3 className="text-primary-cream text-xl mb-4">Restez informé</h3>
+              <h3 className="text-primary-cream text-xl mb-4">CAPSULES AUDIO</h3>
               <p className="text-primary-cream/80 mb-4">
-                Inscrivez-vous à notre newsletter pour recevoir nos actualités
+                Inscrivez-vous pour accéder à nos capsules podcast, à écouter en déplacement ou tranquillement chez vous.
               </p>
               <form className="space-y-4">
                 <div>
@@ -64,15 +64,15 @@ export default function Footer(props: FooterProps) {
                     placeholder="Votre adresse email"
                     required
                     className="w-full px-4 py-2 rounded-md bg-primary-dark/50 border border-primary-teal/20 text-primary-cream placeholder-primary-cream/50 focus:outline-none focus:ring-2 focus:ring-primary-teal form-input"
-                    aria-label="Entrez votre adresse email pour recevoir nos actualités"
+                    aria-label="Entrez votre adresse email pour accéder aux capsules audio"
                   />
                 </div>
                 <button
                   type="submit"
                   className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
-                  aria-label="S&apos;abonner à la newsletter"
+                  aria-label="Accéder aux capsules"
                 >
-                  S&apos;abonner
+                  Accéder aux capsules
                 </button>
               </form>
             </div>
