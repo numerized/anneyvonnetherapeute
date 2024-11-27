@@ -23,6 +23,7 @@
     "@sanity/ui": "2.8.23",
     "@sanity/vision": "3.64.1",
     "@tailwindcss/typography": "0.5.15",
+    "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",

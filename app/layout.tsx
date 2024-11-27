@@ -2,6 +2,7 @@ import './globals.css'
 
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 const serif = PT_Serif({
   variable: '--font-serif',
@@ -31,8 +32,8 @@ export default async function RootLayout({
       lang="en"
       className={`${mono.variable} ${sans.variable} ${serif.variable}`}
     >
-      <body>{children}<SpeedInsights/></body>
-      
+      <body>{children}<SpeedInsights /><Analytics /></body>
+
     </html>
   )
 }
