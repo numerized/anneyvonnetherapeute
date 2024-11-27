@@ -17,14 +17,11 @@ export default defineType({
         defineField({
           name: 'image',
           title: 'Hero Image',
-          type: 'object',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
           fields: [
-            defineField({
-              name: 'asset',
-              type: 'image',
-              title: 'Image',
-              validation: (rule) => rule.required(),
-            }),
             defineField({
               name: 'alt',
               type: 'string',
@@ -94,6 +91,47 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'statistics',
+      title: 'Statistics Section',
+      description: 'Add or edit statistics displayed on the homepage',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'statistic',
+          title: 'Statistic',
+          fields: [
+            defineField({
+              name: 'number',
+              title: 'Number',
+              type: 'string',
+              description: 'The statistic number (can include %, +, etc.)',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'Description of what this number represents',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              number: 'number',
+              label: 'label',
+            },
+            prepare({ number, label }) {
+              return {
+                title: `${number} - ${label}`,
+              }
+            },
+          },
+        },
+      ],
+      validation: (rule) => rule.required().min(1),
+    }),
+    defineField({
       name: 'title',
       description: 'This field is the title of your personal website.',
       title: 'Title',
@@ -141,19 +179,6 @@ export default defineType({
         }),
       ],
       validation: (rule) => rule.max(155).required(),
-    }),
-    defineField({
-      name: 'showcaseProjects',
-      title: 'Showcase projects',
-      description:
-        'These are the projects that will appear first on your landing page.',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{ type: 'project' }],
-        }),
-      ],
     }),
   ],
   preview: {

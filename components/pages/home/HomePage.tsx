@@ -2,8 +2,8 @@ import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import Link from 'next/link'
 import { urlFor } from '../../../sanity/lib/image'
 
-import { ProjectListItem } from '@/components/pages/home/ProjectListItem'
 import { Header } from '@/components/shared/Header'
+import { Stats } from '@/components/shared/Stats'
 import { resolveHref } from '@/sanity/lib/utils'
 import type { HomePagePayload } from '@/types'
 
@@ -14,21 +14,23 @@ export interface HomePageProps {
 
 export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
-  const { overview = [], showcaseProjects = [], title = '', hero } = data ?? {}
+  const { overview = [], title = '', hero, statistics = [] } = data ?? {}
 
   console.log('Full data from Sanity:', data)
   console.log('Hero data:', hero)
   console.log('Hero image:', hero?.image)
-  console.log('Hero image asset:', hero?.image?.asset)
 
-  const imageUrl = hero?.image?.asset ? urlFor(hero.image.asset).width(1920).height(1080).url() : null
+  // Generate image URL only if we have a valid image reference
+  const imageBuilder = hero?.image ? urlFor(hero.image) : null
+  const imageUrl = imageBuilder?.width(1920).height(1080).url()
+  
+  console.log('Image builder:', imageBuilder)
   console.log('Generated image URL:', imageUrl)
 
   return (
-    <div>
-      {/* Hero Section */}
+    <>
       <main 
-        className="relative h-screen"
+        className="relative h-screen px-6"
         id="accueil"
         role="main"
         aria-labelledby="hero-title"
@@ -38,28 +40,22 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 to-transparent z-10" 
             aria-hidden="true"
           />
-          {hero?.image?.asset ? (
-            <>
-              {console.log('Rendering image with URL:', imageUrl)}
-              <img 
-                src={imageUrl}
-                alt={hero.image.alt || 'Hero background'}
-                className="w-full h-full object-cover"
-                loading="eager"
-                width="1920"
-                height="1080"
-              />
-            </>
+          {imageUrl ? (
+            <img 
+              src={imageUrl}
+              alt={hero?.image?.alt || 'Hero background'}
+              className="w-full h-full object-cover"
+              loading="eager"
+              width="1920"
+              height="1080"
+            />
           ) : (
-            <>
-              {console.log('No image asset found, rendering fallback')}
-              <div className="w-full h-full bg-primary-dark" />
-            </>
+            <div className="w-full h-full bg-primary-dark" />
           )}
         </div>
         
-        <div className="relative z-20 max-w-7xl mx-auto px-6 py-24 h-full flex items-center">
-          <div className="max-w-2xl">
+        <div className="max-w-7xl mx-auto relative z-20 h-full flex items-center">
+          <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 w-full md:ml-[4rem] lg:ml-[6rem] md:mr-auto">
             {hero?.badge && (
               <div 
                 className="inline-block bg-primary-teal/90 text-primary-cream px-3 py-1 rounded-full text-sm mb-6"
@@ -91,36 +87,22 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
         </div>
       </main>
 
+      {/* Stats Section */}
+      {statistics && statistics.length > 0 && (
+        <Stats 
+          title="Une approche unique de la thérapie relationnelle"
+          items={statistics.map(stat => ({
+            value: stat.number,
+            label: stat.label
+          }))}
+        />
+      )}
+
       <div className="space-y-20">
         {/* Header */}
         {title && !hero && <Header centered title={title} description={overview} />}
-        
-        {/* Showcase projects */}
-        {showcaseProjects && showcaseProjects.length > 0 && (
-          <div className="mx-auto max-w-[100rem] rounded-md border">
-            {showcaseProjects.map((project, key) => {
-              const href = resolveHref(project?._type, project?.slug)
-              if (!href) {
-                return null
-              }
-              return (
-                <Link
-                  key={key}
-                  href={href}
-                  data-sanity={encodeDataAttribute?.([
-                    'showcaseProjects',
-                    key,
-                    'slug',
-                  ])}
-                >
-                  <ProjectListItem project={project} odd={key % 2} />
-                </Link>
-              )
-            })}
-          </div>
-        )}
       </div>
-    </div>
+    </>
   )
 }
 
