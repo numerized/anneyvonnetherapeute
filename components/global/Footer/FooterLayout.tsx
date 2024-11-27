@@ -69,9 +69,9 @@ export default function Footer(props: FooterProps) {
                 <button
                   type="submit"
                   className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
-                  aria-label="S'abonner à la newsletter"
+                  aria-label="S&apos;abonner à la newsletter"
                 >
-                  S'abonner
+                  S&apos;abonner
                 </button>
               </form>
             </div>
