@@ -1,5 +1,5 @@
 import { StructureBuilder } from 'sanity/desk'
-import { SettingsIcon } from '@sanity/icons'
+import { HomeIcon, CogIcon } from '@sanity/icons'
 
 export const structure = (S: StructureBuilder) => {
   return S.list()
@@ -8,7 +8,7 @@ export const structure = (S: StructureBuilder) => {
       // Singleton for Capsule Settings
       S.listItem()
         .title('Paramètres des Capsules')
-        .icon(SettingsIcon)
+        .icon(CogIcon)
         .child(
           S.document()
             .title('Paramètres des Capsules')
