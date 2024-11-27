@@ -28,10 +28,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   console.log('Generated image URL:', imageUrl)
 
   return (
-    <div className="-mx-[2rem] md:-mx-[4rem] lg:-mx-[6rem]">
-      {/* Hero Section */}
+    <>
       <main 
-        className="relative h-screen"
+        className="relative h-screen px-6"
         id="accueil"
         role="main"
         aria-labelledby="hero-title"
@@ -42,27 +41,21 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             aria-hidden="true"
           />
           {imageUrl ? (
-            <>
-              {console.log('Rendering image with URL:', imageUrl)}
-              <img 
-                src={imageUrl}
-                alt={hero?.image?.alt || 'Hero background'}
-                className="w-full h-full object-cover"
-                loading="eager"
-                width="1920"
-                height="1080"
-              />
-            </>
+            <img 
+              src={imageUrl}
+              alt={hero?.image?.alt || 'Hero background'}
+              className="w-full h-full object-cover"
+              loading="eager"
+              width="1920"
+              height="1080"
+            />
           ) : (
-            <>
-              {console.log('No valid image URL, rendering fallback')}
-              <div className="w-full h-full bg-primary-dark" />
-            </>
+            <div className="w-full h-full bg-primary-dark" />
           )}
         </div>
         
-        <div className="relative z-20 h-full flex items-center">
-          <div className="max-w-2xl mx-[2rem] md:mx-[4rem] lg:mx-[6rem]">
+        <div className="max-w-7xl mx-auto relative z-20 h-full flex items-center">
+          <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 w-full md:ml-[4rem] lg:ml-[6rem] md:mr-auto">
             {hero?.badge && (
               <div 
                 className="inline-block bg-primary-teal/90 text-primary-cream px-3 py-1 rounded-full text-sm mb-6"
@@ -108,9 +101,8 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
       <div className="space-y-20">
         {/* Header */}
         {title && !hero && <Header centered title={title} description={overview} />}
-         
       </div>
-    </div>
+    </>
   )
 }
 
