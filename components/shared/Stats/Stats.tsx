@@ -5,10 +5,10 @@ export function Stats({ title, items }: StatsProps) {
   console.log(items)
   return (
     <section 
-      className="bg-primary-dark py-20"
+      className="bg-primary-dark py-20 -mx-[2rem] md:-mx-[4rem] lg:-mx-[6rem]"
       aria-labelledby="stats-title"
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-[2rem] md:mx-[4rem] lg:mx-[6rem]">
         <h2 
           id="stats-title"
           className="text-primary-cream text-3xl md:text-4xl font-light text-center mb-16"

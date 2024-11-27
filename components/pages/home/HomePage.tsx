@@ -2,7 +2,6 @@ import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import Link from 'next/link'
 import { urlFor } from '../../../sanity/lib/image'
 
-import { ProjectListItem } from '@/components/pages/home/ProjectListItem'
 import { Header } from '@/components/shared/Header'
 import { Stats } from '@/components/shared/Stats'
 import { resolveHref } from '@/sanity/lib/utils'
@@ -15,7 +14,7 @@ export interface HomePageProps {
 
 export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
-  const { overview = [], showcaseProjects = [], title = '', hero, statistics = [] } = data ?? {}
+  const { overview = [], title = '', hero, statistics = [] } = data ?? {}
 
   console.log('Full data from Sanity:', data)
   console.log('Hero data:', hero)
@@ -29,7 +28,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   console.log('Generated image URL:', imageUrl)
 
   return (
-    <div>
+    <div className="-mx-[2rem] md:-mx-[4rem] lg:-mx-[6rem]">
       {/* Hero Section */}
       <main 
         className="relative h-screen"
@@ -62,8 +61,8 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
           )}
         </div>
         
-        <div className="relative z-20 max-w-7xl mx-auto px-6 py-24 h-full flex items-center">
-          <div className="max-w-2xl">
+        <div className="relative z-20 h-full flex items-center">
+          <div className="max-w-2xl mx-[2rem] md:mx-[4rem] lg:mx-[6rem]">
             {hero?.badge && (
               <div 
                 className="inline-block bg-primary-teal/90 text-primary-cream px-3 py-1 rounded-full text-sm mb-6"
@@ -109,31 +108,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
       <div className="space-y-20">
         {/* Header */}
         {title && !hero && <Header centered title={title} description={overview} />}
-        
-        {/* Showcase projects */}
-        {showcaseProjects && showcaseProjects.length > 0 && (
-          <div className="mx-auto max-w-[100rem] rounded-md border">
-            {showcaseProjects.map((project, key) => {
-              const href = resolveHref(project?._type, project?.slug)
-              if (!href) {
-                return null
-              }
-              return (
-                <Link
-                  key={key}
-                  href={href}
-                  data-sanity={encodeDataAttribute?.([
-                    'showcaseProjects',
-                    key,
-                    'slug',
-                  ])}
-                >
-                  <ProjectListItem project={project} odd={key % 2} />
-                </Link>
-              )
-            })}
-          </div>
-        )}
+         
       </div>
     </div>
   )

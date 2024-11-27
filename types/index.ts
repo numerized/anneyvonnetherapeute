@@ -24,15 +24,6 @@ export interface MilestoneItem {
   title?: string
 }
 
-export interface ShowcaseProject {
-  _type: string
-  coverImage?: Image
-  overview?: PortableTextBlock[]
-  slug?: string
-  tags?: string[]
-  title?: string
-}
-
 export interface HeroButton {
   text: string
   ariaLabel: string
@@ -59,7 +50,6 @@ export interface HomePagePayload {
   footer?: PortableTextBlock[]
   overview?: PortableTextBlock[]
   hero?: HeroSection
-  showcaseProjects?: ShowcaseProject[]
   title?: string
   statistics?: StatisticItem[]
 }
