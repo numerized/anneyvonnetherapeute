@@ -1,9 +1,10 @@
 import Image from 'next/image'
 
 import { urlForImage } from '@/sanity/lib/utils'
+import type { SanityImage } from '@/types'
 
 interface ImageBoxProps {
-  image?: { asset?: any }
+  image?: SanityImage
   alt?: string
   width?: number
   height?: number
@@ -21,23 +22,27 @@ export default function ImageBox({
   classesWrapper,
   ...props
 }: ImageBoxProps) {
-  const imageUrl =
-    image && urlForImage(image)?.height(height).width(width).fit('crop').url()
+  const imageBuilder = urlForImage(image)
+  const imageUrl = imageBuilder ? imageBuilder.height(height).width(width).fit('crop').url() : undefined
 
   return (
     <div
       className={`w-full overflow-hidden rounded-[3px] bg-gray-50 ${classesWrapper}`}
       data-sanity={props['data-sanity']}
     >
-      {imageUrl && (
+      {imageUrl ? (
         <Image
           className="absolute h-full w-full"
-          alt={alt}
-          width={width}
           height={height}
-          sizes={size}
+          width={width}
+          alt={alt}
           src={imageUrl}
+          sizes={size}
         />
+      ) : (
+        <div className="flex aspect-square w-full items-center justify-center bg-gray-100 text-gray-500">
+          {alt}
+        </div>
       )}
     </div>
   )

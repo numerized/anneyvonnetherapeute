@@ -35,18 +35,25 @@ export interface HeroBadge {
 }
 
 export interface SanityImageAsset {
-  _id: string
-  url: string
-  metadata: {
-    dimensions: {
-      width: number
-      height: number
+  _id?: string
+  _type?: string
+  url?: string
+  metadata?: {
+    dimensions?: {
+      width?: number
+      height?: number
     }
   }
 }
 
+export interface SanityImageReference {
+  _type: string
+  _ref: string
+}
+
 export interface SanityImage {
-  asset: SanityImageAsset
+  _type?: string
+  asset?: SanityImageAsset | SanityImageReference
   alt?: string
   hotspot?: {
     x: number
