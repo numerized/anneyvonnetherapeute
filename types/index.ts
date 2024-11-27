@@ -37,8 +37,23 @@ export interface HeroBadge {
 
 export interface HeroSection {
   image?: {
-    asset: Image
+    asset: {
+      _type: string
+      _ref: string
+    }
     alt: string
+    hotspot?: {
+      x: number
+      y: number
+      height: number
+      width: number
+    }
+    crop?: {
+      top: number
+      bottom: number
+      left: number
+      right: number
+    }
   }
   badge?: HeroBadge
   title?: string
@@ -60,21 +75,6 @@ export interface PagePayload {
   overview?: PortableTextBlock[]
   title?: string
   slug?: string
-}
-
-export interface ProjectPayload {
-  client?: string
-  coverImage?: Image
-  description?: PortableTextBlock[]
-  duration?: {
-    start?: string
-    end?: string
-  }
-  overview?: PortableTextBlock[]
-  site?: string
-  slug: string
-  tags?: string[]
-  title?: string
 }
 
 export interface SettingsPayload {
