@@ -1,5 +1,4 @@
 import type { PortableTextBlock } from 'next-sanity'
-import type { Image } from 'sanity'
 
 export interface MenuItem {
   _type: string
@@ -19,7 +18,7 @@ export interface MilestoneItem {
     start?: string
     end?: string
   }
-  image?: Image
+  image?: SanityImage
   tags?: string[]
   title?: string
 }
@@ -35,10 +34,36 @@ export interface HeroBadge {
   ariaLabel: string
 }
 
-export interface HeroSection {
-  image?: Image & {
-    alt: string
+export interface SanityImageAsset {
+  _id: string
+  url: string
+  metadata: {
+    dimensions: {
+      width: number
+      height: number
+    }
   }
+}
+
+export interface SanityImage {
+  asset: SanityImageAsset
+  alt?: string
+  hotspot?: {
+    x: number
+    y: number
+    height: number
+    width: number
+  } | null
+  crop?: {
+    top: number
+    bottom: number
+    left: number
+    right: number
+  } | null
+}
+
+export interface HeroSection {
+  image?: SanityImage
   badge?: HeroBadge
   title?: string
   subtitle?: string
@@ -63,7 +88,7 @@ export interface PagePayload {
 
 export interface ProjectPayload {
   client?: string
-  coverImage?: Image
+  coverImage?: SanityImage
   description?: PortableTextBlock[]
   duration?: {
     start?: string
@@ -79,5 +104,5 @@ export interface ProjectPayload {
 export interface SettingsPayload {
   footer?: PortableTextBlock[]
   menuItems?: MenuItem[]
-  ogImage?: Image
+  ogImage?: SanityImage
 }

@@ -1,10 +1,6 @@
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
-import Link from 'next/link'
-import { urlFor } from '../../../sanity/lib/image'
-
 import { Header } from '@/components/shared/Header'
 import { Stats } from '@/components/shared/Stats'
-import { resolveHref } from '@/sanity/lib/utils'
 import type { HomePagePayload } from '@/types'
 
 export interface HomePageProps {
@@ -21,8 +17,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   console.log('Hero image:', hero?.image)
 
   // Generate image URL only if we have a valid image
-  const imageBuilder = hero?.image ? urlFor(hero.image) : undefined
-  const imageUrl = imageBuilder?.width(1920).height(1080).url()
+  const imageUrl = hero?.image?.asset?.url || undefined
   
   console.log('Generated image URL:', imageUrl)
 
