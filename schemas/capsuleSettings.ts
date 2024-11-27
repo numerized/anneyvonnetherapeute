@@ -4,7 +4,6 @@ export default defineType({
   name: 'capsuleSettings',
   title: 'Paramètres des Capsules',
   type: 'document',
-  __experimental_actions: [/*'create',*/ 'update', /*'delete',*/ 'publish'],
   fields: [
     defineField({
       name: 'title',

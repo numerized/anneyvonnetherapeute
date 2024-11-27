@@ -1,7 +1,8 @@
-import { StructureBuilder } from 'sanity/desk'
-import { HomeIcon, CogIcon } from '@sanity/icons'
+import { CogIcon } from '@sanity/icons'
+import { defineConfig } from 'sanity'
+import { type StructureBuilder, type DefaultDocumentNodeResolver } from 'sanity/structure'
 
-export const structure = (S: StructureBuilder) => {
+const structure = (S: StructureBuilder) => {
   return S.list()
     .title('Content')
     .items([
@@ -23,3 +24,5 @@ export const structure = (S: StructureBuilder) => {
       ),
     ])
 }
+
+export default structure

@@ -1,7 +1,8 @@
 import { CogIcon } from '@sanity/icons'
-import { defineType, defineField } from 'sanity'
+import { defineConfig } from 'sanity'
+import { type StructureBuilder } from 'sanity/structure'
 
-export const capsuleStructure = (S: any) =>
+const capsuleStructure = (S: StructureBuilder) => 
   S.listItem()
     .title('Paramètres des Capsules')
     .icon(CogIcon)
@@ -11,3 +12,5 @@ export const capsuleStructure = (S: any) =>
         .schemaType('capsuleSettings')
         .documentId('capsuleSettings')
     )
+
+export default capsuleStructure
