@@ -13,6 +13,8 @@ interface CapsuleSettings {
   description: string
   buttonText: string
   successMessage: string
+  emailLabel: string
+  emailPlaceholder: string
 }
 
 interface FooterProps {
@@ -29,7 +31,9 @@ export default function Footer(props: FooterProps) {
     title: 'CAPSULES AUDIO',
     description: 'Inscrivez-vous pour accéder à nos capsules podcast, à écouter en déplacement ou tranquillement chez vous.',
     buttonText: 'Accéder aux capsules',
-    successMessage: 'Merci de votre inscription ! Vous recevrez bientôt un email de confirmation.'
+    successMessage: 'Merci de votre inscription ! Vous recevrez bientôt un email de confirmation.',
+    emailLabel: 'Adresse email',
+    emailPlaceholder: 'Votre adresse email',
   })
 
   useEffect(() => {
@@ -40,7 +44,9 @@ export default function Footer(props: FooterProps) {
             title,
             description,
             buttonText,
-            successMessage
+            successMessage,
+            emailLabel,
+            emailPlaceholder
           }
         `)
         if (settings) {
@@ -109,7 +115,7 @@ export default function Footer(props: FooterProps) {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="email" className="sr-only">
-                    Adresse email
+                    {capsuleSettings.emailLabel}
                   </label>
                   <input
                     type="email"
@@ -117,7 +123,7 @@ export default function Footer(props: FooterProps) {
                     name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Votre adresse email"
+                    placeholder={capsuleSettings.emailPlaceholder}
                     required
                     className="w-full px-4 py-2 rounded-md bg-primary-dark/50 border border-primary-teal/20 text-primary-cream placeholder-primary-cream/50 focus:outline-none focus:ring-2 focus:ring-primary-teal form-input"
                     aria-label="Entrez votre adresse email pour accéder aux capsules audio"
