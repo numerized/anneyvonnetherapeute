@@ -36,8 +36,7 @@ export interface HeroBadge {
 }
 
 export interface HeroSection {
-  image?: {
-    asset: Image
+  image?: Image & {
     alt: string
   }
   badge?: HeroBadge

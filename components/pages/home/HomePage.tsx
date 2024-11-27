@@ -20,11 +20,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   console.log('Hero data:', hero)
   console.log('Hero image:', hero?.image)
 
-  // Generate image URL only if we have a valid image reference
-  const imageBuilder = hero?.image ? urlFor(hero.image) : null
-  const imageUrl = imageBuilder?.width(1920).height(1080).url()
+  // Generate image URL only if we have a valid image
+  const imageUrl = hero?.image ? urlFor(hero.image).width(1920).height(1080).url() : null
   
-  console.log('Image builder:', imageBuilder)
   console.log('Generated image URL:', imageUrl)
 
   return (
