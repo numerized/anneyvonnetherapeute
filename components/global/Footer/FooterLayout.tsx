@@ -6,15 +6,7 @@ import { useState, useEffect } from 'react'
 
 import { CustomPortableText } from '@/components//shared/CustomPortableText'
 import type { SettingsPayload } from '@/types'
-import { createClient } from '@sanity/client'
-
-// Create a read-only client for the frontend
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-24',
-  useCdn: true,
-})
+import { client } from '@/sanity/lib/client'
 
 interface CapsuleSettings {
   title: string
@@ -58,13 +50,14 @@ export default function Footer(props: FooterProps) {
         console.error('Error fetching capsule settings:', error)
       }
     }
+
     fetchSettings()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('loading')
-    
+
     try {
       const response = await fetch('/api/register-capsule', {
         method: 'POST',
@@ -162,13 +155,19 @@ export default function Footer(props: FooterProps) {
             </div>
             <div className="flex space-x-6 text-primary-cream/80">
               <a href="https://facebook.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="Facebook">
-                <SocialIcon platform="facebook" />
+                <Facebook size={20} aria-hidden="true" />
               </a>
               <a href="https://instagram.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="Instagram">
-                <SocialIcon platform="instagram" />
+                <Instagram size={20} aria-hidden="true" />
               </a>
               <a href="https://linkedin.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="LinkedIn">
-                <SocialIcon platform="linkedin" />
+                <Linkedin size={20} aria-hidden="true" />
+              </a>
+              <a href="https://youtube.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="YouTube">
+                <Youtube size={20} aria-hidden="true" />
+              </a>
+              <a href="https://spotify.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="Spotify">
+                <Music size={20} aria-hidden="true" />
               </a>
             </div>
           </div>

@@ -10,7 +10,7 @@ import { structureTool } from 'sanity/structure'
 import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
 
 import { apiVersion, dataset, projectId, studioUrl } from '@/sanity/lib/api'
-import * as resolve from '@/sanity/plugins/resolve'
+import { locations } from '@/sanity/plugins/resolve'
 import { singletonPlugin } from '@/sanity/plugins/settings'
 import page from '@/sanity/schemas/documents/page'
 import project from '@/sanity/schemas/documents/project'
@@ -19,7 +19,7 @@ import milestone from '@/sanity/schemas/objects/milestone'
 import timeline from '@/sanity/schemas/objects/timeline'
 import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
-import { structure } from './sanity/desk/structure'
+import structure from './sanity/desk/structure'
 import capsuleUser from './schemas/capsuleUser'
 import capsuleSettings from './schemas/capsuleSettings'
 
@@ -51,14 +51,20 @@ export default defineConfig({
   },
   plugins: [
     structureTool({
-      structure: structure,
+      structure,
     }),
     presentationTool({
-      resolve,
       previewUrl: {
         previewMode: {
-          enable: '/api/draft-mode/enable',
+          enable: '/api/draft',
+          disable: '/api/disable-draft'
         },
+      },
+      locate: (doc) => {
+        if (locations[doc.type]) {
+          return locations[doc.type].resolve(doc)
+        }
+        return null
       },
     }),
     // Configures the global "new document" button, and document actions, to suit the Settings document singleton
