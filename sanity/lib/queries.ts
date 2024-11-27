@@ -11,11 +11,11 @@ export const homePageQuery = groq`
       label
     },
     hero {
-      "image": {
-        "asset": image.asset->,
-        "alt": image.alt,
-        "hotspot": image.hotspot,
-        "crop": image.crop,
+      image {
+        asset,
+        alt,
+        hotspot,
+        crop,
       },
       badge {
         text,

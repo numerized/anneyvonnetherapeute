@@ -1,6 +1,7 @@
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import Link from 'next/link'
 import { urlFor } from '../../../sanity/lib/image'
+import Image from 'next/image'
 
 import { Header } from '@/components/shared/Header'
 import { Stats } from '@/components/shared/Stats'
@@ -16,16 +17,23 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
   const { overview = [], title = '', hero, statistics = [] } = data ?? {}
 
-  console.log('Full data from Sanity:', data)
-  console.log('Hero data:', hero)
-  console.log('Hero image:', hero?.image)
+  // Debug logs for all data
+  console.log('Full data:', {
+    data,
+    hero,
+    image: hero?.image,
+    asset: hero?.image?.asset,
+    ref: hero?.image?.asset?._ref
+  })
 
   // Generate image URL only if we have a valid image reference
-  const imageBuilder = hero?.image?.asset ? urlFor({ asset: hero.image.asset }) : null
-  const imageUrl = imageBuilder?.width(1920).height(1080).url()
-  
-  console.log('Image builder:', imageBuilder)
-  console.log('Generated image URL:', imageUrl)
+  let imageUrl: string | null = null;
+  if (hero?.image?.asset?._ref) {
+    const imageBuilder = urlFor(hero.image);
+    if (imageBuilder) {
+      imageUrl = imageBuilder.width(1920).height(1080).url();
+    }
+  }
 
   return (
     <>
@@ -46,11 +54,21 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
               alt={hero?.image?.alt || 'Hero background'}
               className="w-full h-full object-cover"
               loading="eager"
-              width="1920"
-              height="1080"
+              width={1920}
+              height={1080}
             />
           ) : (
-            <div className="w-full h-full bg-primary-dark" />
+            <div className="w-full h-full bg-primary-dark">
+              {/* Debug info for when image is not showing */}
+              <div className="p-4 text-white">
+                <p>Debug: Image not showing</p>
+                <p>Hero exists: {hero ? 'Yes' : 'No'}</p>
+                <p>Image exists: {hero?.image ? 'Yes' : 'No'}</p>
+                <p>Asset exists: {hero?.image?.asset ? 'Yes' : 'No'}</p>
+                <p>Asset ref: {hero?.image?.asset?._ref || 'None'}</p>
+                <p>Full image data: {JSON.stringify(hero?.image, null, 2)}</p>
+              </div>
+            </div>
           )}
         </div>
         
