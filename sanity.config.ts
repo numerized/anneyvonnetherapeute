@@ -10,8 +10,8 @@ import { structureTool } from 'sanity/structure'
 import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
 
 import { apiVersion, dataset, projectId, studioUrl } from '@/sanity/lib/api'
-import * as resolve from '@/sanity/plugins/resolve'
-import { pageStructure, singletonPlugin } from '@/sanity/plugins/settings'
+import { locations } from '@/sanity/plugins/resolve'
+import { singletonPlugin } from '@/sanity/plugins/settings'
 import page from '@/sanity/schemas/documents/page'
 import project from '@/sanity/schemas/documents/project'
 import duration from '@/sanity/schemas/objects/duration'
@@ -19,6 +19,9 @@ import milestone from '@/sanity/schemas/objects/milestone'
 import timeline from '@/sanity/schemas/objects/timeline'
 import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
+import structure from './sanity/desk/structure'
+import capsuleUser from './schemas/capsuleUser'
+import capsuleSettings from './schemas/capsuleSettings'
 
 const title =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE ||
@@ -35,10 +38,12 @@ export default defineConfig({
       // Singletons
       home,
       settings,
+      capsuleSettings,
       // Documents
       duration,
       page,
       project,
+      capsuleUser,
       // Objects
       milestone,
       timeline,
@@ -46,18 +51,24 @@ export default defineConfig({
   },
   plugins: [
     structureTool({
-      structure: pageStructure([home, settings]),
+      structure,
     }),
     presentationTool({
-      resolve,
       previewUrl: {
         previewMode: {
-          enable: '/api/draft-mode/enable',
+          enable: '/api/draft',
+          disable: '/api/disable-draft'
         },
+      },
+      locate: (doc) => {
+        if (locations[doc.type]) {
+          return locations[doc.type].resolve(doc)
+        }
+        return null
       },
     }),
     // Configures the global "new document" button, and document actions, to suit the Settings document singleton
-    singletonPlugin([home.name, settings.name]),
+    singletonPlugin([home.name, settings.name, capsuleSettings.name]),
     // Add an image asset source for Unsplash
     unsplashImageAsset(),
     // Vision lets you query your content with GROQ in the studio

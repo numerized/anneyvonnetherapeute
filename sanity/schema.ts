@@ -1,7 +1,7 @@
 import { type SchemaTypeDefinition } from 'sanity'
 
-import hero from './schemas/objects/hero'
+import { schemaTypes } from '../schemas'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [hero],
+  types: schemaTypes,
 }
