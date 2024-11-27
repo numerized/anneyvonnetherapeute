@@ -12,4 +12,8 @@ export const client = createClient({
   apiVersion,
   useCdn: false,
   perspective: 'published',
+  stega: {
+    enabled: process.env.VERCEL_ENV === 'development',
+    studioUrl: '/studio',
+  },
 })
