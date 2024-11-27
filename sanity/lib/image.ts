@@ -3,23 +3,20 @@ import type { Image } from 'sanity'
 
 import { dataset, projectId } from '../env'
 
-console.log('Sanity Config:', { projectId, dataset })
+if (!projectId || !dataset) {
+  throw new Error('Sanity project ID and dataset are required')
+}
 
 const imageBuilder = createImageUrlBuilder({
-  projectId: projectId || '',
-  dataset: dataset || '',
+  projectId: projectId,
+  dataset: dataset,
 })
 
 export const urlFor = (source: Image | undefined) => {
-  console.log('urlFor received source:', source)
-  
-  // Check if source has asset with _ref
-  if (!source?.asset?._ref && !source?.asset?._id) {
-    console.log('No valid image reference found:', source)
-    return null
+  if (!source?.asset?._ref) {
+    console.warn('Invalid image source:', source)
+    return undefined
   }
 
-  const builder = imageBuilder?.image(source)
-  console.log('Image builder created:', builder)
-  return builder
+  return imageBuilder.image(source)
 }

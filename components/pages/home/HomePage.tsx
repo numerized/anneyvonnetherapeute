@@ -21,8 +21,8 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   console.log('Hero image:', hero?.image)
 
   // Generate image URL only if we have a valid image
-  // @ts-ignore
-  const imageUrl = hero?.image ? urlFor(hero.image).width(1920).height(1080).url() : null
+  const imageBuilder = hero?.image ? urlFor(hero.image) : undefined
+  const imageUrl = imageBuilder?.width(1920).height(1080).url()
   
   console.log('Generated image URL:', imageUrl)
 
