@@ -92,6 +92,22 @@ export interface NewsletterSection {
 
 export interface SettingsPayload {
   footer?: PortableTextBlock[]
+  logo?: {
+    asset: any
+    alt?: string
+    hotspot?: {
+      x: number
+      y: number
+      height: number
+      width: number
+    }
+    crop?: {
+      top: number
+      bottom: number
+      left: number
+      right: number
+    }
+  }
   menuItems?: MenuItem[]
   ogImage?: Image
   newsletter?: NewsletterSection

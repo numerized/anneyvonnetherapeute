@@ -18,6 +18,23 @@ export default defineType({
   // liveEdit: true,
   fields: [
     defineField({
+      name: 'logo',
+      title: 'Site Logo',
+      type: 'image',
+      description: 'Logo displayed in the navigation bar',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        defineField({
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+          description: 'Important for SEO and accessibility.',
+        }),
+      ],
+    }),
+    defineField({
       name: 'menuItems',
       title: 'Menu Item list',
       description: 'Links displayed on the header of your site.',

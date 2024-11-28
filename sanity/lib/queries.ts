@@ -44,7 +44,14 @@ export const pagesBySlugQuery = groq`
 
 export const settingsQuery = groq`
   *[_type == "settings"][0]{
+    _id,
     footer,
+    logo {
+      asset->,
+      alt,
+      hotspot,
+      crop
+    },
     menuItems[] {
       _type,
       title,

@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 import type { SettingsPayload } from '@/types'
 import { NavLinks } from './NavLinks'
+import { urlFor } from '@/sanity/lib/image'
 
 interface NavbarProps {
   data: SettingsPayload
@@ -17,6 +18,9 @@ export default function Navbar(props: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
 
+  const logoAsset = data?.logo?.asset
+  const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
+
   return (
     <header className="relative" role="banner">
       <nav 
@@ -25,16 +29,21 @@ export default function Navbar(props: NavbarProps) {
         aria-label="Main navigation"
       >
         <div className="max-w-7xl mx-auto flex justify-end items-center relative">
-          <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
-            <Image 
-              src="https://firebasestorage.googleapis.com/v0/b/coeurs-a-corps.firebasestorage.app/o/WhatsApp%20Image%202024-11-21%20at%2013.09.15_4aa518c1.jpg?alt=media&token=105e861a-8ff8-4616-b6e1-de9c780ffbb7" 
-              alt="Anne-Yvonne Racine Logo" 
-              className="h-[172px] w-auto"
-              width={172}
-              height={172}
-              priority
-            />
-          </div>
+          {logoUrl && (
+            <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
+              <Image 
+                src={logoUrl}
+                alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+                className="h-[172px] w-auto"
+                width={500}
+                height={500}
+                priority
+                onError={(e) => {
+                  console.error('Error loading logo:', e)
+                }}
+              />
+            </div>
+          )}
 
           <button 
             className="md:hidden p-2 ml-auto"
