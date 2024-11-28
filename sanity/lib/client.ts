@@ -4,7 +4,7 @@ import {
   apiVersion,
   dataset,
   projectId,
-} from '@/sanity/lib/api'
+} from './api'
 
 export const client = createClient({
   projectId,
@@ -13,7 +13,7 @@ export const client = createClient({
   useCdn: false,
   perspective: 'published',
   stega: {
-    enabled: process.env.VERCEL_ENV === 'development',
+    enabled: true,
     studioUrl: '/studio',
   },
 })
