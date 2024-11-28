@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "createdAt": "2024-11-28T20:57:04.416Z",
+  "workspaces": [
+    {
+      "name": "default",
+      "title": "Next.js Personal Website with Sanity.io",
+      "basePath": "/studio",
+      "dataset": "production",
+      "schema": "36a9d061.create-schema.json"
+    }
+  ]
+}
