@@ -77,8 +77,16 @@ export interface PagePayload {
   slug?: string
 }
 
+export interface NewsletterSection {
+  title?: string
+  description?: string
+  buttonText?: string
+  placeholder?: string
+}
+
 export interface SettingsPayload {
   footer?: PortableTextBlock[]
   menuItems?: MenuItem[]
   ogImage?: Image
+  newsletter?: NewsletterSection
 }
