@@ -12,7 +12,7 @@ export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: 
     <>
       {menuItems?.map((menuItem, key) => {
         if (menuItem.linkType === 'reference' && menuItem.reference) {
-          const href = resolveHref(menuItem.reference._type, menuItem.reference.slug)
+          const href = resolveHref(menuItem.reference._type, menuItem.reference.slug?.current)
           if (!href) {
             return null
           }
