@@ -45,10 +45,16 @@ export const pagesBySlugQuery = groq`
 export const settingsQuery = groq`
   *[_type == "settings"][0]{
     footer,
-    menuItems[]->{
+    menuItems[] {
       _type,
-      "slug": slug.current,
-      title
+      title,
+      linkType,
+      reference->{
+        _type,
+        "slug": slug.current,
+        title
+      },
+      anchor
     },
     ogImage,
     newsletter {

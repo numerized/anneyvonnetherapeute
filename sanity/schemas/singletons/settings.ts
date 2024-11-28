@@ -1,5 +1,13 @@
 import { CogIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import type { ValidationContext } from 'sanity'
+
+interface MenuItem {
+  title: string
+  linkType: 'reference' | 'anchor'
+  reference?: any
+  anchor?: string
+}
 
 export default defineType({
   name: 'settings',
@@ -16,21 +24,74 @@ export default defineType({
       type: 'array',
       of: [
         {
-          title: 'Reference',
-          type: 'reference',
-          to: [
-            {
-              type: 'home',
-            },
-            {
-              type: 'page',
-            },
-            {
-              type: 'project',
-            },
+          type: 'object',
+          name: 'menuItem',
+          title: 'Menu Item',
+          fields: [
+            defineField({
+              title: 'Title',
+              name: 'title',
+              type: 'string',
+              validation: Rule => Rule.required()
+            }),
+            defineField({
+              title: 'Link Type',
+              name: 'linkType',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Internal Page', value: 'reference' },
+                  { title: 'Anchor Scroll', value: 'anchor' }
+                ],
+                layout: 'radio'
+              },
+              validation: Rule => Rule.required()
+            }),
+            defineField({
+              title: 'Page Reference',
+              name: 'reference',
+              type: 'reference',
+              to: [
+                { type: 'home' },
+                { type: 'page' },
+                { type: 'project' }
+              ],
+              hidden: ({ parent }: { parent: MenuItem }) => parent?.linkType !== 'reference'
+            }),
+            defineField({
+              title: 'Anchor ID',
+              name: 'anchor',
+              type: 'string',
+              description: 'The ID of the section to scroll to (without the # symbol)',
+              hidden: ({ parent }: { parent: MenuItem }) => parent?.linkType !== 'anchor',
+              validation: Rule => Rule.custom((anchor: string | undefined, context: ValidationContext) => {
+                const parent = context.parent as MenuItem
+                if (parent?.linkType === 'anchor' && !anchor) {
+                  return 'Anchor ID is required for anchor links'
+                }
+                return true
+              })
+            })
           ],
-        },
-      ],
+          preview: {
+            select: {
+              title: 'title',
+              linkType: 'linkType',
+              reference: 'reference.title',
+              anchor: 'anchor'
+            },
+            prepare(selection: MenuItem & { reference?: string }) {
+              const { title, linkType, reference, anchor } = selection
+              return {
+                title: title,
+                subtitle: linkType === 'reference' 
+                  ? `Page: ${reference || 'Not set'}`
+                  : `Scroll to: #${anchor || 'Not set'}`
+              }
+            }
+          }
+        }
+      ]
     }),
     defineField({
       name: 'footer',

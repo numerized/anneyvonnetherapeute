@@ -3,8 +3,14 @@ import type { Image } from 'sanity'
 
 export interface MenuItem {
   _type: string
-  slug?: string
-  title?: string
+  title: string
+  linkType: 'reference' | 'anchor'
+  reference?: {
+    _type: string
+    slug: string
+    title: string
+  }
+  anchor?: string
 }
 
 export interface StatisticItem {
