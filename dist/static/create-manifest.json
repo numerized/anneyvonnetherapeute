@@ -1,13 +1,21 @@
 {
   "version": 1,
-  "createdAt": "2024-11-28T21:39:45.221Z",
+  "createdAt": "2024-03-19T10:00:00.000Z",
   "workspaces": [
     {
       "name": "default",
-      "title": "Next.js Personal Website with Sanity.io",
+      "title": "Anne-Yvonne Thérapeute",
       "basePath": "/studio",
       "dataset": "production",
-      "schema": "36a9d061.create-schema.json"
+      "schema": "36a9d061.create-schema.json",
+      "projectId": "rvsii5is",
+      "social": {
+        "facebook": "https://www.facebook.com/anneyvonnetherapie",
+        "instagram": "https://www.instagram.com/anneyvonnetherapie",
+        "linkedin": "https://www.linkedin.com/in/anneyvonnetherapie",
+        "youtube": "https://www.youtube.com/@anneyvonnetherapie",
+        "spotify": "https://open.spotify.com/show/anneyvonnetherapie"
+      }
     }
   ]
 }
