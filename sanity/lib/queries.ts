@@ -51,5 +51,11 @@ export const settingsQuery = groq`
       title
     },
     ogImage,
+    newsletter {
+      title,
+      description,
+      buttonText,
+      placeholder
+    }
   }
 `

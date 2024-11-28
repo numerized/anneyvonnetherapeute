@@ -61,6 +61,37 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'newsletter',
+      title: 'Newsletter Section',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'title',
+          title: 'Newsletter Title',
+          type: 'string',
+          description: 'The main title for the newsletter section',
+        }),
+        defineField({
+          name: 'description',
+          title: 'Newsletter Description',
+          type: 'text',
+          description: 'A brief description of what subscribers will receive',
+        }),
+        defineField({
+          name: 'buttonText',
+          title: 'Subscribe Button Text',
+          type: 'string',
+          description: 'Text to display on the subscribe button',
+        }),
+        defineField({
+          name: 'placeholder',
+          title: 'Input Placeholder',
+          type: 'string',
+          description: 'Placeholder text for the email input field',
+        }),
+      ],
+    }),
+    defineField({
       name: 'ogImage',
       title: 'Open Graph Image',
       type: 'image',
