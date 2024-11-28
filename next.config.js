@@ -13,6 +13,10 @@ const nextConfig = {
       },
     ],
   },
+  // Force cache invalidation
+  generateBuildId: async () => {
+    return `build-${new Date().getTime()}`
+  },
 }
 
 module.exports = nextConfig
