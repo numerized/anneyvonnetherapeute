@@ -44,11 +44,26 @@ export const pagesBySlugQuery = groq`
 
 export const settingsQuery = groq`
   *[_type == "settings"][0]{
+    _id,
+    notificationMessage,
     footer,
-    menuItems[]->{
+    logo {
+      asset->,
+      alt,
+      hotspot,
+      crop
+    },
+    menuItems[] {
       _type,
-      "slug": slug.current,
-      title
+      title,
+      style,
+      linkType,
+      reference->{
+        _type,
+        "slug": slug.current,
+        title
+      },
+      anchor
     },
     ogImage,
     newsletter {
