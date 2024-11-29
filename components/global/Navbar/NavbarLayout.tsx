@@ -81,7 +81,9 @@ export default function Navbar(props: NavbarProps) {
 
   return (
     <header className="relative" role="banner">
-      <NotificationBanner message="Nouvelle offre disponible ! Découvrez notre programme de thérapie de couple en ligne." />
+      {data.notificationMessage && (
+        <NotificationBanner message={data.notificationMessage} />
+      )}
       <nav 
         className="bg-primary-dark text-primary-cream px-6 py-4" 
         role="navigation" 
