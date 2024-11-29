@@ -1,11 +1,11 @@
 'use client'
 
-import { Menu } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import type { SettingsPayload } from '@/types'
-import { NavLinks } from './NavLinks'
 import { urlFor } from '@/sanity/lib/image'
 
 interface NavbarProps {
@@ -15,11 +15,68 @@ interface NavbarProps {
 export default function Navbar(props: NavbarProps) {
   const { data } = props
   const menuItems = data?.menuItems || []
+  console.log('All menu items:', menuItems);
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
 
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
+
+  const renderMenuItem = (item: any) => {
+    console.log('Menu item:', JSON.stringify(item, null, 2));
+    
+    // Clean up the style value by removing hidden Unicode characters
+    const cleanStyle = item.style?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+    console.log('Clean style:', cleanStyle);
+    
+    const baseClasses = "text-primary-cream hover:text-primary-cream/80 transition-colors duration-200";
+    const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
+    const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
+    const buttonClearClasses = `${buttonBaseClasses} border-2 border-primary-cream hover:bg-primary-cream/10`;
+    
+    console.log('Item style:', item.style);
+    console.log('Applied classes:', cleanStyle === 'button-plain' ? buttonPlainClasses : cleanStyle === 'button-clear' ? buttonClearClasses : baseClasses);
+    
+    const classes = cleanStyle === 'button-plain' 
+      ? buttonPlainClasses 
+      : cleanStyle === 'button-clear'
+        ? buttonClearClasses
+        : baseClasses;
+
+    if (item.linkType === 'reference' && item.reference?.slug) {
+      return (
+        <Link
+          key={item.title}
+          href={`/${item.reference.slug}`}
+          className={classes}
+        >
+          {item.title}
+        </Link>
+      );
+    }
+
+    if (item.linkType === 'anchor' && item.anchor) {
+      return (
+        <a
+          key={item.title}
+          href={`#${item.anchor}`}
+          className={classes}
+          onClick={(e) => {
+            e.preventDefault();
+            const element = document.getElementById(item.anchor);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        >
+          {item.title}
+        </a>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <header className="relative" role="banner">
@@ -44,37 +101,37 @@ export default function Navbar(props: NavbarProps) {
               />
             </div>
           )}
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            {menuItems.map(renderMenuItem)}
+          </div>
 
-          <button 
-            className="md:hidden p-2 ml-auto"
+          {/* Mobile Menu Button */}
+          <button
+            type="button"
+            className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
             aria-label="Toggle menu"
           >
-            <Menu size={24} aria-hidden="true" />
+            {isMenuOpen ? <X /> : <Menu />}
           </button>
-
-          <div className="hidden md:flex items-center space-x-8">
-            <NavLinks 
-              menuItems={menuItems} 
-              setIsMenuOpen={setIsMenuOpen} 
-              setShowAppointmentModal={setShowAppointmentModal} 
-            />
-          </div>
         </div>
 
+        {/* Mobile Menu */}
         {isMenuOpen && (
           <div 
-            id="mobile-menu"
-            className="md:hidden absolute top-full left-0 right-0 bg-primary-dark border-t border-primary-teal/20 p-4"
+            id="mobile-menu" 
+            className="md:hidden absolute top-full left-0 w-full bg-primary-dark border-t border-primary-cream/10"
           >
-            <div className="flex flex-col space-y-4">
-              <NavLinks 
-                menuItems={menuItems} 
-                setIsMenuOpen={setIsMenuOpen} 
-                setShowAppointmentModal={setShowAppointmentModal} 
-              />
+            <div className="px-6 py-4 flex flex-col space-y-4">
+              {menuItems.map((item) => (
+                <div key={item.title} className="w-full">
+                  {renderMenuItem(item)}
+                </div>
+              ))}
             </div>
           </div>
         )}

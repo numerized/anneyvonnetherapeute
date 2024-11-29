@@ -4,6 +4,7 @@ import type { ValidationContext } from 'sanity'
 
 interface MenuItem {
   title: string
+  style: 'text' | 'button-plain' | 'button-clear'
   linkType: 'reference' | 'anchor'
   reference?: any
   anchor?: string
@@ -50,6 +51,21 @@ export default defineType({
               name: 'title',
               type: 'string',
               validation: Rule => Rule.required()
+            }),
+            defineField({
+              title: 'Style',
+              name: 'style',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Simple Text', value: 'text' },
+                  { title: 'Button Plain', value: 'button-plain' },
+                  { title: 'Button Clear', value: 'button-clear' }
+                ],
+                layout: 'radio'
+              },
+              validation: Rule => Rule.required(),
+              initialValue: 'text'
             }),
             defineField({
               title: 'Link Type',

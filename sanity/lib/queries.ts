@@ -55,6 +55,7 @@ export const settingsQuery = groq`
     menuItems[] {
       _type,
       title,
+      style,
       linkType,
       reference->{
         _type,
