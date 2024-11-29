@@ -7,6 +7,7 @@ import Link from 'next/link'
 
 import type { SettingsPayload } from '@/types'
 import { urlFor } from '@/sanity/lib/image'
+import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
 interface NavbarProps {
   data: SettingsPayload
@@ -80,6 +81,7 @@ export default function Navbar(props: NavbarProps) {
 
   return (
     <header className="relative" role="banner">
+      <NotificationBanner message="Nouvelle offre disponible ! Découvrez notre programme de thérapie de couple en ligne." />
       <nav 
         className="bg-primary-dark text-primary-cream px-6 py-4" 
         role="navigation" 
