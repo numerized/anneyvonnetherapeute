@@ -11,6 +11,11 @@ const nextConfig = {
         hostname: 'cdn.sanity.io',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        port: '',
+      },
     ],
   },
   // Force cache invalidation

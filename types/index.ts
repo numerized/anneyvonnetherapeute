@@ -3,8 +3,14 @@ import type { Image } from 'sanity'
 
 export interface MenuItem {
   _type: string
-  slug?: string
-  title?: string
+  title: string
+  linkType: 'reference' | 'anchor'
+  reference?: {
+    _type: string
+    slug: string
+    title: string
+  }
+  anchor?: string
 }
 
 export interface StatisticItem {
@@ -85,7 +91,24 @@ export interface NewsletterSection {
 }
 
 export interface SettingsPayload {
+  notificationMessage?: string
   footer?: PortableTextBlock[]
+  logo?: {
+    asset: any
+    alt?: string
+    hotspot?: {
+      x: number
+      y: number
+      height: number
+      width: number
+    }
+    crop?: {
+      top: number
+      bottom: number
+      left: number
+      right: number
+    }
+  }
   menuItems?: MenuItem[]
   ogImage?: Image
   newsletter?: NewsletterSection
