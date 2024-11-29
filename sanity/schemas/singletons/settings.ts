@@ -19,6 +19,12 @@ export default defineType({
   // liveEdit: true,
   fields: [
     defineField({
+      name: 'notificationMessage',
+      title: 'Message de notification',
+      description: 'Message affiché en haut du site (laissez vide pour masquer)',
+      type: 'string',
+    }),
+    defineField({
       name: 'logo',
       title: 'Site Logo',
       type: 'image',

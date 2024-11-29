@@ -91,6 +91,7 @@ export interface NewsletterSection {
 }
 
 export interface SettingsPayload {
+  notificationMessage?: string
   footer?: PortableTextBlock[]
   logo?: {
     asset: any

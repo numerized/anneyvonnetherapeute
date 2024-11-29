@@ -45,6 +45,7 @@ export const pagesBySlugQuery = groq`
 export const settingsQuery = groq`
   *[_type == "settings"][0]{
     _id,
+    notificationMessage,
     footer,
     logo {
       asset->,
