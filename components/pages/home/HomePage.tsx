@@ -9,6 +9,7 @@ import { TherapyQuestionnaire } from './TherapyQuestionnaire'
 import { ProfessionalTraining } from './ProfessionalTraining'
 import { RelationshipStages } from './RelationshipStages'
 import { AiCompanion } from './AiCompanion'
+import { About } from './About'
 
 export interface HomePageProps {
   data: HomePagePayload | null
@@ -36,6 +37,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
           />
         </div>
       )}
+
+      {/* About Section */}
+      <About />
 
       <TherapyQuestionnaire />
       <ProfessionalTraining />

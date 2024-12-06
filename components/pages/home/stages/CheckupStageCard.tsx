@@ -3,7 +3,11 @@
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
 import { Benefit } from '../Benefit'
 
-export function CheckupStageCard() {
+interface CheckupStageCardProps {
+  onShowPromo?: () => void;
+}
+
+export function CheckupStageCard({ onShowPromo }: CheckupStageCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
@@ -49,6 +53,7 @@ export function CheckupStageCard() {
         </div>
 
         <button
+          onClick={onShowPromo}
           className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
         >
           En savoir plus

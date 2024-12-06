@@ -8,6 +8,7 @@ import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
+import { TherapyPromoModal } from './modals/TherapyPromoModal'
 
 type TherapyOption = {
   title: string
@@ -55,6 +56,8 @@ export function TherapyQuestionnaire() {
     need: ''
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
+  const [showModal, setShowModal] = useState(false)
+  const [selectedTherapyType, setSelectedTherapyType] = useState<TherapyOption['type'] | null>(null)
   const questionnaireRef = useRef<HTMLElement>(null)
 
   const getRecommendations = (situation: string, need: string) => {
@@ -104,167 +107,180 @@ export function TherapyQuestionnaire() {
     questionnaireRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const renderCard = (type: string) => {
-    const handleShowPromo = () => {
-      // You can implement the modal logic here if needed
-    }
+  const handleShowPromo = (type: TherapyOption['type']) => {
+    setSelectedTherapyType(type)
+    setShowModal(true)
+  }
 
+  const renderCard = (type: string) => {
     switch (type) {
       case 'couple':
-        return <CoupleTherapyCard onShowPromo={handleShowPromo} />
+        return <CoupleTherapyCard onShowPromo={() => handleShowPromo('couple')} />
       case 'individual':
-        return <IndividualTherapyCard onShowPromo={handleShowPromo} />
+        return <IndividualTherapyCard onShowPromo={() => handleShowPromo('individual')} />
       case 'vit':
-        return <VitTherapyCard onShowPromo={handleShowPromo} />
+        return <VitTherapyCard onShowPromo={() => handleShowPromo('vit')} />
       case 'beginning':
-        return <BeginningStageCard />
+        return <BeginningStageCard onShowPromo={() => handleShowPromo('beginning')} />
       case 'checkup':
-        return <CheckupStageCard />
+        return <CheckupStageCard onShowPromo={() => handleShowPromo('checkup')} />
       case 'decision':
-        return <DecisionStageCard />
+        return <DecisionStageCard onShowPromo={() => handleShowPromo('decision')} />
       default:
         return null
     }
   }
 
   return (
-    <section id="questionnaire" ref={questionnaireRef} className="py-16 bg-primary-forest/30">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
-          <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
-            TROUVEZ VOTRE ACCOMPAGNEMENT
+    <>
+      <section id="questionnaire" ref={questionnaireRef} className="py-16 bg-primary-forest/30">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
+              TROUVEZ VOTRE ACCOMPAGNEMENT
+            </div>
+            <h2 className="text-3xl md:text-4xl font-light mb-4">
+              Quelle thérapie vous correspond ?
+            </h2>
+            <p className="text-gray-400">
+              Répondez à deux questions simples pour découvrir nos recommandations personnalisées
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-light mb-4">
-            Quelle thérapie vous correspond ?
-          </h2>
-          <p className="text-gray-400">
-            Répondez à deux questions simples pour découvrir nos recommandations personnalisées
-          </p>
+
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-6"
+                >
+                  <h3 className="text-xl text-primary-cream mb-6">Quelle est votre situation ?</h3>
+                  <div className="grid gap-4">
+                    <button
+                      onClick={() => {
+                        setAnswers(prev => ({ ...prev, situation: 'couple' }))
+                        setStep(2)
+                      }}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      Je suis en couple ou je souhaite travailler sur ma relation
+                    </button>
+                    <button
+                      onClick={() => {
+                        setAnswers(prev => ({ ...prev, situation: 'individual' }))
+                        setStep(2)
+                      }}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      Je souhaite un accompagnement individuel
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-6"
+                >
+                  <h3 className="text-xl text-primary-cream mb-6">
+                    {answers.situation === 'couple' ? (
+                      "Quel est votre besoin principal ?"
+                    ) : (
+                      "Quel type d'accompagnement recherchez-vous ?"
+                    )}
+                  </h3>
+                  <div className="grid gap-4">
+                    {answers.situation === 'couple' ? (
+                      <>
+                        <button
+                          onClick={() => getRecommendations(answers.situation, 'start')}
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                        >
+                          Débuter une nouvelle relation sur de bonnes bases
+                        </button>
+                        <button
+                          onClick={() => getRecommendations(answers.situation, 'improve')}
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                        >
+                          Améliorer et faire évoluer notre relation
+                        </button>
+                        <button
+                          onClick={() => getRecommendations(answers.situation, 'decide')}
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                        >
+                          Prendre une décision importante pour notre couple
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => getRecommendations(answers.situation, 'intensive')}
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                        >
+                          Un suivi intensif et personnalisé
+                        </button>
+                        <button
+                          onClick={() => getRecommendations(answers.situation, 'regular')}
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                        >
+                          Un accompagnement régulier
+                        </button>
+                        <button
+                          onClick={() => getRecommendations(answers.situation, 'specific')}
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                        >
+                          Un travail sur des thèmes spécifiques
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-8"
+                >
+                  <h3 className="text-xl text-primary-cream mb-6">Nos recommandations pour vous</h3>
+                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : 'place-items-center'} gap-8`}>
+                    {recommendations.map((option) => (
+                      <div key={option.type} className="w-full">
+                        {renderCard(option.type)}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center">
+                    <button
+                      onClick={handleRestart}
+                      className="text-primary-coral hover:text-primary-rust transition-colors mt-6"
+                    >
+                      Recommencer le questionnaire
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-
-        <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
-          <AnimatePresence mode="wait">
-            {step === 1 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <h3 className="text-xl text-primary-cream mb-6">Quelle est votre situation ?</h3>
-                <div className="grid gap-4">
-                  <button
-                    onClick={() => {
-                      setAnswers(prev => ({ ...prev, situation: 'couple' }))
-                      setStep(2)
-                    }}
-                    className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                  >
-                    Je suis en couple ou je souhaite travailler sur ma relation
-                  </button>
-                  <button
-                    onClick={() => {
-                      setAnswers(prev => ({ ...prev, situation: 'individual' }))
-                      setStep(2)
-                    }}
-                    className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                  >
-                    Je souhaite un accompagnement individuel
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {step === 2 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <h3 className="text-xl text-primary-cream mb-6">
-                  {answers.situation === 'couple' ? (
-                    "Quel est votre besoin principal ?"
-                  ) : (
-                    "Quel type d'accompagnement recherchez-vous ?"
-                  )}
-                </h3>
-                <div className="grid gap-4">
-                  {answers.situation === 'couple' ? (
-                    <>
-                      <button
-                        onClick={() => getRecommendations(answers.situation, 'start')}
-                        className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                      >
-                        Débuter une nouvelle relation sur de bonnes bases
-                      </button>
-                      <button
-                        onClick={() => getRecommendations(answers.situation, 'improve')}
-                        className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                      >
-                        Améliorer et faire évoluer notre relation
-                      </button>
-                      <button
-                        onClick={() => getRecommendations(answers.situation, 'decide')}
-                        className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                      >
-                        Prendre une décision importante pour notre couple
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => getRecommendations(answers.situation, 'intensive')}
-                        className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                      >
-                        Un suivi intensif et personnalisé
-                      </button>
-                      <button
-                        onClick={() => getRecommendations(answers.situation, 'regular')}
-                        className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                      >
-                        Un accompagnement régulier
-                      </button>
-                      <button
-                        onClick={() => getRecommendations(answers.situation, 'specific')}
-                        className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                      >
-                        Un travail sur des thèmes spécifiques
-                      </button>
-                    </>
-                  )}
-                </div>
-              </motion.div>
-            )}
-
-            {step === 3 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
-              >
-                <h3 className="text-xl text-primary-cream mb-6">Nos recommandations pour vous</h3>
-                <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : 'place-items-center'} gap-8`}>
-                  {recommendations.map((option) => (
-                    <div key={option.type} className="w-full">
-                      {renderCard(option.type)}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-center">
-                  <button
-                    onClick={handleRestart}
-                    className="text-primary-coral hover:text-primary-rust transition-colors mt-6"
-                  >
-                    Recommencer le questionnaire
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </section>
+      </section>
+      {selectedTherapyType && (
+        <TherapyPromoModal
+          isOpen={showModal}
+          onClose={() => {
+            setShowModal(false)
+            setSelectedTherapyType(null)
+          }}
+          type={selectedTherapyType}
+        />
+      )}
+    </>
   )
 }
