@@ -128,7 +128,7 @@ export function TherapyQuestionnaire() {
   }
 
   return (
-    <section ref={questionnaireRef} className="py-16 bg-primary-forest/30">
+    <section id="questionnaire" ref={questionnaireRef} className="py-16 bg-primary-forest/30">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
