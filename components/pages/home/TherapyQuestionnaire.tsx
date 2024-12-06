@@ -2,6 +2,12 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
+import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { VitTherapyCard } from './pricing/VitTherapyCard'
+import { BeginningStageCard } from './stages/BeginningStageCard'
+import { CheckupStageCard } from './stages/CheckupStageCard'
+import { DecisionStageCard } from './stages/DecisionStageCard'
 
 type TherapyOption = {
   title: string
@@ -90,9 +96,32 @@ export function TherapyQuestionnaire() {
     setStep(3)
   }
 
+  const renderCard = (type: string) => {
+    const handleShowPromo = () => {
+      // You can implement the modal logic here if needed
+    }
+
+    switch (type) {
+      case 'couple':
+        return <CoupleTherapyCard onShowPromo={handleShowPromo} />
+      case 'individual':
+        return <IndividualTherapyCard onShowPromo={handleShowPromo} />
+      case 'vit':
+        return <VitTherapyCard onShowPromo={handleShowPromo} />
+      case 'beginning':
+        return <BeginningStageCard />
+      case 'checkup':
+        return <CheckupStageCard />
+      case 'decision':
+        return <DecisionStageCard />
+      default:
+        return null
+    }
+  }
+
   return (
     <section className="py-16 bg-primary-forest/30">
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
             TROUVEZ VOTRE ACCOMPAGNEMENT
@@ -208,33 +237,25 @@ export function TherapyQuestionnaire() {
                 className="space-y-8"
               >
                 <h3 className="text-xl text-primary-cream mb-6">Nos recommandations pour vous</h3>
-                <div className="grid gap-6">
-                  {recommendations.map((option, index) => (
-                    <div
-                      key={option.type}
-                      className="bg-primary-forest rounded-[24px] p-6 space-y-4"
-                    >
-                      <h4 className="text-lg text-primary-cream font-medium">{option.title}</h4>
-                      <p className="text-primary-cream/80">{option.description}</p>
-                      <a
-                        href={`#${option.type}`}
-                        className="inline-block bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md px-6 py-2 text-sm"
-                      >
-                        Voir les détails
-                      </a>
+                <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : 'place-items-center'} gap-8`}>
+                  {recommendations.map((option) => (
+                    <div key={option.type} className="w-full">
+                      {renderCard(option.type)}
                     </div>
                   ))}
                 </div>
-                <button
-                  onClick={() => {
-                    setStep(1)
-                    setAnswers({ situation: '', need: '' })
-                    setRecommendations([])
-                  }}
-                  className="text-primary-coral hover:text-primary-rust transition-colors mt-6"
-                >
-                  Recommencer le questionnaire
-                </button>
+                <div className="text-center">
+                  <button
+                    onClick={() => {
+                      setStep(1)
+                      setAnswers({ situation: '', need: '' })
+                      setRecommendations([])
+                    }}
+                    className="text-primary-coral hover:text-primary-rust transition-colors mt-6"
+                  >
+                    Recommencer le questionnaire
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
