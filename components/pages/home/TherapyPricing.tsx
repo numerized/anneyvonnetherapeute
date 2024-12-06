@@ -3,6 +3,7 @@
 import { MessageSquare, BookOpen, Calendar, Heart, Users } from 'lucide-react'
 import { Benefit } from './Benefit'
 import { useState } from 'react'
+import { PromoModal } from '@/components/global/PromoModal'
 
 interface TherapyPricingProps {
   className?: string
@@ -12,20 +13,21 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
   const [showPromoModal, setShowPromoModal] = useState(false)
 
   return (
-    <section className={`py-16 ${className}`}>
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
-            THÉRAPIE DE COUPLE
+    <>
+      <section className={`py-16 ${className}`}>
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
+              THÉRAPIE DE COUPLE
+            </div>
+            <h2 className="text-3xl md:text-4xl font-light mb-4">
+              Transformez Votre Relation
+            </h2>
+            <p className="text-gray-400">
+              Une approche holistique pour une harmonie durable
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-light mb-4">
-            Transformez Votre Relation
-          </h2>
-          <p className="text-gray-400">
-            Une approche holistique pour une harmonie durable
-          </p>
-        </div>
 
           {/* Pricing Card */}
           <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8 max-w-3xl mx-auto">
@@ -112,9 +114,15 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
               >
                 En savoir plus
               </button>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <PromoModal 
+        isOpen={showPromoModal}
+        onClose={() => setShowPromoModal(false)}
+      />
+    </>
   )
 }
