@@ -4,6 +4,7 @@ import { Header } from '@/components/shared/Header'
 import { Stats } from '@/components/shared/Stats'
 import type { HomePagePayload } from '@/types'
 import { Hero } from './Hero'
+import { TherapyPricing } from './TherapyPricing'
 
 export interface HomePageProps {
   data: HomePagePayload | null
@@ -32,8 +33,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
         </div>
       )}
 
+      <TherapyPricing className="mt-20" />
+
       <div className="max-w-7xl mx-auto px-6 space-y-20">
-        {/* Header */}
         {title && !hero && <Header centered title={title} description={overview} />}
       </div>
     </>
