@@ -74,10 +74,55 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                 </p>
               </li>
             </ul>
+          </div>
 
-            <p className="text-xl text-primary-cream mt-8">
-              Vous êtes prêt(e) à investir dans votre bonheur et à créer une vie amoureuse qui reflète vraiment vos valeurs et vos désirs profonds.
-            </p>
+          <div className="mb-8">
+            <br/>
+            <h4 className="text-2xl text-primary-coral mb-4">Points Clés</h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4 text-primary-cream/90">
+                Processus complet sur 6 mois
+              </div>
+              <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4 text-primary-cream/90">
+                Support continu WhatsApp
+              </div>
+              <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4 text-primary-cream/90">
+                Ressources exclusives
+              </div>
+              <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4 text-primary-cream/90">
+                Accompagnement personnalisé
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-2xl text-primary-coral mb-4">Déroulement</h4>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
+                  1
+                </div>
+                <p className="text-primary-cream/90 text-lg">Évaluation initiale approfondie</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
+                  2
+                </div>
+                <p className="text-primary-cream/90 text-lg">Séances alternées couple/individuel</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
+                  3
+                </div>
+                <p className="text-primary-cream/90 text-lg">Bilans réguliers</p>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
+                  4
+                </div>
+                <p className="text-primary-cream/90 text-lg">Suivi et ajustements continus</p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-12 text-center">
