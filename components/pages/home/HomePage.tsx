@@ -29,7 +29,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   return (
     <>
       <main 
-        className="relative h-screen px-6"
+        className="relative h-screen"
         id="accueil"
         role="main"
         aria-labelledby="hero-title"
@@ -48,22 +48,9 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
               width={1920}
               height={1080}
             />
-          ) : (
-            <div className="w-full h-full bg-primary-dark">
-              {/* Debug info for when image is not showing */}
-              <div className="p-4 text-white">
-                <p>Debug: Image not showing</p>
-                <p>Hero exists: {hero ? 'Yes' : 'No'}</p>
-                <p>Image exists: {hero?.image ? 'Yes' : 'No'}</p>
-                <p>Asset exists: {hero?.image?.asset ? 'Yes' : 'No'}</p>
-                <p>Asset ref: {hero?.image?.asset?._ref || 'None'}</p>
-                <p>Full image data: {JSON.stringify(hero?.image, null, 2)}</p>
-              </div>
-            </div>
-          )}
+          ) : null}
         </div>
-        
-        <div className="max-w-7xl mx-auto relative z-20 h-full flex items-center">
+        <div className="max-w-7xl mx-auto px-6 relative z-20 h-full flex flex-col justify-center">
           <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 w-full md:ml-[4rem] lg:ml-[6rem] md:mr-auto">
             {hero?.badge && (
               <div 
@@ -98,16 +85,18 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
 
       {/* Stats Section */}
       {statistics && statistics.length > 0 && (
-        <Stats 
-          title="Une approche unique de la thérapie relationnelle"
-          items={statistics.map(stat => ({
-            value: stat.number,
-            label: stat.label
-          }))}
-        />
+        <div className="max-w-7xl mx-auto px-6">
+          <Stats 
+            title="Une approche unique de la thérapie relationnelle"
+            items={statistics.map(stat => ({
+              value: stat.number,
+              label: stat.label
+            }))}
+          />
+        </div>
       )}
 
-      <div className="space-y-20">
+      <div className="max-w-7xl mx-auto px-6 space-y-20">
         {/* Header */}
         {title && !hero && <Header centered title={title} description={overview} />}
       </div>

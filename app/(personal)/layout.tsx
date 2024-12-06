@@ -50,13 +50,13 @@ export default async function IndexRoute({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-black">
+    <div className="flex min-h-screen flex-col bg-primary-dark text-primary-cream">
       {draftMode().isEnabled && <LiveVisualEditing />}
       <NotificationBanner message="🎉 Bienvenue sur le nouveau site d'AnneYvonne - Thérapeute relationnelle" />
       <Suspense>
         <Navbar />
       </Suspense>
-      <div>
+      <div className="flex-grow">
         <Suspense>{children}</Suspense>
       </div>
       <Suspense>
