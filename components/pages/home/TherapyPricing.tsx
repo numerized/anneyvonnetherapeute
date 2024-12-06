@@ -16,7 +16,7 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-2xl text-sm mb-4">
+          <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
             THÉRAPIE DE COUPLE
           </div>
           <h2 className="text-3xl md:text-4xl font-light mb-4">
