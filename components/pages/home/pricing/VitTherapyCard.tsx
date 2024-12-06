@@ -5,7 +5,7 @@ import { BookOpen, Calendar,MessageSquare } from 'lucide-react'
 import { Benefit } from '../Benefit'
 
 interface VitTherapyCardProps {
-  onShowPromo: () => void
+  onShowPromo: (modalType: string) => void
 }
 
 export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
@@ -86,7 +86,7 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
         </div>
 
         <button
-          onClick={onShowPromo}
+          onClick={() => onShowPromo('vit')}
           className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
         >
           En savoir plus
