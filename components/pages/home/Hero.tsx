@@ -17,6 +17,13 @@ export function Hero({ hero }: HeroProps) {
     }
   }
 
+  const scrollToQuestionnaire = () => {
+    const questionnaireSection = document.getElementById('questionnaire');
+    if (questionnaireSection) {
+      questionnaireSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section 
       className="relative min-h-[80vh] grid place-items-center"
@@ -75,6 +82,7 @@ export function Hero({ hero }: HeroProps) {
                   <button 
                     className="bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-8 py-3 rounded-[24px] font-bold mt-8"
                     aria-label={hero.ctaButton.ariaLabel}
+                    onClick={scrollToQuestionnaire}
                   >
                     {hero.ctaButton.text}
                   </button>

@@ -133,7 +133,12 @@ export function TherapyQuestionnaire() {
 
   return (
     <>
-      <section id="questionnaire" ref={questionnaireRef} className="py-16 bg-primary-forest/30">
+      <section 
+        ref={questionnaireRef}
+        id="questionnaire"
+        className="py-16 bg-primary-forest/30"
+        aria-labelledby="questionnaire-title"
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
             <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
