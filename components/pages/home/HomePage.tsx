@@ -6,6 +6,7 @@ import type { HomePagePayload } from '@/types'
 import { Hero } from './Hero'
 import { TherapyPricing } from './TherapyPricing'
 import { ProfessionalTraining } from './ProfessionalTraining'
+import { RelationshipStages } from './RelationshipStages'
 
 export interface HomePageProps {
   data: HomePagePayload | null
@@ -35,6 +36,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
       )}
 
       <TherapyPricing className="mt-20" />
+      <RelationshipStages className="bg-primary-dark" />
       <ProfessionalTraining />
 
       <div className="max-w-7xl mx-auto px-6 space-y-20">
