@@ -5,6 +5,7 @@ import { Stats } from '@/components/shared/Stats'
 import type { HomePagePayload } from '@/types'
 import { Hero } from './Hero'
 import { TherapyPricing } from './TherapyPricing'
+import { ProfessionalTraining } from './ProfessionalTraining'
 
 export interface HomePageProps {
   data: HomePagePayload | null
@@ -34,6 +35,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
       )}
 
       <TherapyPricing className="mt-20" />
+      <ProfessionalTraining />
 
       <div className="max-w-7xl mx-auto px-6 space-y-20">
         {title && !hero && <Header centered title={title} description={overview} />}
