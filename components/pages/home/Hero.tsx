@@ -2,6 +2,7 @@
 
 import { urlFor } from '@/sanity/lib/image'
 import type { HomePagePayload } from '@/types'
+import { scrollToSection } from '@/utils/scroll'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -18,10 +19,7 @@ export function Hero({ hero }: HeroProps) {
   }
 
   const scrollToQuestionnaire = () => {
-    const questionnaireSection = document.getElementById('questionnaire');
-    if (questionnaireSection) {
-      questionnaireSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSection('questionnaire');
   };
 
   return (

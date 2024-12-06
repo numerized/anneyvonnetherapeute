@@ -9,6 +9,7 @@ import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
 import { TherapyPromoModal } from './modals/TherapyPromoModal'
+import { scrollToSection } from '@/utils/scroll'
 
 type TherapyOption = {
   title: string
@@ -104,7 +105,7 @@ export function TherapyQuestionnaire() {
     setStep(1)
     setAnswers({ situation: '', need: '' })
     setRecommendations([])
-    questionnaireRef.current?.scrollIntoView({ behavior: 'smooth' })
+    scrollToSection('questionnaire')
   }
 
   const handleShowPromo = (type: TherapyOption['type']) => {
