@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { resolveHref } from '@/sanity/lib/utils'
 import { scrollToSection } from '@/utils/scroll'
+import Link from 'next/link'
 
 interface NavLinksProps {
   menuItems: any[]

@@ -34,7 +34,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
 
           <div className="space-y-6 text-primary-cream/90">
             <p className="text-xl mb-6">
-              Si vous êtes ici, c'est probablement parce que vous cherchez à :
+              Si vous êtes ici, c&apos;est probablement parce que vous cherchez à :
             </p>
 
             <ul className="space-y-4">
@@ -56,7 +56,7 @@ export function PromoModal({ isOpen, onClose }: PromoModalProps) {
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
                   <strong className="text-primary-coral">Créer une relation plus consciente et épanouissante :</strong>{" "}
-                  Passer d'une dynamique conflictuelle ou insatisfaisante à une relation harmonieuse et alignée sur vos aspirations.
+                  Passer d&apos;une dynamique conflictuelle ou insatisfaisante à une relation harmonieuse et alignée sur vos aspirations.
                 </p>
               </li>
               <li className="flex items-start gap-3">

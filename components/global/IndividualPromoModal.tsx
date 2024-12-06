@@ -118,13 +118,17 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
                   1
                 </div>
-                <p className="text-primary-cream/90 text-lg">Identification du thème en ligne</p>
+                <p className="text-lg mb-6">
+                  &quot;Découvrez l&apos;accompagnement individuel, un espace privilégié où vous pourrez explorer vos questionnements, vos défis et vos aspirations dans un cadre bienveillant et confidentiel. C&apos;est l&apos;occasion de vous reconnecter à vous-même et d&apos;avancer vers l&apos;épanouissement que vous méritez.&quot;
+                </p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
                   2
                 </div>
-                <p className="text-primary-cream/90 text-lg">Séance gratuite de découverte</p>
+                <p className="text-lg mb-6">
+                  Durée : 1h30 - Prix : 150€
+                </p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">

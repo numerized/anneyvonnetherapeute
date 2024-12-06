@@ -1,8 +1,10 @@
-import './globals.css'
-
+import { getSettings } from '@/sanity/lib/client'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import type { Metadata } from 'next'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
+
+import './globals.css'
 
 const serif = PT_Serif({
   variable: '--font-serif',
