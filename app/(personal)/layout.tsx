@@ -8,6 +8,7 @@ import { Suspense } from 'react'
 
 import { Footer } from '@/components/global/Footer'
 import { Navbar } from '@/components/global/Navbar'
+import NotificationBanner from '@/components/global/NotificationBanner/NotificationBanner'
 // import IntroTemplate from '@/intro-template'
 import { urlForOpenGraphImage } from '@/sanity/lib/utils'
 import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
@@ -49,19 +50,18 @@ export default async function IndexRoute({
   children: React.ReactNode
 }) {
   return (
-    <>
-      <div className="flex min-h-screen flex-col bg-white text-black">
-        <Suspense>
-          <Navbar />
-        </Suspense>
-        <div>
-          <Suspense>{children}</Suspense>
-        </div>
-        <Suspense>
-          <Footer />
-        </Suspense>
-      </div>
+    <div className="flex min-h-screen flex-col bg-white text-black">
       {draftMode().isEnabled && <LiveVisualEditing />}
-    </>
+      <NotificationBanner message="🎉 Bienvenue sur le nouveau site d'AnneYvonne - Thérapeute relationnelle" />
+      <Suspense>
+        <Navbar />
+      </Suspense>
+      <div>
+        <Suspense>{children}</Suspense>
+      </div>
+      <Suspense>
+        <Footer />
+      </Suspense>
+    </div>
   )
 }

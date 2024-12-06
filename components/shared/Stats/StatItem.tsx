@@ -3,7 +3,7 @@ import { StatItemProps } from './types'
 export function StatItem({ value, label }: StatItemProps) {
   return (
     <div 
-      className="text-center"
+      className="text-center bg-primary-forest/30 p-6 rounded-2xl"
       role="listitem"
     >
       <div 
