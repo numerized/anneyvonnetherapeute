@@ -5,6 +5,7 @@ import { Stats } from '@/components/shared/Stats'
 import type { HomePagePayload } from '@/types'
 import { Hero } from './Hero'
 import { TherapyPricing } from './TherapyPricing'
+import { TherapyQuestionnaire } from './TherapyQuestionnaire'
 import { ProfessionalTraining } from './ProfessionalTraining'
 import { RelationshipStages } from './RelationshipStages'
 
@@ -36,6 +37,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
       )}
 
       <TherapyPricing className="mt-20" />
+      <TherapyQuestionnaire />
       <RelationshipStages className="bg-primary-dark" />
       <ProfessionalTraining />
 
