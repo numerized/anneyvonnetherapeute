@@ -1,3 +1,5 @@
+'use client'
+
 import { urlFor } from '@/sanity/lib/image'
 import type { HomePagePayload } from '@/types'
 
@@ -38,38 +40,60 @@ export function Hero({ hero }: HeroProps) {
           />
         )}
       </div>
-      <div className="max-w-7xl mx-auto px-6 relative z-20 h-full flex flex-col justify-center">
-        <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 w-full md:ml-[4rem] lg:ml-[6rem] md:mr-auto">
-          {hero?.badge && (
-            <div 
-              className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4"
-              role="presentation"
-              aria-label={hero.badge.ariaLabel}
-            >
-              {hero.badge.text}
+
+      <div className="relative z-20 h-full">
+        <div className="max-w-7xl mx-auto h-full px-4 md:px-6">
+          <div className="flex flex-col md:flex-row items-center h-full gap-8 py-20">
+            {/* Left side - Text Content */}
+            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem] flex flex-col justify-center">
+              {hero?.badge && (
+                <div className="flex">
+                  <div 
+                    className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4"
+                    role="presentation"
+                    aria-label={hero.badge.ariaLabel}
+                  >
+                    {hero.badge.text}
+                  </div>
+                </div>
+              )}
+              {hero?.title && (
+                <h1 
+                  id="hero-title"
+                  className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-light mb-6"
+                >
+                  {hero.title}
+                </h1>
+              )}
+              {hero?.subtitle && (
+                <p className="text-xl text-primary-cream/80 mb-8">
+                  {hero.subtitle}
+                </p>
+              )}
+              {hero?.ctaButton && (
+                <div className="flex">
+                  <button 
+                    className="bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-8 py-3 rounded-[24px] font-bold mt-8"
+                    aria-label={hero.ctaButton.ariaLabel}
+                  >
+                    {hero.ctaButton.text}
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-          {hero?.title && (
-            <h1 
-              id="hero-title"
-              className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-light mb-6"
-            >
-              {hero.title}
-            </h1>
-          )}
-          {hero?.subtitle && (
-            <p className="text-xl text-primary-cream/80 mb-8">
-              {hero.subtitle}
-            </p>
-          )}
-          {hero?.ctaButton && (
-            <button 
-              className="inline-block bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-8 py-3 rounded-[24px] font-bold mt-8"
-              aria-label={hero.ctaButton.ariaLabel}
-            >
-              {hero.ctaButton.text}
-            </button>
-          )}
+
+            {/* Right side - Video */}
+            <div className="w-full md:w-[400px] relative">
+              <div className="aspect-[9/16] relative">
+                <video
+                  className="absolute inset-0 w-full h-full object-cover rounded-[24px] shadow-2xl"
+                  controls
+                  playsInline
+                  src="/videos/VIDEO_1ERE_PAGE_ESSAI.mp4"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
