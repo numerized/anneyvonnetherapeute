@@ -1,6 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
+import Image from 'next/image'
 
 interface IndividualPromoModalProps {
   isOpen: boolean
@@ -119,7 +120,7 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
                   1
                 </div>
                 <p className="text-lg mb-6">
-                  &quot;Découvrez l&apos;accompagnement individuel, un espace privilégié où vous pourrez explorer vos questionnements, vos défis et vos aspirations dans un cadre bienveillant et confidentiel. C&apos;est l&apos;occasion de vous reconnecter à vous-même et d&apos;avancer vers l&apos;épanouissement que vous méritez.&quot;
+                  "Découvrez l'accompagnement individuel, un espace privilégié où vous pourrez explorer vos questionnements, vos défis et vos aspirations dans un cadre bienveillant et confidentiel. C'est l'occasion de vous reconnecter à vous-même et d'avancer vers l'épanouissement que vous méritez."
                 </p>
               </div>
               <div className="flex items-start gap-4">
@@ -143,6 +144,24 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
                 <p className="text-primary-cream/90 text-lg">Suivi personnalisé continu</p>
               </div>
             </div>
+          </div>
+
+          <div className="relative w-full h-[300px] rounded-[24px] overflow-hidden">
+            <Image
+              src="/images/individual-session.webp"
+              alt="Séance individuelle avec Anne-Yvonne"
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          <div className="mt-8">
+            <p className="text-lg">
+              L'accompagnement individuel est une opportunité unique de transformation.
+            </p>
+            <p className="text-lg">
+              "Ensemble, créons l'espace idéal pour votre épanouissement personnel et relationnel."
+            </p>
           </div>
 
           <div className="mt-12 text-center">
