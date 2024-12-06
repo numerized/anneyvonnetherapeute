@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
@@ -55,6 +55,7 @@ export function TherapyQuestionnaire() {
     need: ''
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
+  const questionnaireRef = useRef<HTMLElement>(null)
 
   const getRecommendations = (situation: string, need: string) => {
     let recommended: TherapyOption[] = []
@@ -96,6 +97,13 @@ export function TherapyQuestionnaire() {
     setStep(3)
   }
 
+  const handleRestart = () => {
+    setStep(1)
+    setAnswers({ situation: '', need: '' })
+    setRecommendations([])
+    questionnaireRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   const renderCard = (type: string) => {
     const handleShowPromo = () => {
       // You can implement the modal logic here if needed
@@ -120,7 +128,7 @@ export function TherapyQuestionnaire() {
   }
 
   return (
-    <section className="py-16 bg-primary-forest/30">
+    <section ref={questionnaireRef} className="py-16 bg-primary-forest/30">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
@@ -246,11 +254,7 @@ export function TherapyQuestionnaire() {
                 </div>
                 <div className="text-center">
                   <button
-                    onClick={() => {
-                      setStep(1)
-                      setAnswers({ situation: '', need: '' })
-                      setRecommendations([])
-                    }}
+                    onClick={handleRestart}
                     className="text-primary-coral hover:text-primary-rust transition-colors mt-6"
                   >
                     Recommencer le questionnaire
