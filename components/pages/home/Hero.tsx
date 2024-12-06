@@ -26,7 +26,7 @@ export function Hero({ hero }: HeroProps) {
     >
       <div className="absolute inset-0">
         <div 
-          className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 to-transparent z-10" 
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/85 via-50% to-primary-forest/30 z-10" 
           aria-hidden="true"
         />
         {imageUrl && (
