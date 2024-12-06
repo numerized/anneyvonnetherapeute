@@ -197,6 +197,12 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
                     description="Support continu pendant toute la durée du processus"
                   />
                 </div>
+                <button
+                  onClick={() => setShowPromoModal(true)}
+                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
+                >
+                  En savoir plus
+                </button>
               </div>
             </div>
           </div>
