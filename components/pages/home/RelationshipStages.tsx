@@ -1,5 +1,8 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
+import Image from 'next/image'
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
 import { Benefit } from './Benefit'
 
@@ -30,7 +33,9 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                 <h3 className="text-2xl text-primary-cream font-light mb-2">
                   COACHING DE DÉBUT DE RELATION
                 </h3>
-                <p className="text-primary-coral italic">Les premiers mois « clés » de votre avenir</p>
+                <p className="text-lg mb-4">
+                  L&apos;amour commence par soi. Explorez vos schémas relationnels.
+                </p>
               </div>
 
               <div className="space-y-6">
@@ -82,7 +87,9 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                 <h3 className="text-2xl text-primary-cream font-light mb-2">
                   CHECK UP RELATIONNEL
                 </h3>
-                <p className="text-primary-coral italic">La relation est vivante, elle évolue</p>
+                <p className="text-lg mb-4">
+                  L&apos;amour s&apos;épanouit dans la conscience. Transformez vos relations.
+                </p>
               </div>
 
               <div className="space-y-6">
@@ -134,7 +141,9 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                 <h3 className="text-2xl text-primary-cream font-light mb-2">
                   RESTER OU PARTIR, COMMENT DECIDER ?
                 </h3>
-                <p className="text-primary-coral italic">Médiation / Coaching pour une décision consciente</p>
+                <p className="text-lg mb-4">
+                  L&apos;amour rayonne naturellement. Vivez des relations authentiques.
+                </p>
               </div>
 
               <div className="space-y-6">
