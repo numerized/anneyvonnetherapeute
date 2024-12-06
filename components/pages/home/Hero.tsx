@@ -42,7 +42,7 @@ export function Hero({ hero }: HeroProps) {
         <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 w-full md:ml-[4rem] lg:ml-[6rem] md:mr-auto">
           {hero?.badge && (
             <div 
-              className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-2xl text-sm mb-4"
+              className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4"
               role="presentation"
               aria-label={hero.badge.ariaLabel}
             >
