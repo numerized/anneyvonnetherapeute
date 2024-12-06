@@ -11,7 +11,7 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
     <section className={`bg-primary-forest py-24 ${className}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <div className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-full text-sm mb-4">
+          <div className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
             POUR LES PROFESSIONNELS
           </div>
           <h2 className="text-4xl text-primary-cream font-light mb-6">
@@ -23,7 +23,7 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="bg-primary-dark/40 rounded-3xl p-8 md:p-12">
+          <div className="bg-primary-dark/40 rounded-[24px] p-8 md:p-12">
             <div className="space-y-8">
               <div className="flex items-start gap-4">
                 <GraduationCap className="text-primary-coral mt-1" size={24} />
@@ -77,11 +77,11 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
             <img
               src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80"
               alt="Professional therapy training session"
-              className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+              className="absolute inset-0 w-full h-full object-cover rounded-[24px]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 to-transparent rounded-3xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 to-transparent rounded-[24px]"></div>
             <div className="absolute bottom-8 left-8 right-8 text-primary-cream">
-              <div className="bg-primary-dark/80 p-6 rounded-xl">
+              <div className="bg-primary-dark/80 p-6 rounded-[24px]">
                 <p className="text-xl mb-4">
                   "Transmettez l'art de la thérapie relationnelle et faites partie du changement."
                 </p>
