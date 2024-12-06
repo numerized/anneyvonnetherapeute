@@ -36,9 +36,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
         </div>
       )}
 
-      <TherapyPricing className="mt-20" />
       <TherapyQuestionnaire />
-      <RelationshipStages className="bg-primary-dark" />
       <ProfessionalTraining />
 
       <div className="max-w-7xl mx-auto px-6 space-y-20">
