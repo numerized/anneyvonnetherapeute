@@ -1,15 +1,17 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence,motion } from 'framer-motion'
+import { useRef,useState } from 'react'
+
+import { scrollToSection } from '@/utils/scroll'
+
+import { TherapyPromoModal } from './modals/TherapyPromoModal'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
-import { TherapyPromoModal } from './modals/TherapyPromoModal'
-import { scrollToSection } from '@/utils/scroll'
 
 type TherapyOption = {
   title: string

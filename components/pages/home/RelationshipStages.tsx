@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import Image from 'next/image'
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
+import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
+
 import { Benefit } from './Benefit'
 
 interface RelationshipStagesProps {

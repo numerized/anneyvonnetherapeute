@@ -1,11 +1,13 @@
 'use client'
 
-import { MessageSquare, BookOpen, Calendar, Heart, Users } from 'lucide-react'
-import { Benefit } from './Benefit'
+import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
 import { useState } from 'react'
-import { PromoModal } from '@/components/global/PromoModal'
+
 import { IndividualPromoModal } from '@/components/global/IndividualPromoModal'
+import { PromoModal } from '@/components/global/PromoModal'
 import { VitPromoModal } from '@/components/global/VitPromoModal'
+
+import { Benefit } from './Benefit'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
