@@ -74,13 +74,16 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
           </div>
 
           <div className="relative h-[600px]">
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/50 via-50% to-primary-forest/20 z-10 rounded-[24px]" 
+              aria-hidden="true"
+            />
             <img
               src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80"
               alt="Professional therapy training session"
               className="absolute inset-0 w-full h-full object-cover rounded-[24px]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 to-transparent rounded-[24px]"></div>
-            <div className="absolute bottom-8 left-8 right-8 text-primary-cream">
+            <div className="absolute bottom-8 left-8 right-8 text-primary-cream z-20">
               <div className="bg-primary-dark/80 p-6 rounded-[24px]">
                 <p className="text-xl mb-4">
                   "Transmettez l'art de la thérapie relationnelle et faites partie du changement."

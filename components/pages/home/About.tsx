@@ -40,12 +40,16 @@ export function About() {
           </div>
 
           <div className="relative">
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/50 via-50% to-primary-forest/20 z-10 rounded-[24px]" 
+              aria-hidden="true"
+            />
             <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BF569E5A-BB37-49F5-8F0E-3B3718B0FFA6_JPG-B94kzMaNooTrt5sM73NidQl2tOp8ke.webp"
+              src="/images/about.webp"
               alt="Espace thérapeutique paisible"
               className="rounded-[24px] w-full h-[600px] object-cover"
-              width="800"
-              height="600"
+              width={800}
+              height={600}
               loading="lazy"
             />
           </div>
