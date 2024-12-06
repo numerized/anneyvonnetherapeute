@@ -6,6 +6,9 @@ import { useState } from 'react'
 import { PromoModal } from '@/components/global/PromoModal'
 import { IndividualPromoModal } from '@/components/global/IndividualPromoModal'
 import { VitPromoModal } from '@/components/global/VitPromoModal'
+import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
+import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { VitTherapyCard } from './pricing/VitTherapyCard'
 
 interface TherapyPricingProps {
   className?: string
@@ -15,6 +18,16 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
   const [showPromoModal, setShowPromoModal] = useState(false)
   const [showIndividualPromoModal, setShowIndividualPromoModal] = useState(false)
   const [showVitPromoModal, setShowVitPromoModal] = useState(false)
+
+  const handleShowPromo = (modalType: string) => {
+    if (modalType === 'promo') {
+      setShowPromoModal(true)
+    } else if (modalType === 'individual') {
+      setShowIndividualPromoModal(true)
+    } else if (modalType === 'vit') {
+      setShowVitPromoModal(true)
+    }
+  }
 
   return (
     <>
@@ -34,259 +47,10 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
           </div>
 
           {/* Pricing Cards Grid */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Couple Therapy Card */}
-            <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
-              <div className="space-y-8">
-                <div className="text-center">
-                  <h3 className="text-2xl text-primary-cream font-light mb-2">
-                    THÉRAPIE RELATIONNELLE DE COUPLE
-                  </h3>
-                  <p className="text-primary-coral italic">De cœur et de corps</p>
-                </div>
-
-                <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
-                  <p className="text-primary-cream/90 italic">
-                    "On ne change pas une relation sans d'abord transformer ceux qui la vivent"
-                  </p>
-                </blockquote>
-
-                <div className="space-y-6">
-                  <h4 className="text-xl text-primary-cream font-light">PROCESSUS COMPLET</h4>
-                  <ul className="list-disc list-inside text-primary-cream/90 space-y-2">
-                    <li>8 séances couple et/ou individuel selon la situation</li>
-                    <li>2 séances de 90 minutes</li>
-                    <li>6 séances de 75 minutes</li>
-                    <li>Bilans et introspections avant et après chaque séance</li>
-                    <li>Parcours à thèmes sur demande</li>
-                  </ul>
-                </div>
-
-                <div className="bg-primary-forest/30 rounded-xl p-6">
-                  <h4 className="text-xl text-primary-cream font-light mb-4">VOTRE THÉRAPIE DE COUPLE</h4>
-                  <div className="space-y-4">
-                    <p className="text-primary-cream/90">
-                      Séances alternées sur 20 - 24 semaines (max. 6 mois)
-                    </p>
-                    <div className="text-primary-coral text-2xl font-bold">
-                      2590 € <span className="text-sm text-primary-cream/70">(ou 3 x 880€ mensuel)</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="space-y-6">
-                    <Benefit
-                      icon={<MessageSquare size={24} />}
-                      title="Support WhatsApp hebdomadaire"
-                      description="Posez une question, recevez une réponse audio personnalisée"
-                    />
-                    <Benefit
-                      icon={<BookOpen size={24} />}
-                      title="Accès à la plateforme"
-                      description="Ressources exclusives et événements en ligne pour soutenir votre transformation"
-                    />
-                    <Benefit
-                      icon={<Calendar size={24} />}
-                      title="Accompagnement intense"
-                      description="Support continu pendant toute la durée du processus"
-                    />
-                    <Benefit
-                      icon={<Heart size={24} />}
-                      title="Investissement dans l'amour"
-                      description="Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !"
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-primary-forest/30 rounded-xl p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="text-primary-coral mt-1">
-                      <Users size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-primary-cream font-bold mb-2">Idéal pour</h4>
-                      <p className="text-primary-cream/90">
-                        Les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setShowPromoModal(true)}
-                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
-                >
-                  En savoir plus
-                </button>
-              </div>
-            </div>
-
-            {/* Individual Therapy Card */}
-            <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
-              <div className="space-y-8">
-                <div className="text-center">
-                  <h3 className="text-2xl text-primary-cream font-light mb-2">
-                    THÉRAPIE RELATIONNELLE INDIVIDUELLE
-                  </h3>
-                  <p className="text-primary-coral italic">Accords à corps</p>
-                </div>
-
-                <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
-                  <p className="text-primary-cream/90 italic">
-                    "Changer sa vie, c'est d'abord se reconnecter à son corps et à soi."
-                  </p>
-                </blockquote>
-
-                <div className="space-y-6">
-                  <h4 className="text-xl text-primary-cream font-light">FORFAIT INDIVIDUEL</h4>
-                  <ul className="list-disc list-inside text-primary-cream/90 space-y-2">
-                    <li>Définissez votre thème thérapeutique en ligne</li>
-                    <li>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</li>
-                  </ul>
-                </div>
-
-                <div className="space-y-4">
-                  {/* COMPACT Package */}
-                  <div className="bg-primary-forest/30 rounded-xl p-6">
-                    <h4 className="text-xl text-primary-cream font-light mb-2">COMPACT</h4>
-                    <ul className="text-primary-cream/90 space-y-2 mb-4">
-                      <li>2 séances par mois</li>
-                      <li>3 MOIS - 12 x 75 min</li>
-                    </ul>
-                    <div className="text-primary-coral text-2xl font-bold">
-                      2850 € <span className="text-sm text-primary-cream/70">(3 x 950€)</span>
-                    </div>
-                  </div>
-
-                  {/* RELAX Package */}
-                  <div className="bg-primary-forest/30 rounded-xl p-6">
-                    <h4 className="text-xl text-primary-cream font-light mb-2">RELAX</h4>
-                    <ul className="text-primary-cream/90 space-y-2 mb-4">
-                      <li>1 séance par mois</li>
-                      <li>6 MOIS - 12 x 75 min</li>
-                    </ul>
-                    <div className="text-primary-coral text-2xl font-bold">
-                      2850 € <span className="text-sm text-primary-cream/70">(3 x 950€)</span>
-                    </div>
-                  </div>
-
-                  {/* MINI Package */}
-                  <div className="bg-primary-forest/30 rounded-xl p-6">
-                    <h4 className="text-xl text-primary-cream font-light mb-2">MINI</h4>
-                    <ul className="text-primary-cream/90 space-y-2 mb-4">
-                      <li>1 séance par semaine</li>
-                      <li>1 MOIS - 4 x 75 min</li>
-                    </ul>
-                    <div className="text-primary-coral text-2xl font-bold">
-                      950 €
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <Benefit
-                    icon={<MessageSquare size={24} />}
-                    title="Support WhatsApp hebdomadaire"
-                    description="Posez une question, recevez une réponse audio personnalisée"
-                  />
-                  <Benefit
-                    icon={<BookOpen size={24} />}
-                    title="Accès à la plateforme"
-                    description="Ressources exclusives et événements en ligne pour soutenir votre transformation"
-                  />
-                  <Benefit
-                    icon={<Calendar size={24} />}
-                    title="Accompagnement personnalisé"
-                    description="Support continu pendant toute la durée du processus"
-                  />
-                </div>
-                <button
-                  onClick={() => setShowIndividualPromoModal(true)}
-                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
-                >
-                  En savoir plus
-                </button>
-              </div>
-            </div>
-
-            {/* VIT Package Card */}
-            <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
-              <div className="space-y-8">
-                <div className="text-center">
-                  <h3 className="text-2xl text-primary-cream font-light mb-2">
-                    FORFAIT INDIVIDUEL VIT
-                  </h3>
-                  <p className="text-primary-coral italic">Forfait Privilège</p>
-                </div>
-
-                <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
-                  <p className="text-primary-cream/90 italic">
-                    "Thérapie sur-mesure"
-                  </p>
-                </blockquote>
-
-                <div className="space-y-6">
-                  <p className="text-primary-cream/90">
-                    Offrez-vous un accompagnement unique, totalement personnalisé et flexible, selon vos besoins spécifiques et à votre rythme.
-                  </p>
-                  <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
-                    <p className="text-primary-cream/90 mb-2">
-                      <strong>VOUS ÊTES PRIORITAIRES, MA DISPONIBILITÉ</strong>
-                    </p>
-                    <p className="text-sm text-primary-cream/70">
-                      (je ne prends que 3 forfaits VIT à la fois)
-                    </p>
-                    <div className="mt-4 flex gap-2">
-                      <span className="bg-primary-rust px-3 py-1 rounded-full text-sm">1 COMPLET</span>
-                      <span className="bg-primary-rust px-3 py-1 rounded-full text-sm">2 COMPLET</span>
-                      <span className="bg-primary-teal px-3 py-1 rounded-full text-sm">3 OUVERT</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-xl text-primary-cream font-light mb-2">TARIFS</h4>
-                  <div className="bg-primary-forest/30 rounded-xl p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <span>5 SÉANCES</span>
-                      <span className="text-primary-coral text-2xl font-bold">1200 €</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>10 SÉANCES</span>
-                      <span className="text-primary-coral text-2xl font-bold">2100 €</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="space-y-6">
-                    <Benefit
-                      icon={<MessageSquare size={24} />}
-                      title="SMS illimités"
-                      description="Réponse audio sous 24h"
-                    />
-                    <Benefit
-                      icon={<BookOpen size={24} />}
-                      title="Accès ressources illimité"
-                      description="Contenus audio et vidéo CAC"
-                    />
-                    <Benefit
-                      icon={<Calendar size={24} />}
-                      title="Flexibilité totale"
-                      description="Report et annulation selon vos besoins"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setShowVitPromoModal(true)}
-                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
-                >
-                  En savoir plus
-                </button>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <CoupleTherapyCard onShowPromo={handleShowPromo} />
+            <IndividualTherapyCard onShowPromo={handleShowPromo} />
+            <VitTherapyCard onShowPromo={handleShowPromo} />
           </div>
         </div>
       </section>
