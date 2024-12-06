@@ -53,7 +53,7 @@ export default function Footer(props: FooterProps) {
 
           {/* Column 2 - Newsletter */}
           <div>
-            <div className="bg-primary-forest/30 rounded-xl p-6">
+            <div className="bg-primary-forest/30 rounded-[24px] p-6">
               <h3 className="text-primary-cream text-xl mb-4">{newsletter.title}</h3>
               <p className="text-primary-cream/80 mb-4">
                 {newsletter.description}
