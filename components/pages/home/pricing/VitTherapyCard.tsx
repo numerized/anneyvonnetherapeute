@@ -32,13 +32,20 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
             <p className="text-primary-cream/90 mb-2">
               <strong>VOUS ÊTES PRIORITAIRES, MA DISPONIBILITÉ</strong>
             </p>
-            <p className="text-sm text-primary-cream/70">
-              (je ne prends que 3 forfaits VIT à la fois)
-            </p>
-            <div className="mt-4 flex gap-2">
-              <span className="bg-primary-rust px-3 py-1 rounded-full text-sm">1 COMPLET</span>
-              <span className="bg-primary-rust px-3 py-1 rounded-full text-sm">2 COMPLET</span>
-              <span className="bg-primary-teal px-3 py-1 rounded-full text-sm">3 OUVERT</span>
+
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="flex items-center justify-center gap-2 bg-primary-rust rounded-[24px] p-3">
+                <Calendar size={20} className="text-primary-cream" />
+                <span className="text-primary-cream">1 COMPLET</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 bg-primary-rust rounded-[24px] p-3">
+                <Calendar size={20} className="text-primary-cream" />
+                <span className="text-primary-cream">2 COMPLET</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 bg-primary-teal rounded-[24px] p-3">
+                <Calendar size={20} className="text-primary-cream" />
+                <span className="text-primary-cream">3 OUVERT</span>
+              </div>
             </div>
           </div>
         </div>
