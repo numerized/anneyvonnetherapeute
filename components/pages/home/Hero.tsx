@@ -19,7 +19,7 @@ export function Hero({ hero }: HeroProps) {
 
   return (
     <section 
-      className="relative h-screen"
+      className="relative min-h-[80vh] grid place-items-center"
       id="accueil"
       role="main"
       aria-labelledby="hero-title"
@@ -41,11 +41,11 @@ export function Hero({ hero }: HeroProps) {
         )}
       </div>
 
-      <div className="relative z-20 h-full">
-        <div className="max-w-7xl mx-auto h-full px-4 md:px-6">
-          <div className="flex flex-col md:flex-row items-center h-full gap-8 py-20">
+      <div className="relative z-20 w-full">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             {/* Left side - Text Content */}
-            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem] flex flex-col justify-center">
+            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem]">
               {hero?.badge && (
                 <div className="flex">
                   <div 
