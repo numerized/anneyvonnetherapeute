@@ -5,7 +5,7 @@ import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
 import { Benefit } from '../Benefit'
 
 interface CoupleTherapyCardProps {
-  onShowPromo: () => void
+  onShowPromo: (modalType: string) => void
 }
 
 export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
@@ -88,7 +88,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
         </div>
 
         <button
-          onClick={onShowPromo}
+          onClick={() => onShowPromo('couple-therapy')}
           className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
         >
           En savoir plus

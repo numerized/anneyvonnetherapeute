@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { getSettings } from '@/sanity/lib/client'
 
 import './globals.css'
 
