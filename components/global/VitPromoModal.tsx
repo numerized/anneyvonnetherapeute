@@ -118,7 +118,9 @@ export function VitPromoModal({ isOpen, onClose }: VitPromoModalProps) {
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
                   1
                 </div>
-                <p className="text-primary-cream/90 text-lg">Accès aux ressources audios et vidéo CAC (ILLIMITÉ)</p>
+                <p className="text-lg mb-6">
+                  &quot;Vivez une expérience transformative unique lors d&apos;une immersion thérapeutique à Ibiza. Dans ce cadre enchanteur, nous explorerons ensemble vos schémas relationnels et émotionnels pour vous permettre de vous reconnecter profondément à vous-même.&quot;
+                </p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">

@@ -11,7 +11,7 @@ export function About() {
             id="about-title"
             className="text-primary-cream text-4xl md:text-5xl font-light mb-3"
           >
-            UNE VIE EN QUÊTE D'AMOUR PUR
+            UNE VIE EN QUÊTE D&apos;AMOUR PUR
           </h2>
         </div>
 
@@ -19,19 +19,19 @@ export function About() {
           <div className="bg-primary-forest/80 rounded-[24px] p-8 md:p-12">
             <div className="space-y-6">
               <p className="text-primary-cream/90">
-                Depuis toujours, je suis habitée par le besoin de comprendre et d'explorer la profondeur des relations humaines. Ma quête d'amour pur a façonné mon approche unique en thérapie relationnelle.
+                Depuis toujours, je suis habitée par le besoin de comprendre et d&apos;explorer la profondeur des relations humaines. Ma quête d&apos;amour pur a façonné mon approche unique en thérapie relationnelle.
               </p>
               
               <p className="text-primary-cream/90">
-                Forte d'un parcours diversifié et de vingt ans d'expérience, j'ai développé une méthode holistique qui unit corps, cœur et esprit.
+                Forte d&apos;un parcours diversifié et de vingt ans d&apos;expérience, j&apos;ai développé une méthode holistique qui unit corps, cœur et esprit.
               </p>
               
               <p className="text-primary-cream/90">
-                Je crois que l'épanouissement est notre état naturel. Mon travail vise à libérer chacun de ses schémas limitants, ouvrant la voie à des relations authentiques. De séances personnalisées aux immersions thérapeutiques à Ibiza, j'accompagne mes clients vers une reconnexion profonde avec eux-mêmes et les autres.
+                Je crois que l&apos;épanouissement est notre état naturel. Mon travail vise à libérer chacun de ses schémas limitants, ouvrant la voie à des relations authentiques. De séances personnalisées aux immersions thérapeutiques à Ibiza, j&apos;accompagne mes clients vers une reconnexion profonde avec eux-mêmes et les autres.
               </p>
               
               <p className="text-primary-cream/90">
-                Ma démarche singulière vous guide vers une vie en harmonie avec vos désirs profonds, transformant vos relations et votre rapport à l'amour.
+                Ma démarche singulière vous guide vers une vie en harmonie avec vos désirs profonds, transformant vos relations et votre rapport à l&apos;amour.
               </p>
             </div>
             <div className="text-right mt-8">
