@@ -2,6 +2,7 @@
 
 import { urlFor } from '@/sanity/lib/image'
 import type { HomePagePayload } from '@/types'
+import { scrollToSection } from '@/utils/scroll'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -17,6 +18,10 @@ export function Hero({ hero }: HeroProps) {
     }
   }
 
+  const scrollToQuestionnaire = () => {
+    scrollToSection('questionnaire');
+  };
+
   return (
     <section 
       className="relative min-h-[80vh] grid place-items-center"
@@ -26,7 +31,7 @@ export function Hero({ hero }: HeroProps) {
     >
       <div className="absolute inset-0">
         <div 
-          className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 to-transparent z-10" 
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/85 via-50% to-primary-forest/30 z-10" 
           aria-hidden="true"
         />
         {imageUrl && (
@@ -75,6 +80,7 @@ export function Hero({ hero }: HeroProps) {
                   <button 
                     className="bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-8 py-3 rounded-[24px] font-bold mt-8"
                     aria-label={hero.ctaButton.ariaLabel}
+                    onClick={scrollToQuestionnaire}
                   >
                     {hero.ctaButton.text}
                   </button>
@@ -85,12 +91,16 @@ export function Hero({ hero }: HeroProps) {
             {/* Right side - Video */}
             <div className="w-full md:w-[400px] relative">
               <div className="aspect-[9/16] relative">
-                <video
-                  className="absolute inset-0 w-full h-full object-cover rounded-[24px] shadow-2xl"
-                  controls
-                  playsInline
-                  src="/videos/VIDEO_1ERE_PAGE_ESSAI.mp4"
-                />
+                <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px]">
+                  <div className="absolute inset-[12px]">
+                    <video
+                      className="w-full h-full object-cover rounded-[24px] shadow-2xl"
+                      controls
+                      playsInline
+                      src="/videos/VIDEO_1ERE_PAGE_ESSAI.mp4"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

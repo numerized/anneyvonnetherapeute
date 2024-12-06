@@ -1,8 +1,9 @@
-import './globals.css'
-
+import type { Metadata } from 'next'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+
+import './globals.css'
 
 const serif = PT_Serif({
   variable: '--font-serif',

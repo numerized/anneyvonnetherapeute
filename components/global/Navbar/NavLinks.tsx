@@ -1,13 +1,21 @@
 import Link from 'next/link'
+
 import { resolveHref } from '@/sanity/lib/utils'
+import { scrollToSection } from '@/utils/scroll'
 
 interface NavLinksProps {
   menuItems: any[]
-  setIsMenuOpen: (value: boolean) => void
-  setShowAppointmentModal: (value: boolean) => void
+  setIsMenuOpen: (isOpen: boolean) => void
+  setShowAppointmentModal: (show: boolean) => void
 }
 
 export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: NavLinksProps) {
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchor: string) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    scrollToSection(anchor);
+  };
+
   return (
     <>
       {menuItems?.map((menuItem, key) => {
@@ -36,13 +44,7 @@ export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: 
               key={key}
               className="text-lg hover:text-primary-teal transition-colors"
               href={`#${menuItem.anchor}`}
-              onClick={(e) => {
-                e.preventDefault()
-                setIsMenuOpen(false)
-                document.getElementById(menuItem.anchor!)?.scrollIntoView({
-                  behavior: 'smooth'
-                })
-              }}
+              onClick={(e) => handleAnchorClick(e, menuItem.anchor!)}
             >
               {menuItem.title}
             </a>

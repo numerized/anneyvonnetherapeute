@@ -41,11 +41,11 @@ export function Hero({ hero }: HeroProps) {
       <div className="max-w-7xl mx-auto px-6 relative z-20 h-full flex flex-col justify-center">
         <div className="max-w-prose mx-auto px-4 sm:px-6 lg:px-8 w-full md:ml-[4rem] lg:ml-[6rem] md:mr-auto">
           {hero?.badge && (
-            <div 
-              className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-2xl text-sm mb-4"
+            <div
+              className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4"
               role="presentation"
             >
-              {hero.badge}
+              {hero.badge.text}
             </div>
           )}
           {hero?.title && (
@@ -56,9 +56,9 @@ export function Hero({ hero }: HeroProps) {
               {hero.title}
             </h1>
           )}
-          {hero?.description && (
+          {hero?.subtitle && (
             <p className="text-xl text-primary-cream/80 mb-8">
-              {hero.description}
+              {hero.subtitle}
             </p>
           )}
           {hero?.ctaButton && (

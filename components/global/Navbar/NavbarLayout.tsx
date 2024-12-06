@@ -1,12 +1,15 @@
 'use client'
 
 import { Menu, X } from 'lucide-react'
-import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect,useState } from 'react'
+import { HiMenu, HiX } from 'react-icons/hi'
 
-import type { SettingsPayload } from '@/types'
 import { urlFor } from '@/sanity/lib/image'
+import { resolveHref } from '@/sanity/lib/utils'
+import { SettingsPayload } from '@/types'
+
 import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
 interface NavbarProps {
