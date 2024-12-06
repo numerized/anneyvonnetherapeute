@@ -73,7 +73,7 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
             )}
             {hero?.ctaButton && (
               <button 
-                className="bg-primary-coral text-primary-cream px-8 py-3 rounded-md hover:bg-primary-rust transition-colors font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
+              className="inline-block bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-8 py-3 rounded-[24px] font-bold mt-8"
                 aria-label={hero.ctaButton.ariaLabel}
               >
                 {hero.ctaButton.text}
