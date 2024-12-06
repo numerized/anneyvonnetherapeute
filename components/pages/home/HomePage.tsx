@@ -18,13 +18,13 @@ export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   const { overview = [], title = '', hero, statistics = [] } = data ?? {}
 
   // Debug logs for all data
-  console.log('Full data:', {
-    data,
-    hero,
-    image: hero?.image,
-    asset: hero?.image?.asset,
-    ref: hero?.image?.asset?._ref
-  })
+  // console.log('Full data:', {
+  //   data,
+  //   hero,
+  //   image: hero?.image,
+  //   asset: hero?.image?.asset,
+  //   ref: hero?.image?.asset?._ref
+  // })
 
   // Generate image URL only if we have a valid image reference
   let imageUrl: string | null = null;
