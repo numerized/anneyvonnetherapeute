@@ -1,6 +1,7 @@
 'use client'
 
-import { Clock, Shield, Sparkles, MessageCircle } from 'lucide-react'
+import { Clock, MessageCircle,Shield, Sparkles } from 'lucide-react'
+
 import { ChatMessage } from '@/components/shared/ChatMessage'
 
 export function AiCompanion() {

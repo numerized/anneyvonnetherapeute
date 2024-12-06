@@ -3,13 +3,14 @@ import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import { Header } from '@/components/shared/Header'
 import { Stats } from '@/components/shared/Stats'
 import type { HomePagePayload } from '@/types'
+
+import { About } from './About'
+import { AiCompanion } from './AiCompanion'
 import { Hero } from './Hero'
-import { TherapyPricing } from './TherapyPricing'
-import { TherapyQuestionnaire } from './TherapyQuestionnaire'
 import { ProfessionalTraining } from './ProfessionalTraining'
 import { RelationshipStages } from './RelationshipStages'
-import { AiCompanion } from './AiCompanion'
-import { About } from './About'
+import { TherapyPricing } from './TherapyPricing'
+import { TherapyQuestionnaire } from './TherapyQuestionnaire'
 
 export interface HomePageProps {
   data: HomePagePayload | null

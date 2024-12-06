@@ -1,6 +1,7 @@
 'use client'
 
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface BeginningStageCardProps {

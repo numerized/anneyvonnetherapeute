@@ -1,16 +1,14 @@
 'use client'
 
-import { resolveHref } from '@/sanity/lib/utils'
-import { urlFor } from '@/sanity/lib/image'
-import { SettingsPayload } from '@/types'
-
-import { useState, useEffect } from 'react'
-
-import { HiMenu, HiX } from 'react-icons/hi'
 import { Menu, X } from 'lucide-react'
-
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect,useState } from 'react'
+import { HiMenu, HiX } from 'react-icons/hi'
+
+import { urlFor } from '@/sanity/lib/image'
+import { resolveHref } from '@/sanity/lib/utils'
+import { SettingsPayload } from '@/types'
 
 import NotificationBanner from '../NotificationBanner/NotificationBanner'
 

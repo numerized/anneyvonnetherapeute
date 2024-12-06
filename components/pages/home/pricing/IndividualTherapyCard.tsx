@@ -1,6 +1,7 @@
 'use client'
 
-import { MessageSquare, BookOpen, Calendar } from 'lucide-react'
+import { BookOpen, Calendar,MessageSquare } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface IndividualTherapyCardProps {

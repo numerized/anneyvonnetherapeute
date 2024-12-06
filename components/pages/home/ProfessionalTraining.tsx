@@ -1,6 +1,6 @@
 'use client'
 
-import { GraduationCap, Users, Award, Calendar } from 'lucide-react'
+import { Award, Calendar,GraduationCap, Users } from 'lucide-react'
 
 interface ProfessionalTrainingProps {
   className?: string
