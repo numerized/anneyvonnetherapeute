@@ -58,14 +58,7 @@ export function About() {
           </div>
         </div>
 
-        <div className="text-center mt-12">
-          <button 
-            className="bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-8 py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
-            aria-label="En savoir plus sur mes services"
-          >
-            Découvrir mes services
-          </button>
-        </div>
+        {/* Removed the button section */}
       </div>
     </section>
   )
