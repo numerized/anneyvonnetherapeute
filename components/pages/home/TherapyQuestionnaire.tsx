@@ -32,7 +32,7 @@ const therapyOptions: TherapyOption[] = [
     type: 'individual'
   },
   {
-    title: 'FORFAIT INDIVIDUEL VIT',
+    title: ' FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY',
     description: 'Un accompagnement unique, totalement personnalisé et flexible selon vos besoins.',
     type: 'vit'
   },

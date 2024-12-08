@@ -29,7 +29,7 @@ export function VitPromoModal({ isOpen, onClose }: VitPromoModalProps) {
 
         <div className="max-w-3xl mx-auto p-8">
           <h3 className="text-4xl font-light text-primary-cream mb-8">
-            FORFAIT INDIVIDUEL VIT
+             FORFAIT INDIVIDUEL VERY<br/>IMPORTANT THERAPY
           </h3>
 
           <div className="space-y-6 text-primary-cream/90">
