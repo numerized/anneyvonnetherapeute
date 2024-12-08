@@ -262,7 +262,7 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-8"
                 >
-                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : 'place-items-center'} gap-8`}>
+                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''}`}>
                     {recommendations.map((option) => (
                       <div key={option.type} className="w-full">
                         {renderCard(option.type)}
