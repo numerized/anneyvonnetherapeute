@@ -150,7 +150,7 @@ export function TherapyQuestionnaire() {
           <div className="relative">
             <div className="max-w-2xl mx-auto text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-light text-primary-coral">
-                {step === 3 ? 'Nos recommandations pour vous' : 'Quelle thérapie vous correspond ?'}
+                {step === 3 ? (recommendations.length === 1 ? 'Notre recommandation pour vous' : 'Nos recommandations pour vous') : 'Quelle thérapie vous correspond ?'}
               </h2>
               {step !== 3 && (
                 <p className="text-lg mt-4">
@@ -262,10 +262,17 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-8"
                 >
-                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''}`}>
-                    {recommendations.map((option) => (
+                  
+                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''} relative`}>
+                    {recommendations.map((option, index) => (
                       <div key={option.type} className="w-full">
                         {renderCard(option.type)}
+                        {recommendations.length === 2 && index === 0 && (
+                          <div className="hidden md:flex absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
+                            <div className="w-[1px] h-48 bg-primary-cream/30"></div>
+                            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-dark px-3 text-primary-cream">OU</span>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
