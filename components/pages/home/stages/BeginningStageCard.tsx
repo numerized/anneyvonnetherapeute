@@ -12,11 +12,11 @@ export function BeginningStageCard({ onShowPromo }: BeginningStageCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-center">
+        <div className="text-right">
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             COACHING DE DÉBUT DE RELATION
           </h3>
-          <p className="text-primary-coral italic text-right">Les premiers mois « clés » de votre avenir</p>
+          <p className="text-primary-coral italic">Les premiers mois « clés » de votre avenir</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">

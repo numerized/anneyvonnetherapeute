@@ -33,19 +33,19 @@ export function DecisionStageCard({ onShowPromo }: DecisionStageCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>DELAI D'ANNULATION DE 48H</span>
+                <span>Délai d'annulation de 48h</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>UNIQUEMENT EN « SALON EN LIGNE »</span>
+                <span>Uniquement en « salon en ligne »</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>RESERVATION EN LIGNE FLEX</span>
+                <span>Réservation en ligne flex</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>RESERVATION EN LIGNE RECURRENCE</span>
+                <span>Réservation en ligne récurrence</span>
               </li>
             </ul>
           </div>

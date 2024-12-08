@@ -12,11 +12,11 @@ export function CheckupStageCard({ onShowPromo }: CheckupStageCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-center">
+        <div className="text-right">
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             CHECK UP RELATIONNEL
           </h3>
-          <p className="text-primary-coral italic text-right">La relation est vivante, elle évolue</p>
+          <p className="text-primary-coral italic">La relation est vivante, elle évolue</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
@@ -33,19 +33,19 @@ export function CheckupStageCard({ onShowPromo }: CheckupStageCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>DELAI D'ANNULATION DE 48H</span>
+                <span>Délai d'annulation de 48h</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>UNIQUEMENT EN « SALON EN LIGNE »</span>
+                <span>Uniquement en « salon en ligne »</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>RESERVATION EN LIGNE FLEX</span>
+                <span>Réservation en ligne flex</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>RESERVATION EN LIGNE RECURRENCE</span>
+                <span>Réservation en ligne récurrence</span>
               </li>
             </ul>
           </div>
