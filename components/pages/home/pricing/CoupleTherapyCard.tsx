@@ -15,7 +15,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             THÉRAPIE RELATIONNELLE DE COUPLE
           </h3>
-          <p className="text-primary-coral italic">De cœur et de corps</p>
+          <p className="text-primary-coral italic text-right">De cœur et de corps</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
