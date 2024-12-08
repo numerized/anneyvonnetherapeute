@@ -19,7 +19,6 @@ interface NavbarProps {
 export default function Navbar(props: NavbarProps) {
   const { data } = props
   const menuItems = data?.menuItems || []
-  console.log('All menu items:', menuItems);
   
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
@@ -28,19 +27,14 @@ export default function Navbar(props: NavbarProps) {
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
 
   const renderMenuItem = (item: any) => {
-    console.log('Menu item:', JSON.stringify(item, null, 2));
     
     // Clean up the style value by removing hidden Unicode characters
     const cleanStyle = item.style?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-    console.log('Clean style:', cleanStyle);
     
     const baseClasses = "text-primary-cream hover:text-primary-cream/80 transition-colors duration-200";
     const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
     const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
     const buttonClearClasses = `${buttonBaseClasses} border-2 border-primary-cream hover:bg-primary-cream/10`;
-    
-    console.log('Item style:', item.style);
-    console.log('Applied classes:', cleanStyle === 'button-plain' ? buttonPlainClasses : cleanStyle === 'button-clear' ? buttonClearClasses : baseClasses);
     
     const classes = cleanStyle === 'button-plain' 
       ? buttonPlainClasses 
