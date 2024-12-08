@@ -13,10 +13,10 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
         <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
-            FORFAIT INDIVIDUEL VIT
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
+             FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY
           </h3>
-          <p className="text-primary-coral italic">Forfait Privilège</p>
+          <p className="text-primary-coral italic text-left">Forfait Privilège</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
@@ -52,13 +52,13 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
         </div>
 
         <div className="space-y-4">
-          <h4 className="text-xl text-primary-cream font-light mb-2">TARIFS</h4>
+          <h4 className="text-xl text-primary-cream font-light mb-2 text-left">TARIFS</h4>
           <div className="bg-primary-forest/30 rounded-xl p-6">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-start items-center mb-4 gap-4">
               <span>5 SÉANCES</span>
               <span className="text-primary-coral text-2xl font-bold">1200 €</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-start items-center gap-4">
               <span>10 SÉANCES</span>
               <span className="text-primary-coral text-2xl font-bold">2100 €</span>
             </div>

@@ -1,23 +1,86 @@
-import { StatItemProps } from './types'
+'use client'
+
+import { useEffect, useRef, useState, useCallback } from 'react'
+
+interface StatItemProps {
+  value: string
+  label: string
+}
 
 export function StatItem({ value, label }: StatItemProps) {
+  const [displayValue, setDisplayValue] = useState('0')
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const elementRef = useRef<HTMLDivElement>(null)
+  const numericValue = parseInt(value.replace(/\D/g, ''))
+  const nonNumericPart = value.replace(/[0-9]/g, '')
+
+  const easeInOutCubic = (t: number): number => {
+    return t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2
+  }
+
+  const startAnimation = useCallback(() => {
+    if (hasAnimated) return
+
+    let startTime: number | null = null
+    const duration = 1500 // 1.5 seconds
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      
+      const easedProgress = easeInOutCubic(progress)
+      const current = Math.round(easedProgress * numericValue)
+      
+      setDisplayValue(`${current}${nonNumericPart}`)
+
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        setHasAnimated(true)
+      }
+    }
+
+    requestAnimationFrame(animate)
+  }, [hasAnimated, numericValue, nonNumericPart])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          startAnimation()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasAnimated, startAnimation])
+
   return (
     <div 
+      ref={elementRef}
       className="text-center bg-primary-forest/30 p-6 rounded-[24px]"
       role="listitem"
     >
-      <div 
+      <p 
         className="text-primary-coral text-5xl font-black mb-2"
         aria-hidden="true"
       >
-        {value}
-      </div>
-      <div 
+        {displayValue}
+      </p>
+      <p 
         className="text-primary-cream/80 text-sm md:text-base"
         aria-label={`${value} ${label}`}
       >
         {label}
-      </div>
+      </p>
     </div>
   )
 }

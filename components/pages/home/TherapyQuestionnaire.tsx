@@ -12,6 +12,7 @@ import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
+import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 
 type TherapyOption = {
   title: string
@@ -31,7 +32,7 @@ const therapyOptions: TherapyOption[] = [
     type: 'individual'
   },
   {
-    title: 'FORFAIT INDIVIDUEL VIT',
+    title: ' FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY',
     description: 'Un accompagnement unique, totalement personnalisé et flexible selon vos besoins.',
     type: 'vit'
   },
@@ -61,6 +62,7 @@ export function TherapyQuestionnaire() {
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
   const [selectedTherapyType, setSelectedTherapyType] = useState<TherapyOption['type'] | null>(null)
+  const [showReward, setShowReward] = useState(false)
   const questionnaireRef = useRef<HTMLElement>(null)
 
   const getRecommendations = (situation: string, need: string) => {
@@ -101,12 +103,14 @@ export function TherapyQuestionnaire() {
 
     setRecommendations(recommended)
     setStep(3)
+    setShowReward(true)
   }
 
   const handleRestart = () => {
     setStep(1)
     setAnswers({ situation: '', need: '' })
     setRecommendations([])
+    setShowReward(false)
     scrollToSection('questionnaire')
   }
 
@@ -143,16 +147,17 @@ export function TherapyQuestionnaire() {
         aria-labelledby="questionnaire-title"
       >
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
-              TROUVEZ VOTRE ACCOMPAGNEMENT
+          <div className="relative">
+            <div className="max-w-2xl mx-auto text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-light text-primary-coral">
+                {step === 3 ? (recommendations.length === 1 ? 'Notre recommandation pour vous' : 'Nos recommandations pour vous') : 'Quelle thérapie vous correspond ?'}
+              </h2>
+              {step !== 3 && (
+                <p className="text-lg mt-4">
+                  Répondez à deux questions simples pour découvrir nos recommandations personnalisées
+                </p>
+              )}
             </div>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">
-              Quelle thérapie vous correspond ?
-            </h2>
-            <p className="text-gray-400">
-              Répondez à deux questions simples pour découvrir nos recommandations personnalisées
-            </p>
           </div>
 
           <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
@@ -257,11 +262,17 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Nos recommandations pour vous</h3>
-                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : 'place-items-center'} gap-8`}>
-                    {recommendations.map((option) => (
+                  
+                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''} relative`}>
+                    {recommendations.map((option, index) => (
                       <div key={option.type} className="w-full">
                         {renderCard(option.type)}
+                        {recommendations.length === 2 && index === 0 && (
+                          <div className="hidden md:flex absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
+                            <div className="w-[1px] h-48 bg-primary-cream/30"></div>
+                            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-dark px-3 text-primary-cream">OU</span>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -289,6 +300,11 @@ export function TherapyQuestionnaire() {
           type={selectedTherapyType}
         />
       )}
+      <QuestionnaireReward
+        isOpen={showReward}
+        onClose={() => setShowReward(false)}
+        situation={answers.situation as 'couple' | 'individual'}
+      />
     </>
   )
 }

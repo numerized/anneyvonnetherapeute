@@ -13,10 +13,10 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
         <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE INDIVIDUELLE
           </h3>
-          <p className="text-primary-coral italic">Accords à corps</p>
+          <p className="text-primary-coral italic text-left">Accords à corps</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
@@ -26,47 +26,83 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
         </blockquote>
 
         <div className="space-y-6">
-          <h4 className="text-xl text-primary-cream font-light">FORFAIT INDIVIDUEL</h4>
-          <ul className="list-disc list-inside text-primary-cream/90 space-y-2">
-            <li>Définissez votre thème thérapeutique en ligne</li>
-            <li>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</li>
-          </ul>
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+            <p className="text-primary-cream/90 mb-2">
+              <strong>Organisation</strong>
+            </p>
+            <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>Définissez votre thème thérapeutique en ligne</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="space-y-4">
           {/* COMPACT Package */}
           <div className="bg-primary-forest/30 rounded-xl p-6">
-            <h4 className="text-xl text-primary-cream font-light mb-2">COMPACT</h4>
-            <ul className="text-primary-cream/90 space-y-2 mb-4">
-              <li>2 séances par mois</li>
-              <li>3 MOIS - 12 x 75 min</li>
-            </ul>
-            <div className="text-primary-coral text-2xl font-bold">
-              2850 € <span className="text-sm text-primary-cream/70">(3 x 950€)</span>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-2xl text-primary-coral font-light text-left">COMPACT</h3>
+              <div className="flex items-end gap-1 justify-start">
+                <p className="text-4xl text-primary-cream font-light">2850 €</p>
+                <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
+              </div>
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                <li className="flex items-center gap-2 m-0">
+                  <span className="text-primary-coral">♦</span>
+                  <span>2 séances par mois</span>
+                </li>
+                <li className="flex items-center gap-2 m-0">
+                  <span className="text-primary-coral">♦</span>
+                  <span>3 MOIS - 12 x 75 min</span>
+                </li>
+              </ul>
             </div>
           </div>
 
           {/* RELAX Package */}
           <div className="bg-primary-forest/30 rounded-xl p-6">
-            <h4 className="text-xl text-primary-cream font-light mb-2">RELAX</h4>
-            <ul className="text-primary-cream/90 space-y-2 mb-4">
-              <li>1 séance par mois</li>
-              <li>6 MOIS - 12 x 75 min</li>
-            </ul>
-            <div className="text-primary-coral text-2xl font-bold">
-              2850 € <span className="text-sm text-primary-cream/70">(3 x 950€)</span>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-2xl text-primary-coral font-light text-left">RELAX</h3>
+              <div className="flex items-end gap-1 justify-start">
+                <p className="text-4xl text-primary-cream font-light">2850 €</p>
+                <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
+              </div>
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                <li className="flex items-center gap-2 m-0">
+                  <span className="text-primary-coral">♦</span>
+                  <span>1 séance par mois</span>
+                </li>
+                <li className="flex items-center gap-2 m-0">
+                  <span className="text-primary-coral">♦</span>
+                  <span>6 MOIS - 12 x 75 min</span>
+                </li>
+              </ul>
             </div>
           </div>
 
           {/* MINI Package */}
           <div className="bg-primary-forest/30 rounded-xl p-6">
-            <h4 className="text-xl text-primary-cream font-light mb-2">MINI</h4>
-            <ul className="text-primary-cream/90 space-y-2 mb-4">
-              <li>1 séance par semaine</li>
-              <li>1 MOIS - 4 x 75 min</li>
-            </ul>
-            <div className="text-primary-coral text-2xl font-bold">
-              950 €
+            <div className="flex flex-col gap-2">
+              <h3 className="text-2xl text-primary-coral font-light text-left">MINI</h3>
+              <div className="flex items-end gap-1 justify-start">
+                <p className="text-4xl text-primary-cream font-light">950 €</p>
+              </div>
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                <li className="flex items-center gap-2 m-0">
+                  <span className="text-primary-coral">♦</span>
+                  <span>1 séance par semaine</span>
+                </li>
+                <li className="flex items-center gap-2 m-0">
+                  <span className="text-primary-coral">♦</span>
+                  <span>1 MOIS - 4 x 75 min</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

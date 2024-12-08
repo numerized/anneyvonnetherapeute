@@ -1,4 +1,4 @@
-import { Modal } from '@/components/shared/Modal'
+import { Modal as TherapyModal } from '@/components/shared/Modal'
 
 interface TherapyPromoModalProps {
   isOpen: boolean
@@ -12,14 +12,27 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
       case 'couple':
         return {
           title: 'Thérapie Relationnelle de Couple',
+          subtitle: 'De cœur et de corps',
           content: (
-            <div className="space-y-4 text-primary-cream/80">
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
               <p>La thérapie relationnelle de couple vous aide à :</p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Améliorer votre communication</li>
-                <li>Résoudre les conflits de manière constructive</li>
-                <li>Renforcer votre connexion émotionnelle</li>
-                <li>Retrouver l'harmonie dans votre relation</li>
+              <ul className="space-y-2 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Améliorer votre communication</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Résoudre les conflits de manière constructive</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Renforcer votre connexion émotionnelle</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Retrouver l'harmonie dans votre relation</span>
+                </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
             </div>
@@ -28,14 +41,27 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
       case 'individual':
         return {
           title: 'Thérapie Relationnelle Individuelle',
+          subtitle: 'Accords à corps',
           content: (
-            <div className="space-y-4 text-primary-cream/80">
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
               <p>La thérapie relationnelle individuelle vous permet de :</p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Explorer vos schémas relationnels</li>
-                <li>Développer votre confiance en vous</li>
-                <li>Améliorer vos relations</li>
-                <li>Vous reconnecter à vous-même</li>
+              <ul className="space-y-2 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Explorer vos schémas relationnels</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Développer votre confiance en vous</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Améliorer vos relations</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Vous reconnecter à vous-même</span>
+                </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
             </div>
@@ -43,15 +69,28 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
         }
       case 'vit':
         return {
-          title: 'Forfait Individuel VIT',
+          title: ' FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY',
+          subtitle: 'Forfait Privilège',
           content: (
-            <div className="space-y-4 text-primary-cream/80">
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
               <p>Le forfait VIT (Very Important Therapy) offre :</p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Un accompagnement personnalisé</li>
-                <li>Une flexibilité maximale</li>
-                <li>Un accès prioritaire</li>
-                <li>Des ressources exclusives</li>
+              <ul className="space-y-2 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Un accompagnement personnalisé</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Une flexibilité maximale</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Un accès prioritaire</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Des ressources exclusives</span>
+                </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
             </div>
@@ -60,14 +99,27 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
       case 'beginning':
         return {
           title: 'Coaching de Début de Relation',
+          subtitle: 'Construire sur des bases solides',
           content: (
-            <div className="space-y-4 text-primary-cream/80">
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
               <p>Le coaching de début de relation vous aide à :</p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Poser des bases solides</li>
-                <li>Identifier les points d'attention</li>
-                <li>Développer une communication saine</li>
-                <li>Construire une relation durable</li>
+              <ul className="space-y-2 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Poser des bases solides</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Identifier les points d'attention</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Développer une communication saine</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Construire une relation durable</span>
+                </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
             </div>
@@ -76,14 +128,27 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
       case 'checkup':
         return {
           title: 'Check Up Relationnel',
+          subtitle: 'La relation est vivante, elle évolue',
           content: (
-            <div className="space-y-4 text-primary-cream/80">
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
               <p>Le check-up relationnel vous permet de :</p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Faire le point sur votre relation</li>
-                <li>Identifier les axes d'amélioration</li>
-                <li>Renforcer vos points forts</li>
-                <li>Maintenir une relation saine</li>
+              <ul className="space-y-2 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Faire le point sur votre relation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Identifier les axes d'amélioration</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Renforcer vos points forts</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Maintenir une relation saine</span>
+                </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
             </div>
@@ -92,14 +157,27 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
       case 'decision':
         return {
           title: 'Rester ou Partir',
+          subtitle: 'Prendre une décision éclairée',
           content: (
-            <div className="space-y-4 text-primary-cream/80">
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
               <p>L'accompagnement "Rester ou Partir" vous aide à :</p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Clarifier vos sentiments</li>
-                <li>Évaluer votre situation</li>
-                <li>Prendre une décision éclairée</li>
-                <li>Planifier les prochaines étapes</li>
+              <ul className="space-y-2 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Clarifier vos sentiments</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Évaluer votre situation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Prendre une décision éclairée</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral mt-1">♦</span>
+                  <span>Planifier les prochaines étapes</span>
+                </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
             </div>
@@ -111,8 +189,8 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
   const content = getContent()
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={content?.title || ''}>
+    <TherapyModal isOpen={isOpen} onClose={onClose} title={content?.title || ''} subtitle={content?.subtitle || ''}>
       {content?.content}
-    </Modal>
+    </TherapyModal>
   )
 }
