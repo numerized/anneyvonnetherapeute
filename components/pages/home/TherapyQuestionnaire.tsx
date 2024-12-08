@@ -147,16 +147,17 @@ export function TherapyQuestionnaire() {
         aria-labelledby="questionnaire-title"
       >
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
-              TROUVEZ VOTRE ACCOMPAGNEMENT
+          <div className="relative">
+            <div className="max-w-2xl mx-auto text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-light text-primary-coral">
+                {step === 3 ? 'Nos recommandations pour vous' : 'Quelle thérapie vous correspond ?'}
+              </h2>
+              {step !== 3 && (
+                <p className="text-lg mt-4">
+                  Répondez à deux questions simples pour découvrir nos recommandations personnalisées
+                </p>
+              )}
             </div>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">
-              Quelle thérapie vous correspond ?
-            </h2>
-            <p className="text-gray-400">
-              Répondez à deux questions simples pour découvrir nos recommandations personnalisées
-            </p>
           </div>
 
           <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
@@ -261,7 +262,6 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Nos recommandations pour vous</h3>
                   <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : 'place-items-center'} gap-8`}>
                     {recommendations.map((option) => (
                       <div key={option.type} className="w-full">
