@@ -43,7 +43,7 @@ export default function Footer(props: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Column 1 - Main Info */}
           <div>
-            <div className="text-primary-cream/80">
+            <div className="text-primary-cream/80 text-right">
               <CustomPortableText
                 paragraphClasses="text-md md:text-xl mb-4"
                 value={footer}

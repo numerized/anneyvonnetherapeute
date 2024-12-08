@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { Heart, Users, User } from 'lucide-react'
+import { Heart, Users, User, BookOpen } from 'lucide-react'
 
 interface QuestionnaireRewardProps {
   isOpen: boolean
@@ -46,20 +46,20 @@ export function QuestionnaireReward({ isOpen, onClose, situation }: Questionnair
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="absolute top-4 left-4 w-20 h-20 rounded-full bg-primary-coral/10 flex items-center justify-center"
+                    className="absolute top-4 left-4 w-12 h-12 rounded-full bg-primary-coral/10 flex items-center justify-center"
                   >
-                    <Heart className="w-12 h-12 text-primary-cream" />
+                    <Heart className="w-6 h-6 text-primary-cream" />
                   </motion.div>
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
                     transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                    className="absolute bottom-4 right-4 w-16 h-16 rounded-full bg-primary-cream/10 flex items-center justify-center"
+                    className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-primary-cream/10 flex items-center justify-center"
                   >
                     {situation === 'couple' ? (
-                      <Users className="w-8 h-8 text-primary-cream" />
+                      <Users className="w-6 h-6 text-primary-cream" />
                     ) : (
-                      <User className="w-8 h-8 text-primary-cream" />
+                      <User className="w-6 h-6 text-primary-cream" />
                     )}
                   </motion.div>
                 </>
@@ -72,20 +72,33 @@ export function QuestionnaireReward({ isOpen, onClose, situation }: Questionnair
                 transition={{ delay: 0.4 }}
                 className="relative z-10"
               >
+                {/* Gamification Counter */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="flex items-center justify-end gap-2 text-white text-sm mb-4"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>Carte 1 / 23 • Ajoutée au Carnet!</span>
+                </motion.div>
+
                 <h2 className="text-primary-coral text-3xl md:text-4xl font-light mb-6 text-right">
                   Merci pour votre sincérité
                 </h2>
-                <p className="text-primary-cream/90 text-lg mb-8">
+                <p className="text-primary-cream/90 text-lg mb-8 text-left">
                   Votre honnêteté est la première étape vers un véritable changement. Je suis là pour vous accompagner dans ce voyage.
                 </p>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onClose}
-                  className="px-8 py-3 bg-primary-cream text-primary-dark rounded-full hover:bg-primary-cream/90 transition-colors"
-                >
-                  Continuer
-                </motion.button>
+                <div className="text-left">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onClose}
+                    className="px-8 py-3 bg-primary-cream text-primary-dark rounded-full hover:bg-primary-cream/90 transition-colors"
+                  >
+                    Continuer
+                  </motion.button>
+                </div>
               </motion.div>
             </motion.div>
           </div>
