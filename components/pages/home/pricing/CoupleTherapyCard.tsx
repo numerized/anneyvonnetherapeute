@@ -1,7 +1,6 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
-
 import { Benefit } from '../Benefit'
 
 interface CoupleTherapyCardProps {
@@ -13,10 +12,10 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
         <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE DE COUPLE
           </h3>
-          <p className="text-primary-coral italic">De cœur et de corps</p>
+          <p className="text-primary-coral italic text-left">De cœur et de corps</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
@@ -26,25 +25,56 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
         </blockquote>
 
         <div className="space-y-6">
-          <h4 className="text-xl text-primary-cream font-light">PROCESSUS COMPLET</h4>
-          <ul className="list-disc list-inside text-primary-cream/90 space-y-2">
-            <li>8 séances couple et/ou individuel selon la situation</li>
-            <li>2 séances de 90 minutes</li>
-            <li>6 séances de 75 minutes</li>
-            <li>Bilans et introspections avant et après chaque séance</li>
-            <li>Parcours à thèmes sur demande</li>
-          </ul>
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+            <p className="text-primary-cream/90 mb-2">
+              <strong>Organisation</strong>
+            </p>
+            <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>8 séances couple et/ou individuel selon la situation</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>2 séances de 90 minutes</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>6 séances de 75 minutes</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>Bilans et introspections avant et après chaque séance</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>Parcours à thèmes sur demande</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="bg-primary-forest/30 rounded-xl p-6">
-          <h4 className="text-xl text-primary-cream font-light mb-4">VOTRE THÉRAPIE DE COUPLE</h4>
-          <div className="space-y-4">
-            <p className="text-primary-cream/90">
-              Séances alternées sur 20 - 24 semaines (max. 6 mois)
-            </p>
-            <div className="text-primary-coral text-2xl font-bold">
-              2590 € <span className="text-sm text-primary-cream/70">(ou 3 x 880€ mensuel)</span>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE DE COUPLE</h3>
+            <div className="flex items-end gap-1 justify-start">
+              <p className="text-4xl text-primary-cream font-light">2590 €</p>
+              <p className="text-primary-cream/70 pb-1">(ou 3 x 880€ mensuel)</p>
             </div>
+            <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>Séances alternées sur 20 - 24 semaines (max. 6 mois)</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>8 séances couple et/ou individuel selon la situation</span>
+              </li>
+              <li className="flex items-center gap-2 m-0">
+                <span className="text-primary-coral">♦</span>
+                <span>Bilans et introspections avant et après chaque séance</span>
+              </li>
+            </ul>
           </div>
         </div>
 

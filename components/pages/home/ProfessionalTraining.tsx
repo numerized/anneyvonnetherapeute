@@ -11,10 +11,10 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
     <section className={`bg-primary-forest py-24 ${className}`}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <div className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
+          <div className="inline-block bg-primary-teal/20 px-4 py-2 rounded-[24px] text-sm mb-4">
             POUR LES PROFESSIONNELS
           </div>
-          <h2 className="text-4xl text-primary-cream font-light mb-6">
+          <h2 className="text-4xl font-light mb-6 text-primary-coral">
             Formation pour Thérapeutes
           </h2>
           <p className="text-xl text-primary-cream/80 max-w-2xl mx-auto">

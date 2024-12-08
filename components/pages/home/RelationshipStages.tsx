@@ -45,7 +45,7 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                     <strong>Organisation</strong>
                   </p>
                   <ul className="text-sm text-primary-cream/70 space-y-2">
-                    <li>DELAI D'ANNULATION (VIT 0 / AUTRES 48H)</li>
+                    <li>DELAI D'ANNULATION DE 48H</li>
                     <li>UNIQUEMENT EN « SALON EN LIGNE »</li>
                     <li>RESERVATION EN LIGNE FLEX</li>
                     <li>RESERVATION EN LIGNE RECURRENCE</li>
@@ -99,7 +99,7 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                     <strong>Organisation</strong>
                   </p>
                   <ul className="text-sm text-primary-cream/70 space-y-2">
-                    <li>DELAI D'ANNULATION (VIT 0 / AUTRES 48H)</li>
+                    <li>DELAI D'ANNULATION DE 48H</li>
                     <li>UNIQUEMENT EN « SALON EN LIGNE »</li>
                     <li>RESERVATION EN LIGNE FLEX</li>
                     <li>RESERVATION EN LIGNE RECURRENCE</li>
@@ -153,7 +153,7 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                     <strong>Organisation</strong>
                   </p>
                   <ul className="text-sm text-primary-cream/70 space-y-2">
-                    <li>DELAI D'ANNULATION (VIT 0 / AUTRES 48H)</li>
+                    <li>DELAI D'ANNULATION DE 48H</li>
                     <li>UNIQUEMENT EN « SALON EN LIGNE »</li>
                     <li>RESERVATION EN LIGNE FLEX</li>
                     <li>RESERVATION EN LIGNE RECURRENCE</li>

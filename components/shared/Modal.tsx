@@ -6,10 +6,11 @@ interface ModalProps {
   isOpen: boolean
   onClose: () => void
   title: string
+  subtitle?: string
   children: React.ReactNode
 }
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export function Modal({ isOpen, onClose, title, subtitle, children }: ModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -36,19 +37,48 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-[24px] bg-primary-dark p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title as="div" className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-primary-cream">
+              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-[24px] bg-primary-forest/90 backdrop-blur-lg p-6 pl-12 text-left align-middle shadow-xl transition-all relative">
+                {/* Close button */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-6 right-6 w-10 h-10 rounded-full bg-primary-cream/20 hover:bg-primary-cream/30 flex items-center justify-center transition-colors"
+                  aria-label="Fermer"
+                >
+                  <X className="w-5 h-5 text-primary-cream" />
+                </button>
+
+                {/* Title */}
+                <div className="mb-4 mt-8">
+                  <Dialog.Title as="h3" className="text-3xl text-primary-coral font-light mb-2">
                     {title}
-                  </h3>
-                  <button
-                    onClick={onClose}
-                    className="text-primary-cream/60 hover:text-primary-cream transition-colors"
+                  </Dialog.Title>
+                  {subtitle && (
+                    <p className="text-primary-cream/90 text-lg italic">{subtitle}</p>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="mt-4">
+                  {children}
+                </div>
+
+                {/* Action buttons */}
+                <div className="mt-16 flex gap-4 justify-center">
+                  <a
+                    href="https://calendly.com/anneyvonn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-primary-coral hover:bg-primary-rust text-primary-cream px-6 py-3 rounded-full transition-colors"
                   >
-                    <X size={24} />
-                  </button>
-                </Dialog.Title>
-                {children}
+                    Prendre Rendez-vous
+                  </a>
+                  <a
+                    href="mailto:contact@anneyvonne.fr"
+                    className="bg-primary-cream/20 hover:bg-primary-cream/30 text-primary-cream px-6 py-3 rounded-full transition-colors"
+                  >
+                    Nous contacter
+                  </a>
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
