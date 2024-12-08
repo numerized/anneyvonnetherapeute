@@ -1,7 +1,6 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
-
 import { Benefit } from '../Benefit'
 
 interface CoupleTherapyCardProps {
@@ -30,24 +29,24 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <p className="text-primary-cream/90 mb-2">
               <strong>Organisation</strong>
             </p>
-            <ul className="text-sm text-primary-cream/70 space-y-2">
-              <li className="flex items-center gap-2">
+            <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>8 séances couple et/ou individuel selon la situation</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>2 séances de 90 minutes</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>6 séances de 75 minutes</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>Bilans et introspections avant et après chaque séance</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>Parcours à thèmes sur demande</span>
               </li>
@@ -62,16 +61,16 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
               <p className="text-4xl text-primary-cream font-light">2590 €</p>
               <p className="text-primary-cream/70 pb-1">(ou 3 x 880€ mensuel)</p>
             </div>
-            <ul className="text-sm text-primary-cream/70 space-y-2 mt-2">
-              <li className="flex items-center gap-2">
+            <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>Séances alternées sur 20 - 24 semaines (max. 6 mois)</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>8 séances couple et/ou individuel selon la situation</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>Bilans et introspections avant et après chaque séance</span>
               </li>

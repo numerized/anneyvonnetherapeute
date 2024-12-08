@@ -30,12 +30,12 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
             <p className="text-primary-cream/90 mb-2">
               <strong>Organisation</strong>
             </p>
-            <ul className="text-sm text-primary-cream/70 space-y-2">
-              <li className="flex items-center gap-2">
+            <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>Définissez votre thème thérapeutique en ligne</span>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
                 <span>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</span>
               </li>
@@ -52,12 +52,12 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
                 <p className="text-4xl text-primary-cream font-light">2850 €</p>
                 <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
               </div>
-              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2">
-                <li className="flex items-center gap-2">
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                <li className="flex items-center gap-2 m-0">
                   <span className="text-primary-coral">♦</span>
                   <span>2 séances par mois</span>
                 </li>
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-2 m-0">
                   <span className="text-primary-coral">♦</span>
                   <span>3 MOIS - 12 x 75 min</span>
                 </li>
@@ -73,12 +73,12 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
                 <p className="text-4xl text-primary-cream font-light">2850 €</p>
                 <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
               </div>
-              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2">
-                <li className="flex items-center gap-2">
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                <li className="flex items-center gap-2 m-0">
                   <span className="text-primary-coral">♦</span>
                   <span>1 séance par mois</span>
                 </li>
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-2 m-0">
                   <span className="text-primary-coral">♦</span>
                   <span>6 MOIS - 12 x 75 min</span>
                 </li>
@@ -93,12 +93,12 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
               <div className="flex items-end gap-1">
                 <p className="text-4xl text-primary-cream font-light">950 €</p>
               </div>
-              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2">
-                <li className="flex items-center gap-2">
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                <li className="flex items-center gap-2 m-0">
                   <span className="text-primary-coral">♦</span>
                   <span>1 séance par semaine</span>
                 </li>
-                <li className="flex items-center gap-2">
+                <li className="flex items-center gap-2 m-0">
                   <span className="text-primary-coral">♦</span>
                   <span>1 MOIS - 4 x 75 min</span>
                 </li>
