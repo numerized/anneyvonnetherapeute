@@ -26,14 +26,33 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
         </blockquote>
 
         <div className="space-y-6">
-          <h4 className="text-xl text-primary-cream font-light">PROCESSUS COMPLET</h4>
-          <ul className="list-disc list-inside text-primary-cream/90 space-y-2">
-            <li>8 séances couple et/ou individuel selon la situation</li>
-            <li>2 séances de 90 minutes</li>
-            <li>6 séances de 75 minutes</li>
-            <li>Bilans et introspections avant et après chaque séance</li>
-            <li>Parcours à thèmes sur demande</li>
-          </ul>
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+            <p className="text-primary-cream/90 mb-2">
+              <strong>Organisation</strong>
+            </p>
+            <ul className="text-sm text-primary-cream/70 space-y-2">
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>8 séances couple et/ou individuel selon la situation</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>2 séances de 90 minutes</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>6 séances de 75 minutes</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>Bilans et introspections avant et après chaque séance</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>Parcours à thèmes sur demande</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="bg-primary-forest/30 rounded-xl p-6">

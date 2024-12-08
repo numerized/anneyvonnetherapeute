@@ -26,11 +26,21 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
         </blockquote>
 
         <div className="space-y-6">
-          <h4 className="text-xl text-primary-cream font-light">FORFAIT INDIVIDUEL</h4>
-          <ul className="list-disc list-inside text-primary-cream/90 space-y-2">
-            <li>Définissez votre thème thérapeutique en ligne</li>
-            <li>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</li>
-          </ul>
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+            <p className="text-primary-cream/90 mb-2">
+              <strong>Organisation</strong>
+            </p>
+            <ul className="text-sm text-primary-cream/70 space-y-2">
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>Définissez votre thème thérapeutique en ligne</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary-coral">♦</span>
+                <span>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="space-y-4">
