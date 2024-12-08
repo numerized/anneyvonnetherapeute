@@ -21,8 +21,8 @@ export default function StyleGuidePage() {
           
           <div className="space-y-8 bg-primary-forest/30 p-8 rounded-[24px]">
             <div>
-              <h1 className="text-6xl text-primary-cream font-light">Heading 1 (text-6xl)</h1>
-              <h2 className="text-5xl text-primary-cream font-light">Heading 2 (text-5xl)</h2>
+              <h1 className="text-6xl text-primary-cream">Heading 1 (text-6xl)</h1>
+              <h2 className="text-5xl text-primary-cream">Heading 2 (text-5xl)</h2>
               <h3 className="text-4xl text-primary-cream font-light">Heading 3 (text-4xl)</h3>
               <h4 className="text-3xl text-primary-cream font-light">Heading 4 (text-3xl)</h4>
               <h5 className="text-2xl text-primary-cream font-light">Heading 5 (text-2xl)</h5>
@@ -42,10 +42,11 @@ export default function StyleGuidePage() {
             </div>
 
             <div className="space-y-2">
-              <p className="font-light text-primary-cream">Font Weight Light</p>
-              <p className="font-normal text-primary-cream">Font Weight Normal</p>
-              <p className="font-medium text-primary-cream">Font Weight Medium</p>
-              <p className="font-bold text-primary-cream">Font Weight Bold</p>
+              <p className="font-light text-primary-cream">Font Weight Light (300)</p>
+              <p className="font-normal text-primary-cream">Font Weight Normal (400)</p>
+              <p className="font-medium text-primary-cream">Font Weight Medium (500)</p>
+              <p className="font-semibold text-primary-cream">Font Weight Semibold (600)</p>
+              <p className="font-bold text-primary-cream">Font Weight Bold (700)</p>
             </div>
           </div>
         </section>

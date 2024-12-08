@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
+import { IBM_Plex_Mono, PT_Serif, Montserrat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
@@ -11,12 +11,13 @@ const serif = PT_Serif({
   subsets: ['latin'],
   weight: ['400', '700'],
 })
-const sans = Inter({
-  variable: '--font-sans',
+
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
   subsets: ['latin'],
-  // @todo: understand why extrabold (800) isn't being respected when explicitly specified in this weight array
-  // weight: ['500', '700', '800'],
+  weight: ['300', '400', '500', '600', '700'],
 })
+
 const mono = IBM_Plex_Mono({
   variable: '--font-mono',
   subsets: ['latin'],
@@ -31,10 +32,9 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${mono.variable} ${sans.variable} ${serif.variable}`}
+      className={`${mono.variable} ${montserrat.variable} ${serif.variable}`}
     >
-      <body>{children}<SpeedInsights /><Analytics /></body>
-
+      <body className="font-montserrat">{children}<SpeedInsights /><Analytics /></body>
     </html>
   )
 }
