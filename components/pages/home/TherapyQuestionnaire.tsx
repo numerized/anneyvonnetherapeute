@@ -296,6 +296,7 @@ export function TherapyQuestionnaire() {
       <QuestionnaireReward
         isOpen={showReward}
         onClose={() => setShowReward(false)}
+        situation={answers.situation as 'couple' | 'individual'}
       />
     </>
   )

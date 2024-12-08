@@ -2,13 +2,15 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { Heart, Users, User } from 'lucide-react'
 
 interface QuestionnaireRewardProps {
   isOpen: boolean
   onClose: () => void
+  situation?: 'couple' | 'individual'
 }
 
-export function QuestionnaireReward({ isOpen, onClose }: QuestionnaireRewardProps) {
+export function QuestionnaireReward({ isOpen, onClose, situation }: QuestionnaireRewardProps) {
   const [showParticles, setShowParticles] = useState(false)
 
   useEffect(() => {
@@ -44,14 +46,22 @@ export function QuestionnaireReward({ isOpen, onClose }: QuestionnaireRewardProp
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="absolute top-4 left-4 w-20 h-20 rounded-full bg-primary-coral/10"
-                  />
+                    className="absolute top-4 left-4 w-20 h-20 rounded-full bg-primary-coral/10 flex items-center justify-center"
+                  >
+                    <Heart className="w-12 h-12 text-primary-cream" />
+                  </motion.div>
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
                     transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                    className="absolute bottom-4 right-4 w-16 h-16 rounded-full bg-primary-cream/10"
-                  />
+                    className="absolute bottom-4 right-4 w-16 h-16 rounded-full bg-primary-cream/10 flex items-center justify-center"
+                  >
+                    {situation === 'couple' ? (
+                      <Users className="w-8 h-8 text-primary-cream" />
+                    ) : (
+                      <User className="w-8 h-8 text-primary-cream" />
+                    )}
+                  </motion.div>
                 </>
               )}
 
@@ -62,7 +72,7 @@ export function QuestionnaireReward({ isOpen, onClose }: QuestionnaireRewardProp
                 transition={{ delay: 0.4 }}
                 className="relative z-10"
               >
-                <h2 className="text-primary-coral text-3xl md:text-4xl font-light mb-6">
+                <h2 className="text-primary-coral text-3xl md:text-4xl font-light mb-6 text-right">
                   Merci pour votre sincérité
                 </h2>
                 <p className="text-primary-cream/90 text-lg mb-8">
