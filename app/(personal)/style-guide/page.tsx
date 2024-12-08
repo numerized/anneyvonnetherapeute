@@ -22,7 +22,7 @@ export default function StyleGuidePage() {
           <div className="space-y-8 bg-primary-forest/30 p-8 rounded-[24px]">
             <div>
               <h1 className="text-6xl text-primary-cream">Heading 1 (text-6xl)</h1>
-              <h2 className="text-5xl text-primary-cream">Heading 2 (text-5xl)</h2>
+              <h2 className="text-5xl text-primary-cream font-light">Heading 2 (text-5xl)</h2>
               <h3 className="text-4xl text-primary-cream font-light">Heading 3 (text-4xl)</h3>
               <h4 className="text-3xl text-primary-cream font-light">Heading 4 (text-3xl)</h4>
               <h5 className="text-2xl text-primary-cream font-light">Heading 5 (text-2xl)</h5>
