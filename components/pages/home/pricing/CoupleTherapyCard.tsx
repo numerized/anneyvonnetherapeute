@@ -11,11 +11,11 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-right">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+        <div className="text-center">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE DE COUPLE
           </h3>
-          <p className="text-primary-coral italic">De cœur et de corps</p>
+          <p className="text-primary-coral italic text-left">De cœur et de corps</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
@@ -56,8 +56,8 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
 
         <div className="bg-primary-forest/30 rounded-xl p-6">
           <div className="flex flex-col gap-2">
-            <h3 className="text-2xl text-primary-coral font-light">VOTRE THÉRAPIE DE COUPLE</h3>
-            <div className="flex items-end gap-1">
+            <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE DE COUPLE</h3>
+            <div className="flex items-end gap-1 justify-start">
               <p className="text-4xl text-primary-cream font-light">2590 €</p>
               <p className="text-primary-cream/70 pb-1">(ou 3 x 880€ mensuel)</p>
             </div>

@@ -57,8 +57,6 @@ export function About() {
             />
           </div>
         </div>
-
-        {/* Removed the button section */}
       </div>
     </section>
   )

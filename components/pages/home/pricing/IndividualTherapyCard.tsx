@@ -12,11 +12,11 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-right">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+        <div className="text-center">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE INDIVIDUELLE
           </h3>
-          <p className="text-primary-coral italic">Accords à corps</p>
+          <p className="text-primary-coral italic text-left">Accords à corps</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
@@ -47,8 +47,8 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           {/* COMPACT Package */}
           <div className="bg-primary-forest/30 rounded-xl p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light">COMPACT</h3>
-              <div className="flex items-end gap-1">
+              <h3 className="text-2xl text-primary-coral font-light text-left">COMPACT</h3>
+              <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">2850 €</p>
                 <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
               </div>
@@ -68,8 +68,8 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           {/* RELAX Package */}
           <div className="bg-primary-forest/30 rounded-xl p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light">RELAX</h3>
-              <div className="flex items-end gap-1">
+              <h3 className="text-2xl text-primary-coral font-light text-left">RELAX</h3>
+              <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">2850 €</p>
                 <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
               </div>
@@ -89,8 +89,8 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           {/* MINI Package */}
           <div className="bg-primary-forest/30 rounded-xl p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light">MINI</h3>
-              <div className="flex items-end gap-1">
+              <h3 className="text-2xl text-primary-coral font-light text-left">MINI</h3>
+              <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">950 €</p>
               </div>
               <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
