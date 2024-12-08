@@ -12,6 +12,7 @@ import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
+import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 
 type TherapyOption = {
   title: string
@@ -61,6 +62,7 @@ export function TherapyQuestionnaire() {
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
   const [selectedTherapyType, setSelectedTherapyType] = useState<TherapyOption['type'] | null>(null)
+  const [showReward, setShowReward] = useState(false)
   const questionnaireRef = useRef<HTMLElement>(null)
 
   const getRecommendations = (situation: string, need: string) => {
@@ -101,12 +103,14 @@ export function TherapyQuestionnaire() {
 
     setRecommendations(recommended)
     setStep(3)
+    setShowReward(true)
   }
 
   const handleRestart = () => {
     setStep(1)
     setAnswers({ situation: '', need: '' })
     setRecommendations([])
+    setShowReward(false)
     scrollToSection('questionnaire')
   }
 
@@ -289,6 +293,10 @@ export function TherapyQuestionnaire() {
           type={selectedTherapyType}
         />
       )}
+      <QuestionnaireReward
+        isOpen={showReward}
+        onClose={() => setShowReward(false)}
+      />
     </>
   )
 }
