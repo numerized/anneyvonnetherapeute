@@ -2,8 +2,8 @@ import dynamic from 'next/dynamic'
 import { draftMode } from 'next/headers'
 
 import { loadSettings } from '@/sanity/loader/loadQuery'
+import { ClientNavbar } from './ClientNavbar'
 
-import NavbarLayout from './NavbarLayout'
 const NavbarPreview = dynamic(() => import('./NavbarPreview'))
 
 export async function Navbar() {
@@ -13,5 +13,5 @@ export async function Navbar() {
     return <NavbarPreview initial={initial} />
   }
 
-  return <NavbarLayout data={initial.data} />
+  return <ClientNavbar data={initial.data} />
 }
