@@ -1,7 +1,7 @@
 'use client'
 
+import { type FC } from 'react'
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
-
 import { Benefit } from '../Benefit'
 
 interface BeginningStageCardProps {
@@ -18,6 +18,12 @@ export function BeginningStageCard({ onShowPromo }: BeginningStageCardProps) {
           </h3>
           <p className="text-primary-coral italic">Les premiers mois « clés » de votre avenir</p>
         </div>
+
+        <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
+          <p className="text-primary-cream/90 italic">
+            "On ne change pas une relation sans d'abord transformer ceux qui la vivent"
+          </p>
+        </blockquote>
 
         <div className="space-y-6">
           <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
