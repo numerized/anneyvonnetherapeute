@@ -1,18 +1,19 @@
 'use client'
 
-import { AnimatePresence,motion } from 'framer-motion'
-import { useRef,useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Users2, User } from 'lucide-react'
+import { useRef, useState } from 'react'
 
+import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
 
-import { TherapyPromoModal } from './modals/TherapyPromoModal'
-import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
-import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
-import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
+import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
-import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
+import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { TherapyPromoModal } from './modals/TherapyPromoModal'
+import { VitTherapyCard } from './pricing/VitTherapyCard'
 
 type TherapyOption = {
   title: string
@@ -147,6 +148,15 @@ export function TherapyQuestionnaire() {
         aria-labelledby="questionnaire-title"
       >
         <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-center mb-4">
+            <div 
+              className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm"
+              role="presentation"
+              aria-label="Questionnaire"
+            >
+              QUESTIONNAIRE
+            </div>
+          </div>
           <div className="relative">
             <div className="max-w-2xl mx-auto text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-light text-primary-coral">
@@ -176,8 +186,9 @@ export function TherapyQuestionnaire() {
                         setAnswers(prev => ({ ...prev, situation: 'couple' }))
                         setStep(2)
                       }}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                     >
+                      <Users2 className="w-6 h-6" />
                       Je suis en couple ou je souhaite travailler sur ma relation
                     </button>
                     <button
@@ -185,8 +196,9 @@ export function TherapyQuestionnaire() {
                         setAnswers(prev => ({ ...prev, situation: 'individual' }))
                         setStep(2)
                       }}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                     >
+                      <User className="w-6 h-6" />
                       Je souhaite un accompagnement individuel
                     </button>
                   </div>
