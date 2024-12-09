@@ -12,11 +12,11 @@ export function CheckupStageCard({ onShowPromo }: CheckupStageCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-center">
+        <div className="text-right">
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             CHECK UP RELATIONNEL
           </h3>
-          <p className="text-primary-coral italic text-right">La relation est vivante, elle évolue</p>
+          <p className="text-primary-coral italic">La relation est vivante, elle évolue</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
