@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Users2, User } from 'lucide-react'
+import { Users2, User, Sparkles, ArrowUpCircle, Scale, Zap, Clock, Target } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
@@ -224,20 +224,23 @@ export function TherapyQuestionnaire() {
                       <>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'start')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                         >
+                          <Sparkles className="w-6 h-6" />
                           Débuter une nouvelle relation sur de bonnes bases
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'improve')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                         >
+                          <ArrowUpCircle className="w-6 h-6" />
                           Améliorer et faire évoluer notre relation
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'decide')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                         >
+                          <Scale className="w-6 h-6" />
                           Prendre une décision importante pour notre couple
                         </button>
                       </>
@@ -245,20 +248,23 @@ export function TherapyQuestionnaire() {
                       <>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'intensive')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                         >
+                          <Zap className="w-6 h-6" />
                           Un suivi intensif et personnalisé
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'regular')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                         >
+                          <Clock className="w-6 h-6" />
                           Un accompagnement régulier
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'specific')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
                         >
+                          <Target className="w-6 h-6" />
                           Un travail sur des thèmes spécifiques
                         </button>
                       </>
