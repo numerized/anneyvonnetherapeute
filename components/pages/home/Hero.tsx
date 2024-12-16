@@ -65,7 +65,7 @@ export function Hero({ hero }: HeroProps) {
               {hero?.title && (
                 <h1 
                   id="hero-title"
-                  className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-light mb-6"
+                  className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-black mb-6"
                 >
                   {hero.title}
                 </h1>
@@ -98,7 +98,7 @@ export function Hero({ hero }: HeroProps) {
                         className="absolute top-auto bottom-0 left-0 w-full object-cover rounded-[32px] shadow-2xl"
                         controls
                         playsInline
-                        src="/videos/VIDEO_1ERE_PAGE_ESSAI.mp4"
+                        src="/videos/VIDEO_1ERE_PAGE_ESSAI2.mp4"
                       />
                     </div>
                   </div>

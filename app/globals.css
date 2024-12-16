@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 @layer base {
-  h1 {
+  #hero-title h1 {
     @apply font-serif text-6xl font-light;
+    font-family: system-ui!important;
+  }
+
+  footer h1 {
+    font-size: 3em;
+    font-family: 'Nove', sans-serif!important;
   }
 }
 

@@ -52,7 +52,6 @@ export default async function IndexRoute({
   return (
     <div className="flex min-h-screen flex-col bg-primary-dark text-primary-cream">
       {draftMode().isEnabled && <LiveVisualEditing />}
-      <NotificationBanner message="🎉 Bienvenue sur le nouveau site d'AnneYvonne - Thérapeute relationnelle" />
       <Suspense>
         <Navbar />
       </Suspense>
