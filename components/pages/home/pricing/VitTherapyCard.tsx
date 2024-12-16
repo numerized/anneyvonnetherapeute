@@ -12,11 +12,11 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-right">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+        <div className="text-center">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
              FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY
           </h3>
-          <p className="text-primary-coral italic">Forfait Privilège</p>
+          <p className="text-primary-coral italic text-left">Forfait Privilège</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">

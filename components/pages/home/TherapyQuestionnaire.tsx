@@ -1,7 +1,6 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Users2, User, Sparkles, ArrowUpCircle, Scale, Zap, Clock, Target } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
@@ -186,9 +185,8 @@ export function TherapyQuestionnaire() {
                         setAnswers(prev => ({ ...prev, situation: 'couple' }))
                         setStep(2)
                       }}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      <Users2 className="w-6 h-6" />
                       Je suis en couple ou je souhaite travailler sur ma relation
                     </button>
                     <button
@@ -196,9 +194,8 @@ export function TherapyQuestionnaire() {
                         setAnswers(prev => ({ ...prev, situation: 'individual' }))
                         setStep(2)
                       }}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      <User className="w-6 h-6" />
                       Je souhaite un accompagnement individuel
                     </button>
                   </div>
@@ -224,23 +221,20 @@ export function TherapyQuestionnaire() {
                       <>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'start')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Sparkles className="w-6 h-6" />
                           Débuter une nouvelle relation sur de bonnes bases
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'improve')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <ArrowUpCircle className="w-6 h-6" />
                           Améliorer et faire évoluer notre relation
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'decide')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Scale className="w-6 h-6" />
                           Prendre une décision importante pour notre couple
                         </button>
                       </>
@@ -248,23 +242,20 @@ export function TherapyQuestionnaire() {
                       <>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'intensive')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Zap className="w-6 h-6" />
                           Un suivi intensif et personnalisé
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'regular')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Clock className="w-6 h-6" />
                           Un accompagnement régulier
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'specific')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Target className="w-6 h-6" />
                           Un travail sur des thèmes spécifiques
                         </button>
                       </>
