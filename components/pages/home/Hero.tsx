@@ -24,7 +24,7 @@ export function Hero({ hero }: HeroProps) {
 
   return (
     <section 
-      className="relative min-h-[80vh] grid place-items-center"
+      className="relative min-h-[100vh] md:min-h-[80vh] grid place-items-center pt-24 md:pt-0"
       id="accueil"
       role="main"
       aria-labelledby="hero-title"
@@ -50,7 +50,7 @@ export function Hero({ hero }: HeroProps) {
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             {/* Left side - Text Content */}
-            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem]">
+            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem] mt-12 md:mt-0">
               {hero?.badge && (
                 <div className="flex">
                   <div 
