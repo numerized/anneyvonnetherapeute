@@ -95,6 +95,18 @@ export default function Navbar(props: NavbarProps) {
         </div>
       )}
 
+      {/* Mobile Button */}
+      {menuItems.length > 0 && (
+        <div className="fixed top-4 right-4 z-50 md:hidden flex items-center">
+          <Link
+            href={menuItems[menuItems.length - 1].reference?.slug ? `/${menuItems[menuItems.length - 1].reference.slug}` : '#'}
+            className="px-4 py-2 rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105"
+          >
+            {menuItems[menuItems.length - 1].title}
+          </Link>
+        </div>
+      )}
+
       {/* Desktop Header */}
       <header className="relative bg-primary-dark hidden md:block" role="banner">
         {data.notificationMessage && (
