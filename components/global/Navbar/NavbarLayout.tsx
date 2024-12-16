@@ -77,83 +77,75 @@ export default function Navbar(props: NavbarProps) {
   };
 
   return (
-    <header className="relative bg-primary-dark" role="banner">
-      {data.notificationMessage && (
-        <NotificationBanner message={data.notificationMessage} />
-      )}
-      <div className="max-w-7xl mx-auto px-6">
-        <nav 
-          className="relative py-4" 
-          role="navigation" 
-          aria-label="Main navigation"
-        >
-          <div className="flex justify-end items-center relative">
-            {logoUrl && (
-              <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
-                <Image 
-                  src={logoUrl}
-                  alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
-                  className="h-[172px] w-auto"
-                  width={500}
-                  height={500}
-                  priority
-                  onError={(e) => {
-                    console.error('Error loading logo:', e)
-                  }}
-                />
-              </div>
-            )}
-            
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
-              {menuItems.map(renderMenuItem)}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              type="button"
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X /> : <Menu />}
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div 
-              id="mobile-menu" 
-              className="md:hidden absolute top-full left-0 w-full bg-primary-dark border-t border-primary-cream/10"
-            >
-              <div className="px-6 py-4 flex flex-col space-y-4">
-                {menuItems.map((item) => (
-                  <div key={item.title} className="w-full">
-                    {renderMenuItem(item)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </nav>
-      </div>
-
-      {showAppointmentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Prendre rendez-vous</h2>
-            {/* Add your appointment form or content here */}
-            <button
-              onClick={() => setShowAppointmentModal(false)}
-              className="mt-4 bg-primary-coral hover:bg-primary-rust transition-colors px-6 py-2 rounded-md text-white font-bold"
-            >
-              Fermer
-            </button>
-          </div>
+    <>
+      {/* Mobile Logo */}
+      {logoUrl && (
+        <div className="fixed top-4 left-4 z-50 md:hidden">
+          <Image 
+            src={logoUrl}
+            alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+            className="h-24 w-auto"
+            width={500}
+            height={500}
+            priority
+            onError={(e) => {
+              console.error('Error loading logo:', e)
+            }}
+          />
         </div>
       )}
-    </header>
+
+      {/* Desktop Header */}
+      <header className="relative bg-primary-dark hidden md:block" role="banner">
+        {data.notificationMessage && (
+          <NotificationBanner message={data.notificationMessage} />
+        )}
+        <div className="max-w-7xl mx-auto px-6">
+          <nav 
+            className="relative py-4" 
+            role="navigation" 
+            aria-label="Main navigation"
+          >
+            <div className="flex justify-end items-center relative">
+              {logoUrl && (
+                <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
+                  <Image 
+                    src={logoUrl}
+                    alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+                    className="h-[172px] w-auto"
+                    width={500}
+                    height={500}
+                    priority
+                    onError={(e) => {
+                      console.error('Error loading logo:', e)
+                    }}
+                  />
+                </div>
+              )}
+              
+              {/* Desktop Menu */}
+              <div className="flex items-center space-x-8">
+                {menuItems.map(renderMenuItem)}
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        {showAppointmentModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h2 className="text-2xl font-bold mb-4">Prendre rendez-vous</h2>
+              {/* Add your appointment form or content here */}
+              <button
+                onClick={() => setShowAppointmentModal(false)}
+                className="mt-4 bg-primary-coral hover:bg-primary-rust transition-colors px-6 py-2 rounded-md text-white font-bold"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
+    </>
   )
 }
