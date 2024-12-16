@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { Users, User, Sparkles, Heart, ArrowUpRight, Target } from 'lucide-react'
 
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
@@ -187,7 +188,10 @@ export function TherapyQuestionnaire() {
                       }}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      Je suis en couple ou je souhaite travailler sur ma relation
+                      <div className="flex items-center gap-3">
+                        <Users className="w-5 h-5 flex-shrink-0" />
+                        <span>Je suis en couple ou je souhaite travailler sur ma relation</span>
+                      </div>
                     </button>
                     <button
                       onClick={() => {
@@ -196,7 +200,10 @@ export function TherapyQuestionnaire() {
                       }}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      Je souhaite un accompagnement individuel
+                      <div className="flex items-center gap-3">
+                        <User className="w-5 h-5 flex-shrink-0" />
+                        <span>Je souhaite un accompagnement individuel</span>
+                      </div>
                     </button>
                   </div>
                 </motion.div>
@@ -223,19 +230,28 @@ export function TherapyQuestionnaire() {
                           onClick={() => getRecommendations(answers.situation, 'start')}
                           className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          Débuter une nouvelle relation sur de bonnes bases
+                          <div className="flex items-center gap-3">
+                            <Sparkles className="w-5 h-5 flex-shrink-0" />
+                            <span>Débuter une nouvelle relation sur de bonnes bases</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'improve')}
                           className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          Améliorer et faire évoluer notre relation
+                          <div className="flex items-center gap-3">
+                            <Heart className="w-5 h-5 flex-shrink-0" />
+                            <span>Améliorer et faire évoluer notre relation</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'decide')}
                           className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          Prendre une décision importante pour notre couple
+                          <div className="flex items-center gap-3">
+                            <Target className="w-5 h-5 flex-shrink-0" />
+                            <span>Prendre une décision importante pour notre couple</span>
+                          </div>
                         </button>
                       </>
                     ) : (
@@ -244,19 +260,28 @@ export function TherapyQuestionnaire() {
                           onClick={() => getRecommendations(answers.situation, 'intensive')}
                           className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          Un suivi intensif et personnalisé
+                          <div className="flex items-center gap-3">
+                            <ArrowUpRight className="w-5 h-5 flex-shrink-0" />
+                            <span>Un suivi intensif et personnalisé</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'regular')}
                           className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          Un accompagnement régulier
+                          <div className="flex items-center gap-3">
+                            <Users className="w-5 h-5 flex-shrink-0" />
+                            <span>Un accompagnement régulier</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'specific')}
                           className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          Un travail sur des thèmes spécifiques
+                          <div className="flex items-center gap-3">
+                            <Target className="w-5 h-5 flex-shrink-0" />
+                            <span>Un travail sur des thèmes spécifiques</span>
+                          </div>
                         </button>
                       </>
                     )}
