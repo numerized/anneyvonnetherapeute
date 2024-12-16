@@ -3,19 +3,12 @@
 import { urlFor } from '@/sanity/lib/image'
 import type { HomePagePayload } from '@/types'
 import { scrollToSection } from '@/utils/scroll'
-import { useRef } from 'react'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
 }
 
 export function Hero({ hero }: HeroProps) {
-  const questionnaireRef = useRef<HTMLDivElement>(null)
-
-  const scrollToQuestionnaire = () => {
-    questionnaireRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   // Generate image URL only if we have a valid image reference
   let imageUrl: string | null = null;
   if (hero?.image?.asset?._ref) {
@@ -25,19 +18,27 @@ export function Hero({ hero }: HeroProps) {
     }
   }
 
+  const scrollToQuestionnaire = () => {
+    scrollToSection('questionnaire');
+  };
+
   return (
     <section 
-      className="relative min-h-screen flex items-center justify-center"
+      className="relative min-h-[80vh] grid place-items-center"
       id="accueil"
       role="main"
       aria-labelledby="hero-title"
     >
-      <div className="absolute inset-0 z-10">
+      <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/85 via-50% to-primary-forest/30 z-10" 
+          aria-hidden="true"
+        />
         {imageUrl && (
           <img 
             src={imageUrl}
             alt={hero?.image?.alt || 'Hero background'}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="w-full h-full object-cover"
             loading="eager"
             width={1920}
             height={1080}
@@ -46,7 +47,7 @@ export function Hero({ hero }: HeroProps) {
       </div>
 
       <div className="relative z-20 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             {/* Left side - Text Content */}
             <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem]">
@@ -64,7 +65,7 @@ export function Hero({ hero }: HeroProps) {
               {hero?.title && (
                 <h1 
                   id="hero-title"
-                  className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-light mt-4 mb-6"
+                  className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-black mb-6 font-[ui-sans-serif,system-ui,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji']"
                 >
                   {hero.title}
                 </h1>
