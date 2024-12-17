@@ -133,7 +133,9 @@ export function Hero({ hero, data }: HeroProps) {
                         className="absolute top-auto bottom-0 left-0 w-full object-cover rounded-[32px] shadow-2xl"
                         controls
                         playsInline
-                        src="/videos/VIDEO_1ERE_PAGE_ESSAI2.mp4"
+                        webkit-playsinline="true"
+                        src="/videos/AUDIO ACCUEIL _1.mp4"
+                        poster="/images/cover.webp"
                       />
                     </div>
                   </div>
