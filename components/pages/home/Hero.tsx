@@ -109,9 +109,9 @@ export function Hero({ hero, data }: HeroProps) {
                 </p>
               )}
               {hero?.ctaButton && (
-                <div className="flex">
+                <div className="flex w-full md:w-auto">
                   <button 
-                    className="bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold mt-8 text-sm md:text-base"
+                    className="w-full md:w-auto bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold mt-8 text-sm md:text-base"
                     aria-label={hero.ctaButton.ariaLabel}
                     onClick={scrollToQuestionnaire}
                   >
