@@ -50,8 +50,8 @@ export default async function IndexRoute({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-primary-dark text-primary-cream">
-      {draftMode().isEnabled && <LiveVisualEditing />}
+    (<div className="flex min-h-screen flex-col bg-primary-dark text-primary-cream">
+      {(await draftMode()).isEnabled && <LiveVisualEditing />}
       <Suspense>
         <Navbar />
       </Suspense>
@@ -61,6 +61,6 @@ export default async function IndexRoute({
       <Suspense>
         <Footer />
       </Suspense>
-    </div>
-  )
+    </div>)
+  );
 }
