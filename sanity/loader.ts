@@ -13,4 +13,4 @@ export const queryStore = createQueryStore({
   studioUrl: '/studio',
   projectId,
   dataset,
-})
+} as any)
