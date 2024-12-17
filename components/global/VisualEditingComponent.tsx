@@ -1,6 +1,6 @@
 'use client'
 
-import { VisualEditing } from '@sanity/visual-editing'
+import { enableVisualEditing } from '@sanity/visual-editing'
 import { queryStore } from '@/sanity/loader'
 import { useEffect, useState } from 'react'
 
@@ -9,9 +9,10 @@ export function VisualEditingComponent() {
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    if (mounted) {
+      enableVisualEditing()
+    }
+  }, [mounted])
 
-  if (!mounted) return null
-
-  return <VisualEditing store={queryStore} />
+  return null
 }
