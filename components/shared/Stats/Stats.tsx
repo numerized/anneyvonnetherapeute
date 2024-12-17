@@ -2,7 +2,6 @@ import { StatItem } from './StatItem'
 import { StatsProps } from './types'
 
 export function Stats({ title, items }: StatsProps) {
-  console.log(items)
   return (
     <section 
       className="bg-primary-dark py-20 -mx-[2rem] md:-mx-[4rem] lg:-mx-[6rem]"
