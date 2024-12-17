@@ -3,7 +3,7 @@ import { draftMode } from 'next/headers'
 import Link from 'next/link'
 
 import { HomePage } from '@/components/pages/home/HomePage'
-import { HomePagePreview } from '@/components/pages/home/HomePagePreview'
+import HomePagePreview from '@/components/pages/home/HomePagePreview'
 import { studioUrl } from '@/sanity/lib/api'
 import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
 
@@ -13,7 +13,7 @@ export default async function IndexRoute() {
     loadSettings()
   ])
 
-  if (draftMode().isEnabled) {
+  if ((await draftMode()).isEnabled) {
     return <HomePagePreview initial={initial} settings={settings} />
   }
 

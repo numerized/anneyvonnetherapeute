@@ -34,7 +34,11 @@ export default async function RootLayout({
       lang="en"
       className={`${mono.variable} ${montserrat.variable} ${serif.variable}`}
     >
-      <body className="font-montserrat">{children}<SpeedInsights /><Analytics /></body>
+      <body className="font-montserrat">
+        {children}
+        <SpeedInsights />
+        <Analytics />
+      </body>
     </html>
   )
 }
