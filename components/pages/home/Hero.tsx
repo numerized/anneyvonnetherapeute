@@ -5,6 +5,7 @@ import type { HomePagePayload } from '@/types'
 import { scrollToSection } from '@/utils/scroll'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -28,6 +29,12 @@ export function Hero({ hero, data }: HeroProps) {
       imageUrl = imageBuilder.width(1920).height(1080).url();
     }
   }
+
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const scrollToQuestionnaire = () => {
     scrollToSection('questionnaire');
@@ -129,14 +136,16 @@ export function Hero({ hero, data }: HeroProps) {
                 <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
                   <div className="absolute inset-[12px]">
                     <div className="w-full h-full relative overflow-hidden rounded-[32px]">
-                      <video
-                        className="absolute top-auto bottom-0 left-0 w-full object-cover rounded-[32px] shadow-2xl"
-                        controls
-                        playsInline
-                        webkit-playsinline="true"
-                        src="/videos/AUDIO ACCUEIL _1.mp4"
-                        poster="/images/cover.webp"
-                      />
+                      {isClient && (
+                        <video
+                          className="absolute top-auto bottom-0 left-0 w-full object-cover rounded-[32px] shadow-2xl"
+                          controls
+                          playsInline
+                          webkit-playsinline="true"
+                          src="/videos/AUDIO ACCUEIL _1.mp4"
+                          poster="/images/cover.webp"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
