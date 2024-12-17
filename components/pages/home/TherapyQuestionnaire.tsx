@@ -170,7 +170,7 @@ export function TherapyQuestionnaire() {
             </div>
           </div>
 
-          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px]">
             <AnimatePresence mode="wait">
               {step === 1 && (
                 <motion.div
