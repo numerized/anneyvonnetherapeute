@@ -3,17 +3,18 @@ import { draftMode } from 'next/headers'
 import Link from 'next/link'
 
 import { HomePage } from '@/components/pages/home/HomePage'
+import { HomePagePreview } from '@/components/pages/home/HomePagePreview'
 import { studioUrl } from '@/sanity/lib/api'
-import { loadHomePage } from '@/sanity/loader/loadQuery'
-const HomePagePreview = dynamic(
-  () => import('@/components/pages/home/HomePagePreview'),
-)
+import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
 
 export default async function IndexRoute() {
-  const initial = await loadHomePage()
+  const [initial, settings] = await Promise.all([
+    loadHomePage(),
+    loadSettings()
+  ])
 
   if (draftMode().isEnabled) {
-    return <HomePagePreview initial={initial} />
+    return <HomePagePreview initial={initial} settings={settings} />
   }
 
   if (!initial.data) {
@@ -28,5 +29,5 @@ export default async function IndexRoute() {
     )
   }
 
-  return <HomePage data={initial.data} />
+  return <HomePage data={initial.data} settings={settings.data} />
 }

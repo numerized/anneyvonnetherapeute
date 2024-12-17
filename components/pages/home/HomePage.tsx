@@ -15,16 +15,17 @@ import { TherapyQuestionnaire } from './TherapyQuestionnaire'
 export interface HomePageProps {
   data: HomePagePayload | null
   encodeDataAttribute?: EncodeDataAttributeCallback
+  settings?: any
 }
 
-export function HomePage({ data, encodeDataAttribute }: HomePageProps) {
+export function HomePage({ data, encodeDataAttribute, settings }: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
   const { overview = [], title = '', hero, statistics = [] } = data ?? {}
 
   return (
     <>
       {/* Hero Section */}
-      {hero && <Hero hero={hero} />}
+      {hero && <Hero hero={hero} data={settings} />}
 
       {/* Stats Section */}
       {statistics && statistics.length > 0 && (
