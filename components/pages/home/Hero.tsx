@@ -122,13 +122,13 @@ export function Hero({ hero, data }: HeroProps) {
             </div>
 
             {/* Right side - Video */}
-            <div className="w-full md:w-[400px] relative px-4 md:px-0">
-              <div className="relative w-full md:w-[400px] aspect-[4/3]">
+            <div className="w-full relative">
+              <div className="relative w-full aspect-[4/3]">
                 <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
                   <div className="absolute inset-[12px]">
                     <div className="w-full h-full relative overflow-hidden rounded-[32px]">
                       <video
-                        className="absolute top-auto bottom-0 left-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+                        className="absolute top-auto bottom-0 left-0 w-full object-cover rounded-[32px] shadow-2xl"
                         controls
                         playsInline
                         src="/videos/VIDEO_1ERE_PAGE_ESSAI2.mp4"
