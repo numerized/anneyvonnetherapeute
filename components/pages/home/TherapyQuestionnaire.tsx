@@ -1,8 +1,8 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Users2, User, Sparkles, ArrowUpCircle, Scale, Zap, Clock, Target } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { Users, User, Sparkles, Heart, ArrowUpRight, Target } from 'lucide-react'
 
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
@@ -170,7 +170,7 @@ export function TherapyQuestionnaire() {
             </div>
           </div>
 
-          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
+          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px]">
             <AnimatePresence mode="wait">
               {step === 1 && (
                 <motion.div
@@ -186,20 +186,24 @@ export function TherapyQuestionnaire() {
                         setAnswers(prev => ({ ...prev, situation: 'couple' }))
                         setStep(2)
                       }}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      <Users2 className="w-6 h-6" />
-                      Je suis en couple ou je souhaite travailler sur ma relation
+                      <div className="flex items-center gap-3">
+                        <Users className="w-5 h-5 flex-shrink-0" />
+                        <span>Je suis en couple ou je souhaite travailler sur ma relation</span>
+                      </div>
                     </button>
                     <button
                       onClick={() => {
                         setAnswers(prev => ({ ...prev, situation: 'individual' }))
                         setStep(2)
                       }}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      <User className="w-6 h-6" />
-                      Je souhaite un accompagnement individuel
+                      <div className="flex items-center gap-3">
+                        <User className="w-5 h-5 flex-shrink-0" />
+                        <span>Je souhaite un accompagnement individuel</span>
+                      </div>
                     </button>
                   </div>
                 </motion.div>
@@ -224,48 +228,60 @@ export function TherapyQuestionnaire() {
                       <>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'start')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Sparkles className="w-6 h-6" />
-                          Débuter une nouvelle relation sur de bonnes bases
+                          <div className="flex items-center gap-3">
+                            <Sparkles className="w-5 h-5 flex-shrink-0" />
+                            <span>Débuter une nouvelle relation sur de bonnes bases</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'improve')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <ArrowUpCircle className="w-6 h-6" />
-                          Améliorer et faire évoluer notre relation
+                          <div className="flex items-center gap-3">
+                            <Heart className="w-5 h-5 flex-shrink-0" />
+                            <span>Améliorer et faire évoluer notre relation</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'decide')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Scale className="w-6 h-6" />
-                          Prendre une décision importante pour notre couple
+                          <div className="flex items-center gap-3">
+                            <Target className="w-5 h-5 flex-shrink-0" />
+                            <span>Prendre une décision importante pour notre couple</span>
+                          </div>
                         </button>
                       </>
                     ) : (
                       <>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'intensive')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Zap className="w-6 h-6" />
-                          Un suivi intensif et personnalisé
+                          <div className="flex items-center gap-3">
+                            <ArrowUpRight className="w-5 h-5 flex-shrink-0" />
+                            <span>Un suivi intensif et personnalisé</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'regular')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Clock className="w-6 h-6" />
-                          Un accompagnement régulier
+                          <div className="flex items-center gap-3">
+                            <Users className="w-5 h-5 flex-shrink-0" />
+                            <span>Un accompagnement régulier</span>
+                          </div>
                         </button>
                         <button
                           onClick={() => getRecommendations(answers.situation, 'specific')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors flex items-center gap-4"
+                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                         >
-                          <Target className="w-6 h-6" />
-                          Un travail sur des thèmes spécifiques
+                          <div className="flex items-center gap-3">
+                            <Target className="w-5 h-5 flex-shrink-0" />
+                            <span>Un travail sur des thèmes spécifiques</span>
+                          </div>
                         </button>
                       </>
                     )}

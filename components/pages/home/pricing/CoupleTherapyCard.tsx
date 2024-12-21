@@ -11,11 +11,11 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
   return (
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
-        <div className="text-right">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+        <div className="text-center">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE DE COUPLE
           </h3>
-          <p className="text-primary-coral italic">De cœur et de corps</p>
+          <p className="text-primary-coral italic text-left">De cœur et de corps</p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
