@@ -1,7 +1,7 @@
 export function About() {
   return (
     <section 
-      className="bg-primary-dark py-24" 
+      className="bg-primary-dark py-6" 
       id="about"
       aria-labelledby="about-title"
     >
@@ -18,7 +18,7 @@ export function About() {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-0 md:gap-12 items-start">
           <div className="bg-primary-forest/80 rounded-[24px] p-8 md:p-12">
             <div className="space-y-6">
               <p className="text-primary-cream/90">
@@ -42,7 +42,7 @@ export function About() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative mx-auto md:mx-8 max-w-[300px] mt-[60px]">
             <div 
               className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/50 via-50% to-primary-forest/20 z-10 rounded-[24px]" 
               aria-hidden="true"
@@ -50,9 +50,9 @@ export function About() {
             <img
               src="/images/about.webp"
               alt="Espace thérapeutique paisible"
-              className="rounded-[24px] w-full h-[600px] object-cover"
-              width={800}
-              height={600}
+              className="rounded-[24px] w-full aspect-[3/5] object-cover"
+              width={300}
+              height={500}
               loading="lazy"
             />
           </div>

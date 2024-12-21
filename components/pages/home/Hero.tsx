@@ -90,9 +90,9 @@ export function Hero({ hero, data }: HeroProps) {
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             {/* Left side - Text Content */}
-            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem] mt-12 md:mt-0">
+            <div className="w-full md:w-1/2 md:ml-[4rem] lg:ml-[6rem] mt-12 md:mt-0 text-center md:text-left">
               {hero?.badge && (
-                <div className="flex">
+                <div className="flex justify-center md:justify-start">
                   <div 
                     className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4"
                     role="presentation"
@@ -131,7 +131,7 @@ export function Hero({ hero, data }: HeroProps) {
             </div>
 
             {/* Right side - Video */}
-            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+            <div className="w-full md:w-1/2 flex items-center justify-center">
               <div className="relative w-full max-w-[300px] aspect-[4/3]">
                 <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
                   <div className="absolute inset-[12px]">
@@ -154,7 +154,7 @@ export function Hero({ hero, data }: HeroProps) {
           </div>
 
           {/* Mobile CTA Button */}
-          <div className="block md:hidden mt-6 px-4">
+          <div className="block md:hidden mt-6 mb-8 md:mb-0 px-4 text-center">
             {hero?.ctaButton && (
               <div className="flex w-full">
                 <button 
