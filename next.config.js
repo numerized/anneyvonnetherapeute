@@ -22,6 +22,27 @@ const nextConfig = {
   generateBuildId: async () => {
     return `build-${new Date().getTime()}`
   },
+  // Disable caching in development
+  experimental: {
+    // This will disable caching in development
+    isrMemoryCacheSize: 0,
+  },
+  // Set revalidate to 0 in development
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: process.env.NODE_ENV === 'development' 
+              ? 'no-store, must-revalidate'
+              : 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
