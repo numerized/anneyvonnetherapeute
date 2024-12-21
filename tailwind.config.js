@@ -13,6 +13,7 @@ module.exports = {
       mono: 'var(--font-mono)',
       montserrat: 'var(--font-montserrat)',
       serif: 'var(--font-serif)',
+      aleo: 'var(--font-aleo)',
     },
     extend: {
       colors: {

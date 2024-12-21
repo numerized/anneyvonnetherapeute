@@ -1,9 +1,15 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, PT_Serif, Montserrat } from 'next/font/google'
+import { IBM_Plex_Mono, PT_Serif, Montserrat, Aleo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import './globals.css'
+
+const aleo = Aleo({
+  variable: '--font-aleo',
+  subsets: ['latin'],
+  weight: ['900'],
+})
 
 const serif = PT_Serif({
   variable: '--font-serif',
@@ -32,7 +38,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${mono.variable} ${montserrat.variable} ${serif.variable}`}
+      className={`${mono.variable} ${montserrat.variable} ${serif.variable} ${aleo.variable}`}
     >
       <body className="font-montserrat">{children}<SpeedInsights /><Analytics /></body>
     </html>
