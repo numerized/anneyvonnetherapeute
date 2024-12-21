@@ -152,20 +152,22 @@ export function Hero({ hero, data }: HeroProps) {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="block md:hidden mt-6 px-4">
-        {hero?.ctaButton && (
-          <div className="flex w-full">
-            <button 
-              className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-2.5 rounded-[24px] font-bold text-base"
-              aria-label={hero.ctaButton.ariaLabel}
-              onClick={scrollToQuestionnaire}
-            >
-              {hero.ctaButton.text}
-            </button>
+
+          {/* Mobile CTA Button */}
+          <div className="block md:hidden mt-6 px-4">
+            {hero?.ctaButton && (
+              <div className="flex w-full">
+                <button 
+                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-2.5 rounded-[24px] font-bold text-base"
+                  aria-label={hero.ctaButton.ariaLabel}
+                  onClick={scrollToQuestionnaire}
+                >
+                  {hero.ctaButton.text}
+                </button>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </section>
   )
