@@ -4,16 +4,17 @@ import { type QueryResponseInitial } from '@sanity/react-loader'
 
 import { homePageQuery } from '@/sanity/lib/queries'
 import { useQuery } from '@/sanity/loader/useQuery'
-import { HomePagePayload } from '@/types'
+import { HomePagePayload, SettingsPayload } from '@/types'
 
 import HomePage from './HomePage'
 
 type Props = {
   initial: QueryResponseInitial<HomePagePayload | null>
+  settings: QueryResponseInitial<SettingsPayload | null>
 }
 
 export default function HomePagePreview(props: Props) {
-  const { initial } = props
+  const { initial, settings } = props
   const { data, encodeDataAttribute } = useQuery<HomePagePayload | null>(
     homePageQuery,
     {},
@@ -28,5 +29,5 @@ export default function HomePagePreview(props: Props) {
     )
   }
 
-  return <HomePage data={data} encodeDataAttribute={encodeDataAttribute} />
+  return <HomePage data={data} encodeDataAttribute={encodeDataAttribute} settings={settings.data} />
 }

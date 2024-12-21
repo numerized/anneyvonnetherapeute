@@ -16,6 +16,11 @@
     font-family: ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color emoji!important;
     font-weight: 900!important;
   }
+
+  footer h1 {
+    font-size: 3em;
+    font-family: 'Nove', sans-serif!important;
+  }
 }
 
 /* Remove default margin */

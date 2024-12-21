@@ -10,6 +10,17 @@ const aleo = Aleo({
   subsets: ['latin'],
   weight: ['900'],
 })
+export const metadata: Metadata = {
+  title: 'Anne-Yvonne Thérapeute',
+  description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/images/logo.png', type: 'image/png' }
+    ],
+    apple: { url: '/images/logo.png', type: 'image/png' }
+  },
+}
 
 const serif = PT_Serif({
   variable: '--font-serif',
@@ -40,7 +51,11 @@ export default async function RootLayout({
       lang="en"
       className={`${mono.variable} ${montserrat.variable} ${serif.variable} ${aleo.variable}`}
     >
-      <body className="font-montserrat">{children}<SpeedInsights /><Analytics /></body>
+      <body className="font-montserrat">
+        {children}
+        <SpeedInsights />
+        <Analytics />
+      </body>
     </html>
   )
 }
