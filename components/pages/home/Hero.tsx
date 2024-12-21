@@ -42,7 +42,7 @@ export function Hero({ hero, data }: HeroProps) {
 
   return (
     <section 
-      className="relative min-h-[100vh] md:min-h-[80vh] grid place-items-center pt-24 md:pt-0"
+      className="relative min-h-[600px] grid place-items-center pt-24 md:pt-0"
       id="accueil"
       role="main"
       aria-labelledby="hero-title"
@@ -131,14 +131,14 @@ export function Hero({ hero, data }: HeroProps) {
             </div>
 
             {/* Right side - Video */}
-            <div className="w-full relative">
-              <div className="relative w-full aspect-[4/3]">
+            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+              <div className="relative w-full max-w-[300px] aspect-[4/3]">
                 <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
                   <div className="absolute inset-[12px]">
                     <div className="w-full h-full relative overflow-hidden rounded-[32px]">
                       {isClient && (
                         <video
-                          className="absolute top-auto bottom-0 left-0 w-full object-cover rounded-[32px] shadow-2xl"
+                          className="absolute top-auto bottom-0 left-0 w-full max-h-[300px] object-cover rounded-[32px] shadow-2xl"
                           controls
                           playsInline
                           webkit-playsinline="true"
@@ -150,22 +150,22 @@ export function Hero({ hero, data }: HeroProps) {
                   </div>
                 </div>
               </div>
-              <div className="block md:hidden mt-6 px-4">
-                {hero?.ctaButton && (
-                  <div className="flex w-full">
-                    <button 
-                      className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-2.5 rounded-[24px] font-bold text-base"
-                      aria-label={hero.ctaButton.ariaLabel}
-                      onClick={scrollToQuestionnaire}
-                    >
-                      {hero.ctaButton.text}
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className="block md:hidden mt-6 px-4">
+        {hero?.ctaButton && (
+          <div className="flex w-full">
+            <button 
+              className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-2.5 rounded-[24px] font-bold text-base"
+              aria-label={hero.ctaButton.ariaLabel}
+              onClick={scrollToQuestionnaire}
+            >
+              {hero.ctaButton.text}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   )
