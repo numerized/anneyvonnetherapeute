@@ -8,7 +8,10 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-0 xl:p-24">
+      <br/>
+      <br/>
+      <br/>
       <PricingPlans />
     </main>
   )
