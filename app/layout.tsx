@@ -13,13 +13,6 @@ const aleo = Aleo({
 export const metadata: Metadata = {
   title: 'Anne-Yvonne Thérapeute',
   description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/images/logo.png', type: 'image/png' }
-    ],
-    apple: { url: '/images/logo.png', type: 'image/png' }
-  },
 }
 
 const serif = PT_Serif({
