@@ -1,8 +1,8 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
+import { BookOpen, Heart, User, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Heart, Users, User, BookOpen } from 'lucide-react'
 
 interface QuestionnaireRewardProps {
   isOpen: boolean

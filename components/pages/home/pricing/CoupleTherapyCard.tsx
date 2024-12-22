@@ -1,6 +1,7 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface CoupleTherapyCardProps {
