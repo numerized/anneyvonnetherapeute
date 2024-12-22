@@ -22,11 +22,6 @@ const nextConfig = {
   generateBuildId: async () => {
     return `build-${new Date().getTime()}`
   },
-  // Disable caching in development
-  experimental: {
-    // This will disable caching in development
-    isrMemoryCacheSize: 0,
-  },
   // Set revalidate to 0 in development
   async headers() {
     return [
