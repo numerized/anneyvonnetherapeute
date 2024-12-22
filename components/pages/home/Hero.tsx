@@ -155,8 +155,10 @@ export function Hero({ hero, data }: HeroProps) {
                             src="/videos/capsule0.mp4"
                             poster="/images/cover0.webp"
                           />
+                          {/* Dark green overlay */}
+                          <div className="absolute inset-0 bg-primary-teal/30 rounded-[32px]" />
                           {/* Frost bubbles */}
-                          <div className="absolute top-4 right-4 flex gap-4">
+                          <div className="absolute top-4 right-4 flex gap-4 z-20">
                             {/* Capsule title bubble */}
                             <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
                               <span className="text-white font-medium">Capsule #1</span>
