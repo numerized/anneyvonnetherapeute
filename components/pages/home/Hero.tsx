@@ -152,23 +152,26 @@ export function Hero({ hero, data }: HeroProps) {
                             className="absolute top-auto bottom-0 left-0 w-full max-h-[300px] object-cover rounded-[32px] shadow-2xl"
                             playsInline
                             webkit-playsinline="true"
-                            src="/videos/AUDIO ACCUEIL _1.mp4"
-                            poster="/images/cover.webp"
+                            src="/videos/capsule0.mp4"
+                            poster="/images/cover0.webp"
                           />
                           <button
                             onClick={togglePlay}
-                            className="absolute left-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-full pr-6 pl-4 py-4 transition-all hover:bg-white/30 cursor-pointer"
                             aria-label={isPlaying ? 'Pause video' : 'Play video'}
                           >
-                            {isPlaying ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-6 h-6">
-                                <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
-                              </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-6 h-6">
-                                <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-                              </svg>
-                            )}
+                            <div className="w-6 h-6 flex items-center justify-center">
+                              {isPlaying ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                                  <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                                </svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                                  <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                                </svg>
+                              )}
+                            </div>
+                            <span className="text-white font-medium">Capsule #1</span>
                           </button>
                         </>
                       )}
