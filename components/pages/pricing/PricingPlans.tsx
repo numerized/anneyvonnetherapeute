@@ -65,10 +65,10 @@ export function PricingPlans() {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center">
-        <h2 className="text-4xl font-light tracking-tight text-primary-forest mb-4">
+        <h2 className="text-4xl font-light tracking-tight text-primary-cream mb-4">
           Tarifs
         </h2>
-        <p className="text-xl text-primary-forest/80 mb-12">
+        <p className="text-xl text-primary-cream/90 mb-12">
           Choisissez la formule qui correspond le mieux à vos besoins.
         </p>
       </div>
@@ -82,22 +82,25 @@ export function PricingPlans() {
               className={clsx(
                 'relative flex flex-col p-8 rounded-[32px]',
                 plan.highlight
-                  ? 'bg-primary-forest text-primary-cream ring-2 ring-primary-coral'
-                  : 'bg-primary-forest/5 text-primary-forest'
+                  ? 'bg-primary-forest/80 text-primary-cream ring-2 ring-primary-coral'
+                  : 'bg-primary-forest/20 text-primary-cream'
               )}
             >
               <div className="mb-4">
-                <Icon className="w-8 h-8" />
+                <Icon className={clsx(
+                  'w-8 h-8',
+                  plan.highlight ? 'text-primary-coral' : 'text-primary-cream/80'
+                )} />
               </div>
 
               <h3 className="text-2xl font-light mb-2">{plan.name}</h3>
-              <p className="text-sm opacity-80 mb-8">{plan.description}</p>
+              <p className="text-sm text-primary-cream/80 mb-8">{plan.description}</p>
 
               <div className="mb-8">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-light">{plan.price}€</span>
+                  <span className="text-4xl font-light">{plan.price}{plan.duration && '€'}</span>
                   {plan.duration && (
-                    <span className="text-sm opacity-70">/ {plan.duration}</span>
+                    <span className="text-sm text-primary-cream/70">/ {plan.duration}</span>
                   )}
                 </div>
               </div>
@@ -106,7 +109,7 @@ export function PricingPlans() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
                     <span className="text-primary-coral">♦</span>
-                    <span className="text-sm opacity-90">{feature}</span>
+                    <span className="text-sm text-primary-cream/90">{feature}</span>
                   </li>
                 ))}
               </ul>
