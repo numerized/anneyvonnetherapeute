@@ -87,7 +87,7 @@ export function AiCompanion() {
               {/* WhatsApp-style header */}
               <div className="flex items-center gap-3 pb-4 border-b border-primary-cream/10">
                 <div className="w-10 h-10 rounded-full bg-primary-teal/20 flex-shrink-0 grid place-items-center">
-                  <span className="text-primary-teal">AY</span>
+                  <span className="text-primary-teal" aria-label="Initiales AnneYvonne">AY</span>
                 </div>
                 <div>
                   <h4 className="text-primary-cream font-medium">AnneYvonne IA</h4>
