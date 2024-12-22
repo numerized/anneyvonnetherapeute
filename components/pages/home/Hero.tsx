@@ -13,13 +13,9 @@ interface HeroProps {
 }
 
 export function Hero({ hero, data }: HeroProps) {
-  console.log('Hero data:', data);
-  console.log('Logo data:', data?.logo);
-  console.log('Logo asset:', data?.logo?.asset);
   
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
-  console.log('Logo URL:', logoUrl);
 
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
