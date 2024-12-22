@@ -1,6 +1,6 @@
 'use client'
 
-import { Heart, MessageSquare, Calendar, FileText } from 'lucide-react'
+import { Calendar, FileText, Heart, MessageSquare } from 'lucide-react'
 
 export default function StyleGuidePage() {
   return (
