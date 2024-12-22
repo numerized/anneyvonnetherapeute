@@ -1,7 +1,8 @@
 'use client'
 
-import { type FC } from 'react'
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
+import { type FC } from 'react'
+
 import { Benefit } from '../Benefit'
 
 interface CheckupStageCardProps {

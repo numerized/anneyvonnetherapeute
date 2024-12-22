@@ -1,19 +1,19 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import { ArrowUpRight, Heart, Sparkles, Target, User, Users } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { Users, User, Sparkles, Heart, ArrowUpRight, Target } from 'lucide-react'
 
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
 
+import { TherapyPromoModal } from './modals/TherapyPromoModal'
+import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
+import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { BeginningStageCard } from './stages/BeginningStageCard'
 import { CheckupStageCard } from './stages/CheckupStageCard'
-import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
-import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
-import { TherapyPromoModal } from './modals/TherapyPromoModal'
-import { VitTherapyCard } from './pricing/VitTherapyCard'
 
 type TherapyOption = {
   title: string

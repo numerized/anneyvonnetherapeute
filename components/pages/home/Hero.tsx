@@ -1,11 +1,12 @@
 'use client'
 
-import { urlFor } from '@/sanity/lib/image'
-import type { HomePagePayload } from '@/types'
-import { scrollToSection } from '@/utils/scroll'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+
+import { urlFor } from '@/sanity/lib/image'
+import type { HomePagePayload } from '@/types'
+import { scrollToSection } from '@/utils/scroll'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
