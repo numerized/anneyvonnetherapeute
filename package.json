@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
-    "@next/env": "15.1.0",
+    "@next/env": "15.1.2",
     "@sanity/demo": "2.0.0",
     "@sanity/icons": "3.4.0",
     "@sanity/image-url": "1.1.0",
@@ -32,7 +32,7 @@
     "dotenv": "^16.4.5",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.461.0",
-    "next": "^15.1.0",
+    "next": "^15.1.2",
     "next-sanity": "9.8.13",
     "react": "^19.0.0-rc.1",
     "react-dom": "^19.0.0-rc.1",
@@ -45,10 +45,10 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
-    "@types/react": "19.0.1",
+    "@types/react": "19.0.2",
     "autoprefixer": "10.4.20",
     "eslint": "8.57.1",
-    "eslint-config-next": "^15.1.0",
+    "eslint-config-next": "^15.1.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "postcss": "8.4.49",
     "prettier": "3.3.3",
@@ -59,6 +59,6 @@
     "typescript": "5.6.3"
   },
   "overrides": {
-    "@types/react": "19.0.1"
+    "@types/react": "19.0.2"
   }
 }
