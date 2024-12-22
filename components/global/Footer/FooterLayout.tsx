@@ -89,10 +89,10 @@ export default function Footer(props: FooterProps) {
         <div className="mt-16 pt-8 border-t border-primary-teal/20">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex space-x-6 text-primary-cream/80">
-              <a href="/mentions-legales" className="hover:text-primary-cream focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-md px-2 py-1">
+              <a className="hover:text-primary-cream focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-md px-2 py-1">
                 Mentions légales
               </a>
-              <a href="/politique-confidentialite" className="hover:text-primary-cream focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-md px-2 py-1">
+              <a className="hover:text-primary-cream focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-md px-2 py-1">
                 Politique de confidentialité
               </a>
             </div>

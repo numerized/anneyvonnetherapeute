@@ -30,7 +30,7 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
                 <div>
                   <h3 className="text-primary-coral font-bold mb-2">Formation Approfondie</h3>
                   <p className="text-primary-cream/90">
-                    Maîtrisez les techniques de la thérapie Cœurs à Corps et développez une approche holistique unique.
+                    Maîtrisez les techniques de la thérapie Cœur à Corps et développez une approche holistique unique.
                   </p>
                 </div>
               </div>

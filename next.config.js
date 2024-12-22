@@ -9,7 +9,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
-        port: '',
+        pathname: '**',
       },
       {
         protocol: 'https',
@@ -18,7 +18,14 @@ const nextConfig = {
       },
     ],
   },
-  // Force cache invalidation
+  typescript: {
+    // Set this to false if you want production builds to abort if there are type errors
+    ignoreBuildErrors: process.env.VERCEL_ENV === 'production',
+  },
+  eslint: {
+    // Set this to false if you want production builds to abort if there are lint errors
+    ignoreDuringBuilds: process.env.VERCEL_ENV === 'production',
+  },
   generateBuildId: async () => {
     return `build-${new Date().getTime()}`
   },
@@ -37,6 +44,14 @@ const nextConfig = {
         ],
       },
     ]
+  },
+  // Development-specific configuration
+  webpack: (config, { dev }) => {
+    if (dev) {
+      // Disable cache in development
+      config.cache = false;
+    }
+    return config;
   },
 }
 

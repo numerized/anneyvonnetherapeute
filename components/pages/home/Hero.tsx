@@ -152,12 +152,12 @@ export function Hero({ hero, data }: HeroProps) {
                             className="absolute top-auto bottom-0 left-0 w-full max-h-[300px] object-cover rounded-[32px] shadow-2xl"
                             playsInline
                             webkit-playsinline="true"
-                            src="/videos/AUDIO ACCUEIL _1.mp4"
+                            src="/videos/capsule0.mp4"
                             poster="/images/cover.webp"
                           />
                           <button
                             onClick={togglePlay}
-                            className="absolute left-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
+                            className="absolute right-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
                             aria-label={isPlaying ? 'Pause video' : 'Play video'}
                           >
                             {isPlaying ? (
