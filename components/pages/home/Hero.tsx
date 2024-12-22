@@ -155,9 +155,17 @@ export function Hero({ hero, data }: HeroProps) {
                             src="/videos/capsule0.mp4"
                             poster="/images/cover0.webp"
                           />
+                          {/* Frost bubbles */}
+                          <div className="absolute top-4 right-4 flex gap-4">
+                            {/* Capsule title bubble */}
+                            <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
+                              <span className="text-white font-medium">Capsule #1</span>
+                            </div>
+                          </div>
+                          {/* Play/Pause button */}
                           <button
                             onClick={togglePlay}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-full pr-6 pl-4 py-4 transition-all hover:bg-white/30 cursor-pointer"
+                            className="absolute right-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
                             aria-label={isPlaying ? 'Pause video' : 'Play video'}
                           >
                             <div className="w-6 h-6 flex items-center justify-center">
@@ -171,7 +179,6 @@ export function Hero({ hero, data }: HeroProps) {
                                 </svg>
                               )}
                             </div>
-                            <span className="text-white font-medium">Capsule #1</span>
                           </button>
                         </>
                       )}
