@@ -1,4 +1,4 @@
-import type { Metadata, ResolvingMetadata } from 'next'
+import type { Metadata, ResolvingMetadata, QueryResponseInitial } from 'next'
 import dynamic from 'next/dynamic'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
@@ -17,9 +17,16 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
   const params = await props.params;
   const { data: page } = await loadPage(params.slug)
 
+  if (!page) {
+    return {
+      title: 'Not Found',
+      description: 'The page you are looking for does not exist.',
+    }
+  }
+
   return {
-    title: page?.title,
-    description: page?.overview
+    title: page.title,
+    description: page.overview
       ? toPlainText(page.overview)
       : (await parent).description,
   }
@@ -31,7 +38,7 @@ export function generateStaticParams() {
 
 export default async function PageSlugRoute(props: Props) {
   const params = await props.params;
-  const initial = await loadPage(params.slug)
+  const initial: QueryResponseInitial = await loadPage(params.slug)
 
   if ((await draftMode()).isEnabled) {
     return <PagePreview params={params} initial={initial} />

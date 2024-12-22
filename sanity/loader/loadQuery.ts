@@ -2,6 +2,7 @@ import 'server-only'
 
 import * as queryStore from '@sanity/react-loader'
 import { draftMode } from 'next/headers'
+import type { QueryResponseInitial } from '@sanity/react-loader'
 
 import { client } from '@/sanity/lib/client'
 import {
@@ -42,7 +43,7 @@ export const loadQuery = (async (query: string, params = {}, options = {}) => {
     revalidate = 60
   }
 
-  return queryStore.loadQuery(query, params, {
+  const result = await queryStore.loadQuery(query, params, {
     ...options,
     next: {
       revalidate,
@@ -51,23 +52,31 @@ export const loadQuery = (async (query: string, params = {}, options = {}) => {
     perspective,
     stega: draft.isEnabled,
   })
-}) satisfies (query: string, params?: any, options?: any) => Promise<any>
+
+  return {
+    data: result,
+    sourceMap: {
+      documents: [],
+      paths: [],
+      mappings: {}
+    }
+  }
+}) satisfies (query: string, params?: any, options?: any) => Promise<QueryResponseInitial<any>>
 
 /**
  * Loaders that are used in more than one place are declared here, otherwise they're colocated with the component
  */
 
-export async function loadSettings() {
-  const data = await loadQuery(
+export async function loadSettings(): Promise<QueryResponseInitial<SettingsPayload>> {
+  return loadQuery(
     settingsQuery,
     {},
     { next: { tags: ['settings', 'home', 'page'] } },
   )
-  return data as SettingsPayload
 }
 
-export async function loadHomePage() {
-  const data = await loadQuery(
+export async function loadHomePage(): Promise<QueryResponseInitial<HomePagePayload>> {
+  return loadQuery(
     homePageQuery,
     {},
     {
@@ -76,14 +85,12 @@ export async function loadHomePage() {
       },
     }
   )
-  return data as HomePagePayload
 }
 
-export async function loadPage(slug: string) {
-  const data = await loadQuery(
+export async function loadPage(slug: string): Promise<QueryResponseInitial<PagePayload | null>> {
+  return loadQuery(
     pagesBySlugQuery,
     { slug },
     { next: { tags: [`page:${slug}`] } },
   )
-  return data as PagePayload | null
 }
