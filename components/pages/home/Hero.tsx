@@ -11,9 +11,10 @@ import { motion } from 'framer-motion'
 interface HeroProps {
   hero: HomePagePayload['hero']
   data: any
+  comingSoon?: boolean
 }
 
-export function Hero({ hero, data }: HeroProps) {
+export function Hero({ hero, data, comingSoon }: HeroProps) {
   
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
@@ -130,12 +131,12 @@ export function Hero({ hero, data }: HeroProps) {
                   <div className="flex w-full md:w-auto">
                     <motion.button 
                       className="w-full md:w-auto bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold mt-8 text-sm md:text-base"
-                      aria-label={hero.ctaButton.ariaLabel}
-                      onClick={scrollToQuestionnaire}
+                      aria-label={comingSoon ? "Prochainement" : hero.ctaButton.ariaLabel}
+                      onClick={comingSoon ? undefined : scrollToQuestionnaire}
                       whileTap={{ scale: 0.95 }}
                       transition={{ ease: [0, 0.71, 0.2, 1] }}
                     >
-                      {hero.ctaButton.text}
+                      {comingSoon ? "PROCHAINEMENT" : hero.ctaButton.text}
                     </motion.button>
                   </div>
                 )}
