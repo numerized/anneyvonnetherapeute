@@ -21,7 +21,7 @@ export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) 
 
   return (
     <div className="bg-white rounded-3xl p-8 shadow-lg print:shadow-none relative min-h-screen">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full print-container">
         <div className="flex-grow">
           <div className="flex justify-between items-start mb-8">
             <h1 className="text-4xl font-light">
@@ -64,8 +64,8 @@ export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) 
           </div>
         </div>
 
-        <div>
-          <div className="flex justify-between print:hidden">
+        <div className="screen-only">
+          <div className="flex justify-between">
             <button
               onClick={onBack}
               className="bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors"
@@ -79,14 +79,12 @@ export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) 
               Suivant
             </button>
           </div>
-
-          <div className="mt-8">
-            <blockquote className="text-primary-coral italic text-sm">
-              "Vous seul(e) détenez le pouvoir de définir votre valeur.
-              Ne laissez jamais quelqu'un d'autre écrire votre histoire."
-            </blockquote>
-          </div>
         </div>
+
+        <blockquote className="text-primary-coral italic text-sm mt-8 print:hidden">
+          "Vous seul(e) détenez le pouvoir de définir votre valeur.
+          Ne laissez jamais quelqu'un d'autre écrire votre histoire."
+        </blockquote>
       </div>
     </div>
   )

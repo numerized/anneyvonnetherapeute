@@ -267,4 +267,14 @@
   textarea.min-h-\[60px\]:not(:focus):placeholder-shown {
     min-height: 6rem !important;
   }
+
+  /* Content container */
+  .print-container {
+    page-break-after: always !important;
+  }
+
+  /* Hide screen-only elements */
+  .screen-only {
+    display: none !important;
+  }
 }
