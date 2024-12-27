@@ -6,6 +6,7 @@ import { scrollToSection } from '@/utils/scroll'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -127,13 +128,15 @@ export function Hero({ hero, data }: HeroProps) {
               <div className="hidden md:block">
                 {hero?.ctaButton && (
                   <div className="flex w-full md:w-auto">
-                    <button 
+                    <motion.button 
                       className="w-full md:w-auto bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold mt-8 text-sm md:text-base"
                       aria-label={hero.ctaButton.ariaLabel}
                       onClick={scrollToQuestionnaire}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ ease: [0, 0.71, 0.2, 1] }}
                     >
                       {hero.ctaButton.text}
-                    </button>
+                    </motion.button>
                   </div>
                 )}
               </div>
@@ -195,13 +198,15 @@ export function Hero({ hero, data }: HeroProps) {
           <div className="block md:hidden mt-6 mb-8 md:mb-0 px-4 text-center">
             {hero?.ctaButton && (
               <div className="flex w-full">
-                <button 
+                <motion.button 
                   className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-2.5 rounded-[24px] font-bold text-base"
                   aria-label={hero.ctaButton.ariaLabel}
                   onClick={scrollToQuestionnaire}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ ease: [0, 0.71, 0.2, 1] }}
                 >
                   {hero.ctaButton.text}
-                </button>
+                </motion.button>
               </div>
             )}
           </div>
