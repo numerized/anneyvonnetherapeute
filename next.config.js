@@ -5,6 +5,9 @@ const nextConfig = {
     // This will force Vercel to rebuild on every deployment
     CACHE_BUST: new Date().toISOString(),
   },
+  experimental: {
+    nftTracing: true
+  },
   images: {
     remotePatterns: [
       {
@@ -31,7 +34,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: process.env.NODE_ENV === 'development' 
+            value: process.env.NODE_ENV === 'development'
               ? 'no-store, must-revalidate'
               : 'public, max-age=31536000, immutable',
           },
