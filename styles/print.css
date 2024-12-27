@@ -135,6 +135,12 @@
     color: #FF6B6B !important;
   }
 
+  /* Print layout */
+  @page {
+    margin: 2cm;
+    size: A4;
+  }
+
   /* Adjust page margins */
   @page {
     margin: 1cm !important;
@@ -227,5 +233,38 @@
 
   .right-8 {
     right: 2rem !important;
+  }
+
+  /* Hide placeholders when printing */
+  textarea::placeholder {
+    color: transparent !important;
+  }
+  input::placeholder {
+    color: transparent !important;
+  }
+
+  /* Add lines for empty textareas */
+  textarea:empty,
+  textarea:not(:focus):placeholder-shown {
+    background-image: linear-gradient(transparent, transparent calc(2rem - 1px), #e2e8f0 calc(2rem - 1px)) !important;
+    background-size: 100% 2rem !important;
+    line-height: 2rem !important;
+    min-height: 10rem !important;
+  }
+
+  /* Specific heights for different textareas */
+  textarea.min-h-\[250px\]:empty,
+  textarea.min-h-\[250px\]:not(:focus):placeholder-shown {
+    min-height: 20rem !important;
+  }
+
+  textarea.min-h-\[150px\]:empty,
+  textarea.min-h-\[150px\]:not(:focus):placeholder-shown {
+    min-height: 12rem !important;
+  }
+
+  textarea.min-h-\[60px\]:empty,
+  textarea.min-h-\[60px\]:not(:focus):placeholder-shown {
+    min-height: 6rem !important;
   }
 }
