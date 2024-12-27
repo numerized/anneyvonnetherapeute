@@ -32,10 +32,6 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>8 séances couple et/ou individuel selon la situation</span>
-              </li>
-              <li className="flex items-center gap-2 m-0">
-                <span className="text-primary-coral">♦</span>
                 <span>2 séances de 90 minutes</span>
               </li>
               <li className="flex items-center gap-2 m-0">
@@ -44,7 +40,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Bilans et introspections avant et après chaque séance</span>
+                <span>Alternance entre séances de couple et individuelles</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
@@ -64,15 +60,15 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Séances alternées sur 20 - 24 semaines (max. 6 mois)</span>
+                <span>Programme sur 6 mois avec séances alternées</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>8 séances couple et/ou individuel selon la situation</span>
+                <span>Bilans et introspections réguliers</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Bilans et introspections avant et après chaque séance</span>
+                <span>Support continu entre les séances</span>
               </li>
             </ul>
           </div>
@@ -88,17 +84,12 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <Benefit
               icon={<BookOpen size={24} />}
               title="Accès à la plateforme"
-              description="Ressources exclusives et événements en ligne pour soutenir votre transformation"
-            />
-            <Benefit
-              icon={<Calendar size={24} />}
-              title="Accompagnement intense"
-              description="Support continu pendant toute la durée du processus"
+              description="Ressources exclusives et exercices pour votre relation"
             />
             <Benefit
               icon={<Heart size={24} />}
               title="Investissement dans l'amour"
-              description="Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !"
+              description="Transformez votre relation et construisez une connexion durable"
             />
           </div>
         </div>

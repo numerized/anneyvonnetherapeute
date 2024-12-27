@@ -12,7 +12,7 @@ export function SexologyTherapyCard({ onShowPromo }: SexologyTherapyCardProps) {
           <h3 className="text-2xl font-light text-primary-cream mb-2">FORFAIT COUPLE SEXOLOGIE</h3>
           <p className="text-primary-coral italic">Programme de renaissance intime</p>
           <blockquote className="mt-6 border-l-2 border-primary-coral/30 pl-4 text-primary-cream/80">
-            "Raviver la flamme et renforcer l'intimité émotionnelle dans votre couple"
+            "Ravivez la flamme et renforcer l'intimité émotionnelle dans votre couple"
           </blockquote>
         </div>
 
@@ -33,16 +33,11 @@ export function SexologyTherapyCard({ onShowPromo }: SexologyTherapyCardProps) {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary-coral mt-1">♦</span>
-              <span className="text-primary-cream/80">Bilans et introspections avant et après chaque séance</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-primary-coral mt-1">♦</span>
               <span className="text-primary-cream/80">Option d'hypnose thérapeutique disponible</span>
             </li>
           </ul>
         </div>
         <div className="bg-primary-forest/30 rounded-xl p-6">
-
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE DE COUPLE</h3>
             <div className="flex items-end gap-1 justify-start">
@@ -52,15 +47,15 @@ export function SexologyTherapyCard({ onShowPromo }: SexologyTherapyCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Séances alternées sur 20 - 24 semaines (max. 6 mois)</span>
+                <span>Programme sur 4 mois avec séances alternées</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>8 séances couple et/ou individuel selon la situation</span>
+                <span>Bilans et introspections réguliers</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Bilans et introspections avant et après chaque séance</span>
+                <span>Support continu entre les séances</span>
               </li>
             </ul>
           </div>
@@ -79,33 +74,15 @@ export function SexologyTherapyCard({ onShowPromo }: SexologyTherapyCardProps) {
             <BookOpen className="h-6 w-6 flex-shrink-0 text-primary-coral" />
             <div>
               <h4 className="font-medium text-primary-cream mb-1">Accès à la plateforme Eros Inspiration</h4>
-              <p className="text-primary-cream/70">Ressources exclusives et événements en ligne pour soutenir votre transformation</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <Clock className="h-6 w-6 flex-shrink-0 text-primary-coral" />
-            <div>
-              <h4 className="font-medium text-primary-cream mb-1">Accompagnement intense</h4>
-              <p className="text-primary-cream/70">Support continu pendant toute la durée du processus</p>
+              <p className="text-primary-cream/70">Ressources exclusives et exercices pratiques pour votre intimité</p>
             </div>
           </div>
 
           <div className="flex items-start gap-4">
             <Heart className="h-6 w-6 flex-shrink-0 text-primary-coral" />
             <div>
-              <h4 className="font-medium text-primary-cream mb-1">Investissement dans l'intimité</h4>
+              <h4 className="font-medium text-primary-cream mb-1">Investissement dans votre intimité</h4>
               <p className="text-primary-cream/70">Ravivez la flamme et renforcez votre connexion intime</p>
-            </div>
-          </div>
-          <div className="bg-primary-forest/30 rounded-xl p-6">
-
-            <div className="flex items-start gap-4">
-              <Users2 className="h-6 w-6 flex-shrink-0 text-primary-coral" />
-              <div>
-                <h4 className="font-medium text-primary-cream mb-1">Idéal pour</h4>
-                <p className="text-primary-cream/70">Les couples souhaitant raviver leur intimité et renforcer leur connexion émotionnelle</p>
-              </div>
             </div>
           </div>
         </div>
