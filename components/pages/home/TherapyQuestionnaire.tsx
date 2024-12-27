@@ -397,22 +397,6 @@ export function TherapyQuestionnaire() {
                 </motion.div>
               )}
 
-              {showReward && (
-                <motion.div
-                  key="recommendations"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6"
-                >
-                  <div className={`grid ${recommendations.length === 2 ? 'md:grid-cols-2' : 'grid-cols-1'} gap-6`}>
-                    {recommendations.map((option) => (
-                      <div key={option.type}>{renderCard(option.type)}</div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
               {step > 1 && (
                 <motion.div
                   key="restart-button"
@@ -438,10 +422,30 @@ export function TherapyQuestionnaire() {
       {showReward && (
         <QuestionnaireReward 
           isOpen={showReward} 
-          onClose={() => setShowReward(false)}
+          onClose={() => {
+            setShowReward(false)
+            // Don't reset step or recommendations when closing reward
+          }}
           situation={answers.situation as 'couple' | 'individual'}
         />
       )}
+
+      <AnimatePresence mode="wait">
+        {step === 4 && recommendations.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="grid grid-cols-1 gap-8 mt-12"
+          >
+            {recommendations.map((option) => (
+              <div key={option.type}>
+                {renderCard(option.type)}
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <TherapyPromoModal
         isOpen={showModal}
