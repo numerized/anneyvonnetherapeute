@@ -407,8 +407,13 @@ export function TherapyQuestionnaire() {
                   >
                     {recommendations.map((option) => (
                       <div key={option.type}
-                        className={`col-span-12 md:col-span-6 ${recommendations.length === 1 ? 'md:col-start-4' : ''
-                          }`}
+                        className={`col-span-12 ${
+                          recommendations.length === 1 
+                            ? (option.type === 'men' || option.type === 'women')
+                              ? 'md:col-span-12' 
+                              : 'md:col-span-6 md:col-start-4'
+                            : 'md:col-span-6'
+                        }`}
                       >
                         {renderCard(option.type)}
                       </div>

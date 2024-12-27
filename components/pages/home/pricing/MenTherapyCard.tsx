@@ -26,7 +26,7 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
   }
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 rounded-[32px]">
+    <div className="grid md:grid-cols-2 gap-8 rounded-[32px] w-full h-full">
       <div className="flex justify-center w-full h-fit">
         <div className="relative w-full max-w-[300px] aspect-[4/3] rounded-[32px]">
           {isClient && (
@@ -70,7 +70,7 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
           )}
         </div>
       </div>
-      <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
+      <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors h-full">
 
 
         <div className="space-y-12">
