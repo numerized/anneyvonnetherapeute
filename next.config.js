@@ -29,17 +29,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: process.env.NODE_ENV === 'development' 
-              ? 'no-store, must-revalidate'
-              : 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
         source: '/favicon.ico',
         headers: [
           {
