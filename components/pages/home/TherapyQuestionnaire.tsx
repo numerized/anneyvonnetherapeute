@@ -26,49 +26,49 @@ type TherapyOption = {
 
 const therapyOptions: TherapyOption[] = [
   {
-    title: 'FORFAIT COUPLE SEXOLOGIE',
-    description: 'Programme de renaissance intime pour couples souhaitant raviver leur flamme et renforcer leur intimité.',
-    type: 'sexology'
-  },
-  {
-    title: 'THERAPIE RELATIONNELLE DE COUPLE',
-    description: 'Pour les couples en désir d\'harmonie, qui souhaitent mieux s\'entendre et se comprendre.',
+    title: 'FORFAIT COUPLE',
+    description: 'Thérapie de couple',
     type: 'couple'
   },
   {
-    title: 'THERAPIE RELATIONNELLE INDIVIDUELLE',
-    description: 'Pour ceux qui souhaitent se reconnecter à eux-mêmes et transformer leur vie.',
+    title: 'FORFAIT INDIVIDUEL',
+    description: 'Thérapie individuelle',
     type: 'individual'
   },
   {
-    title: ' FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY',
-    description: 'Un accompagnement unique, totalement personnalisé et flexible selon vos besoins.',
+    title: 'FORFAIT VIT',
+    description: 'Thérapie intensive',
     type: 'vit'
   },
   {
-    title: 'COACHING DE DEBUT DE RELATION',
-    description: 'Les premiers mois « clés » de votre avenir relationnel.',
-    type: 'beginning'
-  },
-  {
-    title: 'CHECK UP RELATIONNEL',
-    description: 'Pour faire le point régulièrement sur votre relation vivante et évolutive.',
-    type: 'checkup'
-  },
-  {
-    title: 'RESTER OU PARTIR',
-    description: 'Médiation et coaching pour une décision consciente sur l\'avenir de votre relation.',
-    type: 'decision'
-  },
-  {
-    title: 'Programme de transformation sexuelle pour hommes',
+    title: 'FORFAIT HOMME',
     description: 'Programme de transformation sexuelle pour hommes',
     type: 'men'
   },
   {
-    title: 'Voyage vers une sexualité libérée et épanouie',
-    description: 'Voyage vers une sexualité libérée et épanouie',
+    title: 'FORFAIT FEMME',
+    description: 'Voyage vers une sexualité libérée et épanouie pour femmes',
     type: 'women'
+  },
+  {
+    title: 'FORFAIT SEXOLOGIE',
+    description: 'Thérapie sexologique',
+    type: 'sexology'
+  },
+  {
+    title: 'FORFAIT DÉMARRAGE',
+    description: 'Pour bien démarrer',
+    type: 'beginning'
+  },
+  {
+    title: 'FORFAIT BILAN',
+    description: 'Pour faire le point',
+    type: 'checkup'
+  },
+  {
+    title: 'FORFAIT DÉCISION',
+    description: 'Pour prendre une décision',
+    type: 'decision'
   }
 ]
 
@@ -78,7 +78,8 @@ export function TherapyQuestionnaire() {
     situation: '',
     need: '',
     intimacyFocus: false,
-    gender: ''
+    gender: '',
+    stage: ''
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -92,78 +93,91 @@ export function TherapyQuestionnaire() {
   }
 
   const handleNeedSelect = (need: string) => {
-    setAnswers(prev => ({ ...prev, need }));
+    setAnswers(prev => ({ ...prev, need }))
     
-    if (need === 'intimacy') {
-      if (answers.situation === 'individual') {
-        setStep(3); // Go to gender selection
-      } else {
-        const recommended = therapyOptions.filter(option => 
-          ['sexology'].includes(option.type)
-        );
-        setRecommendations(recommended);
-        setStep(4);
-      }
-    } else if (need === 'decide') {
-      const recommended = therapyOptions.filter(option => 
-        ['couple', 'decision'].includes(option.type)
-      );
-      setRecommendations(recommended);
-      setStep(4);
-    } else {
-      if (answers.situation === 'individual') {
-        const recommended = therapyOptions.filter(option =>
-          ['individual'].includes(option.type)
-        );
-        setRecommendations(recommended);
-        setStep(4);
-      } else {
-        const recommended = therapyOptions.filter(option =>
-          ['couple'].includes(option.type)
-        );
-        setRecommendations(recommended);
-        setStep(4);
-      }
+    if (need === 'intimacy' && answers.situation === 'individual') {
+      setStep(3) // Go to gender selection
+      return
     }
-  }
 
-  const handleIntimacySelect = (intimacyFocus: boolean) => {
-    setAnswers(prev => ({ ...prev, intimacyFocus }))
-    if (intimacyFocus) {
-      setRecommendations([therapyOptions.find(option => option.type === 'sexology')!])
-    } else {
-      const recommended = therapyOptions.filter(option => {
-        if (answers.need === 'start') {
-          return ['couple', 'beginning'].includes(option.type)
-        } else if (answers.need === 'improve') {
-          return ['couple', 'checkup'].includes(option.type)
+    let recommended: TherapyOption[] = []
+    switch (need) {
+      case 'regular':
+        recommended = [therapyOptions.find(option => option.type === 'individual')!]
+        break
+      case 'intensive':
+        recommended = [therapyOptions.find(option => option.type === 'vit')!]
+        break
+      case 'intimacy':
+        if (answers.situation === 'couple') {
+          recommended = [
+            therapyOptions.find(option => option.type === 'sexology')!,
+            therapyOptions.find(option => option.type === 'couple')!
+          ]
         }
-        return false
-      })
-      setRecommendations(recommended)
+        break
+      case 'start':
+        recommended = [therapyOptions.find(option => option.type === 'beginning')!]
+        break
+      case 'improve':
+        recommended = [
+          therapyOptions.find(option => option.type === 'checkup')!,
+          therapyOptions.find(option => option.type === 'couple')!
+        ]
+        break
+      case 'decide':
+        recommended = [
+          therapyOptions.find(option => option.type === 'decision')!,
+          therapyOptions.find(option => option.type === 'couple')!
+        ]
+        break
     }
-    setStep(4)
+    
+    setRecommendations(recommended)
     setShowReward(true)
+    setStep(4)
   }
 
   const handleGenderSelect = (gender: string) => {
-    setAnswers(prev => ({ ...prev, gender }));
-    // Set exactly one recommendation based on gender
+    setAnswers(prev => ({ ...prev, gender }))
     const recommended = [{
       title: gender === 'male' ? 'FORFAIT HOMME' : 'FORFAIT FEMME',
       description: gender === 'male' 
         ? 'Programme de transformation sexuelle pour hommes' 
-        : 'Voyage vers une sexualité libérée et épanouie',
+        : 'Voyage vers une sexualité libérée et épanouie pour femmes',
       type: gender === 'male' ? 'men' : 'women'
-    }];
-    setRecommendations(recommended);
-    setShowReward(true);
-    setStep(4);
+    }]
+    setRecommendations(recommended)
+    setShowReward(true)
+    setStep(4)
+  }
+
+  const handleStageSelect = (stage: string) => {
+    setAnswers(prev => ({ ...prev, stage }))
+    let recommended
+    
+    switch (stage) {
+      case 'beginning':
+        recommended = therapyOptions.filter(option => option.type === 'beginning')
+        break
+      case 'checkup':
+        recommended = therapyOptions.filter(option => option.type === 'checkup')
+        break
+      case 'decision':
+        recommended = therapyOptions.filter(option => option.type === 'decision')
+        break
+      default:
+        recommended = []
+    }
+    
+    setRecommendations(recommended)
+    setShowReward(true)
+    setStep(4)
   }
 
   const handleRestart = () => {
     setStep(1)
-    setAnswers({ situation: '', need: '', intimacyFocus: false, gender: '' })
+    setAnswers({ situation: '', need: '', intimacyFocus: false, gender: '', stage: '' })
     setRecommendations([])
     setShowReward(false)
     scrollToSection('questionnaire')
@@ -320,7 +334,7 @@ export function TherapyQuestionnaire() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6"
+                  className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">Je souhaite :</h3>
                   <div className="space-y-4">
@@ -361,7 +375,7 @@ export function TherapyQuestionnaire() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6"
+                  className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">Vous êtes :</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
