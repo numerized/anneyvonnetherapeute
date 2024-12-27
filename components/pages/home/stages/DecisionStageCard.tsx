@@ -10,7 +10,7 @@ interface DecisionStageCardProps {
 
 export function DecisionStageCard({ onShowPromo }: DecisionStageCardProps) {
   return (
-    <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
+    <div className="bg-primary-forest/30 text-primary-cream rounded-3xl p-8">
       <div className="space-y-8">
         <div className="text-center">
           <h3 className="text-2xl text-primary-cream font-light mb-2 text-right">

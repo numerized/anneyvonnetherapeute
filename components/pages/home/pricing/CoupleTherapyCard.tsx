@@ -94,7 +94,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
           </div>
         </div>
 
-        <div className="bg-primary-forest/30 rounded-xl p-6">
+        <div className="bg-primary-forest/30 rounded-3xl p-6">
           <div className="flex items-start gap-4">
             <div className="text-primary-coral mt-1">
               <Users size={24} />
