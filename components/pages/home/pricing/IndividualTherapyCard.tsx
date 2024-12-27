@@ -9,13 +9,13 @@ interface IndividualTherapyCardProps {
 
 export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProps) {
   return (
-    <div className="grid md:grid-cols-2 gap-8">
+    <div className="grid md:grid-cols-2 gap-8 rounded-[32px] w-full h-full">
       <div className="flex justify-center w-full h-fit">
-        <div className="relative w-full max-w-[300px] aspect-[4/3]">
+        <div className="relative w-full max-w-[300px] aspect-[4/3] rounded-[32px]">
           {/* Add image or content here */}
         </div>
       </div>
-      <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
+      <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors h-full">
         <div className="space-y-12">
           <div className="text-right">
             <h3 className="text-2xl text-primary-cream font-light mb-2">
@@ -50,7 +50,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
 
           <div className="space-y-4">
             {/* COMPACT Package */}
-            <div className="bg-primary-forest/30 rounded-3xl p-6">
+            <div className="bg-primary-forest/30 rounded-[24px] p-6">
               <div className="flex flex-col gap-2">
                 <h3 className="text-2xl text-primary-coral font-light text-left">COMPACT</h3>
                 <div className="flex items-end gap-1 justify-start">
@@ -71,7 +71,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
             </div>
 
             {/* RELAX Package */}
-            <div className="bg-primary-forest/30 rounded-3xl p-6">
+            <div className="bg-primary-forest/30 rounded-[24px] p-6">
               <div className="flex flex-col gap-2">
                 <h3 className="text-2xl text-primary-coral font-light text-left">RELAX</h3>
                 <div className="flex items-end gap-1 justify-start">
@@ -92,7 +92,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
             </div>
 
             {/* MINI Package */}
-            <div className="bg-primary-forest/30 rounded-3xl p-6">
+            <div className="bg-primary-forest/30 rounded-[24px] p-6">
               <div className="flex flex-col gap-2">
                 <h3 className="text-2xl text-primary-coral font-light text-left">MINI</h3>
                 <div className="flex items-end gap-1 justify-start">
@@ -131,7 +131,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           </div>
           <button
             onClick={() => onShowPromo('individual')}
-            className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
+            className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold"
           >
             En savoir plus
           </button>
