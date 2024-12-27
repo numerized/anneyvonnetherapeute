@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 
-interface QuestionnaireDay1Props {
+interface QuestionnairePage1Props {
   onNext: () => void
+  onBack: () => void
 }
 
-export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
+export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) {
   const [date] = useState(() => {
     const today = new Date()
     return today.toLocaleDateString('fr-FR', {
@@ -60,7 +61,13 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
         />
       </div>
 
-      <div className="mt-16 flex justify-end print:hidden">
+      <div className="mt-16 flex justify-between print:hidden">
+        <button
+          onClick={onBack}
+          className="bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors"
+        >
+          Précédent
+        </button>
         <button
           onClick={onNext}
           className="bg-primary-coral text-white px-6 py-2 rounded-full hover:bg-primary-rust transition-colors"
