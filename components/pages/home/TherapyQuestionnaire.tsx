@@ -3,7 +3,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Users, User, Sparkles, Heart, ArrowUpRight, Target, Users2, Clock } from 'lucide-react'
-
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
 
@@ -138,9 +137,9 @@ export function TherapyQuestionnaire() {
     setStep(4)
   }
 
-  const handleGenderSelect = (gender: string) => {
+  const handleGenderSelect = (gender: 'male' | 'female') => {
     setAnswers(prev => ({ ...prev, gender }))
-    const recommended = [{
+    const recommended: TherapyOption[] = [{
       title: gender === 'male' ? 'FORFAIT HOMME' : 'FORFAIT FEMME',
       description: gender === 'male' 
         ? 'Programme de transformation sexuelle pour hommes' 
@@ -154,7 +153,7 @@ export function TherapyQuestionnaire() {
 
   const handleStageSelect = (stage: string) => {
     setAnswers(prev => ({ ...prev, stage }))
-    let recommended
+    let recommended: TherapyOption[]
     
     switch (stage) {
       case 'beginning':
@@ -436,7 +435,13 @@ export function TherapyQuestionnaire() {
         </div>
       </section>
 
-      {showReward && <QuestionnaireReward />}
+      {showReward && (
+        <QuestionnaireReward 
+          isOpen={showReward} 
+          onClose={() => setShowReward(false)}
+          situation={answers.situation as 'couple' | 'individual'}
+        />
+      )}
 
       <TherapyPromoModal
         isOpen={showModal}
