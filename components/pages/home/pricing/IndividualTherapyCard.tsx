@@ -12,13 +12,13 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
     <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
         <div className="text-center">
-          <h3 className="text-2xl font-light text-primary-cream mb-2 text-right">
-            THÉRAPIE INDIVIDUELLE
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
+            THÉRAPIE RELATIONNELLE INDIVIDUELLE
           </h3>
-          <p className="text-primary-coral italic text-right">Votre chemin vers l'épanouissement</p>
+          <p className="text-primary-coral italic text-left">Accords à corps</p>
         </div>
 
-        <blockquote className="mt-6 border-l-2 border-primary-coral/30 pl-4 text-primary-cream/80">
+        <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
           <p className="text-primary-cream/90 italic">
             "Changer sa vie, c'est d'abord se reconnecter à son corps et à soi."
           </p>
