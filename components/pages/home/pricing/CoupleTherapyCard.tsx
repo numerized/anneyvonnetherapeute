@@ -11,16 +11,16 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
   return (
     <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
-        <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
+        <div className="text-right">
+          <h3 className="text-2xl text-primary-cream font-light mb-2">
             THÉRAPIE RELATIONNELLE DE COUPLE
           </h3>
-          <p className="text-primary-coral italic text-left">De cœur et de corps</p>
+          <p className="text-primary-coral italic">De cœur et de corps</p>
         </div>
 
-        <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
+        <blockquote className="border-l-4 border-primary-coral pl-4 my-4 text-left">
           <p className="text-primary-cream/90 italic">
-            "On ne change pas une relation sans d'abord transformer ceux qui la vivent"
+            "Ensemble, construisons une relation plus forte et plus épanouie"
           </p>
         </blockquote>
 
