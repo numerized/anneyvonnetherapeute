@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   env: {
     // This will force Vercel to rebuild on every deployment
     CACHE_BUST: new Date().toISOString(),
