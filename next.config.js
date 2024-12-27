@@ -20,7 +20,7 @@ const nextConfig = {
   },
   // Force cache invalidation
   generateBuildId: async () => {
-    return `build-${new Date().getTime()}`
+    return new Date().toISOString()
   },
   // Set revalidate to 0 in development
   async headers() {
@@ -33,6 +33,15 @@ const nextConfig = {
             value: process.env.NODE_ENV === 'development' 
               ? 'no-store, must-revalidate'
               : 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

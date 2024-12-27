@@ -9,18 +9,18 @@ interface CoupleTherapyCardProps {
 
 export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
   return (
-    <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
-      <div className="space-y-8">
-        <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
+    <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
+      <div className="space-y-12">
+        <div className="text-right">
+          <h3 className="text-2xl text-primary-cream font-light mb-2">
             THÉRAPIE RELATIONNELLE DE COUPLE
           </h3>
-          <p className="text-primary-coral italic text-left">De cœur et de corps</p>
+          <p className="text-primary-coral italic">De cœur et de corps</p>
         </div>
 
-        <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
+        <blockquote className="border-l-4 border-primary-coral pl-4 my-4 text-left">
           <p className="text-primary-cream/90 italic">
-            "On ne change pas une relation sans d'abord transformer ceux qui la vivent"
+            "Ensemble, construisons une relation plus forte et plus épanouie"
           </p>
         </blockquote>
 
@@ -32,10 +32,6 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>8 séances couple et/ou individuel selon la situation</span>
-              </li>
-              <li className="flex items-center gap-2 m-0">
-                <span className="text-primary-coral">♦</span>
                 <span>2 séances de 90 minutes</span>
               </li>
               <li className="flex items-center gap-2 m-0">
@@ -44,7 +40,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Bilans et introspections avant et après chaque séance</span>
+                <span>Alternance entre séances de couple et individuelles</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
@@ -54,7 +50,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
           </div>
         </div>
 
-        <div className="bg-primary-forest/30 rounded-xl p-6">
+        <div className="bg-primary-forest/30 rounded-[24px] p-6">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE DE COUPLE</h3>
             <div className="flex items-end gap-1 justify-start">
@@ -64,15 +60,15 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Séances alternées sur 20 - 24 semaines (max. 6 mois)</span>
+                <span>Programme sur 6 mois avec séances alternées</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>8 séances couple et/ou individuel selon la situation</span>
+                <span>Bilans et introspections réguliers</span>
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>Bilans et introspections avant et après chaque séance</span>
+                <span>Support continu entre les séances</span>
               </li>
             </ul>
           </div>
@@ -88,22 +84,17 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <Benefit
               icon={<BookOpen size={24} />}
               title="Accès à la plateforme"
-              description="Ressources exclusives et événements en ligne pour soutenir votre transformation"
-            />
-            <Benefit
-              icon={<Calendar size={24} />}
-              title="Accompagnement intense"
-              description="Support continu pendant toute la durée du processus"
+              description="Ressources exclusives et exercices pour votre relation"
             />
             <Benefit
               icon={<Heart size={24} />}
               title="Investissement dans l'amour"
-              description="Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !"
+              description="Transformez votre relation et construisez une connexion durable"
             />
           </div>
         </div>
 
-        <div className="bg-primary-forest/30 rounded-xl p-6">
+        <div className="bg-primary-forest/30 rounded-[24px] p-6">
           <div className="flex items-start gap-4">
             <div className="text-primary-coral mt-1">
               <Users size={24} />
@@ -119,7 +110,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
 
         <button
           onClick={() => onShowPromo('couple-therapy')}
-          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
+          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold"
         >
           En savoir plus
         </button>
