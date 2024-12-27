@@ -32,7 +32,7 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
 
   return (
     <div className="bg-white rounded-3xl p-8 shadow-lg print:shadow-none relative min-h-screen">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full print-container">
         <div className="flex-grow">
           <div className="flex justify-between items-start mb-8">
             <h1 className="text-4xl font-light">
@@ -117,8 +117,8 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
           </div>
         </div>
 
-        <div>
-          <div className="flex justify-between print:hidden">
+        <div className="screen-only">
+          <div className="flex justify-between">
             <button
               onClick={onPrevious}
               className="bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors"
@@ -133,14 +133,12 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
               Enregistrer
             </button>
           </div>
-
-          <div className="mt-8">
-            <blockquote className="text-primary-coral italic text-sm">
-              "Comme un diamant brut, ma valeur est innée et inaltérable ;
-              ni les regards ni les jugements ne sauraient l'entamer."
-            </blockquote>
-          </div>
         </div>
+
+        <blockquote className="text-primary-coral italic text-sm mt-8 print:hidden">
+          "Comme un diamant brut, ma valeur est innée et inaltérable ;
+          ni les regards ni les jugements ne sauraient l'entamer."
+        </blockquote>
       </div>
     </div>
   )
