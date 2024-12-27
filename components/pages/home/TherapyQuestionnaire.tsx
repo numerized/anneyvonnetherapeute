@@ -403,7 +403,7 @@ export function TherapyQuestionnaire() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className={`grid grid-cols-12 gap-8 mt-12 ${recommendations.length === 1 ? 'justify-center' : ''}`}
+                    className="grid grid-cols-12 gap-8 mt-12"
                   >
                     {recommendations.map((option) => (
                       <div key={option.type}
@@ -411,11 +411,9 @@ export function TherapyQuestionnaire() {
                           recommendations.length === 1 
                             ? (option.type === 'men' || option.type === 'women')
                               ? 'md:col-span-12' 
-                              : option.type === 'individual'
-                                ? 'md:col-span-6 md:col-start-4'
-                                : 'md:col-span-6 md:col-start-4'
+                              : 'md:col-span-6 md:col-start-4'
                             : 'md:col-span-6'
-                        }`}
+                        } ${recommendations.length === 1 ? 'mx-auto max-w-4xl' : ''}`}
                       >
                         {renderCard(option.type)}
                       </div>
