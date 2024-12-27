@@ -108,9 +108,29 @@ export default function Navbar(props: NavbarProps) {
                 </div>
               )}
               
-              {/* Desktop Menu */}
-              <div className="flex items-center space-x-8">
-                {menuItems.map(renderMenuItem)}
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-8">
+                {data?.menuItems?.map((item: any, index: number) => {
+                  const isLast = index === data.menuItems.length - 1
+                  const href = item.reference?.slug?.current === 'coming-soon' 
+                    ? '/prochainement' 
+                    : item.reference?.slug?.current 
+                      ? `/${item.reference.slug.current}` 
+                      : '#'
+                  return (
+                    <Link
+                      key={index}
+                      href={href}
+                      className={`${
+                        isLast
+                          ? 'px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105'
+                          : 'text-primary-cream hover:text-primary-coral transition-colors'
+                      }`}
+                    >
+                      {item.title}
+                    </Link>
+                  )
+                })}
               </div>
             </div>
           </nav>
