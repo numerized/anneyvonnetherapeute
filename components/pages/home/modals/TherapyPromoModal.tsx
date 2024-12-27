@@ -3,7 +3,7 @@ import { Modal as TherapyModal } from '@/components/shared/Modal'
 interface TherapyPromoModalProps {
   isOpen: boolean
   onClose: () => void
-  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision'
+  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision' | 'sexology'
 }
 
 export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalProps) {
@@ -180,6 +180,92 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                 </li>
               </ul>
               <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+            </div>
+          )
+        }
+      case 'sexology':
+        return {
+          title: 'FORFAIT COUPLE SEXOLOGIE',
+          subtitle: 'Programme de renaissance intime pour couples',
+          content: (
+            <div className="text-primary-cream/90 text-lg leading-relaxed space-y-12">
+              <div className="space-y-4">
+                <p>Cette offre exclusive comprend :</p>
+                <ul className="space-y-2 list-none">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>8 séances de 75 minutes sur 4 mois</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Alternance entre séances de couple et séances individuelles</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Accès premium à la plateforme Eros Inspiration pour les deux partenaires</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Outils pratiques à utiliser entre les séances pour renforcer les progrès</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Option : séances d'hypnose thérapeutique pour un déblocage en profondeur</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <p>Bénéfices pour le couple :</p>
+                <ul className="space-y-2 list-none">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Raviver la flamme et renforcer l'intimité émotionnelle</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Améliorer la communication autour de la sexualité</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Surmonter ensemble les difficultés (libido, blocages, dysfonctions)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Explorer de nouvelles dimensions de votre sexualité à deux</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Construire une vision commune de votre épanouissement sexuel</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <p>Déroulement du programme :</p>
+                <ul className="space-y-2 list-none">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Séance de couple : Évaluation et objectifs communs</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Séances individuelles pour chaque partenaire</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Séance de couple : Bilan et ajustements</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Nouvelles séances individuelles</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary-coral mt-1">♦</span>
+                    <span>Séances de couple finales : Intégration et consolidation</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           )
         }
