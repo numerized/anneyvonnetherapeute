@@ -411,7 +411,9 @@ export function TherapyQuestionnaire() {
                           recommendations.length === 1 
                             ? (option.type === 'men' || option.type === 'women')
                               ? 'md:col-span-12' 
-                              : 'md:col-span-6 md:col-start-4'
+                              : option.type === 'individual'
+                                ? 'md:col-span-6 md:col-start-4'
+                                : 'md:col-span-6 md:col-start-4'
                             : 'md:col-span-6'
                         }`}
                       >
