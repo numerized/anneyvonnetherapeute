@@ -1,7 +1,6 @@
 'use client'
 
-import { BookOpen, Calendar,MessageSquare } from 'lucide-react'
-
+import { BookOpen, Calendar, MessageSquare } from 'lucide-react'
 import { Benefit } from '../Benefit'
 
 interface IndividualTherapyCardProps {
@@ -10,8 +9,8 @@ interface IndividualTherapyCardProps {
 
 export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProps) {
   return (
-    <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
-      <div className="space-y-8">
+    <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
+      <div className="space-y-12">
         <div className="text-center">
           <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE INDIVIDUELLE
@@ -45,7 +44,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
 
         <div className="space-y-4">
           {/* COMPACT Package */}
-          <div className="bg-primary-forest/30 rounded-xl p-6">
+          <div className="bg-primary-forest/30 rounded-3xl p-6">
             <div className="flex flex-col gap-2">
               <h3 className="text-2xl text-primary-coral font-light text-left">COMPACT</h3>
               <div className="flex items-end gap-1 justify-start">
@@ -66,7 +65,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           </div>
 
           {/* RELAX Package */}
-          <div className="bg-primary-forest/30 rounded-xl p-6">
+          <div className="bg-primary-forest/30 rounded-3xl p-6">
             <div className="flex flex-col gap-2">
               <h3 className="text-2xl text-primary-coral font-light text-left">RELAX</h3>
               <div className="flex items-end gap-1 justify-start">
@@ -87,7 +86,7 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           </div>
 
           {/* MINI Package */}
-          <div className="bg-primary-forest/30 rounded-xl p-6">
+          <div className="bg-primary-forest/30 rounded-3xl p-6">
             <div className="flex flex-col gap-2">
               <h3 className="text-2xl text-primary-coral font-light text-left">MINI</h3>
               <div className="flex items-end gap-1 justify-start">

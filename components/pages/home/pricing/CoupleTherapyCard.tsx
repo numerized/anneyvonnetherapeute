@@ -9,8 +9,8 @@ interface CoupleTherapyCardProps {
 
 export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
   return (
-    <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
-      <div className="space-y-8">
+    <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
+      <div className="space-y-12">
         <div className="text-center">
           <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
             THÉRAPIE RELATIONNELLE DE COUPLE
@@ -50,7 +50,7 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
           </div>
         </div>
 
-        <div className="bg-primary-forest/30 rounded-xl p-6">
+        <div className="bg-primary-forest/30 rounded-3xl p-6">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE DE COUPLE</h3>
             <div className="flex items-end gap-1 justify-start">
