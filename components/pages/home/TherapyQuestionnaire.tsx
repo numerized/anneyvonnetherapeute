@@ -12,16 +12,22 @@ import { CheckupStageCard } from './stages/CheckupStageCard'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { SexologyTherapyCard } from './pricing/SexologyTherapyCard'
 import { TherapyPromoModal } from './modals/TherapyPromoModal'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
 
 type TherapyOption = {
   title: string
   description: string
-  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision'
+  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision' | 'sexology'
 }
 
 const therapyOptions: TherapyOption[] = [
+  {
+    title: 'FORFAIT COUPLE SEXOLOGIE',
+    description: 'Programme de renaissance intime pour couples souhaitant raviver leur flamme et renforcer leur intimité.',
+    type: 'sexology'
+  },
   {
     title: 'THERAPIE RELATIONNELLE DE COUPLE',
     description: 'Pour les couples en désir d\'harmonie, qui souhaitent mieux s\'entendre et se comprendre.',
@@ -58,7 +64,8 @@ export function TherapyQuestionnaire() {
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState({
     situation: '',
-    need: ''
+    need: '',
+    intimacyFocus: false
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -66,50 +73,70 @@ export function TherapyQuestionnaire() {
   const [showReward, setShowReward] = useState(false)
   const questionnaireRef = useRef<HTMLElement>(null)
 
-  const getRecommendations = (situation: string, need: string) => {
-    let recommended: TherapyOption[] = []
+  const handleSituationSelect = (situation: string) => {
+    setAnswers(prev => ({ ...prev, situation }))
+    setStep(2)
+  }
 
-    // Logic for couples
-    if (situation === 'couple') {
-      if (need === 'start') {
-        recommended = therapyOptions.filter(option => 
-          ['couple', 'beginning'].includes(option.type)
-        )
-      } else if (need === 'improve') {
-        recommended = therapyOptions.filter(option => 
-          ['couple', 'checkup'].includes(option.type)
-        )
-      } else if (need === 'decide') {
-        recommended = therapyOptions.filter(option => 
-          ['couple', 'decision'].includes(option.type)
-        )
-      }
-    }
-    // Logic for individuals
-    else if (situation === 'individual') {
+  const handleNeedSelect = (need: string) => {
+    if (need === 'decide') {
+      const recommended = therapyOptions.filter(option => 
+        ['couple', 'decision'].includes(option.type)
+      )
+      setRecommendations(recommended)
+      setAnswers(prev => ({ ...prev, need }))
+      setStep(4)
+      setShowReward(true)
+    } else if (need === 'intensive' || need === 'regular' || need === 'specific') {
+      let recommended: TherapyOption[] = []
       if (need === 'intensive') {
-        recommended = therapyOptions.filter(option => 
-          ['vit'].includes(option.type)
-        )
+        recommended = therapyOptions.filter(option => ['vit'].includes(option.type))
       } else if (need === 'regular') {
-        recommended = therapyOptions.filter(option => 
-          ['individual'].includes(option.type)
-        )
+        recommended = therapyOptions.filter(option => ['individual'].includes(option.type))
       } else if (need === 'specific') {
-        recommended = therapyOptions.filter(option => 
-          ['individual', 'vit'].includes(option.type)
-        )
+        recommended = therapyOptions.filter(option => ['individual', 'vit'].includes(option.type))
       }
+      setRecommendations(recommended)
+      setAnswers(prev => ({ ...prev, need }))
+      setStep(4)
+      setShowReward(true)
+    } else if (need === 'start') {
+      // Skip intimacy question for "Bien démarrer notre relation"
+      const recommended = therapyOptions.filter(option => 
+        ['couple', 'beginning'].includes(option.type)
+      )
+      setRecommendations(recommended)
+      setAnswers(prev => ({ ...prev, need }))
+      setStep(4)
+      setShowReward(true)
+    } else {
+      setAnswers(prev => ({ ...prev, need }))
+      setStep(3)
     }
+  }
 
-    setRecommendations(recommended)
-    setStep(3)
+  const handleIntimacySelect = (intimacyFocus: boolean) => {
+    setAnswers(prev => ({ ...prev, intimacyFocus }))
+    if (intimacyFocus) {
+      setRecommendations([therapyOptions.find(option => option.type === 'sexology')!])
+    } else {
+      const recommended = therapyOptions.filter(option => {
+        if (answers.need === 'start') {
+          return ['couple', 'beginning'].includes(option.type)
+        } else if (answers.need === 'improve') {
+          return ['couple', 'checkup'].includes(option.type)
+        }
+        return false
+      })
+      setRecommendations(recommended)
+    }
+    setStep(4)
     setShowReward(true)
   }
 
   const handleRestart = () => {
     setStep(1)
-    setAnswers({ situation: '', need: '' })
+    setAnswers({ situation: '', need: '', intimacyFocus: false })
     setRecommendations([])
     setShowReward(false)
     scrollToSection('questionnaire')
@@ -134,6 +161,8 @@ export function TherapyQuestionnaire() {
         return <CheckupStageCard onShowPromo={() => handleShowPromo('checkup')} />
       case 'decision':
         return <DecisionStageCard onShowPromo={() => handleShowPromo('decision')} />
+      case 'sexology':
+        return <SexologyTherapyCard onShowPromo={() => handleShowPromo('sexology')} />
       default:
         return null
     }
@@ -160,9 +189,9 @@ export function TherapyQuestionnaire() {
           <div className="relative">
             <div className="max-w-2xl mx-auto text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-light text-primary-coral">
-                {step === 3 ? (recommendations.length === 1 ? 'Notre recommandation pour vous' : 'Nos recommandations pour vous') : 'Quelle thérapie vous correspond ?'}
+                {step === 4 ? (recommendations.length === 1 ? 'Notre recommandation pour vous' : 'Nos recommandations pour vous') : 'Quelle thérapie vous correspond ?'}
               </h2>
-              {step !== 3 && (
+              {step !== 4 && (
                 <p className="text-lg mt-4">
                   Répondez à deux questions simples pour découvrir nos recommandations personnalisées
                 </p>
@@ -174,18 +203,16 @@ export function TherapyQuestionnaire() {
             <AnimatePresence mode="wait">
               {step === 1 && (
                 <motion.div
+                  key="step-1"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6"
+                  className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">Quelle est votre situation ?</h3>
                   <div className="grid gap-4">
                     <button
-                      onClick={() => {
-                        setAnswers(prev => ({ ...prev, situation: 'couple' }))
-                        setStep(2)
-                      }}
+                      onClick={() => handleSituationSelect('couple')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
@@ -194,150 +221,171 @@ export function TherapyQuestionnaire() {
                       </div>
                     </button>
                     <button
-                      onClick={() => {
-                        setAnswers(prev => ({ ...prev, situation: 'individual' }))
-                        setStep(2)
-                      }}
+                      onClick={() => handleSituationSelect('individual')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <User className="w-5 h-5 flex-shrink-0" />
-                        <span>Je souhaite un accompagnement individuel</span>
+                        <span>Je souhaite une thérapie individuelle</span>
                       </div>
                     </button>
                   </div>
                 </motion.div>
               )}
 
-              {step === 2 && (
+              {step === 2 && answers.situation === 'couple' && (
                 <motion.div
+                  key="step-2-couple"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6"
+                  className="space-y-6 p-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">
-                    {answers.situation === 'couple' ? (
-                      "Quel est votre besoin principal ?"
-                    ) : (
-                      "Quel type d'accompagnement recherchez-vous ?"
-                    )}
-                  </h3>
+                  <h3 className="text-xl text-primary-cream mb-6">Que souhaitez-vous ?</h3>
                   <div className="grid gap-4">
-                    {answers.situation === 'couple' ? (
-                      <>
-                        <button
-                          onClick={() => getRecommendations(answers.situation, 'start')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Sparkles className="w-5 h-5 flex-shrink-0" />
-                            <span>Débuter une nouvelle relation sur de bonnes bases</span>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => getRecommendations(answers.situation, 'improve')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Heart className="w-5 h-5 flex-shrink-0" />
-                            <span>Améliorer et faire évoluer notre relation</span>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => getRecommendations(answers.situation, 'decide')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Target className="w-5 h-5 flex-shrink-0" />
-                            <span>Prendre une décision importante pour notre couple</span>
-                          </div>
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => getRecommendations(answers.situation, 'intensive')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <ArrowUpRight className="w-5 h-5 flex-shrink-0" />
-                            <span>Un suivi intensif et personnalisé</span>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => getRecommendations(answers.situation, 'regular')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Users className="w-5 h-5 flex-shrink-0" />
-                            <span>Un accompagnement régulier</span>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => getRecommendations(answers.situation, 'specific')}
-                          className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Target className="w-5 h-5 flex-shrink-0" />
-                            <span>Un travail sur des thèmes spécifiques</span>
-                          </div>
-                        </button>
-                      </>
-                    )}
+                    <button
+                      onClick={() => handleNeedSelect('start')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Sparkles className="w-5 h-5 flex-shrink-0" />
+                        <span>Bien démarrer notre relation</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNeedSelect('improve')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Heart className="w-5 h-5 flex-shrink-0" />
+                        <span>Améliorer notre relation actuelle</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNeedSelect('decide')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Target className="w-5 h-5 flex-shrink-0" />
+                        <span>Prendre une décision sur l'avenir de notre relation</span>
+                      </div>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 2 && answers.situation === 'individual' && (
+                <motion.div
+                  key="step-2-individual"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-6 p-8"
+                >
+                  <h3 className="text-xl text-primary-cream mb-6">Quel type d'accompagnement recherchez-vous ?</h3>
+                  <div className="grid gap-4">
+                    <button
+                      onClick={() => handleNeedSelect('intensive')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <ArrowUpRight className="w-5 h-5 flex-shrink-0" />
+                        <span>Un suivi intensif et personnalisé</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNeedSelect('regular')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Users className="w-5 h-5 flex-shrink-0" />
+                        <span>Un accompagnement régulier</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleNeedSelect('specific')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Target className="w-5 h-5 flex-shrink-0" />
+                        <span>Un travail sur des thèmes spécifiques</span>
+                      </div>
+                    </button>
                   </div>
                 </motion.div>
               )}
 
               {step === 3 && (
                 <motion.div
+                  key="step-3"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="space-y-8"
+                  className="space-y-6 p-8"
                 >
-                  
-                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''} relative`}>
-                    {recommendations.map((option, index) => (
-                      <div key={option.type} className="w-full">
-                        {renderCard(option.type)}
-                        {recommendations.length === 2 && index === 0 && (
-                          <div className="hidden md:flex absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 items-center">
-                            <div className="w-[1px] h-48 bg-primary-cream/30"></div>
-                            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-dark px-3 text-primary-cream">OU</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-center">
+                  <h3 className="text-xl text-primary-cream mb-6">Votre priorité est-elle de raviver l'intimité dans votre couple ?</h3>
+                  <div className="grid gap-4">
                     <button
-                      onClick={handleRestart}
-                      className="text-primary-coral hover:text-primary-rust transition-colors mt-6"
+                      onClick={() => handleIntimacySelect(true)}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
-                      Recommencer le questionnaire
+                      <div className="flex items-center gap-3">
+                        <Heart className="w-5 h-5 flex-shrink-0" />
+                        <span>Oui, je souhaite me concentrer sur l'intimité et la connexion</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleIntimacySelect(false)}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Users className="w-5 h-5 flex-shrink-0" />
+                        <span>Non, je souhaite travailler sur d'autres aspects de la relation</span>
+                      </div>
                     </button>
                   </div>
                 </motion.div>
               )}
+
+              {step === 4 && (
+                <motion.div
+                  key="recommendations"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="p-8"
+                >
+                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''}`}>
+                    {recommendations.map((option) => (
+                      <div key={option.type}>
+                        {renderCard(option.type)}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
+
+            {step > 1 && (
+              <div className="flex justify-center pb-8">
+                <button
+                  onClick={handleRestart}
+                  className="text-primary-cream hover:text-primary-cream/80 transition-colors"
+                >
+                  Recommencer le questionnaire
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>
-      {selectedTherapyType && (
-        <TherapyPromoModal
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(false)
-            setSelectedTherapyType(null)
-          }}
-          type={selectedTherapyType}
-        />
-      )}
-      <QuestionnaireReward
-        isOpen={showReward}
-        onClose={() => setShowReward(false)}
-        situation={answers.situation as 'couple' | 'individual'}
+
+      {showReward && <QuestionnaireReward />}
+
+      <TherapyPromoModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        type={selectedTherapyType || 'couple'}
       />
     </>
   )
