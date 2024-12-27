@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   env: {
     // This will force Vercel to rebuild on every deployment
     CACHE_BUST: new Date().toISOString(),
@@ -25,17 +26,6 @@ const nextConfig = {
   // Set revalidate to 0 in development
   async headers() {
     return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: process.env.NODE_ENV === 'development' 
-              ? 'no-store, must-revalidate'
-              : 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
       {
         source: '/favicon.ico',
         headers: [

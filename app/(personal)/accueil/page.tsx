@@ -7,7 +7,7 @@ import HomePagePreview from '@/components/pages/home/HomePagePreview'
 import { studioUrl } from '@/sanity/lib/api'
 import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
 
-export default async function IndexRoute() {
+export default async function AccueilRoute() {
   const [initial, settings] = await Promise.all([
     loadHomePage(),
     loadSettings()
