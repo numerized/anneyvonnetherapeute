@@ -13,7 +13,7 @@ export function DecisionStageCard({ onShowPromo }: DecisionStageCardProps) {
     <div className="bg-primary-forest/30 text-primary-cream rounded-[24px] p-8">
       <div className="space-y-8">
         <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2">
+          <h3 className="text-2xl text-primary-cream font-light mb-2 text-right">
             RESTER OU PARTIR, DECIDEZ-VOUS
           </h3>
           <p className="text-primary-coral italic text-right">Médiation / Coaching pour une décision consciente</p>

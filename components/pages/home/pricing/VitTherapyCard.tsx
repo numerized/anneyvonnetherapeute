@@ -12,16 +12,16 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
   return (
     <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
-        <div className="text-center">
-          <h3 className="text-2xl text-primary-cream font-light mb-2 text-left">
+        <div className="text-right">
+          <h3 className="text-2xl text-primary-cream font-light mb-2">
              FORFAIT INDIVIDUEL VERY IMPORTANT THERAPY
           </h3>
-          <p className="text-primary-coral italic text-left">Forfait Privilège</p>
+          <p className="text-primary-coral italic">Forfait Privilège</p>
         </div>
 
-        <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
+        <blockquote className="border-l-4 border-primary-coral pl-4 my-4 text-left">
           <p className="text-primary-cream/90 italic">
-            "Thérapie sur-mesure"
+            "Prenez une décision éclairée pour votre avenir relationnel"
           </p>
         </blockquote>
 
