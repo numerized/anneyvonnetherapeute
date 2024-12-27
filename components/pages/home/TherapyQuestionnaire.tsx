@@ -205,9 +205,9 @@ export function TherapyQuestionnaire() {
       case 'sexology':
         return <SexologyTherapyCard onShowPromo={() => handleShowPromo('sexology')} />
       case 'men':
-        return <MenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+        return <MenTherapyCard onShowPromo={() => handleShowPromo('men')} />
       case 'women':
-        return <WomenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+        return <WomenTherapyCard onShowPromo={() => handleShowPromo('women')} />
       default:
         return null
     }
