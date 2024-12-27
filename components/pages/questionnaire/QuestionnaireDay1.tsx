@@ -60,13 +60,6 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
         />
       </div>
 
-      <div className="print:absolute print:bottom-[1cm] print:left-8 print:right-8">
-        <blockquote className="text-primary-coral italic text-sm">
-          "Vous seul(e) détenez le pouvoir de définir votre valeur.
-          Ne laissez jamais quelqu'un d'autre écrire votre histoire."
-        </blockquote>
-      </div>
-
       <div className="mt-16 flex justify-end print:hidden">
         <button
           onClick={onNext}
@@ -74,6 +67,13 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
         >
           Suivant
         </button>
+      </div>
+
+      <div className="mt-8 print:absolute print:bottom-4 print:left-8 print:right-8">
+        <blockquote className="text-primary-coral italic text-sm">
+          "Vous seul(e) détenez le pouvoir de définir votre valeur.
+          Ne laissez jamais quelqu'un d'autre écrire votre histoire."
+        </blockquote>
       </div>
     </div>
   )
