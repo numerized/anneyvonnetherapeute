@@ -1,5 +1,5 @@
 @media print {
-  /* Aggressively hide all Vercel elements */
+  /* Hide navigation elements and buttons except content */
   body > *:not(main):not(div):not(section),
   div[style*="fixed"],
   div[style*="absolute"],
@@ -49,6 +49,52 @@
     z-index: -9999 !important;
     transform: scale(0) !important;
     pointer-events: none !important;
+  }
+
+  /* Print layout adjustments */
+  .print\:absolute {
+    position: absolute !important;
+  }
+
+  .print\:bottom-4 {
+    bottom: 1rem !important;
+  }
+
+  .print\:left-8 {
+    left: 2rem !important;
+  }
+
+  .print\:right-8 {
+    right: 2rem !important;
+  }
+
+  /* Hide navigation buttons when printing */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Ensure proper spacing */
+  .mt-8 {
+    margin-top: 2rem !important;
+  }
+
+  .mt-16 {
+    margin-top: 4rem !important;
+  }
+
+  /* Container height */
+  .min-h-screen {
+    min-height: 100vh !important;
+  }
+
+  .print\:min-h-\[calc\(100vh-4cm\)\] {
+    min-height: calc(100vh - 4cm) !important;
+  }
+
+  /* Ensure citations stay on their pages */
+  blockquote {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   /* Force page breaks */
@@ -113,9 +159,8 @@
     margin-bottom: 1.5rem !important;
   }
 
-  /* Remove margin before page break */
-  .print\:mb-0 {
-    margin-bottom: 0 !important;
+  .mb-16 {
+    margin-bottom: 4rem !important;
   }
 
   /* Ensure textareas print their content properly */
@@ -135,34 +180,24 @@
     margin-bottom: 0.5rem !important;
   }
 
-  /* Adjust spacing for better print layout */
-  .space-y-8 > * + * {
-    margin-top: 1.5rem !important;
+  /* Position elements */
+  .relative {
+    position: relative !important;
   }
 
-  .space-y-4 > * + * {
-    margin-top: 0.75rem !important;
-  }
-
-  /* Position citations at bottom of page */
-  .print\:absolute {
+  .absolute {
     position: absolute !important;
   }
 
-  .print\:bottom-\[1cm\] {
-    bottom: 1cm !important;
+  .bottom-4 {
+    bottom: 1rem !important;
   }
 
-  .print\:left-8 {
+  .left-8 {
     left: 2rem !important;
   }
 
-  .print\:right-8 {
+  .right-8 {
     right: 2rem !important;
-  }
-
-  /* Ensure container takes full page height */
-  .print\:min-h-\[calc\(100vh-2cm\)\] {
-    min-height: calc(100vh - 2cm) !important;
   }
 }
