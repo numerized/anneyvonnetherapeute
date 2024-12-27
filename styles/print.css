@@ -1,0 +1,168 @@
+@media print {
+  /* Aggressively hide all Vercel elements */
+  body > *:not(main):not(div):not(section),
+  div[style*="fixed"],
+  div[style*="absolute"],
+  div[style*="sticky"],
+  div[style*="z-index"],
+  button[style*="fixed"],
+  button[style*="absolute"],
+  button[style*="sticky"],
+  button[style*="z-index"],
+  *[class*="vercel"],
+  *[class*="speed-insights"],
+  *[id*="vercel"],
+  *[id*="speed-insights"],
+  *[data-testid*="vercel"],
+  *[data-testid*="speed-insights"],
+  *[aria-label*="Vercel"],
+  *[aria-label*="Speed Insights"],
+  div[class*="SpeedInsights"],
+  button[aria-label*="View Vercel Speed Insights"],
+  #SpeedInsights,
+  #vercel-speed-insights,
+  /* Additional catch-all selectors */
+  [class*="vercel-analytics"],
+  [id*="vercel-analytics"],
+  [data-vercel-analytics],
+  [data-vercel-speed-insights],
+  [data-vercel-insights],
+  /* Hide any floating buttons */
+  .fixed,
+  *[style*="position: fixed"],
+  *[class*="fixed"],
+  *[style*="z-index: 9999"],
+  *[style*="z-index:9999"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 0 !important;
+    z-index: -9999 !important;
+    transform: scale(0) !important;
+    pointer-events: none !important;
+  }
+
+  /* Force page breaks */
+  .print\:break-before-page {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Keep questions and answers together */
+  .question-group {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Reset background colors and shadows for better printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ensure white background */
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Container adjustments */
+  .container {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Maintain text colors */
+  .text-primary-coral {
+    color: #FF6B6B !important;
+  }
+
+  /* Adjust page margins */
+  @page {
+    margin: 1cm !important;
+    size: A4;
+  }
+
+  /* Ensure proper font sizes for print */
+  html {
+    font-size: 11pt !important;
+  }
+
+  /* Content spacing adjustments */
+  .p-8 {
+    padding: 1rem !important;
+  }
+
+  .mb-8 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mb-12 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Remove margin before page break */
+  .print\:mb-0 {
+    margin-bottom: 0 !important;
+  }
+
+  /* Ensure textareas print their content properly */
+  textarea {
+    border: none !important;
+    resize: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  /* Prevent page breaks inside rating items */
+  .rating-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Adjust spacing for better print layout */
+  .space-y-8 > * + * {
+    margin-top: 1.5rem !important;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+
+  /* Position citations at bottom of page */
+  .print\:absolute {
+    position: absolute !important;
+  }
+
+  .print\:bottom-\[1cm\] {
+    bottom: 1cm !important;
+  }
+
+  .print\:left-8 {
+    left: 2rem !important;
+  }
+
+  .print\:right-8 {
+    right: 2rem !important;
+  }
+
+  /* Ensure container takes full page height */
+  .print\:min-h-\[calc\(100vh-2cm\)\] {
+    min-height: calc(100vh - 2cm) !important;
+  }
+}

@@ -39,7 +39,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
   }
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-lg">
+    <div className="bg-white rounded-3xl p-8 shadow-lg print:shadow-none print:relative print:min-h-[calc(100vh-2cm)]">
       <div className="flex justify-between items-start mb-8">
         <h1 className="text-4xl font-light">
           <span className="text-primary-coral">jour</span>
@@ -58,7 +58,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
         <p className="text-gray-600 italic text-sm mb-6">(Échelle de 1 à 10)</p>
         
         <ul className="list-none space-y-4 mb-12">
-          <li className="flex items-center">
+          <li className="flex items-center rating-item">
             <span className="italic">Confiance en soi</span>
             <input
               type="number"
@@ -74,7 +74,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
               className="w-12 text-center border border-gray-300 rounded ml-2"
             />
           </li>
-          <li className="flex items-center">
+          <li className="flex items-center rating-item">
             <span className="italic">Satisfaction dans mes relations actuelles</span>
             <input
               type="number"
@@ -90,7 +90,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
               className="w-12 text-center border border-gray-300 rounded ml-2"
             />
           </li>
-          <li className="flex items-center">
+          <li className="flex items-center rating-item">
             <span className="italic">Capacité à exprimer mes besoins</span>
             <input
               type="number"
@@ -109,7 +109,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
         </ul>
 
         <div className="space-y-8">
-          <div>
+          <div className="question-group">
             <h3 className="text-lg font-medium text-gray-700 italic mb-6">Mes points forts</h3>
             <textarea
               value={strengths}
@@ -119,7 +119,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
             />
           </div>
 
-          <div>
+          <div className="question-group">
             <h3 className="text-lg font-medium text-gray-700 italic mb-6">Mes axes à renforcer</h3>
             <textarea
               value={improvements}
@@ -129,7 +129,7 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
             />
           </div>
 
-          <div>
+          <div className="question-group">
             <h3 className="text-lg font-medium text-gray-700 italic mb-6">J'ai compris que...</h3>
             <textarea
               value={understanding}
@@ -141,14 +141,14 @@ export function QuestionnaireDay2({ onPrevious, onNext }: QuestionnaireDay2Props
         </div>
       </div>
 
-      <div className="relative">
+      <div className="print:absolute print:bottom-[1cm] print:left-8 print:right-8">
         <blockquote className="text-primary-coral italic text-sm">
           "Comme un diamant brut, ma valeur est innée et inaltérable ;
           ni les regards ni les jugements ne sauraient l'entamer."
         </blockquote>
       </div>
 
-      <div className="mt-16 flex justify-between">
+      <div className="mt-16 flex justify-between print:hidden">
         <button
           onClick={onPrevious}
           className="bg-gray-200 text-gray-700 px-6 py-2 rounded-full hover:bg-gray-300 transition-colors"

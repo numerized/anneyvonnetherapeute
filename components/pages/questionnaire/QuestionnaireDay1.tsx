@@ -19,7 +19,7 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
   const [definition, setDefinition] = useState('')
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-lg">
+    <div className="bg-white rounded-3xl p-8 shadow-lg print:shadow-none print:relative print:min-h-[calc(100vh-2cm)]">
       <div className="flex justify-between items-start mb-8">
         <h1 className="text-4xl font-light">
           <span className="text-primary-coral">jour</span>
@@ -40,8 +40,8 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
         </p>
       </div>
 
-      <div className="mb-12">
-        <h3 className="text-lg font-medium text-gray-700 italic mb-6"><i>Pourquoi l'estime de soi est essentielle en amour</i></h3>
+      <div className="mb-12 question-group">
+        <h3 className="text-lg font-medium text-gray-700 italic mb-6">Pourquoi l'estime de soi est essentielle en amour</h3>
         <textarea
           value={whyImportant}
           onChange={(e) => setWhyImportant(e.target.value)}
@@ -50,8 +50,8 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
         />
       </div>
 
-      <div className="mb-12">
-        <h3 className="text-lg font-medium text-gray-700 italic mb-6"><i>Ma propre définition de l'estime de soi</i></h3>
+      <div className="mb-12 question-group">
+        <h3 className="text-lg font-medium text-gray-700 italic mb-6">Ma propre définition de l'estime de soi</h3>
         <textarea
           value={definition}
           onChange={(e) => setDefinition(e.target.value)}
@@ -60,14 +60,14 @@ export function QuestionnaireDay1({ onNext }: QuestionnaireDay1Props) {
         />
       </div>
 
-      <div className="relative">
+      <div className="print:absolute print:bottom-[1cm] print:left-8 print:right-8">
         <blockquote className="text-primary-coral italic text-sm">
           "Vous seul(e) détenez le pouvoir de définir votre valeur.
           Ne laissez jamais quelqu'un d'autre écrire votre histoire."
         </blockquote>
       </div>
 
-      <div className="mt-16 flex justify-end">
+      <div className="mt-16 flex justify-end print:hidden">
         <button
           onClick={onNext}
           className="bg-primary-coral text-white px-6 py-2 rounded-full hover:bg-primary-rust transition-colors"
