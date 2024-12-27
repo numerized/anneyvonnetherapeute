@@ -9,8 +9,8 @@ export function WomenTherapyCard({ onShowPromo }: WomenTherapyCardProps) {
     <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
         <div>
-          <h3 className="text-2xl font-light text-primary-cream mb-2 text-right">FORFAIT FEMME</h3>
-          <p className="text-primary-coral italic text-right">Voyage vers une sexualité libérée et épanouie pour femmes</p>
+          <h3 className="text-2xl font-light text-primary-cream mb-2">FORFAIT FEMME</h3>
+          <p className="text-primary-coral italic">Voyage vers une sexualité libérée et épanouie pour femmes</p>
           <blockquote className="mt-6 border-l-2 border-primary-coral/30 pl-4 text-primary-cream/80">
             "Cultivez un désir authentique et puissant"
           </blockquote>

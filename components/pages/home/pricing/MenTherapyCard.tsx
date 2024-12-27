@@ -9,8 +9,8 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
     <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
         <div>
-          <h3 className="text-2xl font-light text-primary-cream mb-2 text-right">FORFAIT HOMME</h3>
-          <p className="text-primary-coral italic text-right">Programme de transformation sexuelle pour hommes</p>
+          <h3 className="text-2xl font-light text-primary-cream mb-2">FORFAIT HOMME</h3>
+          <p className="text-primary-coral italic">Programme de transformation sexuelle pour hommes</p>
           <blockquote className="mt-6 border-l-2 border-primary-coral/30 pl-4 text-primary-cream/80">
             "Développez une sexualité épanouie et harmonieuse"
           </blockquote>
