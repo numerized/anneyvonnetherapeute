@@ -10,7 +10,10 @@ import { VitPromoModal } from '@/components/global/VitPromoModal'
 import { Benefit } from './Benefit'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { MenTherapyCard } from './pricing/MenTherapyCard'
+import { SexologyTherapyCard } from './pricing/SexologyTherapyCard'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
+import { WomenTherapyCard } from './pricing/WomenTherapyCard'
 
 interface TherapyPricingProps {
   className?: string
@@ -49,10 +52,13 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
           </div>
 
           {/* Pricing Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <CoupleTherapyCard onShowPromo={handleShowPromo} />
-            <IndividualTherapyCard onShowPromo={handleShowPromo} />
-            <VitTherapyCard onShowPromo={handleShowPromo} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <CoupleTherapyCard onShowPromo={() => handleShowPromo('promo')} />
+            <SexologyTherapyCard onShowPromo={() => handleShowPromo('promo')} />
+            <MenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+            <WomenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+            <IndividualTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+            <VitTherapyCard onShowPromo={() => handleShowPromo('vit')} />
           </div>
         </div>
       </section>

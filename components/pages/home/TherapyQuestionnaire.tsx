@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Users, User, Sparkles, Heart, ArrowUpRight, Target } from 'lucide-react'
+import { Users, User, Sparkles, Heart, ArrowUpRight, Target, Users2, Clock } from 'lucide-react'
 
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
@@ -12,14 +12,16 @@ import { CheckupStageCard } from './stages/CheckupStageCard'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { DecisionStageCard } from './stages/DecisionStageCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
+import { MenTherapyCard } from './pricing/MenTherapyCard'
 import { SexologyTherapyCard } from './pricing/SexologyTherapyCard'
 import { TherapyPromoModal } from './modals/TherapyPromoModal'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
+import { WomenTherapyCard } from './pricing/WomenTherapyCard'
 
 type TherapyOption = {
   title: string
   description: string
-  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision' | 'sexology'
+  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision' | 'sexology' | 'men' | 'women'
 }
 
 const therapyOptions: TherapyOption[] = [
@@ -57,6 +59,16 @@ const therapyOptions: TherapyOption[] = [
     title: 'RESTER OU PARTIR',
     description: 'Médiation et coaching pour une décision consciente sur l\'avenir de votre relation.',
     type: 'decision'
+  },
+  {
+    title: 'Programme de transformation sexuelle pour hommes',
+    description: 'Programme de transformation sexuelle pour hommes',
+    type: 'men'
+  },
+  {
+    title: 'Voyage vers une sexualité libérée et épanouie',
+    description: 'Voyage vers une sexualité libérée et épanouie',
+    type: 'women'
   }
 ]
 
@@ -65,7 +77,8 @@ export function TherapyQuestionnaire() {
   const [answers, setAnswers] = useState({
     situation: '',
     need: '',
-    intimacyFocus: false
+    intimacyFocus: false,
+    gender: ''
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -79,39 +92,38 @@ export function TherapyQuestionnaire() {
   }
 
   const handleNeedSelect = (need: string) => {
-    if (need === 'decide') {
+    setAnswers(prev => ({ ...prev, need }));
+    
+    if (need === 'intimacy') {
+      if (answers.situation === 'individual') {
+        setStep(3); // Go to gender selection
+      } else {
+        const recommended = therapyOptions.filter(option => 
+          ['sexology'].includes(option.type)
+        );
+        setRecommendations(recommended);
+        setStep(4);
+      }
+    } else if (need === 'decide') {
       const recommended = therapyOptions.filter(option => 
         ['couple', 'decision'].includes(option.type)
-      )
-      setRecommendations(recommended)
-      setAnswers(prev => ({ ...prev, need }))
-      setStep(4)
-      setShowReward(true)
-    } else if (need === 'intensive' || need === 'regular' || need === 'specific') {
-      let recommended: TherapyOption[] = []
-      if (need === 'intensive') {
-        recommended = therapyOptions.filter(option => ['vit'].includes(option.type))
-      } else if (need === 'regular') {
-        recommended = therapyOptions.filter(option => ['individual'].includes(option.type))
-      } else if (need === 'specific') {
-        recommended = therapyOptions.filter(option => ['individual', 'vit'].includes(option.type))
-      }
-      setRecommendations(recommended)
-      setAnswers(prev => ({ ...prev, need }))
-      setStep(4)
-      setShowReward(true)
-    } else if (need === 'start') {
-      // Skip intimacy question for "Bien démarrer notre relation"
-      const recommended = therapyOptions.filter(option => 
-        ['couple', 'beginning'].includes(option.type)
-      )
-      setRecommendations(recommended)
-      setAnswers(prev => ({ ...prev, need }))
-      setStep(4)
-      setShowReward(true)
+      );
+      setRecommendations(recommended);
+      setStep(4);
     } else {
-      setAnswers(prev => ({ ...prev, need }))
-      setStep(3)
+      if (answers.situation === 'individual') {
+        const recommended = therapyOptions.filter(option =>
+          ['individual'].includes(option.type)
+        );
+        setRecommendations(recommended);
+        setStep(4);
+      } else {
+        const recommended = therapyOptions.filter(option =>
+          ['couple'].includes(option.type)
+        );
+        setRecommendations(recommended);
+        setStep(4);
+      }
     }
   }
 
@@ -134,9 +146,24 @@ export function TherapyQuestionnaire() {
     setShowReward(true)
   }
 
+  const handleGenderSelect = (gender: string) => {
+    setAnswers(prev => ({ ...prev, gender }));
+    // Set exactly one recommendation based on gender
+    const recommended = [{
+      title: gender === 'male' ? 'FORFAIT HOMME' : 'FORFAIT FEMME',
+      description: gender === 'male' 
+        ? 'Programme de transformation sexuelle pour hommes' 
+        : 'Voyage vers une sexualité libérée et épanouie',
+      type: gender === 'male' ? 'men' : 'women'
+    }];
+    setRecommendations(recommended);
+    setShowReward(true);
+    setStep(4);
+  }
+
   const handleRestart = () => {
     setStep(1)
-    setAnswers({ situation: '', need: '', intimacyFocus: false })
+    setAnswers({ situation: '', need: '', intimacyFocus: false, gender: '' })
     setRecommendations([])
     setShowReward(false)
     scrollToSection('questionnaire')
@@ -147,7 +174,7 @@ export function TherapyQuestionnaire() {
     setShowModal(true)
   }
 
-  const renderCard = (type: string) => {
+  const renderCard = (type: TherapyOption['type']) => {
     switch (type) {
       case 'couple':
         return <CoupleTherapyCard onShowPromo={() => handleShowPromo('couple')} />
@@ -163,6 +190,10 @@ export function TherapyQuestionnaire() {
         return <DecisionStageCard onShowPromo={() => handleShowPromo('decision')} />
       case 'sexology':
         return <SexologyTherapyCard onShowPromo={() => handleShowPromo('sexology')} />
+      case 'men':
+        return <MenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+      case 'women':
+        return <WomenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
       default:
         return null
     }
@@ -270,6 +301,15 @@ export function TherapyQuestionnaire() {
                         <span>Prendre une décision sur l'avenir de notre relation</span>
                       </div>
                     </button>
+                    <button
+                      onClick={() => handleNeedSelect('intimacy')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Heart className="w-5 h-5 flex-shrink-0" />
+                        <span>Améliorer l'intimité dans notre relation</span>
+                      </div>
+                    </button>
                   </div>
                 </motion.div>
               )}
@@ -280,102 +320,104 @@ export function TherapyQuestionnaire() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6 p-8"
+                  className="space-y-6"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Quel type d'accompagnement recherchez-vous ?</h3>
-                  <div className="grid gap-4">
-                    <button
-                      onClick={() => handleNeedSelect('intensive')}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <ArrowUpRight className="w-5 h-5 flex-shrink-0" />
-                        <span>Un suivi intensif et personnalisé</span>
-                      </div>
-                    </button>
+                  <h3 className="text-xl text-primary-cream mb-6">Je souhaite :</h3>
+                  <div className="space-y-4">
                     <button
                       onClick={() => handleNeedSelect('regular')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <Users className="w-5 h-5 flex-shrink-0" />
+                        <Users2 className="w-5 h-5 flex-shrink-0" />
                         <span>Un accompagnement régulier</span>
                       </div>
                     </button>
                     <button
-                      onClick={() => handleNeedSelect('specific')}
+                      onClick={() => handleNeedSelect('intensive')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <Target className="w-5 h-5 flex-shrink-0" />
-                        <span>Un travail sur des thèmes spécifiques</span>
+                        <Clock className="w-5 h-5 flex-shrink-0" />
+                        <span>Un accompagnement intensif</span>
                       </div>
                     </button>
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                <motion.div
-                  key="step-3"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="space-y-6 p-8"
-                >
-                  <h3 className="text-xl text-primary-cream mb-6">Votre priorité est-elle de raviver l'intimité dans votre couple ?</h3>
-                  <div className="grid gap-4">
                     <button
-                      onClick={() => handleIntimacySelect(true)}
+                      onClick={() => handleNeedSelect('intimacy')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <Heart className="w-5 h-5 flex-shrink-0" />
-                        <span>Oui, je souhaite me concentrer sur l'intimité et la connexion</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleIntimacySelect(false)}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Users className="w-5 h-5 flex-shrink-0" />
-                        <span>Non, je souhaite travailler sur d'autres aspects de la relation</span>
+                        <span>Un accompagnement sur l'intimité</span>
                       </div>
                     </button>
                   </div>
                 </motion.div>
               )}
 
-              {step === 4 && (
+              {step === 3 && answers.need === 'intimacy' && (
+                <motion.div
+                  key="step-3-gender"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-6"
+                >
+                  <h3 className="text-xl text-primary-cream mb-6">Vous êtes :</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button
+                      className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                      onClick={() => handleGenderSelect('male')}
+                    >
+                      <h4 className="text-xl mb-2">Un homme</h4>
+                      <p className="text-primary-cream/70">Programme de transformation sexuelle pour hommes</p>
+                    </button>
+                    <button
+                      className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                      onClick={() => handleGenderSelect('female')}
+                    >
+                      <h4 className="text-xl mb-2">Une femme</h4>
+                      <p className="text-primary-cream/70">Voyage vers une sexualité libérée et épanouie</p>
+                    </button>
+                  </div>
+
+                </motion.div>
+              )}
+
+              {showReward && (
                 <motion.div
                   key="recommendations"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="p-8"
+                  className="space-y-6"
                 >
-                  <div className={`grid ${recommendations.length > 1 ? 'md:grid-cols-2' : ''} gap-8 ${recommendations.length === 1 ? 'max-w-2xl mx-auto' : ''}`}>
+                  <div className="grid grid-cols-1 gap-6">
                     {recommendations.map((option) => (
-                      <div key={option.type}>
-                        {renderCard(option.type)}
-                      </div>
+                      <div key={option.type}>{renderCard(option.type)}</div>
                     ))}
                   </div>
                 </motion.div>
               )}
+
+              {step > 1 && (
+                <motion.div
+                  key="restart-button"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex justify-center mt-8"
+                >
+                  <button
+                    onClick={handleRestart}
+                    className="text-primary-cream/50 hover:text-primary-cream transition-colors"
+                  >
+                    Recommencer le questionnaire
+                  </button>
+                </motion.div>
+              )}
             </AnimatePresence>
 
-            {step > 1 && (
-              <div className="flex justify-center pb-8">
-                <button
-                  onClick={handleRestart}
-                  className="text-primary-cream hover:text-primary-cream/80 transition-colors"
-                >
-                  Recommencer le questionnaire
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </section>
