@@ -46,6 +46,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Only show Speed Insights when not printing
+  const isPrinting = typeof window !== 'undefined' && window.matchMedia('print').matches
+
   return (
     <html
       lang="en"
@@ -53,8 +56,8 @@ export default async function RootLayout({
     >
       <body className="font-montserrat">
         {children}
-        <SpeedInsights />
         <Analytics />
+        {!isPrinting && <SpeedInsights />}
       </body>
     </html>
   )

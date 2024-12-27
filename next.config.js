@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+  },
+  speedInsights: {
+    disabled: true,
+  },
   env: {
     // This will force Vercel to rebuild on every deployment
     CACHE_BUST: new Date().toISOString(),
