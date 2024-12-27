@@ -10,7 +10,7 @@ interface VitTherapyCardProps {
 
 export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
+    <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
         <div className="text-right">
           <h3 className="text-2xl text-primary-cream font-light mb-2">
@@ -53,7 +53,7 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
 
         <div className="space-y-4">
           <h4 className="text-xl text-primary-cream font-light mb-2 text-left">TARIFS</h4>
-          <div className="bg-primary-forest/30 rounded-3xl p-6">
+          <div className="bg-primary-forest/30 rounded-[24px] p-6">
             <div className="flex justify-start items-center mb-4 gap-4">
               <span>5 SÉANCES</span>
               <span className="text-primary-coral text-2xl font-bold">1200 €</span>
@@ -87,7 +87,7 @@ export function VitTherapyCard({ onShowPromo }: VitTherapyCardProps) {
 
         <button
           onClick={() => onShowPromo('vit')}
-          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
+          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold"
         >
           En savoir plus
         </button>
