@@ -99,7 +99,7 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
 
         <button
           onClick={onShowPromo}
-          className="w-full rounded-full bg-primary-coral/20 hover:bg-primary-coral/30 text-primary-cream py-4 transition-colors"
+          className="w-full rounded-full bg-primary-coral hover:bg-primary-coral/80 text-primary-cream py-4 transition-colors"
         >
           En savoir plus
         </button>
