@@ -10,7 +10,7 @@ interface BeginningStageCardProps {
 
 export function BeginningStageCard({ onShowPromo }: BeginningStageCardProps) {
   return (
-    <div className="bg-primary-forest/30 text-primary-cream rounded-3xl p-8">
+    <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors h-full">
       <div className="space-y-8">
         <div className="text-right">
           <h3 className="text-2xl text-primary-cream font-light mb-2">
@@ -73,7 +73,7 @@ export function BeginningStageCard({ onShowPromo }: BeginningStageCardProps) {
 
         <button
           onClick={onShowPromo}
-          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
+          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold"
         >
           En savoir plus
         </button>
