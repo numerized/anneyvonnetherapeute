@@ -5,9 +5,6 @@ const nextConfig = {
     // This will force Vercel to rebuild on every deployment
     CACHE_BUST: new Date().toISOString(),
   },
-  experimental: {
-    nftTracing: true
-  },
   images: {
     remotePatterns: [
       {
