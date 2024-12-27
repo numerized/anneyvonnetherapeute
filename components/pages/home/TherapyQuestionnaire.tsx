@@ -406,7 +406,7 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6"
                 >
-                  <div className="grid grid-cols-1 gap-6">
+                  <div className={`grid grid-cols-1 ${recommendations.length === 2 ? 'md:grid-cols-2' : ''} gap-6`}>
                     {recommendations.map((option) => (
                       <div key={option.type}>{renderCard(option.type)}</div>
                     ))}

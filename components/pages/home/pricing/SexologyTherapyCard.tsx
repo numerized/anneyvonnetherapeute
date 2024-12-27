@@ -9,8 +9,8 @@ export function SexologyTherapyCard({ onShowPromo }: SexologyTherapyCardProps) {
     <div className="relative overflow-hidden rounded-3xl bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
         <div>
-          <h3 className="text-2xl font-light text-primary-cream mb-2">FORFAIT COUPLE SEXOLOGIE</h3>
-          <p className="text-primary-coral italic">Programme de renaissance intime</p>
+          <h3 className="text-2xl font-light text-primary-cream mb-2 text-right">FORFAIT SEXOLOGIE</h3>
+          <p className="text-primary-coral italic text-right">Programme de renaissance intime pour couples</p>
           <blockquote className="mt-6 border-l-2 border-primary-coral/30 pl-4 text-primary-cream/80">
             "Ravivez la flamme et renforcer l'intimité émotionnelle dans votre couple"
           </blockquote>
