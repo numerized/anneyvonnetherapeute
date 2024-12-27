@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import './globals.css'
+import '@/styles/index.css'
 
 const aleo = Aleo({
   variable: '--font-aleo',
@@ -48,10 +49,10 @@ export default async function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${mono.variable} ${montserrat.variable} ${serif.variable} ${aleo.variable}`}
     >
-      <body className="font-montserrat">
+      <body className="font-montserrat bg-primary-dark" style={{ backgroundColor: '#2a3a3a' }}>
         {children}
         <SpeedInsights />
         <Analytics />

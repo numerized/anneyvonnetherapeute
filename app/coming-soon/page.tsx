@@ -3,7 +3,6 @@ import { draftMode } from 'next/headers'
 import Link from 'next/link'
 
 import { ComingSoonPage } from '@/components/pages/coming-soon/ComingSoonPage'
-import HomePagePreview from '@/components/pages/home/HomePagePreview'
 import { studioUrl } from '@/sanity/lib/api'
 import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
 
@@ -12,10 +11,6 @@ export default async function ComingSoonRoute() {
     loadHomePage(),
     loadSettings()
   ])
-
-  if ((await draftMode()).isEnabled) {
-    return <HomePagePreview initial={initial} settings={settings} />
-  }
 
   if (!initial.data) {
     return (
