@@ -93,7 +93,7 @@ export function TherapyQuestionnaire() {
 
   const handleNeedSelect = (need: string) => {
     setAnswers(prev => ({ ...prev, need }))
-    
+
     if (need === 'intimacy' && answers.situation === 'individual') {
       setStep(3) // Go to gender selection
       return
@@ -131,7 +131,7 @@ export function TherapyQuestionnaire() {
         ]
         break
     }
-    
+
     setRecommendations(recommended)
     setShowReward(true)
     setStep(4)
@@ -141,8 +141,8 @@ export function TherapyQuestionnaire() {
     setAnswers(prev => ({ ...prev, gender }))
     const recommended: TherapyOption[] = [{
       title: gender === 'male' ? 'FORFAIT HOMME' : 'FORFAIT FEMME',
-      description: gender === 'male' 
-        ? 'Programme de transformation sexuelle pour hommes' 
+      description: gender === 'male'
+        ? 'Programme de transformation sexuelle pour hommes'
         : 'Voyage vers une sexualité libérée et épanouie pour femmes',
       type: gender === 'male' ? 'men' : 'women'
     }]
@@ -154,7 +154,7 @@ export function TherapyQuestionnaire() {
   const handleStageSelect = (stage: string) => {
     setAnswers(prev => ({ ...prev, stage }))
     let recommended: TherapyOption[]
-    
+
     switch (stage) {
       case 'beginning':
         recommended = therapyOptions.filter(option => option.type === 'beginning')
@@ -168,7 +168,7 @@ export function TherapyQuestionnaire() {
       default:
         recommended = []
     }
-    
+
     setRecommendations(recommended)
     setShowReward(true)
     setStep(4)
@@ -214,7 +214,7 @@ export function TherapyQuestionnaire() {
 
   return (
     <>
-      <section 
+      <section
         ref={questionnaireRef}
         id="questionnaire"
         className="py-16 bg-primary-forest/30"
@@ -222,7 +222,7 @@ export function TherapyQuestionnaire() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-center mb-4">
-            <div 
+            <div
               className="inline-block bg-primary-teal/20 text-primary-cream px-4 py-2 rounded-[24px] text-sm"
               role="presentation"
               aria-label="Questionnaire"
@@ -397,6 +397,26 @@ export function TherapyQuestionnaire() {
                 </motion.div>
               )}
 
+              <AnimatePresence mode="wait">
+                {step === 4 && recommendations.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className={`grid grid-cols-12 gap-8 mt-12 ${recommendations.length === 1 ? 'justify-center' : ''}`}
+                  >
+                    {recommendations.map((option) => (
+                      <div key={option.type}
+                        className={`col-span-12 md:col-span-6 ${recommendations.length === 1 ? 'md:col-start-4' : ''
+                          }`}
+                      >
+                        {renderCard(option.type)}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {step > 1 && (
                 <motion.div
                   key="restart-button"
@@ -420,8 +440,8 @@ export function TherapyQuestionnaire() {
       </section>
 
       {showReward && (
-        <QuestionnaireReward 
-          isOpen={showReward} 
+        <QuestionnaireReward
+          isOpen={showReward}
           onClose={() => {
             setShowReward(false)
             // Don't reset step or recommendations when closing reward
@@ -430,22 +450,7 @@ export function TherapyQuestionnaire() {
         />
       )}
 
-      <AnimatePresence mode="wait">
-        {step === 4 && recommendations.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="grid grid-cols-1 gap-8 mt-12"
-          >
-            {recommendations.map((option) => (
-              <div key={option.type}>
-                {renderCard(option.type)}
-              </div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+
 
       <TherapyPromoModal
         isOpen={showModal}
