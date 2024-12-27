@@ -245,7 +245,7 @@ export function TherapyQuestionnaire() {
 
           <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px]">
             <AnimatePresence mode="wait">
-              {step === 1 && (
+              {step === 1 ? (
                 <motion.div
                   key="step-1"
                   initial={{ opacity: 0, y: 20 }}
@@ -275,9 +275,7 @@ export function TherapyQuestionnaire() {
                     </button>
                   </div>
                 </motion.div>
-              )}
-
-              {step === 2 && answers.situation === 'couple' && (
+              ) : step === 2 && answers.situation === 'couple' ? (
                 <motion.div
                   key="step-2-couple"
                   initial={{ opacity: 0, y: 20 }}
@@ -325,9 +323,7 @@ export function TherapyQuestionnaire() {
                     </button>
                   </div>
                 </motion.div>
-              )}
-
-              {step === 2 && answers.situation === 'individual' && (
+              ) : step === 2 && answers.situation === 'individual' ? (
                 <motion.div
                   key="step-2-individual"
                   initial={{ opacity: 0, y: 20 }}
@@ -366,9 +362,7 @@ export function TherapyQuestionnaire() {
                     </button>
                   </div>
                 </motion.div>
-              )}
-
-              {step === 3 && answers.need === 'intimacy' && (
+              ) : step === 3 && answers.need === 'intimacy' ? (
                 <motion.div
                   key="step-3-gender"
                   initial={{ opacity: 0, y: 20 }}
@@ -393,53 +387,48 @@ export function TherapyQuestionnaire() {
                       <p className="text-primary-cream/70">Voyage vers une sexualité libérée et épanouie</p>
                     </button>
                   </div>
-
                 </motion.div>
-              )}
-
-              <AnimatePresence mode="wait">
-                {step === 4 && recommendations.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="grid grid-cols-12 gap-8 mt-12"
-                  >
-                    {recommendations.map((option) => (
-                      <div key={option.type}
-                        className={`col-span-12 ${
-                          recommendations.length === 1 
-                            ? (option.type === 'men' || option.type === 'women')
-                              ? 'md:col-span-12' 
-                              : 'md:col-span-6 md:col-start-4'
-                            : 'md:col-span-6'
-                        } ${recommendations.length === 1 ? 'mx-auto max-w-4xl' : ''}`}
-                      >
-                        {renderCard(option.type)}
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {step > 1 && (
+              ) : step === 4 && recommendations.length > 0 ? (
                 <motion.div
-                  key="restart-button"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="flex justify-center mt-8"
+                  key="step-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="grid grid-cols-12 gap-8 mt-12"
                 >
-                  <button
-                    onClick={handleRestart}
-                    className="text-primary-cream/50 hover:text-primary-cream transition-colors"
-                  >
-                    Recommencer le questionnaire
-                  </button>
+                  {recommendations.map((option) => (
+                    <div key={option.type}
+                      className={`col-span-12 ${
+                        recommendations.length === 1 
+                          ? (option.type === 'men' || option.type === 'women')
+                            ? 'md:col-span-12' 
+                            : 'md:col-span-6 md:col-start-4'
+                          : 'md:col-span-6'
+                      } ${recommendations.length === 1 ? 'mx-auto max-w-4xl' : ''}`}
+                    >
+                      {renderCard(option.type)}
+                    </div>
+                  ))}
                 </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
 
+            {step > 1 && (
+              <motion.div
+                key="restart-button"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex justify-center mt-8 pb-8"
+              >
+                <button
+                  onClick={handleRestart}
+                  className="text-primary-cream/50 hover:text-primary-cream transition-colors"
+                >
+                  Recommencer le questionnaire
+                </button>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>
