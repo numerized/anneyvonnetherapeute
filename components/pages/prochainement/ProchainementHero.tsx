@@ -19,9 +19,21 @@ export function ProchainementHero({ hero, data }: HeroProps) {
     setIsClient(true)
   }, [])
 
+  // Type guard function
+  const isValidImage = (img: any): img is { asset: { _ref: string } } => {
+    return img && typeof img === 'object' && img.asset && '_ref' in img.asset;
+  }
+
   // Generate image URLs
-  const logoUrl = data?.logo?.asset?._ref ? urlFor(data.logo).url() : null
-  const imageUrl = hero?.image?.asset?._ref ? urlFor(hero.image).width(1920).height(1080).url() : null
+  const logoUrl = (() => {
+    const builder = urlFor(data?.logo)
+    return builder?.url() ?? null
+  })()
+
+  const imageUrl = (() => {
+    const builder = urlFor(hero?.image)
+    return builder?.width(1920).height(1080).url() ?? null
+  })()
 
   return (
     <section 
@@ -47,7 +59,7 @@ export function ProchainementHero({ hero, data }: HeroProps) {
         )}
       </div>
 
-      {/* Mobile Logo and Login */}
+      {/* Mobile Logo */}
       <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
           <Image 
@@ -58,14 +70,6 @@ export function ProchainementHero({ hero, data }: HeroProps) {
             height={300}
             priority
           />
-        )}
-        {data?.menuItems?.length > 0 && data.menuItems[data.menuItems.length - 1] && (
-          <Link
-            href={data.menuItems[data.menuItems.length - 1].reference?.slug?.current ? `/${data.menuItems[data.menuItems.length - 1].reference.slug.current}` : '#'}
-            className="inline-block px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105 whitespace-nowrap"
-          >
-            {data.menuItems[data.menuItems.length - 1].title}
-          </Link>
         )}
       </div>
 
@@ -113,12 +117,11 @@ export function ProchainementHero({ hero, data }: HeroProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <Link
-                    href={hero.ctaButton.link || '#'}
-                    className="inline-block bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold text-sm md:text-base"
+                  <div
+                    className="inline-block bg-primary-coral text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold text-sm md:text-base cursor-default"
                   >
                     PROCHAINEMENT
-                  </Link>
+                  </div>
                 </motion.div>
               )}
             </div>
