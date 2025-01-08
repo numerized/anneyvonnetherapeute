@@ -57,7 +57,7 @@ export function EmailForm({ onClose }: EmailFormProps) {
   return (
     <Modal
       isOpen={true}
-      onClose={onClose}
+      onClose={() => onClose?.()}
       title="CONTACTEZ-NOUS"
       subtitle="Pour plus d'informations sur nos services"
     >
