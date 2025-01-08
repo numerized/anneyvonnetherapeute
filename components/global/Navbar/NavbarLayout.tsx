@@ -119,14 +119,14 @@ export default function Navbar(props: NavbarProps) {
               {!isProchainement && data?.menuItems && (
                 <div className="hidden md:flex items-center space-x-8">
                   {data.menuItems.map((item: any, index: number) => {
-                    const isLast = index === (data?.menuItems?.length ?? 0) - 1
+                    const isSecondToLast = index === (data?.menuItems?.length ?? 0) - 2
                     const href = item.reference?.slug?.current === 'coming-soon' 
                       ? '/prochainement' 
                       : item.reference?.slug?.current 
                         ? `/${item.reference.slug.current}` 
                         : '#'
                     
-                    if (isLast) {
+                    if (isSecondToLast) {
                       return (
                         <button
                           key={index}

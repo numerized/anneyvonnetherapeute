@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { functions } from '@/lib/firebase'
-import { httpsCallable } from 'firebase/functions'
 import { Modal } from '@/components/shared/Modal'
 
 interface EmailFormProps {
@@ -22,12 +21,24 @@ export function EmailForm({ onClose }: EmailFormProps) {
     setSubmitStatus('idle')
 
     try {
-      const sendEmail = httpsCallable(functions, 'sendEmail')
-      await sendEmail({
-        name,
-        email,
-        message
+      const response = await fetch('https://us-central1-coeurs-a-corps.cloudfunctions.net/sendContactEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message
+        })
       })
+
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('Server error:', error)
+        throw new Error(error.details || error.error || 'Failed to send email')
+      }
       setSubmitStatus('success')
       setName('')
       setEmail('')
