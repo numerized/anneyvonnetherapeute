@@ -10,6 +10,7 @@ import { HiMenu, HiX } from 'react-icons/hi'
 import { urlFor } from '@/sanity/lib/image'
 import { resolveHref } from '@/sanity/lib/utils'
 import { SettingsPayload } from '@/types'
+import { EmailForm } from '@/components/shared/EmailForm'
 
 import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
@@ -124,15 +125,24 @@ export default function Navbar(props: NavbarProps) {
                       : item.reference?.slug?.current 
                         ? `/${item.reference.slug.current}` 
                         : '#'
+                    
+                    if (isLast) {
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => setShowAppointmentModal(true)}
+                          className="px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105"
+                        >
+                          {item.title}
+                        </button>
+                      )
+                    }
+                    
                     return (
                       <Link
                         key={index}
                         href={href}
-                        className={`${
-                          isLast
-                            ? 'px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105'
-                            : 'text-primary-cream hover:text-primary-coral transition-colors'
-                        }`}
+                        className="text-primary-cream hover:text-primary-coral transition-colors"
                       >
                         {item.title}
                       </Link>
@@ -147,14 +157,16 @@ export default function Navbar(props: NavbarProps) {
         {showAppointmentModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg p-6 max-w-md w-full">
-              <h2 className="text-2xl font-bold mb-4">Prendre rendez-vous</h2>
-              {/* Add your appointment form or content here */}
-              <button
-                onClick={() => setShowAppointmentModal(false)}
-                className="mt-4 bg-primary-coral hover:bg-primary-rust transition-colors px-6 py-2 rounded-md text-white font-bold"
-              >
-                Fermer
-              </button>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Prendre rendez-vous</h2>
+                <button
+                  onClick={() => setShowAppointmentModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              <EmailForm onClose={() => setShowAppointmentModal(false)} />
             </div>
           </div>
         )}
