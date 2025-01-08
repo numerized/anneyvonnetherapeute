@@ -62,23 +62,7 @@ export function Modal({ isOpen, onClose, title, subtitle, children }: ModalProps
                   {children}
                 </div>
 
-                {/* Action buttons */}
-                <div className="mt-16 flex gap-4 justify-center">
-                  <a
-                    href="https://calendly.com/anneyvonn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-primary-coral hover:bg-primary-rust text-primary-cream px-6 py-3 rounded-full transition-colors"
-                  >
-                    Prendre Rendez-vous
-                  </a>
-                  <a
-                    href="mailto:contact@anneyvonne.fr"
-                    className="bg-primary-cream/20 hover:bg-primary-cream/30 text-primary-cream px-6 py-3 rounded-full transition-colors"
-                  >
-                    Nous contacter
-                  </a>
-                </div>
+                
               </Dialog.Panel>
             </Transition.Child>
           </div>
