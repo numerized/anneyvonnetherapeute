@@ -1,13 +1,14 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp } from "firebase/app";
 import { getFunctions } from 'firebase/functions'
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBwRASncivRPjaRONIU9KSxyg9Nq3fyutY",
-  authDomain: "coeurs-a-corps.firebaseapp.com",
-  projectId: "coeurs-a-corps",
-  storageBucket: "coeurs-a-corps.firebasestorage.app",
-  messagingSenderId: "311547169034",
-  appId: "1:311547169034:web:933f73c2392d182fe752f3"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
