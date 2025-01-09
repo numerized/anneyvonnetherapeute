@@ -224,6 +224,12 @@ export default function CapsulesPage() {
     setLikedCapsules({});
   };
 
+  const setVideoRef = (element: HTMLVideoElement | null, id: number) => {
+    if (element) {
+      videoRefs.current[id] = element;
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
       {/* Hero Section */}
@@ -231,7 +237,7 @@ export default function CapsulesPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl ml-auto text-right">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
-              Capsules Audio
+              Capsules
             </h1>
             <p className="text-xl text-primary-cream/80">
               Découvrez notre collection de méditations guidées et d&apos;exercices pratiques 
@@ -312,7 +318,7 @@ export default function CapsulesPage() {
                   {isClient && (
                     <>
                       <video
-                        ref={(el) => el && (videoRefs.current[capsule.id] = el)}
+                        ref={(el) => setVideoRef(el, capsule.id)}
                         className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
                         playsInline
                         webkit-playsinline="true"
@@ -382,7 +388,7 @@ export default function CapsulesPage() {
                 <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
                 <p className="text-white/80">{capsule.description}</p>
                 {/* Tags */}
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex flex-wrap gap-2 mt-4 justify-end">
                   {capsule.tags.map((tag, index) => (
                     <span
                       key={index}
