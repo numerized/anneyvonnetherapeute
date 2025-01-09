@@ -340,8 +340,15 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         </p>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-          N'hésitez pas à explorer nos capsules audio déjà disponibles sur notre site.
+          Je vous invite à découvrir dès maintenant nos capsules audio en cliquant sur le lien ci-dessous :
         </p>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://anneyvonnetherapeute.vercel.app/capsules" 
+             style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
+            Accéder aux Capsules
+          </a>
+        </div>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
           À très bientôt,<br>
