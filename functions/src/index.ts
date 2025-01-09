@@ -1,4 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
+import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 import { defineSecret } from 'firebase-functions/params'
 import * as sgMail from '@sendgrid/mail'
 import { initializeApp } from 'firebase-admin/app'
@@ -157,3 +158,73 @@ export const addNewsletterSubscriber = onRequest(
     }
   }
 )
+
+// Send welcome email when new newsletter subscriber is added
+export const sendNewsletterWelcomeEmail = onDocumentCreated(
+  {
+    document: 'newsletter/{documentId}',
+    secrets: [sendgridApiKey, senderEmail]
+  },
+  async (event) => {
+    try {
+      const snapshot = event.data;
+      if (!snapshot) {
+        console.log('No data associated with the event');
+        return;
+      }
+
+      const data = snapshot.data();
+      const subscriberEmail = data.email;
+
+      // Configure SendGrid
+      sgMail.setApiKey(sendgridApiKey.value());
+
+      // Email template
+      const msg = {
+        to: subscriberEmail,
+        from: senderEmail.value(),
+        subject: 'Bienvenue à nos capsules audio - Anne-Yvonne Thérapeute',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h1 style="color: #E8927C; margin-bottom: 20px;">Bienvenue !</h1>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+              Chère/Cher abonné(e),
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+              Je suis ravie de vous accueillir dans notre communauté. Merci d'avoir rejoint notre newsletter pour accéder à nos capsules audio.
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+              Vous recevrez régulièrement des contenus exclusifs, des méditations guidées et des exercices pratiques pour vous accompagner dans votre cheminement personnel.
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+              N'hésitez pas à explorer nos capsules audio déjà disponibles sur notre site.
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+              À très bientôt,<br>
+              Anne-Yvonne
+            </p>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 14px; color: #666;">
+              <p>
+                Si vous souhaitez vous désabonner, répondez simplement à cet email.
+              </p>
+            </div>
+          </div>
+        `
+      };
+
+      // Send email
+      await sgMail.send(msg);
+      console.log('Welcome email sent to:', subscriberEmail);
+
+    } catch (error) {
+      console.error('Error sending welcome email:', error);
+      throw new Error('Failed to send welcome email');
+    }
+  }
+);
