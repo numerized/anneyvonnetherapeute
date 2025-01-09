@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
-import { initializeApp, getApp, getApps } from 'firebase/app'
+import { app } from '@/lib/firebase'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,8 +12,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+// Use the existing Firebase instance
 const db = getFirestore(app);
 
 export async function POST(request: Request) {
