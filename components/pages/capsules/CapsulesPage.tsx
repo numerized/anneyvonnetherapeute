@@ -25,7 +25,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(41,53,49,0.62)]',
-    tags: ['Relaxation', 'Sommeil', 'Stress', 'Détente']
+    tags: ['Méditation', 'Relaxation', 'Respiration', 'Stress']
   },
   {
     id: 9,
@@ -35,7 +35,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
-    tags: ['Respiration', 'Anti-stress']
+    tags: ['Respiration', 'Anti-stress', 'Méditation', 'Bien-être']
   },
   {
     id: 8,
@@ -45,7 +45,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(71,94,146,0.62)]',
-    tags: ['Visualisation', 'Manifestation', 'Développement personnel']
+    tags: ['Visualisation', 'Développement personnel', 'Méditation', 'Bien-être']
   },
   {
     id: 7,
@@ -55,7 +55,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(95,71,146,0.62)]',
-    tags: ['Sommeil']
+    tags: ['Sommeil', 'Relaxation', 'Méditation', 'Bien-être']
   },
   {
     id: 6,
@@ -65,7 +65,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,71,127,0.62)]',
-    tags: ['Gratitude', 'Bien-être', 'Développement personnel']
+    tags: ['Gratitude', 'Bien-être', 'Développement personnel', 'Méditation']
   },
   {
     id: 5,
@@ -75,7 +75,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(71,146,89,0.62)]',
-    tags: ['Ancrage', 'Équilibre']
+    tags: ['Ancrage', 'Équilibre', 'Méditation', 'Bien-être']
   },
   {
     id: 4,
@@ -85,7 +85,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,132,71,0.62)]',
-    tags: ['Énergie', 'Matin', 'Vitalité', 'Motivation']
+    tags: ['Énergie', 'Méditation', 'Respiration', 'Visualisation']
   },
   {
     id: 3,
@@ -95,7 +95,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(71,140,146,0.62)]',
-    tags: ['Émotions', 'Thérapie']
+    tags: ['Émotions', 'Thérapie', 'Bien-être', 'Relaxation']
   },
   {
     id: 2,
@@ -105,7 +105,7 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
-    tags: ['Créativité', 'Inspiration', 'Expression', 'Art']
+    tags: ['Créativité', 'Méditation', 'Visualisation', 'Développement personnel']
   },
   {
     id: 1,
@@ -115,13 +115,14 @@ const capsules: Capsule[] = [
     videoUrl: '/videos/capsule0.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(71,146,116,0.62)]',
-    tags: ['Auto-compassion']
+    tags: ['Auto-compassion', 'Bien-être', 'Méditation', 'Développement personnel']
   }
 ]
 
 export default function CapsulesPage() {
   const [isClient, setIsClient] = useState(false)
   const [activeVideo, setActiveVideo] = useState<number | null>(null)
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement }>({})
 
   useEffect(() => {
@@ -147,6 +148,36 @@ export default function CapsulesPage() {
       setActiveVideo(null)
     }
   }
+
+  // Get unique tags with counts
+  const allTags = capsules.reduce((acc, capsule) => {
+    capsule.tags.forEach(tag => {
+      acc[tag] = (acc[tag] || 0) + 1
+    })
+    return acc
+  }, {} as { [key: string]: number })
+
+  // Sort tags by count (descending) and alphabetically
+  const sortedTags = Object.entries(allTags)
+    .sort(([tagA, countA], [tagB, countB]) => {
+      if (countA === countB) {
+        return tagA.localeCompare(tagB)
+      }
+      return countB - countA
+    })
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag)
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    )
+  }
+
+  // Filter capsules based on selected tags
+  const filteredCapsules = capsules.filter(capsule =>
+    selectedTags.length === 0 || selectedTags.some(tag => capsule.tags.includes(tag))
+  )
 
   const breakpointColumnsObj = {
     default: 3,
@@ -174,6 +205,27 @@ export default function CapsulesPage() {
         <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
       </div>
 
+      {/* Tag Filters */}
+      <div className="bg-primary-dark/30 backdrop-blur-sm py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap gap-3 justify-center">
+            {sortedTags.map(([tag, count]) => (
+              <button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all
+                  ${selectedTags.includes(tag)
+                    ? 'bg-white text-primary-dark'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                  }`}
+              >
+                {tag} ({count})
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Capsules Grid */}
       <div className="container mx-auto px-4 py-16">
         <style jsx global>{`
@@ -195,7 +247,7 @@ export default function CapsulesPage() {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
         >
-          {capsules.map((capsule) => (
+          {filteredCapsules.map((capsule) => (
             <div key={capsule.id} className="bg-primary-dark p-8 rounded-[32px] flex flex-col">
               {/* Video Container */}
               <div className="relative w-full rounded-[32px] overflow-hidden">
