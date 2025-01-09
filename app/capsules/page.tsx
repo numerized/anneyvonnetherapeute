@@ -1,0 +1,20 @@
+import { Metadata } from 'next'
+import CapsulesPage from '@/components/pages/capsules/CapsulesPage'
+import { ClientNavbar } from '@/components/global/Navbar/ClientNavbar'
+import { loadSettings } from '@/sanity/loader/loadQuery'
+
+export const metadata: Metadata = {
+  title: 'Capsules Audio - Anne-Yvonne Thérapeute',
+  description: 'Découvrez nos capsules audio de méditation et de développement personnel.',
+}
+
+export default async function Capsules() {
+  const initial = await loadSettings()
+
+  return (
+    <>
+      <ClientNavbar data={initial.data} />
+      <CapsulesPage />
+    </>
+  )
+}
