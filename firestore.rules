@@ -17,5 +17,11 @@ service cloud.firestore {
         // Basic email format validation
         request.resource.data.email.matches('^[^@]+@[^@]+\\.[^@]+$');
     }
+    
+    // Newsletter unsubscribed collection
+    match /newsletter-unsubscribed/{document} {
+      allow read: if false;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
   }
 }

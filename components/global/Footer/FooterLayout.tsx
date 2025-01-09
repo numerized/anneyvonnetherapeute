@@ -58,13 +58,18 @@ export default function Footer(props: FooterProps) {
           {/* Column 2 - Newsletter */}
           <div>
             <div className="bg-primary-forest/30 rounded-[24px] p-6">
-              <h3 className="text-primary-cream text-xl mb-4">{newsletter.title}</h3>
-              <p className="text-primary-cream/80 mb-4">
-                {newsletter.description}
-              </p>
+              <h3 className="text-2xl text-primary-cream font-bold mb-4">
+                {newsletter.title}
+              </h3>
+              {!isSubscribed && (
+                <p className="text-primary-cream/80 mb-4">
+                  {newsletter.description}
+                </p>
+              )}
               {isSubscribed ? (
-                <div className="text-primary-coral font-bold text-left py-4">
-                  Merci pour votre inscription !
+                <div className="mt-4">
+                  <p className="text-primary-coral font-bold text-left">Merci pour votre inscription !</p>
+                  <p className="text-primary-coral text-left mt-2">Consultez votre email pour confirmer votre accès aux capsules gratuites</p>
                 </div>
               ) : (
                 <form className="space-y-4" onSubmit={async (e) => {

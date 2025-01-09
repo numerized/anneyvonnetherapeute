@@ -5,6 +5,7 @@ import * as sgMail from '@sendgrid/mail'
 import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import * as crypto from 'crypto';
+import { FieldValue } from 'firebase-admin/firestore';
 
 // Initialize Firebase Admin
 initializeApp()
@@ -203,7 +204,8 @@ export const handleNewsletterUnsubscribe = onRequest(
   }, 
   async (request, response) => {
     try {
-      const { email, token } = request.query;
+      const email = request.query.email as string;
+      const token = request.query.token as string;
 
       if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
         response.status(400).send(`
@@ -242,14 +244,22 @@ export const handleNewsletterUnsubscribe = onRequest(
         return;
       }
 
-      // Delete all documents with matching email
+      // Get all documents with this email from the newsletter collection
       const db = getFirestore();
-      const snapshot = await db.collection('newsletter')
+      const newsletterQuery = await db.collection('newsletter')
         .where('email', '==', email)
         .get();
 
+      // Store unsubscribe record with timestamp
+      await db.collection('newsletter-unsubscribed').add({
+        email: email,
+        unsubscribedAt: FieldValue.serverTimestamp(),
+        previousSubscriptionIds: newsletterQuery.docs.map(doc => doc.id)
+      });
+
+      // Delete all documents with this email
       const batch = db.batch();
-      snapshot.docs.forEach((doc) => {
+      newsletterQuery.docs.forEach((doc) => {
         batch.delete(doc.ref);
       });
       await batch.commit();
@@ -270,7 +280,6 @@ export const handleNewsletterUnsubscribe = onRequest(
           </body>
         </html>
       `);
-      return;
     } catch (error) {
       console.error('Error handling unsubscribe:', error);
       response.status(500).send(`
@@ -287,7 +296,6 @@ export const handleNewsletterUnsubscribe = onRequest(
           </body>
         </html>
       `);
-      return;
     }
   }
 );
