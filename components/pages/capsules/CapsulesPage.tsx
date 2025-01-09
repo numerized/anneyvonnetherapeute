@@ -386,7 +386,11 @@ export default function CapsulesPage() {
                   {capsule.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 rounded-full bg-white/10 text-white/90 text-sm font-medium"
+                      className={`px-3 py-1 text-xs rounded-full transition-all
+                        ${selectedTags.includes(tag)
+                          ? 'bg-white text-primary-dark font-medium'
+                          : 'bg-white/10 text-white'
+                        }`}
                     >
                       {tag}
                     </span>
