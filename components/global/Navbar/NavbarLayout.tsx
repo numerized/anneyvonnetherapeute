@@ -120,26 +120,21 @@ export default function Navbar(props: NavbarProps) {
                 <div className="hidden md:flex items-center space-x-8">
                   {data.menuItems.map((item: any, index: number) => {
                     const isSecondToLast = index === (data?.menuItems?.length ?? 0) - 2
-                    const href = item.reference?.slug?.current === 'coming-soon' 
-                      ? '/prochainement' 
-                      : item.reference?.slug?.current 
-                        ? `/${item.reference.slug.current}` 
-                        : '#'
-                    
+                      
                     // Clean up the style value by removing hidden Unicode characters
                     const cleanStyle = item.style?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-                    
+                      
                     const baseClasses = "text-primary-cream hover:text-primary-cream/80 transition-colors duration-200";
                     const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
                     const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
                     const buttonClearClasses = `${buttonBaseClasses} border-2 border-primary-cream hover:bg-primary-cream/10`;
-                    
+                      
                     const classes = cleanStyle === 'button-plain' 
                       ? buttonPlainClasses 
                       : cleanStyle === 'button-clear'
                         ? buttonClearClasses
                         : baseClasses;
-                    
+                      
                     if (isSecondToLast) {
                       return (
                         <button
@@ -151,7 +146,34 @@ export default function Navbar(props: NavbarProps) {
                         </button>
                       )
                     }
-                    
+
+                    // Handle anchor links
+                    if (item.linkType === 'anchor' && item.anchor) {
+                      return (
+                        <a
+                          key={index}
+                          href={`#${item.anchor}`}
+                          className={classes}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const element = document.getElementById(item.anchor);
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }}
+                        >
+                          {item.title}
+                        </a>
+                      );
+                    }
+                      
+                    // Handle regular links
+                    const href = item.reference?.slug?.current === 'coming-soon' 
+                      ? '/prochainement' 
+                      : item.reference?.slug?.current 
+                        ? `/${item.reference.slug.current}` 
+                        : '#';
+                      
                     return (
                       <Link
                         key={index}
