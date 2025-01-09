@@ -126,12 +126,26 @@ export default function Navbar(props: NavbarProps) {
                         ? `/${item.reference.slug.current}` 
                         : '#'
                     
+                    // Clean up the style value by removing hidden Unicode characters
+                    const cleanStyle = item.style?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+                    
+                    const baseClasses = "text-primary-cream hover:text-primary-cream/80 transition-colors duration-200";
+                    const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
+                    const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
+                    const buttonClearClasses = `${buttonBaseClasses} border-2 border-primary-cream hover:bg-primary-cream/10`;
+                    
+                    const classes = cleanStyle === 'button-plain' 
+                      ? buttonPlainClasses 
+                      : cleanStyle === 'button-clear'
+                        ? buttonClearClasses
+                        : baseClasses;
+                    
                     if (isSecondToLast) {
                       return (
                         <button
                           key={index}
                           onClick={() => setShowAppointmentModal(true)}
-                          className="px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105"
+                          className={classes}
                         >
                           {item.title}
                         </button>
@@ -142,7 +156,7 @@ export default function Navbar(props: NavbarProps) {
                       <Link
                         key={index}
                         href={href}
-                        className="text-primary-cream hover:text-primary-coral transition-colors"
+                        className={classes}
                       >
                         {item.title}
                       </Link>
