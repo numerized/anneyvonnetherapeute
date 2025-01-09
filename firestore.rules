@@ -2,8 +2,20 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Default rule - deny all access
     match /{document=**} {
       allow read, write: if false;
+    }
+    
+    // Newsletter collection - allow adding new subscribers
+    match /newsletter/{document} {
+      allow create: if 
+        // Must have an email field
+        request.resource.data.keys().hasAll(['email']) &&
+        // Email must be a string
+        request.resource.data.email is string &&
+        // Basic email format validation
+        request.resource.data.email.matches('^[^@]+@[^@]+\\.[^@]+$');
     }
   }
 }

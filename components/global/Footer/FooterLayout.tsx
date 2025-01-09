@@ -1,5 +1,8 @@
+'use client'
+
 import { Facebook, Instagram, Linkedin, Music, Youtube } from 'lucide-react'
 import type { PortableTextBlock } from 'next-sanity'
+import { useState } from 'react';
 
 import { CustomPortableText } from '@/components//shared/CustomPortableText'
 import type { SettingsPayload } from '@/types'
@@ -34,6 +37,7 @@ export default function Footer(props: FooterProps) {
     buttonText: 'Accéder aux capsules',
     placeholder: 'Votre adresse email'
   }
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   if (!footer || footer.length === 0) return null;
 
@@ -58,29 +62,63 @@ export default function Footer(props: FooterProps) {
               <p className="text-primary-cream/80 mb-4">
                 {newsletter.description}
               </p>
-              <form className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="sr-only">
-                    Adresse email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder={newsletter.placeholder}
-                    required
-                    className="w-full px-4 py-2 rounded-md bg-primary-dark/50 border border-primary-teal/20 text-primary-cream placeholder-primary-cream/50 focus:outline-none focus:ring-2 focus:ring-primary-teal form-input"
-                    aria-label={newsletter.placeholder}
-                  />
+              {isSubscribed ? (
+                <div className="text-primary-coral font-bold text-left py-4">
+                  Merci pour votre inscription !
                 </div>
-                <button
-                  type="submit"
-                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
-                  aria-label={newsletter.buttonText}
-                >
-                  {newsletter.buttonText}
-                </button>
-              </form>
+              ) : (
+                <form className="space-y-4" onSubmit={async (e) => {
+                  e.preventDefault();
+                  const form = e.target as HTMLFormElement;
+                  const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+                  const email = emailInput.value;
+
+                  try {
+                    const response = await fetch('/api/newsletter', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ email }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                      throw new Error(data.error || 'Failed to subscribe');
+                    }
+
+                    // Clear the form and show success message
+                    form.reset();
+                    setIsSubscribed(true);
+                  } catch (error) {
+                    console.error('Newsletter subscription error:', error);
+                    alert(error instanceof Error ? error.message : 'Une erreur est survenue. Veuillez réessayer.');
+                  }
+                }}>
+                  <div>
+                    <label htmlFor="email" className="sr-only">
+                      Adresse email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder={newsletter.placeholder}
+                      required
+                      className="w-full px-4 py-2 rounded-md bg-primary-dark/50 border border-primary-teal/20 text-primary-cream placeholder-primary-cream/50 focus:outline-none focus:ring-2 focus:ring-primary-teal form-input"
+                      aria-label={newsletter.placeholder}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
+                    aria-label={newsletter.buttonText}
+                  >
+                    {newsletter.buttonText}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

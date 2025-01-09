@@ -1,6 +1,11 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { defineSecret } from 'firebase-functions/params'
 import * as sgMail from '@sendgrid/mail'
+import { initializeApp } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
+
+// Initialize Firebase Admin
+initializeApp()
 
 // Define secrets
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY')
@@ -109,6 +114,46 @@ export const sendContactEmail = onRequest(
         statusCode: sendGridError.statusCode,
         sendGridResponse: sendGridError.response?.body
       })
+    }
+  }
+)
+
+// Newsletter subscription endpoint
+export const addNewsletterSubscriber = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://anneyvonne.fr',
+      'https://www.anneyvonne.fr'
+    ]
+  }, 
+  async (request, response) => {
+    try {
+      if (request.method !== 'POST') {
+        response.status(405).json({ error: 'Method not allowed' })
+        return
+      }
+
+      const { email } = request.body
+      console.log('Newsletter subscription request for:', email)
+
+      if (!email) {
+        response.status(400).json({ error: 'Email is required' })
+        return
+      }
+
+      // Add to Firestore
+      const db = getFirestore()
+      await db.collection('newsletter').add({
+        email,
+        createdAt: new Date().toISOString(),
+        source: 'website'
+      })
+
+      response.status(200).json({ message: 'Successfully subscribed to newsletter' })
+    } catch (error) {
+      console.error('Error in newsletter subscription:', error)
+      response.status(500).json({ error: 'Failed to subscribe to newsletter' })
     }
   }
 )
