@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import Masonry from 'react-masonry-css'
 
 interface Capsule {
   id: number
@@ -11,18 +12,111 @@ interface Capsule {
   date: Date
   videoUrl: string
   posterUrl: string
+  gradient: string
+  tags: string[]
 }
 
 const capsules: Capsule[] = [
   {
-    id: 1,
-    title: 'Méditation guidée pour la relaxation',
-    description: 'Une séance de méditation douce pour vous aider à vous détendre et à retrouver votre calme intérieur.',
+    id: 10,
+    title: 'Méditation guidée pour la relaxation profonde',
+    description: 'Une séance apaisante pour vous aider à vous détendre et à retrouver votre calme intérieur. Idéale pour la fin de journée, cette méditation vous guidera à travers un voyage de relaxation profonde, en utilisant des techniques de respiration et de visualisation pour libérer les tensions accumulées pendant la journée.',
     date: new Date('2025-01-09'),
     videoUrl: '/videos/capsule0.mp4',
-    posterUrl: '/images/cover0.webp'
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(41,53,49,0.62)]',
+    tags: ['Relaxation', 'Sommeil', 'Stress', 'Détente']
   },
-  // Add more capsules here
+  {
+    id: 9,
+    title: 'Exercice de respiration consciente',
+    description: 'Découvrez des techniques de respiration puissantes pour gérer le stress et l\'anxiété au quotidien.',
+    date: new Date('2024-12-28'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
+    tags: ['Respiration', 'Anti-stress']
+  },
+  {
+    id: 8,
+    title: 'Visualisation créative pour le succès',
+    description: 'Une pratique guidée pour manifester vos objectifs et renforcer votre confiance en vous. Cette séance combine des techniques de visualisation positive avec des affirmations puissantes pour vous aider à créer la vie que vous désirez. Apprenez à utiliser la loi d\'attraction de manière pratique et efficace.',
+    date: new Date('2024-12-15'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(71,94,146,0.62)]',
+    tags: ['Visualisation', 'Manifestation', 'Développement personnel']
+  },
+  {
+    id: 7,
+    title: 'Méditation pour un sommeil réparateur',
+    description: 'Préparez-vous à une nuit paisible avec cette séance relaxante.',
+    date: new Date('2024-11-30'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(95,71,146,0.62)]',
+    tags: ['Sommeil']
+  },
+  {
+    id: 6,
+    title: 'Pratique de gratitude quotidienne',
+    description: 'Cultivez la reconnaissance et la joie dans votre vie avec cet exercice de gratitude guidé. Découvrez comment la pratique régulière de la gratitude peut transformer votre perspective et attirer plus de positif dans votre vie. Une séance qui vous aidera à développer une attitude de reconnaissance envers les petits et grands moments de bonheur quotidiens.',
+    date: new Date('2024-11-15'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(146,71,127,0.62)]',
+    tags: ['Gratitude', 'Bien-être', 'Développement personnel']
+  },
+  {
+    id: 5,
+    title: 'Ancrage et connexion à la terre',
+    description: 'Retrouvez votre équilibre et votre stabilité avec cette méditation d\'ancrage puissante.',
+    date: new Date('2024-10-28'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(71,146,89,0.62)]',
+    tags: ['Ancrage', 'Équilibre']
+  },
+  {
+    id: 4,
+    title: 'Méditation du matin énergisante',
+    description: 'Commencez votre journée avec vitalité grâce à cette pratique dynamique et revigorante. Une séance conçue pour éveiller votre corps et votre esprit, stimuler votre énergie et vous préparer à une journée productive et positive. Inclut des exercices de respiration énergisante et des visualisations motivantes.',
+    date: new Date('2024-10-15'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(146,132,71,0.62)]',
+    tags: ['Énergie', 'Matin', 'Vitalité', 'Motivation']
+  },
+  {
+    id: 3,
+    title: 'Libération des tensions émotionnelles',
+    description: 'Une séance thérapeutique pour relâcher les émotions stagnantes et retrouver la légèreté.',
+    date: new Date('2024-09-30'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(71,140,146,0.62)]',
+    tags: ['Émotions', 'Thérapie']
+  },
+  {
+    id: 2,
+    title: 'Méditation pour la créativité',
+    description: 'Stimulez votre imagination et débloquez votre potentiel créatif avec cette séance inspirante. Explorez les espaces de votre conscience où naissent les idées nouvelles et laissez votre créativité s\'épanouir naturellement. Une méditation qui combine des visualisations colorées et des exercices d\'expansion de conscience pour ouvrir les portes de votre expression créative.',
+    date: new Date('2024-09-15'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
+    tags: ['Créativité', 'Inspiration', 'Expression', 'Art']
+  },
+  {
+    id: 1,
+    title: 'Pratique d\'auto-compassion',
+    description: 'Développez une relation bienveillante avec vous-même.',
+    date: new Date('2024-08-30'),
+    videoUrl: '/videos/capsule0.mp4',
+    posterUrl: '/images/cover0.webp',
+    gradient: 'from-transparent to-[rgb(71,146,116,0.62)]',
+    tags: ['Auto-compassion']
+  }
 ]
 
 export default function CapsulesPage() {
@@ -54,12 +148,18 @@ export default function CapsulesPage() {
     }
   }
 
+  const breakpointColumnsObj = {
+    default: 3,
+    1280: 2,
+    768: 1
+  }
+
   return (
-    <main className="min-h-screen bg-primary-cream pt-[var(--navbar-height)]">
+    <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
       {/* Hero Section */}
       <div className="relative bg-primary-forest py-20 overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl ml-auto text-right"> 
+          <div className="max-w-2xl ml-auto text-right">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
               Capsules Audio
             </h1>
@@ -69,20 +169,38 @@ export default function CapsulesPage() {
             </p>
           </div>
         </div>
-        {/* Decorative circles - adjusted for right-aligned content */}
+        {/* Decorative circles */}
         <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
         <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
       </div>
 
       {/* Capsules Grid */}
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <style jsx global>{`
+          .my-masonry-grid {
+            display: flex;
+            width: auto;
+            gap: 2rem;
+          }
+          .my-masonry-grid_column {
+            background-clip: padding-box;
+          }
+          .my-masonry-grid_column > div {
+            margin-bottom: 2rem;
+          }
+        `}</style>
+        
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
           {capsules.map((capsule) => (
-            <div key={capsule.id} className="space-y-6">
+            <div key={capsule.id} className="bg-primary-dark p-8 rounded-[32px] flex flex-col">
               {/* Video Container */}
               <div className="relative w-full rounded-[32px] overflow-hidden">
                 {/* Aspect ratio container */}
-                <div className="relative pb-[56.25%]"> {/* 16:9 aspect ratio */}
+                <div className="relative pb-[56.25%]">
                   {isClient && (
                     <>
                       <video
@@ -93,8 +211,8 @@ export default function CapsulesPage() {
                         src={capsule.videoUrl}
                         poster={capsule.posterUrl}
                       />
-                      {/* Dark green gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[rgb(41,53,49,0.62)] rounded-[32px]" />
+                      {/* Gradient overlay */}
+                      <div className={`absolute inset-0 bg-gradient-to-r ${capsule.gradient} rounded-[32px]`} />
                       {/* Frost bubbles */}
                       <div className="absolute top-4 right-4 flex gap-4 z-20">
                         {/* Capsule title bubble */}
@@ -126,16 +244,31 @@ export default function CapsulesPage() {
               </div>
               
               {/* Capsule Info */}
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-primary-forest">{capsule.title}</h2>
-                <p className="text-primary-forest/80">{capsule.description}</p>
-                <p className="text-sm text-primary-forest/60">
+              <div className="flex-grow space-y-4 mt-6">
+                <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
+                <p className="text-white/80">{capsule.description}</p>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {capsule.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 rounded-full bg-white/10 text-white/90 text-sm font-medium"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Date - Always at bottom */}
+              <div className="text-right mt-4">
+                <p className="text-sm text-white/60">
                   {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
                 </p>
               </div>
             </div>
           ))}
-        </div>
+        </Masonry>
       </div>
     </main>
   )
