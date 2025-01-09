@@ -4,6 +4,7 @@ import { defineSecret } from 'firebase-functions/params'
 import * as sgMail from '@sendgrid/mail'
 import { initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
+import * as crypto from 'crypto';
 
 // Initialize Firebase Admin
 initializeApp()
@@ -12,6 +13,7 @@ initializeApp()
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY')
 const recipientEmail = defineSecret('RECIPIENT_EMAIL')
 const senderEmail = defineSecret('SENDER_EMAIL')
+const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET')
 
 interface SendGridError extends Error {
   response?: {
@@ -19,6 +21,19 @@ interface SendGridError extends Error {
   };
   code?: string;
   statusCode?: number;
+}
+
+// Helper function to generate unsubscribe token
+function generateUnsubscribeToken(email: string, secret: string): string {
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(email);
+  return hmac.digest('hex');
+}
+
+// Verify unsubscribe token
+function verifyUnsubscribeToken(email: string, token: string, secret: string): boolean {
+  const expectedToken = generateUnsubscribeToken(email, secret);
+  return token === expectedToken;
 }
 
 export const sendContactEmail = onRequest(
@@ -159,11 +174,112 @@ export const addNewsletterSubscriber = onRequest(
   }
 )
 
+// Handle newsletter unsubscribe
+export const handleNewsletterUnsubscribe = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://anneyvonne.fr',
+      'https://www.anneyvonne.fr'
+    ],
+    secrets: [UNSUBSCRIBE_SECRET]
+  }, 
+  async (request, response) => {
+    try {
+      const { email, token } = request.query;
+
+      if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
+        response.status(400).send(`
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+                .error { color: #e74c3c; }
+              </style>
+            </head>
+            <body>
+              <h1 class="error">Lien invalide</h1>
+              <p>Le lien de désabonnement est invalide ou a expiré.</p>
+            </body>
+          </html>
+        `);
+        return;
+      }
+
+      // Verify token
+      if (!verifyUnsubscribeToken(email, token, UNSUBSCRIBE_SECRET.value())) {
+        response.status(400).send(`
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+                .error { color: #e74c3c; }
+              </style>
+            </head>
+            <body>
+              <h1 class="error">Lien invalide</h1>
+              <p>Le lien de désabonnement est invalide ou a expiré.</p>
+            </body>
+          </html>
+        `);
+        return;
+      }
+
+      // Delete all documents with matching email
+      const db = getFirestore();
+      const snapshot = await db.collection('newsletter')
+        .where('email', '==', email)
+        .get();
+
+      const batch = db.batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      // Return success page
+      response.send(`
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+              .success { color: #E8927C; }
+            </style>
+          </head>
+          <body>
+            <h1 class="success">Désabonnement confirmé</h1>
+            <p>Vous avez été désabonné avec succès de notre newsletter.</p>
+            <p>Nous espérons vous revoir bientôt !</p>
+          </body>
+        </html>
+      `);
+      return;
+    } catch (error) {
+      console.error('Error handling unsubscribe:', error);
+      response.status(500).send(`
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+              .error { color: #e74c3c; }
+            </style>
+          </head>
+          <body>
+            <h1 class="error">Erreur</h1>
+            <p>Une erreur est survenue lors du désabonnement. Veuillez réessayer plus tard.</p>
+          </body>
+        </html>
+      `);
+      return;
+    }
+  }
+);
+
 // Send welcome email when new newsletter subscriber is added
 export const sendNewsletterWelcomeEmail = onDocumentCreated(
   {
     document: 'newsletter/{documentId}',
-    secrets: [sendgridApiKey, senderEmail]
+    secrets: [sendgridApiKey, senderEmail, UNSUBSCRIBE_SECRET]
   },
   async (event) => {
     try {
@@ -175,6 +291,10 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
 
       const data = snapshot.data();
       const subscriberEmail = data.email;
+
+      // Generate unsubscribe token
+      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET.value());
+      const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
 
       // Configure SendGrid
       sgMail.setApiKey(sendgridApiKey.value());
@@ -209,10 +329,14 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
               Anne-Yvonne
             </p>
             
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 14px; color: #666;">
-              <p>
-                Si vous souhaitez vous désabonner, répondez simplement à cet email.
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                Pour vous désabonner de cette newsletter :
               </p>
+              <a href="${unsubscribeUrl}" 
+                 style="display: inline-block; color: #E8927C; text-decoration: none; font-size: 14px; border: 1px solid #E8927C; padding: 8px 16px; border-radius: 4px;">
+                Se Désabonner
+              </a>
             </div>
           </div>
         `
