@@ -36,12 +36,27 @@ function verifyUnsubscribeToken(email: string, token: string, secret: string): b
   return token === expectedToken;
 }
 
+// Helper function to create email template with logo
+function createEmailTemplate(content: string) {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: left; margin-bottom: 30px;">
+        <img src="https://anneyvonnetherapeute.vercel.app/images/logo.png" 
+             alt="Anne-Yvonne Thérapeute" 
+             style="width: 120px; height: auto;"
+        />
+      </div>
+      ${content}
+    </div>
+  `;
+}
+
 export const sendContactEmail = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://anneyvonne.fr',
-      'https://www.anneyvonne.fr'
+      'https://anneyvonnetherapeute.vercel.app',
+      'https://www.anneyvonnetherapeute.vercel.app'
     ],
     secrets: [sendgridApiKey, recipientEmail, senderEmail]
   }, 
@@ -79,21 +94,23 @@ export const sendContactEmail = onRequest(
 
       sgMail.setApiKey(apiKey)
 
+      const emailContent = `
+        <h2 style="color: #E8927C; margin-bottom: 20px;">Nouveau message de contact</h2>
+        <p><strong>Nom :</strong> ${name}</p>
+        <p><strong>Email :</strong> ${email}</p>
+        <p><strong>Message :</strong></p>
+        <p style="white-space: pre-wrap;">${message}</p>
+      `;
+
       const msg = {
         to: recipientEmail.value(),
         from: {
           email: senderEmail.value(),
           name: 'Anne-Yvonne Thérapie'  // This should match your verified sender name in SendGrid
         },
+        replyTo: email,
         subject: `Nouveau message de ${name}`,
-        text: `Nom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-        html: `
-          <h3>Nouveau message du site web</h3>
-          <p><strong>Nom:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong></p>
-          <p>${message.replace(/\n/g, '<br>')}</p>
-        `
+        html: createEmailTemplate(emailContent)
       }
 
       console.log('Attempting to send email with config:', {
@@ -139,8 +156,8 @@ export const addNewsletterSubscriber = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://anneyvonne.fr',
-      'https://www.anneyvonne.fr'
+      'https://anneyvonnetherapeute.vercel.app',
+      'https://www.anneyvonnetherapeute.vercel.app'
     ]
   }, 
   async (request, response) => {
@@ -179,8 +196,8 @@ export const handleNewsletterUnsubscribe = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://anneyvonne.fr',
-      'https://www.anneyvonne.fr'
+      'https://anneyvonnetherapeute.vercel.app',
+      'https://www.anneyvonnetherapeute.vercel.app'
     ],
     secrets: [UNSUBSCRIBE_SECRET]
   }, 
@@ -299,47 +316,47 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
       // Configure SendGrid
       sgMail.setApiKey(sendgridApiKey.value());
 
+      const emailContent = `
+        <h1 style="color: #E8927C; margin-bottom: 20px;">Bienvenue !</h1>
+        
+        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+          Chère/Cher abonné(e),
+        </p>
+        
+        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+          Je suis ravie de vous accueillir dans notre communauté. Merci d'avoir rejoint notre newsletter pour accéder à nos capsules audio.
+        </p>
+        
+        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+          Vous recevrez régulièrement des contenus exclusifs, des méditations guidées et des exercices pratiques pour vous accompagner dans votre cheminement personnel.
+        </p>
+        
+        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+          N'hésitez pas à explorer nos capsules audio déjà disponibles sur notre site.
+        </p>
+        
+        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+          À très bientôt,<br>
+          Anne-Yvonne
+        </p>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+          <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
+            Pour vous désabonner de cette newsletter :
+          </p>
+          <a href="${unsubscribeUrl}" 
+             style="display: inline-block; color: #E8927C; text-decoration: none; font-size: 14px; border: 1px solid #E8927C; padding: 8px 16px; border-radius: 4px;">
+            Se Désabonner
+          </a>
+        </div>
+      `;
+
       // Email template
       const msg = {
         to: subscriberEmail,
         from: senderEmail.value(),
         subject: 'Bienvenue à nos capsules audio - Anne-Yvonne Thérapeute',
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #E8927C; margin-bottom: 20px;">Bienvenue !</h1>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-              Chère/Cher abonné(e),
-            </p>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-              Je suis ravie de vous accueillir dans notre communauté. Merci d'avoir rejoint notre newsletter pour accéder à nos capsules audio.
-            </p>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-              Vous recevrez régulièrement des contenus exclusifs, des méditations guidées et des exercices pratiques pour vous accompagner dans votre cheminement personnel.
-            </p>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-              N'hésitez pas à explorer nos capsules audio déjà disponibles sur notre site.
-            </p>
-            
-            <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-              À très bientôt,<br>
-              Anne-Yvonne
-            </p>
-            
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-              <p style="font-size: 14px; color: #666; margin-bottom: 10px;">
-                Pour vous désabonner de cette newsletter :
-              </p>
-              <a href="${unsubscribeUrl}" 
-                 style="display: inline-block; color: #E8927C; text-decoration: none; font-size: 14px; border: 1px solid #E8927C; padding: 8px 16px; border-radius: 4px;">
-                Se Désabonner
-              </a>
-            </div>
-          </div>
-        `
+        html: createEmailTemplate(emailContent)
       };
 
       // Send email
