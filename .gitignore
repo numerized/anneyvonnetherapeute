@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /studio/node_modules
+/functions/node_modules
 /.pnp
 .pnp.js
 
@@ -44,3 +45,4 @@ yarn-error.log*
 studio/.env.development
 .sanity/runtime/app.js
 .sanity/runtime/index.html
+firebase-debug.log
