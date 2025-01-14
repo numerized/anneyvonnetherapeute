@@ -91,10 +91,6 @@ export function WomenTherapyCard({ onShowPromo }: WomenTherapyCardProps) {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary-coral mt-1">♦</span>
-                <span className="text-primary-cream/80">2 consultations mensuelles pour un accompagnement progressif</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-primary-coral mt-1">♦</span>
                 <span className="text-primary-cream/80">Accès illimité à la plateforme Eros Inspiration et ses ressources exclusives</span>
               </li>
               <li className="flex items-start gap-2">

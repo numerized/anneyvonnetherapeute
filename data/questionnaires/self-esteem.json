@@ -1,0 +1,90 @@
+{
+  "id": "self-esteem",
+  "title": "Questionnaire sur l'Estime de Soi",
+  "description": "Ce questionnaire vous aidera à explorer votre relation avec l'estime de soi et son impact sur vos relations.",
+  "steps": [
+    {
+      "id": "introduction",
+      "type": "text",
+      "title": "Introduction à l'Estime de Soi",
+      "description": "L'estime de soi est la pierre angulaire de toutes les relations saines. Elle nous permet de nous respecter, de poser des limites et d'attirer des interactions épanouissantes. Dans ce carnet, vous explorerez vos forces, vos besoins et vos objectifs pour construire une vie amoureuse alignée avec vos valeurs.",
+      "quote": "Vous seul(e) détenez le pouvoir de définir votre valeur. Ne laissez jamais quelqu'un d'autre écrire votre histoire.",
+      "fields": [
+        {
+          "id": "whyImportant",
+          "type": "textarea",
+          "title": "Pourquoi l'estime de soi est essentielle en amour",
+          "description": "Expliquez dans vos mots pourquoi vous pensez que l'estime de soi est importante dans les relations amoureuses",
+          "hint": "Réfléchissez à vos expériences passées et à ce que vous avez appris",
+          "defaultValue": "",
+          "placeholderValue": "Votre réponse..."
+        },
+        {
+          "id": "definition",
+          "type": "textarea",
+          "title": "Ma propre définition de l'estime de soi",
+          "description": "Comment définiriez-vous l'estime de soi avec vos propres mots ?",
+          "hint": "Il n'y a pas de bonne ou mauvaise réponse, c'est votre perception qui compte",
+          "defaultValue": "",
+          "placeholderValue": "Votre réponse..."
+        }
+      ]
+    },
+    {
+      "id": "evaluation",
+      "type": "mixed",
+      "title": "Mon état des lieux relationnel",
+      "description": "Évaluez différents aspects de votre relation à vous-même et aux autres",
+      "fields": [
+        {
+          "id": "confidence",
+          "type": "range",
+          "title": "Confiance en soi",
+          "description": "Évaluez votre niveau de confiance en vous",
+          "hint": "1 = Très faible, 10 = Très élevé",
+          "defaultValue": "1",
+          "min": "1",
+          "max": "10"
+        },
+        {
+          "id": "satisfaction",
+          "type": "range",
+          "title": "Satisfaction dans mes relations actuelles",
+          "description": "Évaluez votre niveau de satisfaction dans vos relations",
+          "hint": "1 = Pas du tout satisfait(e), 10 = Très satisfait(e)",
+          "defaultValue": "1",
+          "min": "1",
+          "max": "10"
+        },
+        {
+          "id": "needs",
+          "type": "range",
+          "title": "Capacité à exprimer mes besoins",
+          "description": "Évaluez votre capacité à exprimer vos besoins dans vos relations",
+          "hint": "1 = Très difficile, 10 = Très facile",
+          "defaultValue": "1",
+          "min": "1",
+          "max": "10"
+        },
+        {
+          "id": "strengths",
+          "type": "textarea",
+          "title": "Mes points forts",
+          "description": "Quelles sont vos qualités dans vos relations ?",
+          "hint": "Pensez à ce que les autres apprécient chez vous",
+          "defaultValue": "",
+          "placeholderValue": "Listez vos points forts..."
+        },
+        {
+          "id": "improvements",
+          "type": "textarea",
+          "title": "Mes axes d'amélioration",
+          "description": "Quels aspects souhaitez-vous améliorer dans vos relations ?",
+          "hint": "Soyez bienveillant(e) envers vous-même",
+          "defaultValue": "",
+          "placeholderValue": "Listez vos axes d'amélioration..."
+        }
+      ]
+    }
+  ]
+}

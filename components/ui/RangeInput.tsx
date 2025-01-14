@@ -17,16 +17,18 @@ export function RangeInput({ value, onChange, min = "1", max = "10", className =
   }
 
   return (
-    <div className="relative">
+    <div className="relative py-4">
       <style jsx>{`
         input[type="range"] {
           -webkit-appearance: none;
           appearance: none;
           width: 100%;
-          height: 8px;
+          height: 12px;
           background: #e2e8f0;
-          border-radius: 4px;
+          border-radius: 6px;
           outline: none;
+          cursor: pointer;
+          margin: 8px 0;
         }
 
         input[type="range"]::-webkit-slider-thumb {
@@ -34,67 +36,38 @@ export function RangeInput({ value, onChange, min = "1", max = "10", className =
           appearance: none;
           width: 24px;
           height: 24px;
-          background: #FF6B6B;
+          background: #FF5E5B;
           border-radius: 50%;
           cursor: pointer;
-          border: 2px solid white;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          margin-top: -8px;
-          transition: all 0.2s ease;
+          transition: background 0.2s ease;
         }
 
         input[type="range"]::-moz-range-thumb {
           width: 24px;
           height: 24px;
-          background: #FF6B6B;
+          background: #FF5E5B;
           border-radius: 50%;
           cursor: pointer;
-          border: 2px solid white;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          transition: all 0.2s ease;
+          border: none;
+          transition: background 0.2s ease;
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
-          transform: scale(1.1);
-          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+          background: #FF4542;
         }
 
         input[type="range"]::-moz-range-thumb:hover {
+          background: #FF4542;
+        }
+
+        input[type="range"]:active::-webkit-slider-thumb {
+          background: #FF4542;
           transform: scale(1.1);
-          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
         }
 
-        input[type="range"]::-webkit-slider-runnable-track {
-          width: 100%;
-          height: 8px;
-          cursor: pointer;
-          background: #e2e8f0;
-          border-radius: 4px;
-        }
-
-        input[type="range"]::-moz-range-track {
-          width: 100%;
-          height: 8px;
-          cursor: pointer;
-          background: #e2e8f0;
-          border-radius: 4px;
-        }
-
-        @media print {
-          input[type="range"] {
-            height: 8px !important;
-          }
-
-          input[type="range"]::-webkit-slider-thumb {
-            width: 20px !important;
-            height: 20px !important;
-            margin-top: -6px !important;
-          }
-
-          input[type="range"]::-moz-range-thumb {
-            width: 20px !important;
-            height: 20px !important;
-          }
+        input[type="range"]:active::-moz-range-thumb {
+          background: #FF4542;
+          transform: scale(1.1);
         }
       `}</style>
       <input
