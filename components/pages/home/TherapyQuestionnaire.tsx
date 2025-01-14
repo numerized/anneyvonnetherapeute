@@ -377,12 +377,14 @@ export function TherapyQuestionnaire() {
                       onClick={() => handleGenderSelect('male')}
                     >
                       <h4 className="text-xl mb-2">Un homme</h4>
+                      <p className="text-primary-cream/70">Programme de transformation sexuelle pour hommes</p>
                     </button>
                     <button
                       className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
                       onClick={() => handleGenderSelect('female')}
                     >
                       <h4 className="text-xl mb-2">Une femme</h4>
+                      <p className="text-primary-cream/70">Voyage vers une sexualité libérée et épanouie</p>
                     </button>
                   </div>
                 </motion.div>
