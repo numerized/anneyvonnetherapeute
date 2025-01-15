@@ -19,10 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        'montserrat': ['var(--font-montserrat)'],
-        'serif': ['var(--font-serif)'],
-        'mono': ['var(--font-mono)'],
-        'aleo': ['var(--font-aleo)'],
+        montserrat: ['var(--font-montserrat)'],
+        aleo: ['var(--font-aleo)'],
       },
       colors: {
         border: "hsl(var(--border))",

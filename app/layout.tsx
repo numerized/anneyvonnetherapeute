@@ -1,71 +1,37 @@
-import type { Metadata } from 'next'
-import { IBM_Plex_Mono, PT_Serif, Montserrat, Aleo, Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Toast } from "@/components/ui/toast"
-
-import './globals.css'
-
-const aleo = Aleo({
-  variable: '--font-aleo',
-  subsets: ['latin'],
-  weight: ['900'],
-})
-
-const inter = Inter({
-  subsets: ["latin"]
-})
-
-export const metadata: Metadata = {
-  title: 'Anne-Yvonne Thérapeute',
-  description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/images/logo.png', type: 'image/png' }
-    ],
-    apple: { url: '/images/logo.png', type: 'image/png' }
-  },
-}
-
-const serif = PT_Serif({
-  variable: '--font-serif',
-  style: ['normal', 'italic'],
-  subsets: ['latin'],
-  weight: ['400', '700'],
-})
+import { Toaster } from "sonner";
+import { Montserrat, Aleo } from "next/font/google";
+import "./globals.css";
 
 const montserrat = Montserrat({
-  variable: '--font-montserrat',
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-})
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
 
-const mono = IBM_Plex_Mono({
-  variable: '--font-mono',
-  subsets: ['latin'],
-  weight: ['500', '700'],
-})
+const aleo = Aleo({
+  subsets: ["latin"],
+  variable: "--font-aleo",
+  display: "swap",
+});
 
-export default async function RootLayout({
+export const metadata = {
+  title: "Anne Yvonne - Thérapeute",
+  description: "Anne Yvonne - Thérapeute Psycho-corporelle, Gestalt-thérapeute",
+};
+
+export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  // Only show Speed Insights when not printing
-  const isPrinting = typeof window !== 'undefined' && window.matchMedia('print').matches
-
   return (
     <html
       lang="en"
-      className={`${mono.variable} ${montserrat.variable} ${serif.variable} ${aleo.variable} ${inter.variable}`}
+      className={`${montserrat.variable} ${aleo.variable}`}
     >
-      <body className="font-montserrat">
+      <body className={`font-montserrat antialiased`}>
         {children}
-        <Analytics />
-        {!isPrinting && <SpeedInsights />}
-        <Toast />
+        <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
-  )
+  );
 }
