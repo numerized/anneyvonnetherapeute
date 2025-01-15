@@ -15,54 +15,63 @@ export default function VerifyPage() {
     async function verifyEmail() {
       const auth = getAuth(app);
       
-      // Get the email from localStorage
-      const email = window.localStorage.getItem('emailForSignIn');
-      const currentUrl = window.location.href;
-
-      if (!email) {
-        toast.error('No email found. Please try logging in again.');
-        router.push('/login');
-        return;
-      }
-
       try {
-        // First, verify with Firebase directly
-        if (isSignInWithEmailLink(auth, currentUrl)) {
-          // Sign in with Firebase
-          await signInWithEmailLink(auth, email, currentUrl);
+        // Get the email from localStorage
+        const email = window.localStorage.getItem('emailForSignIn');
+        console.log('Retrieved email from localStorage:', email);
 
-          // Then call our API to handle any server-side auth
-          const response = await fetch('/api/auth/verify', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email,
-              link: currentUrl,
-            }),
-          });
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || 'Verification failed');
-          }
-
-          // Clear the email from localStorage
-          window.localStorage.removeItem('emailForSignIn');
-
-          // Show success message
-          toast.success('Successfully signed in!');
-
-          // Redirect to dashboard
-          router.push('/dashboard');
-        } else {
-          throw new Error('Invalid verification link');
+        if (!email) {
+          console.error('No email found in localStorage');
+          toast.error('No email found. Please try logging in again.');
+          router.push('/login');
+          return;
         }
-      } catch (error) {
-        console.error('Verification error:', error);
-        toast.error(error instanceof Error ? error.message : 'Failed to verify email link');
+
+        // Get the current URL
+        const currentUrl = window.location.href;
+        console.log('Current URL:', currentUrl);
+
+        // Check if this is a valid sign-in link
+        const isValid = isSignInWithEmailLink(auth, currentUrl);
+        console.log('Is sign-in link valid?', isValid);
+
+        if (!isValid) {
+          console.error('Invalid sign-in link');
+          toast.error('Invalid verification link. Please request a new one.');
+          router.push('/login');
+          return;
+        }
+
+        // Attempt to sign in
+        console.log('Attempting to sign in...');
+        await signInWithEmailLink(auth, email, currentUrl);
+        console.log('Successfully signed in with Firebase');
+
+        // Clear the email from localStorage
+        window.localStorage.removeItem('emailForSignIn');
+        console.log('Cleared email from localStorage');
+
+        // Show success message
+        toast.success('Successfully signed in!');
+
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } catch (error: any) {
+        console.error('Verification error:', {
+          code: error.code,
+          message: error.message,
+          stack: error.stack
+        });
+
+        let errorMessage = 'Failed to verify email link';
+
+        if (error.code === 'auth/invalid-action-code') {
+          errorMessage = 'This link has expired or already been used. Please request a new one.';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'Invalid email address. Please try again.';
+        }
+
+        toast.error(errorMessage);
         router.push('/login');
       } finally {
         setIsVerifying(false);

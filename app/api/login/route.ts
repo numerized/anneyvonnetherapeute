@@ -7,8 +7,6 @@ const actionCodeSettings = {
   url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`,
   // This must be true for email link sign-in
   handleCodeInApp: true,
-  // Optional dynamic link domain
-  dynamicLinkDomain: process.env.NEXT_PUBLIC_FIREBASE_DYNAMIC_LINKS_DOMAIN
 };
 
 export async function POST(request: Request) {
@@ -24,7 +22,11 @@ export async function POST(request: Request) {
 
     try {
       const auth = getAuth(app);
+      console.log('Sending sign-in link to:', email);
+      console.log('Action code settings:', actionCodeSettings);
+      
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      console.log('Sign-in link sent successfully');
 
       return NextResponse.json(
         { 
@@ -34,7 +36,11 @@ export async function POST(request: Request) {
         { status: 200 }
       );
     } catch (authError: any) {
-      console.error('Authentication error:', authError);
+      console.error('Authentication error:', {
+        code: authError.code,
+        message: authError.message,
+        stack: authError.stack
+      });
       
       // Handle specific Firebase errors
       if (authError.code === 'auth/invalid-email') {
@@ -52,7 +58,7 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json(
-        { error: 'Failed to send magic link' },
+        { error: authError.message || 'Failed to send magic link' },
         { status: 500 }
       );
     }
