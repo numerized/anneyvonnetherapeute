@@ -6,23 +6,7 @@ const actionCodeSettings = {
   // URL you want to redirect back to
   url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`,
   // This must be true for email link sign-in
-  handleCodeInApp: true,
-  // iOS app settings
-  ...(process.env.NEXT_PUBLIC_IOS_BUNDLE_ID && {
-    iOS: {
-      bundleId: process.env.NEXT_PUBLIC_IOS_BUNDLE_ID
-    }
-  }),
-  // Android app settings
-  ...(process.env.NEXT_PUBLIC_ANDROID_PACKAGE_NAME && {
-    android: {
-      packageName: process.env.NEXT_PUBLIC_ANDROID_PACKAGE_NAME,
-      installApp: true,
-      minimumVersion: '12'
-    }
-  }),
-  // URL must be in the authorized domains list in the Firebase Console
-  dynamicLinkDomain: 'anneyvonnetherapeute.page.link'
+  handleCodeInApp: true
 };
 
 export async function POST(request: Request) {
