@@ -6,9 +6,8 @@ import { getAuth, signOut, User } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { CheckSquare, Square } from 'lucide-react';
+import { CheckSquare, Square, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { Loader2 } from '@/components/ui/loader';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
