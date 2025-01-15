@@ -20,6 +20,8 @@ const config = {
     extend: {
       fontFamily: {
         montserrat: ['var(--font-montserrat)'],
+        serif: ['var(--font-serif)'],
+        mono: ['var(--font-mono)'],
         aleo: ['var(--font-aleo)'],
       },
       colors: {

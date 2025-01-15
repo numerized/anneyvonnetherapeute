@@ -1,37 +1,62 @@
-import { Toaster } from "sonner";
-import { Montserrat, Aleo } from "next/font/google";
-import "./globals.css";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-});
+import type { Metadata } from 'next'
+import { IBM_Plex_Mono, PT_Serif, Montserrat, Aleo } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Toaster } from "sonner"
+import './globals.css'
 
 const aleo = Aleo({
-  subsets: ["latin"],
-  variable: "--font-aleo",
-  display: "swap",
-});
+  subsets: ['latin'],
+  variable: '--font-aleo',
+  display: 'swap',
+})
 
-export const metadata = {
-  title: "Anne Yvonne - Thérapeute",
-  description: "Anne Yvonne - Thérapeute Psycho-corporelle, Gestalt-thérapeute",
-};
+const serif = PT_Serif({
+  variable: '--font-serif',
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  weight: ['400', '700'],
+})
+
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
+  subsets: ['latin'],
+})
+
+const mono = IBM_Plex_Mono({
+  variable: '--font-mono',
+  subsets: ['latin'],
+  weight: ['500', '700'],
+})
+
+export const metadata: Metadata = {
+  title: 'Anne-Yvonne Thérapeute',
+  description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/images/logo.png', type: 'image/png' }
+    ],
+    apple: { url: '/images/logo.png', type: 'image/png' }
+  },
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html
       lang="en"
-      className={`${montserrat.variable} ${aleo.variable}`}
+      className={`${mono.variable} ${montserrat.variable} ${serif.variable} ${aleo.variable}`}
     >
-      <body className={`font-montserrat antialiased`}>
+      <body className="font-montserrat antialiased">
         {children}
         <Toaster position="top-center" richColors closeButton />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
-  );
+  )
 }
