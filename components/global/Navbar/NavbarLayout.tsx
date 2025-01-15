@@ -44,7 +44,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
   const renderMenuItem = (item: any, index: number) => {
     // Clean up the style value by removing hidden Unicode characters
     const cleanStyle = item?.style?.replace(/[\u200B-\u200D\uFEFF]/g, '')
-    const isLastItem = index === data.menuItems.length - 1
+    const isLastItem = data.menuItems && index === data.menuItems.length - 1
 
     if (isLastItem) {
       const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200 flex items-center justify-center";
@@ -162,9 +162,11 @@ export default function NavbarLayout({ data }: NavbarProps) {
               {/* Desktop Navigation */}
               {!isProchainement && data?.menuItems && (
                 <div className="hidden md:flex items-center space-x-8">
-                  {data.menuItems.map((item: any, index: number) => {
-                    return renderMenuItem(item, index);
-                  })}
+                  {data.menuItems.map((item: any, index: number) => (
+                    <div key={item._key || `menu-item-${index}`}>
+                      {renderMenuItem(item, index)}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
