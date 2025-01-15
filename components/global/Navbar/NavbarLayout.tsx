@@ -1,18 +1,18 @@
 'use client'
 
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { app } from '@/lib/firebase';
+import Image from 'next/image';
+import Link from 'next/link';
+import { HiMenu, HiX } from 'react-icons/hi';
+import { urlFor } from '@/sanity/lib/image';
+import { resolveHref } from '@/sanity/lib/utils';
+import { SettingsPayload } from '@/types';
+import { EmailForm } from '@/components/shared/EmailForm';
+import NotificationBanner from '../NotificationBanner/NotificationBanner';
 import { Menu, X } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useEffect,useState } from 'react'
-import { HiMenu, HiX } from 'react-icons/hi'
-
-import { urlFor } from '@/sanity/lib/image'
-import { resolveHref } from '@/sanity/lib/utils'
-import { SettingsPayload } from '@/types'
-import { EmailForm } from '@/components/shared/EmailForm'
-
-import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
 interface NavbarProps {
   data: SettingsPayload
@@ -24,6 +24,7 @@ export default function Navbar(props: NavbarProps) {
   
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
@@ -31,11 +32,48 @@ export default function Navbar(props: NavbarProps) {
   const pathname = usePathname()
   const isProchainement = pathname === '/prochainement'
 
-  const renderMenuItem = (item: any) => {
-    
+  useEffect(() => {
+    const auth = getAuth(app);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const renderMenuItem = (item: any, index: number) => {
     // Clean up the style value by removing hidden Unicode characters
-    const cleanStyle = item.style?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-    
+    const cleanStyle = item?.style?.replace(/[\u200B-\u200D\uFEFF]/g, '')
+    const isLastItem = index === data.menuItems.length - 1
+
+    if (isLastItem) {
+      const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
+      const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`;
+      
+      return (
+        <Link
+          key={item._key}
+          href={isLoggedIn ? '/dashboard' : '/login'}
+          className={buttonClearClasses}
+        >
+          {isLoggedIn ? 'Espace 180°' : item.title}
+        </Link>
+      )
+    }
+
+    if (item?.slug?.current === 'prochainement') {
+      return (
+        <Link
+          key={item._key}
+          href="/prochainement"
+          className="text-white hover:text-white/80 transition-colors duration-200"
+        >
+          {item.title}
+        </Link>
+      );
+    }
+
+    // Clean up the style value by removing hidden Unicode characters
     const baseClasses = "text-white hover:text-white/80 transition-colors duration-200";
     const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
     const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
@@ -119,83 +157,7 @@ export default function Navbar(props: NavbarProps) {
               {!isProchainement && data?.menuItems && (
                 <div className="hidden md:flex items-center space-x-8">
                   {data.menuItems.map((item: any, index: number) => {
-                    const isSecondToLast = index === (data?.menuItems?.length ?? 0) - 2
-                      
-                    // Clean up the style value by removing hidden Unicode characters
-                    const cleanStyle = item.style?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-                      
-                    const baseClasses = "text-white hover:text-white/80 transition-colors duration-200";
-                    const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
-                    const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
-                    const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`;
-                      
-                    const classes = cleanStyle === 'button-plain' 
-                      ? buttonPlainClasses 
-                      : cleanStyle === 'button-clear'
-                        ? buttonClearClasses
-                        : baseClasses;
-                      
-                    if (isSecondToLast) {
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => setShowAppointmentModal(true)}
-                          className={classes}
-                        >
-                          {item.title}
-                        </button>
-                      )
-                    }
-
-                    // If it's the last item, redirect to login
-                    if (index === data.menuItems.length - 1) {
-                      return (
-                        <Link
-                          key={index}
-                          href="/login"
-                          className={classes}
-                        >
-                          {item.title}
-                        </Link>
-                      );
-                    }
-
-                    // Handle anchor links
-                    if (item.linkType === 'anchor' && item.anchor) {
-                      return (
-                        <a
-                          key={index}
-                          href={`#${item.anchor}`}
-                          className={classes}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            const element = document.getElementById(item.anchor);
-                            if (element) {
-                              element.scrollIntoView({ behavior: 'smooth' });
-                            }
-                          }}
-                        >
-                          {item.title}
-                        </a>
-                      );
-                    }
-                      
-                    // Handle regular links
-                    const href = item.reference?.slug?.current === 'coming-soon' 
-                      ? '/prochainement' 
-                      : item.reference?.slug?.current 
-                        ? `/${item.reference.slug.current}` 
-                        : '#';
-                      
-                    return (
-                      <Link
-                        key={index}
-                        href={href}
-                        className={classes}
-                      >
-                        {item.title}
-                      </Link>
-                    )
+                    return renderMenuItem(item, index);
                   })}
                 </div>
               )}

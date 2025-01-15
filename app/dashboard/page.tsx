@@ -6,7 +6,7 @@ import { getAuth, signOut, User } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { ClipboardList, CheckSquare, Square } from 'lucide-react';
+import { CheckSquare, Square } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -113,10 +113,7 @@ export default function DashboardPage() {
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
               {/* TODO Section */}
               <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <ClipboardList className="w-6 h-6 text-primary-coral" />
-                  <h2 className="text-4xl font-black text-primary-coral tracking-tight">À faire</h2>
-                </div>
+                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">À faire</h2>
                 <div className="space-y-4">
                   {/* Questionnaire Item */}
                   <div className="flex items-start gap-3">
@@ -172,10 +169,16 @@ export default function DashboardPage() {
             </div>
 
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-              <h2 className="text-4xl font-black text-primary-coral tracking-tight">Activité récente</h2>
+              <h2 className="text-4xl font-black text-primary-coral tracking-tight">Votre prochain rendez-vous</h2>
               <p className="mt-2 text-primary-cream/80">
-                Suivez vos dernières actions et mises à jour ici.
+                Aucun rendez-vous programmé. Cliquez ci-dessous pour en planifier un.
               </p>
+              <Button 
+                variant="outline" 
+                className="mt-4 text-primary-cream hover:text-primary-coral border-primary-cream/20 hover:border-primary-coral"
+              >
+                Prendre rendez-vous
+              </Button>
             </div>
           </div>
         </div>
