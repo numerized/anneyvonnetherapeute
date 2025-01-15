@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { CheckSquare, Square } from 'lucide-react';
 import Link from 'next/link';
+import { Loader2 } from '@/components/ui/loader';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -21,7 +22,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const auth = getAuth(app);
 
-    // Check if we're already authenticated
+    // Set initial state
     if (auth.currentUser) {
       setUser(auth.currentUser);
       setLoading(false);
@@ -39,9 +40,23 @@ export default function DashboardPage() {
       setLoading(false);
     });
 
-    // Cleanup subscription
     return () => unsubscribe();
   }, [router]);
+
+  // Don't render anything while loading
+  if (loading) {
+    return (
+      <div className="relative min-h-screen grid place-items-center bg-primary-forest">
+        <div className="text-center">
+          <Loader2 className="w-6 h-6 animate-spin text-primary-cream/80" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const handleSignOut = async () => {
     try {
@@ -61,20 +76,6 @@ export default function DashboardPage() {
       [id]: !prev[id]
     }));
   };
-
-  if (loading) {
-    return (
-      <div className="relative min-h-screen grid place-items-center bg-primary-forest">
-        <div className="text-center">
-          <p className="text-primary-cream/80">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null; // Router will redirect
-  }
 
   return (
     <div className="min-h-screen bg-primary-forest p-8">

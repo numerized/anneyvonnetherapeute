@@ -24,7 +24,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
   
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined)
 
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
@@ -34,12 +34,21 @@ export default function NavbarLayout({ data }: NavbarProps) {
 
   useEffect(() => {
     const auth = getAuth(app);
+    
+    // Set initial auth state
+    setIsLoggedIn(!!auth.currentUser);
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(!!user);
     });
 
     return () => unsubscribe();
   }, []);
+
+  // Don't render anything until we know the auth state
+  if (isLoggedIn === undefined) {
+    return null;
+  }
 
   const renderMenuItem = (item: any, index: number) => {
     // Clean up the style value by removing hidden Unicode characters
