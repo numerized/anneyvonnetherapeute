@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -40,26 +40,29 @@ export default function LoginPage() {
       router.push('/login/check-email');
     } catch (error) {
       console.error('Login error:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to send login link');
+      toast.error('Failed to send magic link. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))] px-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="relative min-h-screen grid place-items-center bg-primary-forest">
+      <div className="w-full max-w-md px-4 space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight">
-            Sign in to your account
+          <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
+            Sign in
           </h2>
-          <p className="mt-2 text-sm text-[hsl(var(--muted-foreground))]">
+          <p className="mt-2 text-primary-cream/80">
             Enter your email to receive a magic link
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="space-y-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="sr-only">
+              Email address
+            </label>
             <Input
               id="email"
               name="email"
@@ -70,14 +73,14 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
-              className="block w-full"
+              className="block w-full bg-primary-cream/10 border-primary-cream/20 text-primary-cream placeholder:text-primary-cream/50 focus:border-primary-coral focus:ring-primary-coral"
             />
           </div>
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full"
+            className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]"
           >
             {isLoading ? 'Sending...' : 'Send Magic Link'}
           </Button>

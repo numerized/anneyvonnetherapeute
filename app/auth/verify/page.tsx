@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { app } from '@/lib/firebase';
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
 export default function VerifyPage() {
   const [isVerifying, setIsVerifying] = useState(true);
@@ -12,17 +12,16 @@ export default function VerifyPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    async function verifyEmail() {
-      const auth = getAuth(app);
-      
+    const auth = getAuth(app);
+    
+    const verifyEmail = async () => {
       try {
         // Get the email from localStorage
         const email = window.localStorage.getItem('emailForSignIn');
         console.log('Retrieved email from localStorage:', email);
 
         if (!email) {
-          console.error('No email found in localStorage');
-          toast.error('No email found. Please try logging in again.');
+          toast.error('No email found. Please try signing in again.');
           router.push('/login');
           return;
         }
@@ -36,8 +35,7 @@ export default function VerifyPage() {
         console.log('Is sign-in link valid?', isValid);
 
         if (!isValid) {
-          console.error('Invalid sign-in link');
-          toast.error('Invalid verification link. Please request a new one.');
+          toast.error('Invalid sign-in link. Please try signing in again.');
           router.push('/login');
           return;
         }
@@ -60,36 +58,38 @@ export default function VerifyPage() {
         console.error('Verification error:', {
           code: error.code,
           message: error.message,
-          stack: error.stack
+          email: window.localStorage.getItem('emailForSignIn'),
+          url: window.location.href,
         });
 
-        let errorMessage = 'Failed to verify email link';
+        toast.error(
+          error.code === 'auth/invalid-action-code'
+            ? 'Invalid or expired sign-in link. Please try signing in again.'
+            : 'Failed to verify email. Please try signing in again.'
+        );
 
-        if (error.code === 'auth/invalid-action-code') {
-          errorMessage = 'This link has expired or already been used. Please request a new one.';
-        } else if (error.code === 'auth/invalid-email') {
-          errorMessage = 'Invalid email address. Please try again.';
-        }
-
-        toast.error(errorMessage);
         router.push('/login');
       } finally {
         setIsVerifying(false);
       }
-    }
+    };
 
     verifyEmail();
   }, [router, searchParams]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))]">
+    <div className="relative min-h-screen grid place-items-center bg-primary-forest">
       <div className="text-center">
-        {isVerifying ? (
+        {isVerifying && (
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-[hsl(var(--foreground))]">Verifying your email...</h2>
-            <p className="text-[hsl(var(--muted-foreground))]">Please wait while we complete the sign-in process.</p>
+            <h2 className="text-4xl font-black text-primary-cream tracking-tight">
+              Verifying your email...
+            </h2>
+            <p className="text-primary-cream/80">
+              Please wait while we complete the sign-in process.
+            </p>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

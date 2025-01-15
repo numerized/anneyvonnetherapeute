@@ -8,31 +8,36 @@ export default function CheckEmailPage() {
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    setEmail(window.localStorage.getItem('emailForSignIn'));
+    // Get email from localStorage
+    const storedEmail = window.localStorage.getItem('emailForSignIn');
+    setEmail(storedEmail);
   }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))] px-4">
-      <div className="w-full max-w-md space-y-8 text-center">
-        <h2 className="text-3xl font-bold tracking-tight">Check your email</h2>
+    <div className="relative min-h-screen grid place-items-center bg-primary-forest">
+      <div className="w-full max-w-md px-4 space-y-8 text-center">
+        <h2 className="text-4xl font-black text-primary-cream tracking-tight">Check your email</h2>
         
         <div className="space-y-4">
           {email && (
-            <p className="text-[hsl(var(--muted-foreground))]">
-              We've sent a magic link to <span className="font-medium text-[hsl(var(--foreground))]">{email}</span>
+            <p className="text-primary-cream/80">
+              We've sent a magic link to <span className="font-medium text-primary-cream">{email}</span>
             </p>
           )}
           
-          <p className="text-[hsl(var(--muted-foreground))]">
+          <p className="text-primary-cream/80">
             Click the link in the email to sign in to your account.
           </p>
 
-          <div className="pt-4">
-            <p className="text-sm text-[hsl(var(--muted-foreground))]">
+          <div className="mt-8">
+            <p className="text-sm text-primary-cream/80">
               Didn't receive the email?
             </p>
             <Link href="/login">
-              <Button variant="ghost" className="mt-2">
+              <Button 
+                variant="ghost" 
+                className="mt-2 text-primary-cream hover:text-primary-coral hover:bg-primary-cream/10"
+              >
                 Try again
               </Button>
             </Link>
