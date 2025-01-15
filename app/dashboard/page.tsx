@@ -97,18 +97,6 @@ export default function DashboardPage() {
 
         {/* Dashboard Cards */}
         <div className="grid gap-6">
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <h2 className="text-4xl font-black text-primary-coral tracking-tight">Bienvenue dans votre espace</h2>
-            <p className="mt-2 text-primary-cream/80">
-              Votre espace personnel vous permet de :
-            </p>
-            <ul className="mt-2 space-y-2 text-primary-cream/80 list-disc list-inside">
-              <li>Suivre vos tâches et questionnaires à compléter</li>
-              <li>Accéder à vos capsules vidéo personnalisées</li>
-              <li>Gérer vos rendez-vous et suivre votre progression</li>
-            </ul>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
               {/* TODO Section */}
@@ -166,6 +154,20 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Capsules Section */}
+            <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
+              <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Capsules</h2>
+              <p className="text-sm text-primary-cream/80 mb-4">
+                Accédez à nos capsules vidéo pour votre développement personnel
+              </p>
+              <Link
+                href="/capsules"
+                className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
+              >
+                Voir mes capsules
+              </Link>
             </div>
 
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
