@@ -147,6 +147,19 @@ export default function Navbar(props: NavbarProps) {
                       )
                     }
 
+                    // If it's the last item, redirect to login
+                    if (index === data.menuItems.length - 1) {
+                      return (
+                        <Link
+                          key={index}
+                          href="/login"
+                          className={classes}
+                        >
+                          {item.title}
+                        </Link>
+                      );
+                    }
+
                     // Handle anchor links
                     if (item.linkType === 'anchor' && item.anchor) {
                       return (

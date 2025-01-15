@@ -20,7 +20,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const auth = getAuth(app);
-    
+
     // Check if we're already authenticated
     if (auth.currentUser) {
       setUser(auth.currentUser);
@@ -81,102 +81,100 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Dashboard</h1>
+            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Votre Espace 180°</h1>
             <p className="mt-2 text-primary-cream/80">
-              Welcome back, {user.email}!
+              Bienvenue, {user.email}!
             </p>
           </div>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={handleSignOut}
             className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
           >
-            Sign Out
+            Se déconnecter
           </Button>
-        </div>
-
-        {/* TODO Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <ClipboardList className="w-6 h-6 text-primary-cream" />
-            <h2 className="text-2xl font-bold text-primary-cream">À faire</h2>
-          </div>
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <div className="space-y-4">
-              {/* Questionnaire Item */}
-              <div className="flex items-start gap-3">
-                <button 
-                  onClick={() => toggleCheckbox('questionnaire')}
-                  className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
-                >
-                  {checkedItems.questionnaire ? (
-                    <CheckSquare className="w-5 h-5" />
-                  ) : (
-                    <Square className="w-5 h-5" />
-                  )}
-                </button>
-                <div className="grid gap-1.5 leading-none">
-                  <Link 
-                    href="/questionnaire" 
-                    className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
-                  >
-                    Remplir le questionnaire d'estime de soi
-                  </Link>
-                  <p className="text-sm text-primary-cream/60">
-                    Un questionnaire pour mieux comprendre votre relation avec vous-même
-                  </p>
-                </div>
-              </div>
-
-              {/* Appointment Item */}
-              <div className="flex items-start gap-3">
-                <button 
-                  onClick={() => toggleCheckbox('appointment')}
-                  className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
-                >
-                  {checkedItems.appointment ? (
-                    <CheckSquare className="w-5 h-5" />
-                  ) : (
-                    <Square className="w-5 h-5" />
-                  )}
-                </button>
-                <div className="grid gap-1.5 leading-none">
-                  <Link 
-                    href="/appointment" 
-                    className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
-                  >
-                    Prendre rendez-vous avec votre coach
-                  </Link>
-                  <p className="text-sm text-primary-cream/60">
-                    Planifiez votre prochaine séance de coaching
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Dashboard Cards */}
         <div className="grid gap-6">
           <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <h2 className="text-2xl font-bold text-primary-cream">Getting Started</h2>
+            <h2 className="text-4xl font-black text-primary-coral tracking-tight">Bienvenue dans votre espace</h2>
             <p className="mt-2 text-primary-cream/80">
-              This is your dashboard. You can start customizing it based on your needs.
+              Votre espace personnel vous permet de :
             </p>
+            <ul className="mt-2 space-y-2 text-primary-cream/80 list-disc list-inside">
+              <li>Suivre vos tâches et questionnaires à compléter</li>
+              <li>Accéder à vos capsules vidéo personnalisées</li>
+              <li>Gérer vos rendez-vous et suivre votre progression</li>
+            </ul>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-              <h3 className="text-xl font-bold text-primary-cream">Statistics</h3>
-              <p className="mt-2 text-primary-cream/80">
-                View your analytics and performance metrics here.
-              </p>
+              {/* TODO Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <ClipboardList className="w-6 h-6 text-primary-coral" />
+                  <h2 className="text-4xl font-black text-primary-coral tracking-tight">À faire</h2>
+                </div>
+                <div className="space-y-4">
+                  {/* Questionnaire Item */}
+                  <div className="flex items-start gap-3">
+                    <button
+                      onClick={() => toggleCheckbox('questionnaire')}
+                      className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
+                    >
+                      {checkedItems.questionnaire ? (
+                        <CheckSquare className="w-5 h-5" />
+                      ) : (
+                        <Square className="w-5 h-5" />
+                      )}
+                    </button>
+                    <div className="grid gap-1.5 leading-none">
+                      <Link
+                        href="/questionnaire"
+                        className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
+                      >
+                        Remplir le questionnaire d'estime de soi
+                      </Link>
+                      <p className="text-sm text-primary-cream/60">
+                        Un questionnaire pour mieux comprendre votre relation avec vous-même
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Appointment Item */}
+                  <div className="flex items-start gap-3">
+                    <button
+                      onClick={() => toggleCheckbox('appointment')}
+                      className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
+                    >
+                      {checkedItems.appointment ? (
+                        <CheckSquare className="w-5 h-5" />
+                      ) : (
+                        <Square className="w-5 h-5" />
+                      )}
+                    </button>
+                    <div className="grid gap-1.5 leading-none">
+                      <Link
+                        href="/appointment"
+                        className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
+                      >
+                        Prendre rendez-vous avec votre coach
+                      </Link>
+                      <p className="text-sm text-primary-cream/60">
+                        Planifiez votre prochaine séance de coaching
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            
+
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-              <h3 className="text-xl font-bold text-primary-cream">Recent Activity</h3>
+              <h2 className="text-4xl font-black text-primary-coral tracking-tight">Activité récente</h2>
               <p className="mt-2 text-primary-cream/80">
-                Track your latest actions and updates here.
+                Suivez vos dernières actions et mises à jour ici.
               </p>
             </div>
           </div>

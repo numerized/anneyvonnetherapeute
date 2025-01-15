@@ -34,13 +34,13 @@ export default function LoginPage() {
       window.localStorage.setItem('emailForSignIn', email);
 
       // Show success message
-      toast.success('Magic link sent! Check your email.');
+      toast.success('Lien magique envoyé ! Vérifiez votre email.');
       
       // Optional: Redirect to a confirmation page
       router.push('/login/check-email');
     } catch (error) {
       console.error('Login error:', error);
-      toast.error('Failed to send magic link. Please try again.');
+      toast.error('Échec de l\'envoi du lien magique. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
     }
@@ -51,17 +51,19 @@ export default function LoginPage() {
       <div className="w-full max-w-md px-4 space-y-8">
         <div className="text-center">
           <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
-            Sign in
+            Connexion
           </h2>
           <p className="mt-2 text-primary-cream/80">
-            Enter your email to receive a magic link
+            Pour accéder à votre espace personnel, entrez votre adresse email ci-dessous.
+            <br />
+            Nous vous enverrons un lien sécurisé par email pour vous connecter sans mot de passe.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="sr-only">
-              Email address
+              Adresse email
             </label>
             <Input
               id="email"
@@ -69,7 +71,7 @@ export default function LoginPage() {
               type="email"
               autoComplete="email"
               required
-              placeholder="Enter your email"
+              placeholder="Entrez votre email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
@@ -82,7 +84,7 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]"
           >
-            {isLoading ? 'Sending...' : 'Send Magic Link'}
+            {isLoading ? 'Envoi en cours...' : 'Envoyer le lien magique'}
           </Button>
         </form>
       </div>

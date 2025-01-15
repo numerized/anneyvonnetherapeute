@@ -5,91 +5,114 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { toast } from 'sonner';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function VerifyPage() {
   const [isVerifying, setIsVerifying] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const auth = getAuth(app);
-    
-    const verifyEmail = async () => {
+    async function verifyEmail() {
+      const auth = getAuth(app);
+      
       try {
+        // Check if this is a sign-in link
+        if (!isSignInWithEmailLink(auth, window.location.href)) {
+          setError('invalid-link');
+          return;
+        }
+
         // Get the email from localStorage
         const email = window.localStorage.getItem('emailForSignIn');
-        console.log('Retrieved email from localStorage:', email);
-
         if (!email) {
-          toast.error('No email found. Please try signing in again.');
-          router.push('/login');
+          setError('no-email');
           return;
         }
 
-        // Get the current URL
-        const currentUrl = window.location.href;
-        console.log('Current URL:', currentUrl);
-
-        // Check if this is a valid sign-in link
-        const isValid = isSignInWithEmailLink(auth, currentUrl);
-        console.log('Is sign-in link valid?', isValid);
-
-        if (!isValid) {
-          toast.error('Invalid sign-in link. Please try signing in again.');
-          router.push('/login');
-          return;
-        }
-
-        // Attempt to sign in
-        console.log('Attempting to sign in...');
-        await signInWithEmailLink(auth, email, currentUrl);
-        console.log('Successfully signed in with Firebase');
-
-        // Clear the email from localStorage
+        // Sign in with email link
+        await signInWithEmailLink(auth, email, window.location.href);
+        
+        // Clear email from storage
         window.localStorage.removeItem('emailForSignIn');
-        console.log('Cleared email from localStorage');
-
-        // Show success message
-        toast.success('Successfully signed in!');
-
-        // Redirect to dashboard
+        
+        // Success! Redirect to dashboard
+        toast.success('Connexion réussie !');
         router.push('/dashboard');
       } catch (error: any) {
-        console.error('Verification error:', {
-          code: error.code,
-          message: error.message,
-          email: window.localStorage.getItem('emailForSignIn'),
-          url: window.location.href,
-        });
-
+        console.error('Verification error:', error);
+        
+        if (error.code === 'auth/invalid-action-code') {
+          setError('invalid-link');
+        } else {
+          setError('unknown');
+        }
+        
         toast.error(
           error.code === 'auth/invalid-action-code'
-            ? 'Invalid or expired sign-in link. Please try signing in again.'
-            : 'Failed to verify email. Please try signing in again.'
+            ? "Le lien n'est plus valide. Veuillez demander un nouveau lien."
+            : "Une erreur s'est produite. Veuillez réessayer."
         );
-
-        router.push('/login');
       } finally {
         setIsVerifying(false);
       }
-    };
+    }
 
     verifyEmail();
-  }, [router, searchParams]);
+  }, [router]);
+
+  const getErrorMessage = () => {
+    switch (error) {
+      case 'invalid-link':
+        return "Ce lien n'est plus valide. Veuillez demander un nouveau lien de connexion.";
+      case 'no-email':
+        return "Nous n'avons pas pu retrouver votre email. Veuillez réessayer de vous connecter.";
+      default:
+        return "Une erreur s'est produite lors de la vérification. Veuillez réessayer.";
+    }
+  };
 
   return (
     <div className="relative min-h-screen grid place-items-center bg-primary-forest">
-      <div className="text-center">
-        {isVerifying && (
-          <div className="space-y-4">
-            <h2 className="text-4xl font-black text-primary-cream tracking-tight">
-              Verifying your email...
-            </h2>
-            <p className="text-primary-cream/80">
-              Please wait while we complete the sign-in process.
-            </p>
-          </div>
-        )}
+      <div className="w-full max-w-md px-4 space-y-8">
+        <div className="text-center">
+          {isVerifying ? (
+            <>
+              <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
+                Vérification en cours...
+              </h2>
+              <p className="mt-2 text-primary-cream/80">
+                Veuillez patienter pendant que nous vérifions votre email.
+              </p>
+            </>
+          ) : error ? (
+            <>
+              <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
+                Erreur de vérification
+              </h2>
+              <p className="mt-2 text-primary-cream/80">
+                {getErrorMessage()}
+              </p>
+              <div className="mt-4">
+                <Link href="/login">
+                  <Button variant="outline" className="text-primary-cream hover:text-primary-coral">
+                    Retour à la connexion
+                  </Button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
+                Vérification réussie
+              </h2>
+              <p className="mt-2 text-primary-cream/80">
+                Vous allez être redirigé vers votre espace personnel...
+              </p>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
