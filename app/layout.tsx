@@ -53,7 +53,7 @@ export default function RootLayout({
     >
       <body className="font-montserrat antialiased">
         {children}
-        <Toaster position="top-center" richColors closeButton />
+        <Toaster position="bottom-right" richColors closeButton />
         <Analytics />
         <SpeedInsights />
       </body>
