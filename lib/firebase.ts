@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFunctions } from 'firebase/functions'
+import { getFunctions } from 'firebase/functions';
+import { getAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,5 +15,6 @@ const firebaseConfig = {
 // Initialize Firebase only if it hasn't been initialized
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-export const functions = getFunctions(app)
+export const functions = getFunctions(app);
+export const auth = getAuth(app);
 export { app };

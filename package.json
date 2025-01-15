@@ -17,6 +17,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@next/env": "15.1.2",
+    "@radix-ui/react-slot": "^1.1.1",
     "@sanity/demo": "2.0.0",
     "@sanity/icons": "3.4.0",
     "@sanity/image-url": "1.1.0",
@@ -27,6 +28,7 @@
     "@tailwindcss/typography": "0.5.15",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
+    "class-variance-authority": "^0.7.1",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
     "dotenv": "^16.4.5",
@@ -43,9 +45,12 @@
     "sanity": "3.64.1",
     "sanity-plugin-asset-source-unsplash": "3.0.1",
     "server-only": "0.0.1",
-    "styled-components": "6.1.13"
+    "sonner": "^1.7.2",
+    "styled-components": "6.1.13",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@shadcn/ui": "^0.0.4",
     "@types/node": "^22.10.0",
     "@types/react": "19.0.2",
     "autoprefixer": "10.4.20",
