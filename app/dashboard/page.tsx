@@ -157,30 +157,38 @@ export default function DashboardPage() {
             </div>
 
             {/* Capsules Section */}
-            <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-              <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Capsules</h2>
-              <p className="text-sm text-primary-cream/80 mb-4">
-                Accédez à nos capsules vidéo pour votre développement personnel
-              </p>
-              <Link
-                href="/capsules"
-                className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
-              >
-                Voir mes capsules
-              </Link>
+            <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 flex flex-col">
+              <div>
+                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Capsules</h2>
+                <p className="text-sm text-primary-cream/80 mb-4">
+                  Accédez à nos capsules vidéo pour votre développement personnel
+                </p>
+              </div>
+              <div className="mt-auto flex justify-end">
+                <Link
+                  href="/capsules"
+                  className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
+                >
+                  Voir mes capsules
+                </Link>
+              </div>
             </div>
 
-            <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-              <h2 className="text-4xl font-black text-primary-coral tracking-tight">Votre prochain rendez-vous</h2>
-              <p className="mt-2 text-primary-cream/80">
-                Aucun rendez-vous programmé. Cliquez ci-dessous pour en planifier un.
-              </p>
-              <Button 
-                variant="outline" 
-                className="mt-4 text-primary-cream hover:text-primary-coral border-primary-cream/20 hover:border-primary-coral"
-              >
-                Prendre rendez-vous
-              </Button>
+            <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 flex flex-col">
+              <div>
+                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Votre prochain rendez-vous</h2>
+                <p className="text-sm text-primary-cream/80 mb-4">
+                  Planifiez votre prochaine séance de coaching
+                </p>
+              </div>
+              <div className="mt-auto flex justify-end">
+                <Link
+                  href="/appointment"
+                  className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
+                >
+                  Prendre rendez-vous
+                </Link>
+              </div>
             </div>
           </div>
         </div>
