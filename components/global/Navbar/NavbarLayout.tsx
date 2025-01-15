@@ -7,6 +7,7 @@ import { app } from '@/lib/firebase';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiMenu, HiX } from 'react-icons/hi';
+import { Loader2 } from 'lucide-react';
 import { urlFor } from '@/sanity/lib/image';
 import { resolveHref } from '@/sanity/lib/utils';
 import { SettingsPayload } from '@/types';
@@ -18,13 +19,12 @@ interface NavbarProps {
   data: SettingsPayload
 }
 
-export default function Navbar(props: NavbarProps) {
-  const { data } = props
+export default function NavbarLayout({ data }: NavbarProps) {
   const menuItems = data?.menuItems || []
   
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
@@ -47,7 +47,7 @@ export default function Navbar(props: NavbarProps) {
     const isLastItem = index === data.menuItems.length - 1
 
     if (isLastItem) {
-      const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
+      const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200 flex items-center justify-center";
       const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`;
       
       return (
@@ -56,7 +56,13 @@ export default function Navbar(props: NavbarProps) {
           href={isLoggedIn ? '/dashboard' : '/login'}
           className={buttonClearClasses}
         >
-          {isLoggedIn ? 'Espace 180°' : item.title}
+          {isLoggedIn === null ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : isLoggedIn ? (
+            'Espace 180°'
+          ) : (
+            item.title
+          )}
         </Link>
       )
     }
