@@ -81,9 +81,9 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Votre Espace 180°</h1>
+            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Conversion 180° d'Amour</h1>
             <p className="mt-2 text-primary-cream/80">
-              Bienvenue, {user.email}!
+              Bienvenue, {user.email} dans votre espace personnel.
             </p>
           </div>
           <Button
