@@ -5,7 +5,7 @@ import sgMail from '@sendgrid/mail'
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16'
+  apiVersion: '2024-12-18.acacia'
 })
 
 // Initialize SendGrid
@@ -13,7 +13,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
 
 export async function POST(req: Request) {
   const body = await req.text()
-  const sig = headers().get('stripe-signature')
+  const headersList = await headers()
+  const sig = headersList.get('stripe-signature')
 
   let event: Stripe.Event
 

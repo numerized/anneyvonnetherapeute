@@ -131,7 +131,7 @@ export const sendContactEmail = onRequest(
         to: recipientEmail.value(),
         from: {
           email: senderEmail.value(),
-          name: 'Anne-Yvonne Thérapie'  // This should match your verified sender name in SendGrid
+          name: 'Anne-Yvonne Thérapeute'  // This should match your verified sender name in SendGrid
         },
         replyTo: email,
         subject: `Nouveau message de ${name}`,
@@ -423,7 +423,7 @@ export const createCheckoutSession = onRequest(
     try {
       // Initialize Stripe
       const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
-        apiVersion: '2023-10-16'
+        apiVersion: '2024-12-18.acacia'
       })
 
       const { ticketType, email } = req.body as CreateCheckoutSessionData
@@ -488,7 +488,7 @@ export const handleStripeWebhook = onRequest(
     try {
       // Initialize Stripe
       const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
-        apiVersion: '2023-10-16'
+        apiVersion: '2024-12-18.acacia'
       })
 
       // Initialize SendGrid

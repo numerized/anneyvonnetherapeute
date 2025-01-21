@@ -53,7 +53,7 @@ export function ProchainementPage({ data, settings }: any) {
                   </h2>
                   <p className="text-xl text-primary-coral italic mb-2">8e édition</p>
                   <p className="text-lg text-primary-cream/80">
-                    Présenté en direct par <span className="text-primary-coral">Anne Yvonne Racine</span>
+                    Intervention en direct sur Whereby par <span className="text-primary-coral">Anne Yvonne Racine</span>
                   </p>
                 </div>
 
