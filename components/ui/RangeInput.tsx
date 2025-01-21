@@ -7,11 +7,12 @@ interface RangeInputProps {
   onChange: (value: string) => void
   min?: string
   max?: string
+  step?: string
   className?: string
   style?: CSSProperties
 }
 
-export function RangeInput({ value, onChange, min = "1", max = "10", className = "", style }: RangeInputProps) {
+export function RangeInput({ value, onChange, min = "0", max = "10", step = "1", className = "", style }: RangeInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value)
   }
@@ -101,6 +102,7 @@ export function RangeInput({ value, onChange, min = "1", max = "10", className =
         type="range"
         min={min}
         max={max}
+        step={step}
         value={value}
         onChange={handleChange}
         className={className}
