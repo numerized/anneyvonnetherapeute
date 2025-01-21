@@ -2,11 +2,6 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia'
-})
-
 // Ticket types and prices
 const TICKET_PRICES = {
   standard: {
@@ -26,16 +21,27 @@ export async function POST(req: Request) {
     const headersList = await headers()
     const origin = headersList.get('origin')
 
-    if (!ticketType || !email || !TICKET_PRICES[ticketType]) {
+    if (!ticketType || !email) {
       return NextResponse.json(
-        { error: 'Invalid ticket type or missing email' },
+        { error: 'Ticket type and email are required' },
         { status: 400 }
       )
     }
 
-    const ticket = TICKET_PRICES[ticketType]
+    const price = TICKET_PRICES[ticketType as keyof typeof TICKET_PRICES]
+    if (!price) {
+      return NextResponse.json(
+        { error: 'Invalid ticket type' },
+        { status: 400 }
+      )
+    }
 
-    // Create Stripe checkout session
+    // Initialize Stripe inside the handler
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2024-12-18.acacia'
+    })
+
+    // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -43,12 +49,12 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'chf',
             product_data: {
-              name: ticket.name,
+              name: price.name,
               description: ticketType === 'vip'
                 ? 'Accès au festival + Q&A exclusive + enregistrement 30 jours'
                 : 'Accès au festival en direct'
             },
-            unit_amount: ticket.amount,
+            unit_amount: price.amount,
           },
           quantity: 1,
         },
@@ -64,10 +70,10 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ sessionId: session.id })
-  } catch (error) {
-    console.error('Error:', error)
+  } catch (err) {
+    console.error('Error creating checkout session:', err)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Error creating checkout session' },
       { status: 500 }
     )
   }
