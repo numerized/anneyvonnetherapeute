@@ -6,11 +6,11 @@ interface RangeInputProps {
   id?: string
   value: string
   onChange: (value: string) => void
-  min?: number
-  max?: number
+  min?: string
+  max?: string
   minLabel?: string
   maxLabel?: string
-  step?: number
+  step?: string
   className?: string
   style?: CSSProperties
 }
@@ -19,11 +19,11 @@ export function RangeInput({
   id,
   value, 
   onChange, 
-  min = 1, 
-  max = 10, 
+  min = "0", 
+  max = "10", 
   minLabel,
   maxLabel,
-  step = 1, 
+  step = "1", 
   className = "", 
   style 
 }: RangeInputProps) {

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { RangeInput } from '@/components/ui/RangeInput'
+import { EvaluationResults } from '@/components/pages/evaluation/EvaluationResults'
 
 interface RatingSection {
   [key: string]: string
@@ -18,30 +19,32 @@ export default function EvaluationHandicapRelationnelPage() {
   })
 
   const [socialRatings, setSocialRatings] = useState<RatingSection>({
-    autonomieDecisionnelle: '1',
-    gestionTemps: '1',
-    expressionOpinions: '1',
-    limites: '1',
-    solitude: '1',
-    independanceEmotionnelle: '1',
-    autonomieQuotidienne: '1',
-    gestionConflits: '1',
-    independanceFinanciere: '1',
-    priseInitiatives: '1'
+    autonomieDecisionnelle: '0',
+    gestionTemps: '0',
+    expressionOpinions: '0',
+    limites: '0',
+    solitude: '0',
+    independanceEmotionnelle: '0',
+    autonomieQuotidienne: '0',
+    gestionConflits: '0',
+    independanceFinanciere: '0',
+    priseInitiatives: '0'
   })
 
   const [intimateRatings, setIntimateRatings] = useState<RatingSection>({
-    autonomieDecisionnelleIntime: '1',
-    gestionTempsPartage: '1',
-    expressionBesoins: '1',
-    limitesRelation: '1',
-    gestionAttachement: '1',
-    independanceEmotionnelleIntime: '1',
-    partageResponsabilites: '1',
-    gestionConflitsRelation: '1',
-    intimitePhysique: '1',
-    visionCommune: '1'
+    autonomieDecisionnelleIntime: '0',
+    gestionTempsPartage: '0',
+    expressionBesoins: '0',
+    limitesRelation: '0',
+    gestionAttachement: '0',
+    independanceEmotionnelleIntime: '0',
+    partageResponsabilites: '0',
+    gestionConflitsRelation: '0',
+    intimitePhysique: '0',
+    visionCommune: '0'
   })
+
+  const [showResults, setShowResults] = useState(false)
 
   const handleSocialChange = (field: keyof typeof socialRatings, value: string) => {
     setSocialRatings(prev => ({ ...prev, [field]: value }))
@@ -90,6 +93,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.autonomieDecisionnelle}
                     onChange={(value) => handleSocialChange('autonomieDecisionnelle', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -105,6 +110,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.gestionTemps}
                     onChange={(value) => handleSocialChange('gestionTemps', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -120,6 +127,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.expressionOpinions}
                     onChange={(value) => handleSocialChange('expressionOpinions', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -135,6 +144,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.limites}
                     onChange={(value) => handleSocialChange('limites', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -150,6 +161,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.solitude}
                     onChange={(value) => handleSocialChange('solitude', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -165,6 +178,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.independanceEmotionnelle}
                     onChange={(value) => handleSocialChange('independanceEmotionnelle', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -180,6 +195,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.autonomieQuotidienne}
                     onChange={(value) => handleSocialChange('autonomieQuotidienne', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -195,6 +212,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.gestionConflits}
                     onChange={(value) => handleSocialChange('gestionConflits', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -210,6 +229,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.independanceFinanciere}
                     onChange={(value) => handleSocialChange('independanceFinanciere', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -225,6 +246,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={socialRatings.priseInitiatives}
                     onChange={(value) => handleSocialChange('priseInitiatives', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
               </ul>
@@ -247,6 +270,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.autonomieDecisionnelleIntime}
                     onChange={(value) => handleIntimateChange('autonomieDecisionnelleIntime', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -262,6 +287,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.gestionTempsPartage}
                     onChange={(value) => handleIntimateChange('gestionTempsPartage', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -277,6 +304,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.expressionBesoins}
                     onChange={(value) => handleIntimateChange('expressionBesoins', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -292,6 +321,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.limitesRelation}
                     onChange={(value) => handleIntimateChange('limitesRelation', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -307,6 +338,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.gestionAttachement}
                     onChange={(value) => handleIntimateChange('gestionAttachement', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -322,6 +355,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.independanceEmotionnelleIntime}
                     onChange={(value) => handleIntimateChange('independanceEmotionnelleIntime', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -337,6 +372,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.partageResponsabilites}
                     onChange={(value) => handleIntimateChange('partageResponsabilites', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -352,6 +389,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.gestionConflitsRelation}
                     onChange={(value) => handleIntimateChange('gestionConflitsRelation', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -367,6 +406,8 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.intimitePhysique}
                     onChange={(value) => handleIntimateChange('intimitePhysique', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
 
@@ -382,11 +423,31 @@ export default function EvaluationHandicapRelationnelPage() {
                   <RangeInput
                     value={intimateRatings.visionCommune}
                     onChange={(value) => handleIntimateChange('visionCommune', value)}
+                    min="0"
+                    max="10"
                   />
                 </li>
               </ul>
             </div>
           </div>
+
+          <div className="flex justify-center">
+            <button
+              onClick={() => setShowResults(!showResults)}
+              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              {showResults ? 'Masquer les résultats' : 'Voir mes résultats'}
+            </button>
+          </div>
+
+          {showResults && (
+            <section className="mt-8">
+              <EvaluationResults
+                socialRatings={socialRatings}
+                intimateRatings={intimateRatings}
+              />
+            </section>
+          )}
 
           <blockquote className="text-primary-coral italic text-sm mt-8 print:hidden">
             "Comme un diamant brut, ma valeur est innée et inaltérable ;
