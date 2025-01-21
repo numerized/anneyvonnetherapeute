@@ -3,11 +3,6 @@ import { headers } from 'next/headers'
 import Stripe from 'stripe'
 import sgMail from '@sendgrid/mail'
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia'
-})
-
 // Initialize SendGrid
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
 
@@ -19,6 +14,11 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
+    // Initialize Stripe inside the handler
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2024-12-18.acacia'
+    })
+
     event = stripe.webhooks.constructEvent(
       body,
       sig!,
