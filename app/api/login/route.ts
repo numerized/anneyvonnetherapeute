@@ -4,7 +4,9 @@ import { app } from '@/lib/firebase';
 
 const actionCodeSettings = {
   // URL you want to redirect back to
-  url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`,
+  url: process.env.NEXT_PUBLIC_BASE_URL 
+    ? `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`
+    : 'http://localhost:3000/auth/verify', // Fallback for development
   // This must be true for email link sign-in
   handleCodeInApp: true
 };
@@ -17,6 +19,14 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Email is required' },
         { status: 400 }
+      );
+    }
+
+    if (!actionCodeSettings.url) {
+      console.error('BASE_URL not configured');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
       );
     }
 

@@ -1,5 +1,5 @@
 User-agent: *
-Allow: /
+Disallow: /
 
-# Sitemap URL
-Sitemap: https://anneyvonnetherapeute.fr/sitemap.xml
+# Prevent all search engines from indexing the site
+# Remove sitemap reference since we don't want indexing

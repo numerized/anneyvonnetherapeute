@@ -129,11 +129,15 @@ export function Hero({ hero, data }: HeroProps) {
                 {hero?.ctaButton && (
                   <div className="flex w-full md:w-auto">
                     <motion.button 
-                      className="w-full md:w-auto bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold mt-8 text-sm md:text-base"
+                      className="w-full md:w-auto bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold mt-8 text-sm md:text-base animate-glow"
                       aria-label={hero.ctaButton.ariaLabel}
                       onClick={scrollToQuestionnaire}
                       whileTap={{ scale: 0.95 }}
                       transition={{ ease: [0, 0.71, 0.2, 1] }}
+                      whileHover={{
+                        scale: 1.02,
+                        transition: { duration: 0.2 }
+                      }}
                     >
                       {hero.ctaButton.text}
                     </motion.button>
