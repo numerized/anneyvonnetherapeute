@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { RangeInput } from '@/components/ui/RangeInput'
 import { EvaluationResults } from '@/components/pages/evaluation/EvaluationResults'
+import { motion } from 'framer-motion'
 
 interface RatingSection {
   [key: string]: string
@@ -432,12 +433,18 @@ export default function EvaluationHandicapRelationnelPage() {
           </div>
 
           <div className="flex justify-center">
-            <button
-              onClick={() => setShowResults(!showResults)}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ ease: [0, 0.71, 0.2, 1] }}
             >
-              {showResults ? 'Masquer les résultats' : 'Voir mes résultats'}
-            </button>
+              <button
+                onClick={() => setShowResults(!showResults)}
+                className="rounded-full px-6 py-3 bg-primary-coral hover:bg-primary-rust text-primary-cream transition-all duration-300 flex items-center gap-2"
+              >
+                {showResults ? 'Masquer les résultats' : 'Voir mes résultats'}
+              </button>
+            </motion.div>
           </div>
 
           {showResults && (
