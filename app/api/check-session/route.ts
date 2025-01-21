@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-})
-
 export async function POST(req: Request) {
   try {
     const { sessionId } = await req.json()
@@ -16,6 +12,11 @@ export async function POST(req: Request) {
       )
     }
 
+    // Initialize Stripe inside the handler
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2024-12-18.acacia',
+    })
+
     const session = await stripe.checkout.sessions.retrieve(sessionId)
 
     if (session.payment_status !== 'paid') {
@@ -26,10 +27,10 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Error checking session:', error)
+  } catch (err) {
+    console.error('Error checking session:', err)
     return NextResponse.json(
-      { error: 'Failed to check payment status' },
+      { error: 'Error checking session' },
       { status: 500 }
     )
   }
