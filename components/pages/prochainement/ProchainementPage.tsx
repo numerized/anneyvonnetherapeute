@@ -2,8 +2,32 @@
 
 import { ProchainementHero } from './ProchainementHero'
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { PurchaseTicket } from './PurchaseTicket'
+import { useSearchParams } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 
 export function ProchainementPage({ data, settings }: any) {
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    // Check for successful payment
+    if (searchParams.get('success') === 'true') {
+      toast.success('Paiement réussi ! Vous recevrez un email avec les détails d\'accès.')
+    }
+    // Check for canceled payment
+    if (searchParams.get('canceled') === 'true') {
+      toast.error('Le paiement a été annulé.')
+    }
+  }, [searchParams])
+
+  const handleTicketPurchase = (type: 'standard' | 'vip') => {
+    setSelectedTicketType(type)
+    setShowPurchaseModal(true)
+  }
+
   if (!data?.hero) {
     return null
   }
@@ -53,13 +77,33 @@ export function ProchainementPage({ data, settings }: any) {
                 <div className="bg-primary-forest/30 rounded-[24px] p-6">
                   <h3 className="text-xl font-light text-primary-cream mb-4">Tarifs</h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center text-primary-cream/80">
-                      <span>Accès standard</span>
-                      <span className="text-primary-coral font-bold">45 CHF</span>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex justify-between items-center text-primary-cream/80">
+                        <span>Accès standard</span>
+                        <span className="text-primary-coral font-bold">45 CHF</span>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleTicketPurchase('standard')}
+                        className="w-full bg-primary-coral/20 hover:bg-primary-coral/30 text-primary-cream rounded-full py-2 text-sm transition-colors"
+                      >
+                        Acheter
+                      </motion.button>
                     </div>
-                    <div className="flex justify-between items-center text-primary-cream/80">
-                      <span>Pack VIP (places limitées)</span>
-                      <span className="text-primary-coral font-bold">85 CHF</span>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex justify-between items-center text-primary-cream/80">
+                        <span>Pack VIP (places limitées)</span>
+                        <span className="text-primary-coral font-bold">85 CHF</span>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleTicketPurchase('vip')}
+                        className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream rounded-full py-2 text-sm transition-colors"
+                      >
+                        Acheter en VIP
+                      </motion.button>
                     </div>
                   </div>
                 </div>
@@ -83,30 +127,20 @@ export function ProchainementPage({ data, settings }: any) {
                 Anne Yvonne Racine après le spectacle, et l'accès à l'enregistrement de l'événement pendant 30 jours.
               </p>
             </div>
-
-            {/* Ticket Purchase Button */}
-            <div className="text-center">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ ease: [0, 0.71, 0.2, 1] }}
-              >
-                <a 
-                  href="https://www.ticketcorner.ch" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block rounded-full px-8 py-4 bg-primary-coral hover:bg-primary-rust text-primary-cream transition-all duration-300 text-lg font-bold"
-                >
-                  Réserver mes billets
-                </a>
-              </motion.div>
-              <p className="text-primary-cream/60 mt-4 text-sm">
-                La billetterie est gérée par notre partenaire Ticketcorner
-              </p>
-            </div>
           </div>
         </div>
       </section>
+
+      {/* Purchase Modal */}
+      {showPurchaseModal && selectedTicketType && (
+        <PurchaseTicket
+          ticketType={selectedTicketType}
+          onClose={() => {
+            setShowPurchaseModal(false)
+            setSelectedTicketType(null)
+          }}
+        />
+      )}
     </main>
   )
 }
