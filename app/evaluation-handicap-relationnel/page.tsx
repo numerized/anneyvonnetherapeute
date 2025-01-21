@@ -437,7 +437,20 @@ export default function EvaluationHandicapRelationnelPage() {
               transition={{ ease: [0, 0.71, 0.2, 1] }}
             >
               <button
-                onClick={() => setShowResults(!showResults)}
+                onClick={() => {
+                  setShowResults(!showResults);
+                  if (!showResults) {
+                    setTimeout(() => {
+                      const modalContainer = document.querySelector('.overflow-y-auto');
+                      if (modalContainer) {
+                        modalContainer.scrollTo({
+                          top: modalContainer.scrollHeight,
+                          behavior: 'smooth'
+                        });
+                      }
+                    }, 300);
+                  }
+                }}
                 className="rounded-full px-6 py-3 bg-primary-coral hover:bg-primary-rust text-primary-cream transition-all duration-300 flex items-center gap-2"
               >
                 {showResults ? 'Masquer les résultats' : 'Voir mes résultats'}

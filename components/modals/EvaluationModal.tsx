@@ -18,7 +18,7 @@ export function EvaluationModal({ isOpen, onClose }: EvaluationModalProps) {
           <div className="relative w-full">
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
+              className="fixed right-4 top-4 z-[60] rounded-full bg-primary-coral hover:bg-primary-rust transition-colors p-2 text-primary-cream shadow-lg"
             >
               <X className="h-6 w-6" />
             </button>

@@ -140,14 +140,15 @@ export default function Footer(props: FooterProps) {
               </a>
             </div>
             <div className="flex space-x-6 text-primary-cream/80">
-              <a href="https://facebook.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="Facebook">
-                <SocialIcon platform="facebook" />
-              </a>
-              <a href="https://instagram.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="Instagram">
+
+              <a href="https://www.instagram.com/sexologie_relation_therapie/" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="Instagram">
                 <SocialIcon platform="instagram" />
               </a>
-              <a href="https://linkedin.com" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="LinkedIn">
+              <a href="https://ch.linkedin.com/in/anne-yvonne-racine-8951b415b" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="LinkedIn">
                 <SocialIcon platform="linkedin" />
+              </a>
+              <a href="https://www.youtube.com/@anneyvonneracine123/featured" className="hover:text-primary-teal transition-colors focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-full p-1" aria-label="YouTube">
+                <SocialIcon platform="youtube" />
               </a>
             </div>
           </div>
