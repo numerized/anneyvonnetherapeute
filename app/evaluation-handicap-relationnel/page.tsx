@@ -56,8 +56,8 @@ export default function EvaluationHandicapRelationnelPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary-green p-4 md:p-8">
-      <div className="bg-white rounded-3xl p-8 shadow-lg print:shadow-none relative max-w-4xl mx-auto">
+    <main className="min-h-screen bg-primary-forest p-4 md:p-8">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg print:shadow-none">
         <div className="flex flex-col h-full print-container">
           <div className="flex-grow">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
@@ -460,6 +460,6 @@ export default function EvaluationHandicapRelationnelPage() {
           </blockquote>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
