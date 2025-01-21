@@ -166,9 +166,6 @@ export function EvaluationHandicapRelationnel() {
           <RangeInput
             value={scores[question.id] || '5'}
             onChange={(value) => handleScoreChange(question.id, value)}
-            min="0"
-            max="10"
-            step="1"
           />
           <div className="flex justify-between text-sm text-gray-500 mt-2">
             <span>{question.min}</span>
