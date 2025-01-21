@@ -9,7 +9,7 @@ interface RatingSection {
   [key: string]: string
 }
 
-export default function EvaluationHandicapRelationnelPage() {
+export function EvaluationHandicapRelationnelPage() {
   const [date] = useState(() => {
     const today = new Date()
     return today.toLocaleDateString('fr-FR', {
@@ -462,4 +462,8 @@ export default function EvaluationHandicapRelationnelPage() {
       </div>
     </main>
   )
+}
+
+export default function Page() {
+  return <EvaluationHandicapRelationnelPage />
 }
