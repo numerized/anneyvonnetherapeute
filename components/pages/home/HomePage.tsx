@@ -8,6 +8,7 @@ import type { HomePagePayload } from '@/types'
 
 import { About } from './About'
 import { AiCompanion } from './AiCompanion'
+import { EvaluationSection } from './EvaluationSection'
 import { Hero } from './Hero'
 import { ProfessionalTraining } from './ProfessionalTraining'
 import { RelationshipStages } from './RelationshipStages'
@@ -46,8 +47,10 @@ export function HomePage({ data, encodeDataAttribute, settings }: HomePageProps)
       <About />
 
       <TherapyQuestionnaire />
+      
       <ProfessionalTraining />
       <AiCompanion />
+      <EvaluationSection />
 
       <div className="max-w-7xl mx-auto px-6 space-y-20">
         {title && !hero && <Header centered title={title} description={overview} />}
