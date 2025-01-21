@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-})
-
 export async function POST(req: Request) {
   try {
     const { sessionId } = await req.json()
@@ -16,6 +11,11 @@ export async function POST(req: Request) {
         { status: 400 }
       )
     }
+
+    // Initialize Stripe inside the handler
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2024-12-18.acacia',
+    })
 
     const session = await stripe.checkout.sessions.retrieve(sessionId)
 
