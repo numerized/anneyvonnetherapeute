@@ -60,18 +60,16 @@ export default function EvaluationHandicapRelationnelPage() {
       <div className="bg-white rounded-3xl p-8 shadow-lg print:shadow-none relative max-w-4xl mx-auto">
         <div className="flex flex-col h-full print-container">
           <div className="flex-grow">
-            <div className="flex justify-between items-start mb-8">
-              <h1 className="text-4xl font-light">
-                <span className="text-primary-coral">jour</span>
-                <span className="text-gray-200 text-6xl">1</span>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-primary-coral md:max-w-[70%]">
+                Formulaire d'Évaluation du Handicap Relationnel
               </h1>
-              <div className="text-right">
+              <div className="text-right text-sm md:text-base">
                 <span className="text-gray-600">Date: </span>
                 <span className="text-gray-700">{date}</span>
               </div>
             </div>
 
-            <h2 className="text-xl text-gray-600 italic mb-4">Formulaire d'Évaluation du Handicap Relationnel</h2>
             <p className="text-gray-600 mb-8">
               Ce formulaire est divisé en deux parties : l'une centrée sur vos interactions sociales générales, 
               l'autre sur vos relations intimes ou amoureuses. Pour chaque affirmation, évaluez votre situation 
