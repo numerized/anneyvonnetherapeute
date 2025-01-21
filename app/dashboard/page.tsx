@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
+    evaluation: false,
     questionnaire: false,
     appointment: false,
   });
@@ -103,6 +104,31 @@ export default function DashboardPage() {
               <div className="mb-8">
                 <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">À faire</h2>
                 <div className="space-y-4">
+                  {/* Evaluation Item */}
+                  <div className="flex items-start gap-3">
+                    <button
+                      onClick={() => toggleCheckbox('evaluation')}
+                      className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
+                    >
+                      {checkedItems.evaluation ? (
+                        <CheckSquare className="w-5 h-5" />
+                      ) : (
+                        <Square className="w-5 h-5" />
+                      )}
+                    </button>
+                    <div className="grid gap-1.5 leading-none">
+                      <Link
+                        href="/evaluation-handicap-relationnel"
+                        className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
+                      >
+                        Formulaire d'Évaluation du Handicap Relationnel
+                      </Link>
+                      <p className="text-sm text-primary-cream/60">
+                        Évaluez votre niveau d'autonomie dans vos relations sociales et intimes
+                      </p>
+                    </div>
+                  </div>
+
                   {/* Questionnaire Item */}
                   <div className="flex items-start gap-3">
                     <button
