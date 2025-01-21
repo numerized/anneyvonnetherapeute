@@ -131,8 +131,8 @@ export function EvaluationResults({ socialRatings, intimateRatings }: Evaluation
       
       {/* Social Results */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-coral-red">Section Sociale</h3>
-        <p className="text-lg font-medium">Score moyen : {socialAverage.toFixed(1)} / 10</p>
+        <h3 className="text-xl font-semibold text-primary-coral">Section Sociale</h3>
+        <p className="text-lg font-medium text-primary-coral">Score moyen : {socialAverage.toFixed(1)} / 10</p>
         <div className="bg-gray-50 p-4 rounded-lg">
           <h4 className="text-lg font-medium text-gray-800">{socialCategory.title}</h4>
           <p className="text-gray-600 mt-2">{socialCategory.description}</p>
@@ -149,8 +149,8 @@ export function EvaluationResults({ socialRatings, intimateRatings }: Evaluation
 
       {/* Intimate Results */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-coral-red">Section Intime et Amoureuse</h3>
-        <p className="text-lg font-medium">Score moyen : {intimateAverage.toFixed(1)} / 10</p>
+        <h3 className="text-xl font-semibold text-primary-coral">Section Intime et Amoureuse</h3>
+        <p className="text-lg font-medium text-primary-coral">Score moyen : {intimateAverage.toFixed(1)} / 10</p>
         <div className="bg-gray-50 p-4 rounded-lg">
           <h4 className="text-lg font-medium text-gray-800">{intimateCategory.title}</h4>
           <p className="text-gray-600 mt-2">{intimateCategory.description}</p>
