@@ -4,7 +4,7 @@ import { defineSecret } from 'firebase-functions/params'
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import * as admin from 'firebase-admin'
 import Stripe from 'stripe'
-import * as sgMail from '@sendgrid/mail'
+import sgMail from '@sendgrid/mail'
 import * as crypto from 'crypto'
 
 // Initialize Firebase Admin
@@ -37,7 +37,7 @@ function createEmailTemplate(content: string): string {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: left; margin-bottom: 30px;">
-        <img src="https://coeurs-a-corps.org/images/logo.png" 
+        <img src="https://www.coeur-a-corps.org/images/logo.png" 
              alt="Anne-Yvonne Thérapeute" 
              style="width: 120px; height: auto;"
         />
@@ -80,8 +80,8 @@ export const sendContactEmail = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://coeurs-a-corps.org',
-      'https://www.coeurs-a-corps.org'
+      'https://www.coeur-a-corps.org',
+      'https://www.coeur-a-corps.org'
     ],
     secrets: [sendgridApiKey, recipientEmail, senderEmail]
   }, 
@@ -176,53 +176,13 @@ export const sendContactEmail = onRequest(
   }
 )
 
-// Newsletter subscription endpoint
-export const addNewsletterSubscriber = onRequest(
-  { 
-    cors: [
-      'http://localhost:3000',
-      'https://coeurs-a-corps.org',
-      'https://www.coeurs-a-corps.org'
-    ]
-  }, 
-  async (request, response) => {
-    try {
-      if (request.method !== 'POST') {
-        response.status(405).json({ error: 'Method not allowed' })
-        return
-      }
-
-      const { email } = request.body
-      console.log('Newsletter subscription request for:', email)
-
-      if (!email) {
-        response.status(400).json({ error: 'Email is required' })
-        return
-      }
-
-      // Add to Firestore
-      const db = getFirestore()
-      await db.collection('newsletter').add({
-        email,
-        createdAt: new Date().toISOString(),
-        source: 'website'
-      })
-
-      response.status(200).json({ message: 'Successfully subscribed to newsletter' })
-    } catch (error) {
-      console.error('Error in newsletter subscription:', error)
-      response.status(500).json({ error: 'Failed to subscribe to newsletter' })
-    }
-  }
-)
-
 // Handle newsletter unsubscribe
 export const handleNewsletterUnsubscribe = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://coeurs-a-corps.org',
-      'https://www.coeurs-a-corps.org'
+      'https://www.coeur-a-corps.org',
+      'https://www.coeur-a-corps.org'
     ],
     secrets: [UNSUBSCRIBE_SECRET]
   }, 
@@ -334,17 +294,18 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
     try {
       const snapshot = event.data;
       if (!snapshot) {
-        console.log('No data associated with the event');
+        console.error('No data associated with the event');
         return;
       }
 
       const data = snapshot.data();
       if (!data || !data.email) {
-        console.log('No email found in the document');
+        console.error('No email found in the document. Data:', data);
         return;
       }
 
       const subscriberEmail = data.email;
+      console.log('Preparing welcome email for:', subscriberEmail);
 
       // Generate unsubscribe token
       const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET.value());
@@ -352,6 +313,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
 
       // Initialize SendGrid
       sgMail.setApiKey(sendgridApiKey.value());
+      console.log('SendGrid initialized with API key');
 
       // Configure SendGrid
       const emailContent = `
@@ -374,7 +336,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://coeurs-a-corps.org/capsules" 
+          <a href="https://www.coeur-a-corps.org/capsules" 
              style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
             Accéder aux Capsules
           </a>
@@ -407,13 +369,43 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         html: createEmailTemplate(emailContent)
       };
 
-      // Send email
-      await sgMail.send(msg);
-      console.log('Welcome email sent to:', subscriberEmail);
+      console.log('Sending welcome email to:', subscriberEmail);
+      
+      try {
+        await sgMail.send(msg);
+        console.log('Welcome email sent successfully to:', subscriberEmail);
+        
+        // Update document to mark email as sent
+        await snapshot.ref.update({
+          welcomeEmailSent: true,
+          welcomeEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('Document updated with email sent status');
+      } catch (error: unknown) {
+        console.error('SendGrid error:', error);
+        // Type assertion for SendGrid error
+        interface SendGridError {
+          response?: {
+            body?: unknown;
+            headers?: unknown;
+            statusCode?: number;
+          };
+        }
+        
+        const sendGridError = error as SendGridError;
+        if (sendGridError.response) {
+          console.error('SendGrid response:', {
+            body: sendGridError.response.body,
+            headers: sendGridError.response.headers,
+            status: sendGridError.response.statusCode
+          });
+        }
+        throw error;
+      }
 
     } catch (error) {
-      console.error('Error sending welcome email:', error);
-      throw new Error('Failed to send welcome email');
+      console.error('Error in sendNewsletterWelcomeEmail:', error);
+      throw new Error('Failed to send welcome email: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
 );
@@ -542,7 +534,7 @@ export const handleStripeWebhook = onRequest(
           subject: 'Votre billet pour le Festival de la Poésie',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <img src="https://coeurs-a-corps.org/images/logo.png" 
+              <img src="https://www.coeur-a-corps.org/images/logo.png" 
                    alt="Anne-Yvonne Thérapeute" 
                    style="width: 120px; height: auto; margin-bottom: 30px;"
               />
@@ -591,7 +583,7 @@ export const verifyTicketAccess = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://coeurs-a-corps.org'
+      'https://www.coeur-a-corps.org'
     ],
     secrets: [WHEREBY_LINK]
   },

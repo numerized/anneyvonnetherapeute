@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         subject: 'Votre billet pour le Festival de la Poésie',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <img src="https://coeurs-a-corps.org/images/logo.png" 
+            <img src="https://www.coeur-a-corps.org/images/logo.png" 
                  alt="Anne-Yvonne Thérapeute" 
                  style="width: 120px; height: auto; margin-bottom: 30px;"
             />
