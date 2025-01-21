@@ -9,7 +9,7 @@ interface RatingSection {
   [key: string]: string
 }
 
-export function EvaluationHandicapRelationnelPage() {
+export default function EvaluationHandicapRelationnelPage() {
   const [date] = useState(() => {
     const today = new Date()
     return today.toLocaleDateString('fr-FR', {
@@ -78,7 +78,7 @@ export function EvaluationHandicapRelationnelPage() {
 
             <div className="mb-12">
               <h3 className="text-xl font-bold mb-6">Section 1 : Relationnelle Sociale</h3>
-              
+　　 　 　 　
               <ul className="list-none space-y-8 mb-12">
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
@@ -255,7 +255,7 @@ export function EvaluationHandicapRelationnelPage() {
             {/* Section 2: Relations Intimes */}
             <div className="mb-12">
               <h3 className="text-xl font-bold mb-6">Section 2 : Relationnelle Intime et Amoureuse</h3>
-              
+　　 　 　 　
               <ul className="list-none space-y-8 mb-12">
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
@@ -462,8 +462,4 @@ export function EvaluationHandicapRelationnelPage() {
       </div>
     </main>
   )
-}
-
-export default function Page() {
-  return <EvaluationHandicapRelationnelPage />
 }

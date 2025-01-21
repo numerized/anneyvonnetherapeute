@@ -1,6 +1,8 @@
 'use client'
 
-import { RatingSection } from './types'
+interface RatingSection {
+  [key: string]: string
+}
 
 interface EvaluationResultsProps {
   socialRatings: RatingSection
