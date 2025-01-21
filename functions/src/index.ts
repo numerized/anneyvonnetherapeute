@@ -1,28 +1,23 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { onDocumentCreated } from 'firebase-functions/v2/firestore'
 import { defineSecret } from 'firebase-functions/params'
-import * as sgMail from '@sendgrid/mail'
-import { initializeApp } from 'firebase-admin/app'
-import { getFirestore } from 'firebase-admin/firestore'
-import * as crypto from 'crypto';
-import { FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore'
+import * as admin from 'firebase-admin'
+import Stripe from 'stripe'
+import sgMail from '@sendgrid/mail'
+import * as crypto from 'crypto'
 
 // Initialize Firebase Admin
-initializeApp()
+admin.initializeApp()
 
 // Define secrets
+const STRIPE_SECRET_KEY = defineSecret('STRIPE_SECRET_KEY')
+const STRIPE_WEBHOOK_SECRET = defineSecret('STRIPE_WEBHOOK_SECRET')
+const WHEREBY_LINK = defineSecret('WHEREBY_LINK')
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY')
-const recipientEmail = defineSecret('RECIPIENT_EMAIL')
 const senderEmail = defineSecret('SENDER_EMAIL')
 const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET')
-
-interface SendGridError extends Error {
-  response?: {
-    body: any;
-  };
-  code?: string;
-  statusCode?: number;
-}
+const recipientEmail = defineSecret('RECIPIENT_EMAIL')
 
 // Helper function to generate unsubscribe token
 function generateUnsubscribeToken(email: string, secret: string): string {
@@ -38,11 +33,11 @@ function verifyUnsubscribeToken(email: string, token: string, secret: string): b
 }
 
 // Helper function to create email template with logo
-function createEmailTemplate(content: string) {
+function createEmailTemplate(content: string): string {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: left; margin-bottom: 30px;">
-        <img src="https://anneyvonnetherapeute.vercel.app/images/logo.png" 
+        <img src="https://www.coeur-a-corps.org/images/logo.png" 
              alt="Anne-Yvonne Thérapeute" 
              style="width: 120px; height: auto;"
         />
@@ -52,12 +47,41 @@ function createEmailTemplate(content: string) {
   `;
 }
 
+// Ticket types and prices
+interface TicketPrice {
+  amount: number
+  name: string
+}
+
+interface TicketPrices {
+  standard: TicketPrice
+  vip: TicketPrice
+}
+
+type TicketType = keyof TicketPrices
+
+const TICKET_PRICES: TicketPrices = {
+  standard: {
+    amount: 4500, // 45 CHF in centimes
+    name: 'Festival de la Poésie - Accès Standard'
+  },
+  vip: {
+    amount: 8500, // 85 CHF in centimes
+    name: 'Festival de la Poésie - Pack VIP'
+  }
+}
+
+interface CreateCheckoutSessionData {
+  ticketType: TicketType
+  email: string
+}
+
 export const sendContactEmail = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://anneyvonnetherapeute.vercel.app',
-      'https://www.anneyvonnetherapeute.vercel.app'
+      'https://www.coeur-a-corps.org',
+      'https://www.coeur-a-corps.org'
     ],
     secrets: [sendgridApiKey, recipientEmail, senderEmail]
   }, 
@@ -107,7 +131,7 @@ export const sendContactEmail = onRequest(
         to: recipientEmail.value(),
         from: {
           email: senderEmail.value(),
-          name: 'Anne-Yvonne Thérapie'  // This should match your verified sender name in SendGrid
+          name: 'Anne-Yvonne Thérapeute'  // This should match your verified sender name in SendGrid
         },
         replyTo: email,
         subject: `Nouveau message de ${name}`,
@@ -127,13 +151,13 @@ export const sendContactEmail = onRequest(
       } catch (sendGridError) {
         console.error('SendGrid Error:', {
           error: sendGridError,
-          response: (sendGridError as SendGridError).response?.body,
-          statusCode: (sendGridError as SendGridError).statusCode
+          response: (sendGridError as any).response?.body,
+          statusCode: (sendGridError as any).statusCode
         })
         throw sendGridError
       }
     } catch (error) {
-      const sendGridError = error as SendGridError
+      const sendGridError = error as any
       console.error('Detailed error:', {
         message: sendGridError.message,
         code: sendGridError.code,
@@ -152,53 +176,13 @@ export const sendContactEmail = onRequest(
   }
 )
 
-// Newsletter subscription endpoint
-export const addNewsletterSubscriber = onRequest(
-  { 
-    cors: [
-      'http://localhost:3000',
-      'https://anneyvonnetherapeute.vercel.app',
-      'https://www.anneyvonnetherapeute.vercel.app'
-    ]
-  }, 
-  async (request, response) => {
-    try {
-      if (request.method !== 'POST') {
-        response.status(405).json({ error: 'Method not allowed' })
-        return
-      }
-
-      const { email } = request.body
-      console.log('Newsletter subscription request for:', email)
-
-      if (!email) {
-        response.status(400).json({ error: 'Email is required' })
-        return
-      }
-
-      // Add to Firestore
-      const db = getFirestore()
-      await db.collection('newsletter').add({
-        email,
-        createdAt: new Date().toISOString(),
-        source: 'website'
-      })
-
-      response.status(200).json({ message: 'Successfully subscribed to newsletter' })
-    } catch (error) {
-      console.error('Error in newsletter subscription:', error)
-      response.status(500).json({ error: 'Failed to subscribe to newsletter' })
-    }
-  }
-)
-
 // Handle newsletter unsubscribe
 export const handleNewsletterUnsubscribe = onRequest(
   { 
     cors: [
       'http://localhost:3000',
-      'https://anneyvonnetherapeute.vercel.app',
-      'https://www.anneyvonnetherapeute.vercel.app'
+      'https://www.coeur-a-corps.org',
+      'https://www.coeur-a-corps.org'
     ],
     secrets: [UNSUBSCRIBE_SECRET]
   }, 
@@ -306,24 +290,32 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
     document: 'newsletter/{documentId}',
     secrets: [sendgridApiKey, senderEmail, UNSUBSCRIBE_SECRET]
   },
-  async (event) => {
+  async (event: { data: admin.firestore.DocumentSnapshot | undefined }) => {
     try {
       const snapshot = event.data;
       if (!snapshot) {
-        console.log('No data associated with the event');
+        console.error('No data associated with the event');
         return;
       }
 
       const data = snapshot.data();
+      if (!data || !data.email) {
+        console.error('No email found in the document. Data:', data);
+        return;
+      }
+
       const subscriberEmail = data.email;
+      console.log('Preparing welcome email for:', subscriberEmail);
 
       // Generate unsubscribe token
       const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET.value());
       const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
 
-      // Configure SendGrid
+      // Initialize SendGrid
       sgMail.setApiKey(sendgridApiKey.value());
+      console.log('SendGrid initialized with API key');
 
+      // Configure SendGrid
       const emailContent = `
         <h1 style="color: #E8927C; margin-bottom: 20px;">Bienvenue !</h1>
         
@@ -344,7 +336,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://anneyvonnetherapeute.vercel.app/capsules" 
+          <a href="https://www.coeur-a-corps.org/capsules" 
              style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
             Accéder aux Capsules
           </a>
@@ -369,18 +361,257 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
       // Email template
       const msg = {
         to: subscriberEmail,
-        from: senderEmail.value(),
+        from: {
+          email: senderEmail.value(),
+          name: 'Anne-Yvonne Thérapeute'
+        },
         subject: 'Bienvenue à nos capsules audio - Anne-Yvonne Thérapeute',
         html: createEmailTemplate(emailContent)
       };
 
-      // Send email
-      await sgMail.send(msg);
-      console.log('Welcome email sent to:', subscriberEmail);
+      console.log('Sending welcome email to:', subscriberEmail);
+      
+      try {
+        await sgMail.send(msg);
+        console.log('Welcome email sent successfully to:', subscriberEmail);
+        
+        // Update document to mark email as sent
+        await snapshot.ref.update({
+          welcomeEmailSent: true,
+          welcomeEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        console.log('Document updated with email sent status');
+      } catch (error: unknown) {
+        console.error('SendGrid error:', error);
+        // Type assertion for SendGrid error
+        interface SendGridError {
+          response?: {
+            body?: unknown;
+            headers?: unknown;
+            statusCode?: number;
+          };
+        }
+        
+        const sendGridError = error as SendGridError;
+        if (sendGridError.response) {
+          console.error('SendGrid response:', {
+            body: sendGridError.response.body,
+            headers: sendGridError.response.headers,
+            status: sendGridError.response.statusCode
+          });
+        }
+        throw error;
+      }
 
     } catch (error) {
-      console.error('Error sending welcome email:', error);
-      throw new Error('Failed to send welcome email');
+      console.error('Error in sendNewsletterWelcomeEmail:', error);
+      throw new Error('Failed to send welcome email: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
 );
+
+export const createCheckoutSession = onRequest(
+  {
+    cors: true,
+    secrets: [STRIPE_SECRET_KEY],
+    timeoutSeconds: 60,
+    memory: '256MiB',
+    minInstances: 0,
+    maxInstances: 10,
+  },
+  async (req, res) => {
+    try {
+      // Initialize Stripe
+      const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        apiVersion: '2024-12-18.acacia'
+      })
+
+      const { ticketType, email } = req.body as CreateCheckoutSessionData
+
+      if (!ticketType || !email || !(ticketType in TICKET_PRICES)) {
+        res.status(400).json({ error: 'Invalid ticket type or missing email' })
+        return
+      }
+
+      const ticket = TICKET_PRICES[ticketType]
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'chf',
+              product_data: {
+                name: ticket.name,
+                description: ticketType === 'vip'
+                  ? 'Accès au festival + Q&A exclusive + enregistrement 30 jours'
+                  : 'Accès au festival en direct'
+              },
+              unit_amount: ticket.amount,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${req.headers.origin}/prochainement?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.origin}/prochainement?canceled=true`,
+        customer_email: email,
+        metadata: {
+          ticketType,
+          email,
+        },
+      })
+
+      res.json({ sessionId: session.id })
+    } catch (error) {
+      console.error('Error:', error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+)
+
+interface WebhookMetadata {
+  email: string
+  ticketType: TicketType
+}
+
+export const handleStripeWebhook = onRequest(
+  {
+    cors: true,
+    secrets: [STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, WHEREBY_LINK, sendgridApiKey, senderEmail],
+    timeoutSeconds: 60,
+    memory: '256MiB',
+    minInstances: 0,
+    maxInstances: 10,
+  },
+  async (req, res) => {
+    try {
+      // Initialize Stripe
+      const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        apiVersion: '2024-12-18.acacia'
+      })
+
+      // Initialize SendGrid
+      sgMail.setApiKey(sendgridApiKey.value())
+
+      const sig = req.headers['stripe-signature']
+      if (!sig || typeof sig !== 'string') {
+        res.status(400).send('Missing stripe-signature header')
+        return
+      }
+
+      const event = stripe.webhooks.constructEvent(
+        req.rawBody!,
+        sig,
+        STRIPE_WEBHOOK_SECRET.value()
+      )
+
+      if (event.type === 'checkout.session.completed') {
+        const session = event.data.object as Stripe.Checkout.Session
+        const metadata = session.metadata as WebhookMetadata | null
+
+        if (!metadata?.email || !metadata?.ticketType) {
+          throw new Error('Missing metadata in session')
+        }
+
+        // Store ticket information in Firestore
+        await getFirestore().collection('tickets').add({
+          email: metadata.email,
+          ticketType: metadata.ticketType,
+          purchaseDate: FieldValue.serverTimestamp(),
+          sessionId: session.id
+        })
+
+        // Send confirmation email
+        const isVip = metadata.ticketType === 'vip'
+        
+        await sgMail.send({
+          from: {
+            email: senderEmail.value(),
+            name: 'Anne-Yvonne Thérapeute'
+          },
+          to: metadata.email,
+          subject: 'Votre billet pour le Festival de la Poésie',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <img src="https://www.coeur-a-corps.org/images/logo.png" 
+                   alt="Anne-Yvonne Thérapeute" 
+                   style="width: 120px; height: auto; margin-bottom: 30px;"
+              />
+              <h2>Confirmation d'achat - Festival de la Poésie</h2>
+              <p>Merci pour votre achat ! Voici les détails de votre billet :</p>
+              <ul>
+                <li>Type de billet : ${isVip ? 'Pack VIP' : 'Accès Standard'}</li>
+                <li>Date : 15 Mars 2025</li>
+                <li>Heure : 19h00 - 22h00</li>
+              </ul>
+              <p>Voici votre lien d'accès au festival :</p>
+              <p><a href="${WHEREBY_LINK.value()}" 
+                    style="display: inline-block; padding: 12px 24px; background-color: #E76F51; color: white; text-decoration: none; border-radius: 25px;"
+              >
+                Accéder au festival
+              </a></p>
+              ${isVip ? `
+              <p>En tant que membre VIP, vous aurez accès à :</p>
+              <ul>
+                <li>Une session Q&R exclusive avec Anne Yvonne Racine</li>
+                <li>L'enregistrement de l'événement pendant 30 jours</li>
+              </ul>
+              ` : ''}
+              <p>Conservez précieusement cet email, il contient votre lien d'accès.</p>
+              <p style="color: #666; font-size: 14px; margin-top: 40px;">
+                Si vous avez des questions, n'hésitez pas à nous contacter.
+              </p>
+            </div>
+          `,
+        })
+      }
+
+      res.json({ received: true })
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).send(`Webhook Error: ${err.message}`)
+      } else {
+        res.status(400).send('Webhook Error: Unknown error occurred')
+      }
+    }
+  }
+)
+
+// Verify ticket access
+export const verifyTicketAccess = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://www.coeur-a-corps.org'
+    ],
+    secrets: [WHEREBY_LINK]
+  },
+  async (req, res) => {
+    try {
+      const { email } = req.body
+
+      if (!email) {
+        res.status(400).json({ error: 'Email is required' })
+        return
+      }
+
+      const db = getFirestore()
+      const ticketSnapshot = await db.collection('tickets')
+        .where('email', '==', email)
+        .where('used', '==', false)
+        .get()
+
+      if (ticketSnapshot.empty) {
+        res.status(404).json({ error: 'No valid ticket found' })
+        return
+      }
+
+      // Return access link
+      res.json({ accessLink: WHEREBY_LINK.value() })
+    } catch (error) {
+      console.error('Error verifying ticket:', error)
+      res.status(500).json({ error: 'Failed to verify ticket' })
+    }
+  }
+)

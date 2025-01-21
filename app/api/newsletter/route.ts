@@ -1,16 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getFirestore, collection, addDoc } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { app } from '@/lib/firebase'
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-};
 
 // Use the existing Firebase instance
 const db = getFirestore(app);
@@ -37,12 +27,13 @@ export async function POST(request: Request) {
     console.log('Adding email to newsletter collection:', email);
 
     try {
-      // Add to Firestore
+      // Add to Firestore using the same collection path as the Firebase function
       const newsletterRef = collection(db, 'newsletter');
       const docRef = await addDoc(newsletterRef, {
         email,
-        createdAt: new Date().toISOString(),
-        source: 'website'
+        createdAt: serverTimestamp(), // Use serverTimestamp instead of ISO string
+        source: 'website',
+        status: 'active' // Add status field
       });
 
       console.log('Successfully added document with ID:', docRef.id);
@@ -59,9 +50,9 @@ export async function POST(request: Request) {
       )
     }
   } catch (error) {
-    console.error('General error in newsletter subscription:', error);
+    console.error('Error in newsletter subscription:', error);
     return NextResponse.json(
-      { error: 'Failed to subscribe to newsletter: ' + (error instanceof Error ? error.message : 'Unknown error') },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
