@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
               {/* TODO Section */}
               <div className="mb-8">
-                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">À faire</h2>
+                <h2 className="text-4xl font-black tracking-tight mb-4" style={{ color: '#D9B70D' }}>À faire</h2>
                 <div className="space-y-4">
                   {/* Evaluation Item */}
                   <div className="flex items-start gap-3">
