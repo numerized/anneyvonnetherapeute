@@ -5,12 +5,8 @@ import Stripe from 'stripe'
 // Ticket types and prices
 const TICKET_PRICES = {
   standard: {
-    amount: 4500, // 45 CHF in centimes
-    name: 'Festival de la Poésie - Accès Standard'
-  },
-  vip: {
-    amount: 8500, // 85 CHF in centimes
-    name: 'Festival de la Poésie - Pack VIP'
+    amount: 11100, // 111 CHF in centimes
+    name: 'Formation - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
   }
 }
 
@@ -59,9 +55,7 @@ export async function POST(req: Request) {
             currency: 'chf',
             product_data: {
               name: price.name,
-              description: ticketType === 'vip'
-                ? 'Accès au festival + Q&A exclusive + enregistrement 30 jours'
-                : 'Accès au festival en direct'
+              description: 'Accès à la formation en direct'
             },
             unit_amount: price.amount,
           },
