@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
-import { SendGrid } from '@sendgrid/mail'
+import sgMail from '@sendgrid/mail'
 
 // Initialize SendGrid
-const sendgrid = new SendGrid(process.env.SENDGRID_API_KEY!)
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
 
 export async function POST(req: Request) {
   try {
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
       }
 
       try {
-        await sendgrid.send(msg)
+        await sgMail.send(msg)
       } catch (error) {
         console.error('Error sending email:', error)
         throw error
