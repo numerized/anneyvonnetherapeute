@@ -49,7 +49,10 @@ function createEmailTemplate(content: string): string {
 
 // Ticket types and prices
 interface TicketPrice {
-  amount: number
+  amount: {
+    chf: number
+    eur: number
+  }
   name: string
 }
 
@@ -58,10 +61,14 @@ interface TicketPrices {
 }
 
 type TicketType = keyof TicketPrices
+type Currency = 'chf' | 'eur'
 
 const TICKET_PRICES: TicketPrices = {
   standard: {
-    amount: 11100, // 111 CHF in centimes
+    amount: {
+      chf: 11100, // 111 CHF in centimes
+      eur: 11100  // 111 EUR in cents
+    },
     name: 'Formation - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
   }
 }
@@ -69,6 +76,7 @@ const TICKET_PRICES: TicketPrices = {
 interface CreateCheckoutSessionData {
   ticketType: TicketType
   email: string
+  currency: Currency
 }
 
 export const sendContactEmail = onRequest(
@@ -422,9 +430,9 @@ export const createCheckoutSession = onRequest(
         apiVersion: '2024-12-18.acacia'
       })
 
-      const { ticketType, email } = req.body as CreateCheckoutSessionData
+      const { ticketType, email, currency } = req.body as CreateCheckoutSessionData
 
-      if (!ticketType || !email || !(ticketType in TICKET_PRICES)) {
+      if (!ticketType || !email || !currency || !(ticketType in TICKET_PRICES)) {
         res.status(400).json({ error: 'Invalid ticket type or missing email' })
         return
       }
@@ -436,12 +444,12 @@ export const createCheckoutSession = onRequest(
         line_items: [
           {
             price_data: {
-              currency: 'chf',
+              currency: currency,
               product_data: {
                 name: ticket.name,
                 description: 'Formation - Mieux vivre l\'autre'
               },
-              unit_amount: ticket.amount,
+              unit_amount: ticket.amount[currency as Currency],
             },
             quantity: 1,
           },
@@ -453,6 +461,7 @@ export const createCheckoutSession = onRequest(
         metadata: {
           ticketType,
           email,
+          currency,
         },
       })
 
@@ -467,6 +476,7 @@ export const createCheckoutSession = onRequest(
 interface WebhookMetadata {
   email: string
   ticketType: TicketType
+  currency: Currency
 }
 
 export const handleStripeWebhook = onRequest(
@@ -505,7 +515,7 @@ export const handleStripeWebhook = onRequest(
         const session = event.data.object as Stripe.Checkout.Session
         const metadata = session.metadata as WebhookMetadata | null
 
-        if (!metadata?.email || !metadata?.ticketType) {
+        if (!metadata?.email || !metadata?.ticketType || !metadata?.currency) {
           throw new Error('Missing metadata in session')
         }
 
@@ -531,28 +541,37 @@ export const handleStripeWebhook = onRequest(
                    alt="Anne-Yvonne Thérapeute" 
                    style="width: 120px; height: auto; margin-bottom: 30px;"
               />
-              <h2>Confirmation d'achat - Formation</h2>
-              <p>Merci pour votre achat ! Voici les détails de votre formation :</p>
+              <h2>Confirmation d'inscription - Formation "Mieux vivre l'autre"</h2>
+              <p>Merci pour votre inscription ! Voici les détails de votre formation :</p>
+              
+              <h3>Formation</h3>
+              <p>"Mieux vivre l'autre : une formation pour élever la conscience relationnelle dans la diversité"<br/>
+              par Anne-Yvonne Racine (coeur-a-corps.org)</p>
+
+              <h3>Détails pratiques</h3>
               <ul>
-                <li>Formation : Mieux vivre l'autre | Anne-Yvonne Racine (coeur-a-corps.org)</li>
-                <li>Dates : 2 + 9 + 23 février 2025</li>
-                <li>Horaire : 19h-21.30h</li>
-                <li>Format : Whereby (sans inscriptions ni installation)</li>
+                <li><strong>Dates :</strong> 2 + 9 + 23 février 2025 (3 soirées incluses)</li>
+                <li><strong>Horaire :</strong> 19h-21h30</li>
+                <li><strong>Format :</strong> Formation en ligne via Whereby (sans inscription ni installation requise)</li>
+                <li><strong>Montant réglé :</strong> 111 ${metadata.currency.toUpperCase()} (${metadata.currency.toUpperCase() === 'CHF' ? 'Francs Suisses' : 'Euros'})</li>
               </ul>
-              <p>Voici votre lien d'accès à la formation :</p>
-              <p><a href="${WHEREBY_LINK.value()}" 
-                    style="display: inline-block; padding: 12px 24px; background-color: #E76F51; color: white; text-decoration: none; border-radius: 25px;"
-              >
-                Accéder à la formation
-              </a></p>
-              <p>Conservez précieusement cet email, il contient votre lien d'accès.</p>
-              <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
-                <p style="color: #666; font-size: 14px;">
-                  <strong>Contact et informations :</strong><br>
-                  Site web : <a href="https://coeur-a-corps.org" style="color: #E76F51;">coeur-a-corps.org</a><br>
-                  Email : <a href="mailto:a.ra@bluewin.ch" style="color: #E76F51;">a.ra@bluewin.ch</a>
-                </p>
-              </div>
+
+              <h3>Votre lien d'accès</h3>
+              <p>Voici votre lien pour rejoindre la formation :</p>
+              <p><a href="${WHEREBY_LINK.value()}" style="color: #E97451; text-decoration: underline;">${WHEREBY_LINK.value()}</a></p>
+              
+              <h3>À propos de la formation</h3>
+              <p>Cette formation en trois soirées vous guidera pour :</p>
+              <ul>
+                <li>Approfondir votre conscience de soi et valoriser votre essence unique</li>
+                <li>Explorer les dimensions supérieures de la communication</li>
+                <li>Tisser des liens d'âme à âme</li>
+              </ul>
+
+              <p>Pour toute question, n'hésitez pas à me contacter via coeur-a-corps.org</p>
+              
+              <p>Au plaisir de vous retrouver pour cette belle aventure !</p>
+              <p>Anne-Yvonne</p>
             </div>
           `,
         })
