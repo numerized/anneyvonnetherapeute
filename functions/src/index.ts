@@ -55,19 +55,14 @@ interface TicketPrice {
 
 interface TicketPrices {
   standard: TicketPrice
-  vip: TicketPrice
 }
 
 type TicketType = keyof TicketPrices
 
 const TICKET_PRICES: TicketPrices = {
   standard: {
-    amount: 4500, // 45 CHF in centimes
-    name: 'Festival de la Poésie - Accès Standard'
-  },
-  vip: {
-    amount: 8500, // 85 CHF in centimes
-    name: 'Festival de la Poésie - Pack VIP'
+    amount: 11100, // 111 CHF in centimes
+    name: 'Formation - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
   }
 }
 
@@ -443,9 +438,7 @@ export const createCheckoutSession = onRequest(
               currency: 'chf',
               product_data: {
                 name: ticket.name,
-                description: ticketType === 'vip'
-                  ? 'Accès au festival + Q&A exclusive + enregistrement 30 jours'
-                  : 'Accès au festival en direct'
+                description: 'Formation - Mieux vivre l\'autre'
               },
               unit_amount: ticket.amount,
             },
@@ -523,45 +516,41 @@ export const handleStripeWebhook = onRequest(
         })
 
         // Send confirmation email
-        const isVip = metadata.ticketType === 'vip'
-        
         await sgMail.send({
           from: {
             email: senderEmail.value(),
             name: 'Anne-Yvonne Thérapeute'
           },
           to: metadata.email,
-          subject: 'Votre billet pour le Festival de la Poésie',
+          subject: 'Votre billet pour la formation',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <img src="https://www.coeur-a-corps.org/images/logo.png" 
                    alt="Anne-Yvonne Thérapeute" 
                    style="width: 120px; height: auto; margin-bottom: 30px;"
               />
-              <h2>Confirmation d'achat - Festival de la Poésie</h2>
-              <p>Merci pour votre achat ! Voici les détails de votre billet :</p>
+              <h2>Confirmation d'achat - Formation</h2>
+              <p>Merci pour votre achat ! Voici les détails de votre formation :</p>
               <ul>
-                <li>Type de billet : ${isVip ? 'Pack VIP' : 'Accès Standard'}</li>
-                <li>Date : 15 Mars 2025</li>
-                <li>Heure : 19h00 - 22h00</li>
+                <li>Formation : Mieux vivre l'autre | Anne-Yvonne Racine (coeur-a-corps.org)</li>
+                <li>Dates : 2 + 9 + 23 février 2025</li>
+                <li>Horaire : 19h-21.30h</li>
+                <li>Format : Whereby (sans inscriptions ni installation)</li>
               </ul>
-              <p>Voici votre lien d'accès au festival :</p>
+              <p>Voici votre lien d'accès à la formation :</p>
               <p><a href="${WHEREBY_LINK.value()}" 
                     style="display: inline-block; padding: 12px 24px; background-color: #E76F51; color: white; text-decoration: none; border-radius: 25px;"
               >
-                Accéder au festival
+                Accéder à la formation
               </a></p>
-              ${isVip ? `
-              <p>En tant que membre VIP, vous aurez accès à :</p>
-              <ul>
-                <li>Une session Q&R exclusive avec Anne Yvonne Racine</li>
-                <li>L'enregistrement de l'événement pendant 30 jours</li>
-              </ul>
-              ` : ''}
               <p>Conservez précieusement cet email, il contient votre lien d'accès.</p>
-              <p style="color: #666; font-size: 14px; margin-top: 40px;">
-                Si vous avez des questions, n'hésitez pas à nous contacter.
-              </p>
+              <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #666; font-size: 14px;">
+                  <strong>Contact et informations :</strong><br>
+                  Site web : <a href="https://coeur-a-corps.org" style="color: #E76F51;">coeur-a-corps.org</a><br>
+                  Email : <a href="mailto:a.ra@bluewin.ch" style="color: #E76F51;">a.ra@bluewin.ch</a>
+                </p>
+              </div>
             </div>
           `,
         })

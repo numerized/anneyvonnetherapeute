@@ -49,68 +49,60 @@ export function ProchainementPage({ data, settings }: any) {
                 {/* Header */}
                 <div className="text-center mb-12">
                   <h2 className="text-4xl md:text-5xl font-light text-primary-cream mb-4">
-                    Festival de la Poésie
+                    Mieux vivre l'autre : une formation pour élever la conscience relationnelle dans la diversité
                   </h2>
-                  <p className="text-xl text-primary-coral italic mb-2">8e édition</p>
                   <p className="text-lg text-primary-cream/80">
-                    Intervention en direct sur Whereby par <span className="text-primary-coral">Anne Yvonne Racine</span>
+                    dim. 02 févr.  |  Whereby (sans inscriptions ni installation)
                   </p>
                 </div>
 
                 {/* Event Details */}
-                <div className="grid md:grid-cols-2 gap-8 mb-12">
-                  <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-8 mb-12 auto-rows-fr">
+                  <div>
                     <div className="bg-primary-forest/30 rounded-[24px] p-6">
                       <h3 className="text-xl font-light text-primary-cream mb-4">Détails de l'événement</h3>
                       <ul className="space-y-4 text-primary-cream/80">
                         <li className="flex items-start gap-2">
                           <span className="text-primary-coral">♦</span>
-                          <span>Date: 15 Mars 2025</span>
+                          <span>DATES INCLUES DANS LA RESERVATION</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="text-primary-coral">♦</span>
-                          <span>Heure: 19h00 - 22h00</span>
+                          <span>2 + 9 + 23 février 2025</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="text-primary-coral">♦</span>
-                          <span>Format: Diffusion en direct sur Whereby</span>
+                          <span>19h-21.30h</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary-coral">♦</span>
+                          <span>Format: Whereby (sans inscriptions ni installation)</span>
                         </li>
                       </ul>
                     </div>
                   </div>
 
-                  <div className="space-y-6">
+                  <div>
                     <div className="bg-primary-forest/30 rounded-[24px] p-6">
-                      <h3 className="text-xl font-light text-primary-cream mb-4">Tarifs</h3>
+                      <h3 className="text-xl font-light text-primary-cream mb-4">Tarif</h3>
                       <div className="space-y-4">
                         <div className="flex flex-col gap-2">
                           <div className="flex justify-between items-center text-primary-cream/80">
-                            <span>Accès standard</span>
-                            <span className="text-primary-coral font-bold">45 CHF</span>
+                            <span>Tarif unique</span>
+                            <span className="text-primary-coral font-bold">111 CHF/EUROS</span>
                           </div>
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleTicketPurchase('standard')}
-                            className="w-full bg-primary-coral/20 hover:bg-primary-coral/30 text-primary-cream rounded-full py-2 text-sm transition-colors"
-                          >
-                            Acheter
-                          </motion.button>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <div className="flex justify-between items-center text-primary-cream/80">
-                            <span>Pack VIP (places limitées)</span>
-                            <span className="text-primary-coral font-bold">85 CHF</span>
-                          </div>
-                          <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleTicketPurchase('vip')}
                             className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream rounded-full py-2 text-sm transition-colors"
                           >
-                            Acheter en VIP
+                            Réserver ma place
                           </motion.button>
                         </div>
+                        <p className="text-primary-cream/60 text-sm mt-4">
+                          L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -119,19 +111,64 @@ export function ProchainementPage({ data, settings }: any) {
                 {/* Description */}
                 <div className="bg-primary-forest/30 rounded-[24px] p-6 mb-12">
                   <h3 className="text-xl font-light text-primary-cream mb-4">À propos de l'événement</h3>
-                  <p className="text-primary-cream/80 mb-4">
-                    Rejoignez-nous pour une soirée exceptionnelle dédiée à la poésie et à l'expression artistique, 
-                    diffusée en direct par Anne Yvonne Racine. Cette 8e édition du Festival de la Poésie promet 
-                    d'être une célébration unique de la créativité et de l'émotion à travers les mots.
-                  </p>
-                  <p className="text-primary-cream/80 mb-4">
-                    Profitez de cette expérience immersive depuis le confort de votre domicile grâce à notre 
-                    diffusion en direct sur Whereby. Interagissez en temps réel et plongez dans l'univers poétique.
-                  </p>
-                  <p className="text-primary-cream/80">
-                    Le pack VIP inclut : un accès prioritaire, une session de questions-réponses exclusive avec 
-                    Anne Yvonne Racine après le spectacle, et l'accès à l'enregistrement de l'événement pendant 30 jours.
-                  </p>
+                  <div className="space-y-4 text-primary-cream/80">
+                    <p>
+                      Dans un monde où les interactions sociales sont souvent façonnées par des normes implicites, les personnes multipotentielles et neurodivergentes se distinguent par leur conscience élevée et leur perception unique de la réalité.
+                    </p>
+                    <p>
+                      Leur richesse cognitive, leur hypersensibilité et leur pensée divergente sont des manifestations d'une conscience éveillée, offrant à la fois des opportunités d'évolution personnelle et collective, mais aussi des défis relationnels.
+                    </p>
+                    <p>
+                      Cette mini-formation vise à offrir des outils concrets pour naviguer dans cet univers relationnel complexe avec une conscience accrue.
+                    </p>
+                    <p>
+                      Que vous soyez multipotentiel(le), doté(e) d'une curiosité insatiable et d'une quête constante d'expansion de conscience, ou neurodivergent(e), avec des modes de perception et de communication transcendant les normes conventionnelles, cette formation vous guidera pour :
+                    </p>
+                    
+                    <ul className="space-y-4 pl-6">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>Approfondir votre conscience de soi et valoriser votre essence unique : Identifier vos besoins relationnels profonds, établir des limites saines, et cultiver des liens alignés avec votre vérité intérieure.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>Explorer les dimensions supérieures de la communication : Développer des stratégies pour transmuter les incompréhensions liées à votre fonctionnement atypique en opportunités d'éveil mutuel, favorisant des échanges authentiques et élevés.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>Tisser des liens d'âme à âme : Découvrir comment vos différences sont en réalité des portails vers une compréhension plus profonde de l'humanité, enrichissant vos relations personnelles et professionnelles d'une dimension spirituelle.</span>
+                      </li>
+                    </ul>
+
+                    <p>
+                      En célébrant la diversité cognitive et émotionnelle comme une expression de l'évolution de la conscience collective, cette formation vise à construire des relations plus harmonieuses et éveillées.
+                    </p>
+                    <p>
+                      Elle offre un espace sacré où chacun peut apprendre à incarner pleinement sa fréquence unique tout en honorant celle des autres. Cette formation met l'accent sur l'éveil de la conscience de soi, la compréhension mutuelle à un niveau supérieur, et le développement d'une communication qui transcende les différences apparentes.
+                    </p>
+                    <p>
+                      Elle répond aux défis spécifiques rencontrés par les âmes multipotentielles (comme le besoin d'expansion constante ou la gestion de l'hypersensibilité) et les êtres neurodivergents (comme la navigation dans les subtilités des attentes sociales ou l'expression de besoins non conventionnels), tout en célébrant leurs dons uniques comme des catalyseurs d'évolution collective.
+                    </p>
+                    <p>
+                      En seulement deux soirées et un Q/R, vous pourrez amorcer un changement durable dans votre façon d'interagir avec les autres et avec vous-même. C'est un investissement précieux pour votre bien-être émotionnel et votre épanouissement personnel.
+                    </p>
+                    <p className="text-primary-coral font-bold">
+                      Inscrivez-vous dès maintenant pour réserver votre place et commencer votre voyage vers des relations plus conscientes et épanouissantes !
+                    </p>
+                    <p className="text-sm text-primary-cream/60">
+                       Le prix comprend les trois soirées de formation. Le lien vous sera envoyé dès le payement reçu.
+                    </p>
+                  </div>
+                  <div className="mt-8 flex justify-center">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleTicketPurchase('standard')}
+                      className="bg-primary-coral hover:bg-primary-rust text-primary-cream rounded-full py-3 px-8 text-lg transition-colors w-full max-w-md"
+                    >
+                      Réserver ma place
+                    </motion.button>
+                  </div>
                 </div>
               </div>
             </div>
