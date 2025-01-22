@@ -1,94 +1,103 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
-import sgMail from '@sendgrid/mail'
+import { SendGrid } from '@sendgrid/mail'
 
 // Initialize SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
+const sendgrid = new SendGrid(process.env.SENDGRID_API_KEY!)
 
 export async function POST(req: Request) {
-  const body = await req.text()
-  const headersList = await headers()
-  const sig = headersList.get('stripe-signature')
-
-  let event: Stripe.Event
-
   try {
     // Initialize Stripe inside the handler
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      //@ts-ignore
       apiVersion: '2024-12-18.acacia'
     })
 
-    event = stripe.webhooks.constructEvent(
+    const body = await req.text()
+    const sig = req.headers.get('stripe-signature')
+
+    if (!sig) {
+      return NextResponse.json({ error: 'No signature' }, { status: 400 })
+    }
+
+    const event = stripe.webhooks.constructEvent(
       body,
-      sig!,
+      sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     )
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object as Stripe.Checkout.Session
+      const metadata = session.metadata as { email: string; ticketType: string; currency: string } | null
+
+      if (!metadata?.email || !metadata?.ticketType || !metadata?.currency) {
+        throw new Error('Missing metadata in session')
+      }
+
+      // Send confirmation email
+      const msg = {
+        to: metadata.email,
+        from: {
+          email: 'a.ra@bluewin.ch',
+          name: 'Anne-Yvonne Racine'
+        },
+        subject: 'Confirmation de votre inscription à la formation',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <img src="https://coeur-a-corps.org/images/logo.png" 
+                   alt="Anne-Yvonne Thérapeute" 
+                   style="width: 120px; height: auto; margin-bottom: 30px;"
+              />
+              <h2>Confirmation d'inscription - Formation "Mieux vivre l'autre"</h2>
+              <p>Merci pour votre inscription ! Voici les détails de votre formation :</p>
+              
+              <h3>Formation</h3>
+              <p>"Mieux vivre l'autre : une formation pour élever la conscience relationnelle dans la diversité"<br/>
+              par Anne-Yvonne Racine (coeur-a-corps.org)</p>
+
+              <h3>Détails pratiques</h3>
+              <ul>
+                <li><strong>Dates :</strong> 2 + 9 + 23 février 2025 (3 soirées incluses)</li>
+                <li><strong>Horaire :</strong> 19h-21h30</li>
+                <li><strong>Format :</strong> Formation en ligne via Whereby (sans inscription ni installation requise)</li>
+                <li><strong>Montant réglé :</strong> 111 ${metadata.currency.toUpperCase()} (${metadata.currency.toUpperCase() === 'CHF' ? 'Francs Suisses' : 'Euros'})</li>
+              </ul>
+
+              <h3>Votre lien d'accès</h3>
+              <p>Voici votre lien pour rejoindre la formation :</p>
+              <p><a href="${process.env.WHEREBY_LINK}" style="color: #E97451; text-decoration: underline;">${process.env.WHEREBY_LINK}</a></p>
+              
+              <h3>À propos de la formation</h3>
+              <p>Cette formation en trois soirées vous guidera pour :</p>
+              <ul>
+                <li>Approfondir votre conscience de soi et valoriser votre essence unique</li>
+                <li>Explorer les dimensions supérieures de la communication</li>
+                <li>Tisser des liens d'âme à âme</li>
+              </ul>
+
+              <p>Pour toute question, n'hésitez pas à me contacter via coeur-a-corps.org</p>
+              
+              <p>Au plaisir de vous retrouver pour cette belle aventure !</p>
+              <p>Anne-Yvonne</p>
+          </div>
+        `
+      }
+
+      try {
+        await sendgrid.send(msg)
+      } catch (error) {
+        console.error('Error sending email:', error)
+        throw error
+      }
+    }
+
+    return NextResponse.json({ received: true })
   } catch (err) {
-    console.error('Webhook signature verification failed:', err)
+    console.error('Webhook error:', err)
     return NextResponse.json(
-      { error: 'Webhook signature verification failed' },
+      { error: 'Webhook handler failed' },
       { status: 400 }
     )
   }
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session
-
-    try {
-      // Send confirmation email
-      const isVip = session.metadata?.ticketType === 'vip'
-      
-      await sgMail.send({
-        from: {
-          email: process.env.SENDER_EMAIL!,
-          name: 'Anne-Yvonne Thérapeute'
-        },
-        to: session.metadata?.email!,
-        subject: 'Votre billet pour le Festival de la Poésie',
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <img src="https://www.coeur-a-corps.org/images/logo.png" 
-                 alt="Anne-Yvonne Thérapeute" 
-                 style="width: 120px; height: auto; margin-bottom: 30px;"
-            />
-            <h2>Confirmation d'achat - Festival de la Poésie</h2>
-            <p>Merci pour votre achat ! Voici les détails de votre billet :</p>
-            <ul>
-              <li>Type de billet : ${isVip ? 'Pack VIP' : 'Accès Standard'}</li>
-              <li>Date : 15 Mars 2025</li>
-              <li>Heure : 19h00 - 22h00</li>
-            </ul>
-            <p>Voici votre lien d'accès au festival :</p>
-            <p><a href="${process.env.WHEREBY_LINK}" 
-                  style="display: inline-block; padding: 12px 24px; background-color: #E76F51; color: white; text-decoration: none; border-radius: 25px;"
-            >
-              Accéder au festival
-            </a></p>
-            ${isVip ? `
-            <p>En tant que membre VIP, vous aurez accès à :</p>
-            <ul>
-              <li>Une session Q&R exclusive avec Anne Yvonne Racine</li>
-              <li>L'enregistrement de l'événement pendant 30 jours</li>
-            </ul>
-            ` : ''}
-            <p>Conservez précieusement cet email, il contient votre lien d'accès.</p>
-            <p style="color: #666; font-size: 14px; margin-top: 40px;">
-              Si vous avez des questions, n'hésitez pas à nous contacter.
-            </p>
-          </div>
-        `,
-      })
-
-      return NextResponse.json({ received: true })
-    } catch (error) {
-      console.error('Error processing webhook:', error)
-      return NextResponse.json(
-        { error: 'Webhook processing failed' },
-        { status: 500 }
-      )
-    }
-  }
-
-  return NextResponse.json({ received: true })
 }
