@@ -14,6 +14,7 @@ export async function POST(req: Request) {
 
     // Initialize Stripe inside the handler
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      //@ts-ignore
       apiVersion: '2024-12-18.acacia',
     })
 

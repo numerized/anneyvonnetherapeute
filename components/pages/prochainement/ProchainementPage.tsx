@@ -2,7 +2,7 @@
 
 import { ProchainementHero } from './ProchainementHero'
 import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { PurchaseTicket } from './PurchaseTicket'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-hot-toast'
@@ -11,6 +11,8 @@ import PaymentSuccess from './PaymentSuccess'
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
 
@@ -28,6 +30,17 @@ export function ProchainementPage({ data, settings }: any) {
   const handleTicketPurchase = (type: 'standard' | 'vip') => {
     setSelectedTicketType(type)
     setShowPurchaseModal(true)
+  }
+
+  const toggleVideo = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+      } else {
+        videoRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
   }
 
   if (!data?.hero) {
@@ -48,12 +61,48 @@ export function ProchainementPage({ data, settings }: any) {
               <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[32px] p-8 md:p-12">
                 {/* Header */}
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl md:text-5xl font-light text-primary-cream mb-4">
-                    Mieux vivre l'autre : une formation pour élever la conscience relationnelle dans la diversité
+                  <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
+                    Mieux vivre l'autre
                   </h2>
-                  <p className="text-lg text-primary-cream/80">
-                    dim. 02 févr.  |  Whereby (sans inscriptions ni installation)
+                  <p className="text-lg md:text-xl text-primary-cream/80">
+                    Une formation pour élever la conscience relationnelle dans la diversité
                   </p>
+                </div>
+
+                {/* Whereby Video */}
+                <div className="w-full max-w-4xl mx-auto px-4 py-8">
+                  <div className="relative aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl group">
+                    <video 
+                      ref={videoRef}
+                      className="w-full h-full object-cover"
+                      poster="/images/whereby-poster.png"
+                      onClick={toggleVideo}
+                    >
+                      <source src="/videos/whereby.mp4" type="video/mp4" />
+                      Votre navigateur ne supporte pas la lecture de vidéos.
+                    </video>
+                    
+                    {/* Frosted Play/Pause Button */}
+                    <div 
+                      className={`absolute top-4 left-4 transition-opacity duration-300 
+                        ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
+                      onClick={toggleVideo}
+                    >
+                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md cursor-pointer 
+                                    flex items-center justify-center
+                                    transform transition-transform duration-300 hover:scale-110">
+                        {isPlaying ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="white" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="white" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653Z" />
+                          </svg>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Event Details */}
@@ -173,6 +222,8 @@ export function ProchainementPage({ data, settings }: any) {
               </div>
             </div>
           </section>
+
+          
 
           {/* Purchase Modal */}
           {showPurchaseModal && selectedTicketType && (

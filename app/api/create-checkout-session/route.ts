@@ -5,7 +5,10 @@ import Stripe from 'stripe'
 // Ticket types and prices
 const TICKET_PRICES = {
   standard: {
-    amount: 11100, // 111 CHF in centimes
+    amount: {
+      chf: 11100, // 111 CHF in centimes
+      eur: 11100  // 111 EUR in cents
+    },
     name: 'Formation - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
   }
 }
@@ -19,16 +22,16 @@ export async function POST(req: Request) {
     })
 
     const body = await req.json()
-    const { ticketType, email } = body
-    console.log('Request data:', { ticketType, email })
+    const { ticketType, email, currency } = body
+    console.log('Request data:', { ticketType, email, currency })
 
     const headersList = await headers()
     const origin = headersList.get('origin')
     console.log('Origin from headers:', origin)
 
-    if (!ticketType || !email) {
+    if (!ticketType || !email || !currency) {
       return NextResponse.json(
-        { error: 'Ticket type and email are required' },
+        { error: 'Ticket type, email, and currency are required' },
         { status: 400 }
       )
     }
@@ -43,6 +46,7 @@ export async function POST(req: Request) {
 
     // Initialize Stripe inside the handler
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      //@ts-ignore
       apiVersion: '2024-12-18.acacia'
     })
 
@@ -52,12 +56,12 @@ export async function POST(req: Request) {
       line_items: [
         {
           price_data: {
-            currency: 'chf',
+            currency: currency.toLowerCase(),
             product_data: {
               name: price.name,
               description: 'Accès à la formation en direct'
             },
-            unit_amount: price.amount,
+            unit_amount: price.amount[currency.toLowerCase() as keyof typeof price.amount],
           },
           quantity: 1,
         },
@@ -69,6 +73,7 @@ export async function POST(req: Request) {
       metadata: {
         ticketType,
         email,
+        currency: currency.toLowerCase()
       }
     })
 

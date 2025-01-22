@@ -14,6 +14,7 @@ interface PurchaseTicketProps {
 
 export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
   const [email, setEmail] = useState('')
+  const [currency, setCurrency] = useState('eur')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -32,6 +33,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
         body: JSON.stringify({
           ticketType,
           email,
+          currency,
         }),
       })
 
@@ -69,7 +71,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
         </button>
 
         <h3 className="text-2xl font-light text-primary-cream mb-6">
-          {ticketType === 'vip' ? 'Pack VIP' : 'Accès Standard'}
+          Réserver ma place
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -86,6 +88,42 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
               className="w-full px-4 py-2 rounded-full bg-primary-dark/30 text-primary-cream border border-primary-cream/20 focus:border-primary-coral outline-none"
               placeholder="votre@email.com"
             />
+          </div>
+
+          <div>
+            <label className="block text-primary-cream/80 mb-3">
+              Devise de paiement
+            </label>
+            <div className="flex gap-8 justify-center">
+              <label className="flex flex-col items-center gap-3 cursor-pointer group">
+                <div className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}>
+                  <input
+                    type="radio"
+                    name="currency"
+                    value="eur"
+                    checked={currency === 'eur'}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="sr-only"
+                  />
+                  <span className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}>EUR</span>
+                </div>
+                <span className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}>Euros</span>
+              </label>
+              <label className="flex flex-col items-center gap-3 cursor-pointer group">
+                <div className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'chf' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}>
+                  <input
+                    type="radio"
+                    name="currency"
+                    value="chf"
+                    checked={currency === 'chf'}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="sr-only"
+                  />
+                  <span className={`text-2xl font-bold transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}>CHF</span>
+                </div>
+                <span className={`text-sm transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/60'}`}>Francs Suisses</span>
+              </label>
+            </div>
           </div>
 
           {error && (
