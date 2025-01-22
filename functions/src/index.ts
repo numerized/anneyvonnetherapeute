@@ -418,6 +418,7 @@ export const createCheckoutSession = onRequest(
     try {
       // Initialize Stripe
       const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        //@ts-ignore
         apiVersion: '2024-12-18.acacia'
       })
 
@@ -481,6 +482,7 @@ export const handleStripeWebhook = onRequest(
     try {
       // Initialize Stripe
       const stripe = new Stripe(STRIPE_SECRET_KEY.value(), {
+        //@ts-ignore
         apiVersion: '2024-12-18.acacia'
       })
 
