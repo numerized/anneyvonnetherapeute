@@ -22,8 +22,8 @@ export async function POST(req: Request) {
     })
 
     const body = await req.json()
-    const { ticketType, email, currency } = body
-    console.log('Request data:', { ticketType, email, currency })
+    const { ticketType, email, currency, discount, couponCode } = body
+    console.log('Request data:', { ticketType, email, currency, discount, couponCode })
 
     const headersList = await headers()
     const origin = headersList.get('origin')
@@ -44,6 +44,10 @@ export async function POST(req: Request) {
       )
     }
 
+    // Calculate discounted amount if applicable
+    const baseAmount = price.amount[currency.toLowerCase() as keyof typeof price.amount]
+    const finalAmount = discount ? Math.round(baseAmount * (1 - discount / 100)) : baseAmount
+
     // Initialize Stripe inside the handler
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       //@ts-ignore
@@ -59,9 +63,9 @@ export async function POST(req: Request) {
             currency: currency.toLowerCase(),
             product_data: {
               name: price.name,
-              description: 'Accès à la formation en direct'
+              description: discount > 0 ? `Accès à la formation en direct (Code promo : ${couponCode})` : 'Accès à la formation en direct'
             },
-            unit_amount: price.amount[currency.toLowerCase() as keyof typeof price.amount],
+            unit_amount: finalAmount,
           },
           quantity: 1,
         },
@@ -73,7 +77,9 @@ export async function POST(req: Request) {
       metadata: {
         ticketType,
         email,
-        currency: currency.toLowerCase()
+        currency: currency.toLowerCase(),
+        discount: discount ? discount.toString() : '0',
+        couponCode: couponCode || ''
       }
     })
 
