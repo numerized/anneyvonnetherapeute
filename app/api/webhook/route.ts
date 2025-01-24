@@ -27,13 +27,61 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     )
 
+    console.log('Webhook event received:', event.type)
+
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session
-      const metadata = session.metadata as { email: string; ticketType: string; currency: string } | null
+      console.log('Session data:', {
+        id: session.id,
+        amountTotal: session.amount_total,
+        metadata: session.metadata
+      })
+
+      const metadata = session.metadata as { 
+        email: string; 
+        ticketType: string; 
+        currency: string;
+        discount: string;
+      } | null
 
       if (!metadata?.email || !metadata?.ticketType || !metadata?.currency) {
         throw new Error('Missing metadata in session')
       }
+
+      // Get the actual amount paid from the session
+      const amountTotal = session.amount_total || 0
+      const finalPrice = amountTotal / 100 // Convert from cents to whole currency units
+      const discountApplied = parseInt(metadata.discount || '0')
+
+      console.log('Preparing email with:', {
+        finalPrice,
+        currency: metadata.currency,
+        discountApplied
+      })
+
+      // Create calendar links for each date
+      const eventDates = [
+        { date: '2025-02-02', startTime: '19:00', endTime: '21:30' },
+        { date: '2025-02-09', startTime: '19:00', endTime: '21:30' },
+        { date: '2025-02-23', startTime: '19:00', endTime: '21:30' }
+      ]
+
+      const createGoogleCalendarLink = (date: string, startTime: string, endTime: string) => {
+        const start = `${date}T${startTime}:00+01:00`
+        const end = `${date}T${endTime}:00+01:00`
+        const text = encodeURIComponent('Formation "Mieux vivre l\'autre"')
+        const details = encodeURIComponent('Formation en ligne via Whereby\n\nLien de connexion: ' + process.env.WHEREBY_LINK)
+        const location = encodeURIComponent('En ligne via Whereby')
+        return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start.replace(/[-:+]/g, '')}/${end.replace(/[-:+]/g, '')}&details=${details}&location=${location}`
+      }
+
+      // Create calendar links for each date
+      const calendarLinks = eventDates.map(({ date, startTime, endTime }) => ({
+        date,
+        googleLink: createGoogleCalendarLink(date, startTime, endTime)
+      }))
+
+      console.log('Calendar links created:', calendarLinks)
 
       // Send confirmation email
       const msg = {
@@ -61,7 +109,19 @@ export async function POST(req: Request) {
                 <li><strong>Dates :</strong> 2 + 9 + 23 février 2025 (3 soirées incluses)</li>
                 <li><strong>Horaire :</strong> 19h-21h30</li>
                 <li><strong>Format :</strong> Formation en ligne via Whereby (sans inscription ni installation requise)</li>
-                <li><strong>Montant réglé :</strong> 111 ${metadata.currency.toUpperCase()} (${metadata.currency.toUpperCase() === 'CHF' ? 'Francs Suisses' : 'Euros'})</li>
+                <li><strong>Montant réglé :</strong> ${finalPrice} ${metadata.currency.toUpperCase()} ${discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''}</li>
+              </ul>
+
+              <h3>Ajouter les dates à votre calendrier</h3>
+              <ul style="list-style: none; padding-left: 0;">
+                ${calendarLinks.map(({ date, googleLink }) => `
+                  <li style="margin-bottom: 10px;">
+                    <strong>${new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</strong> - 
+                    <a href="${googleLink}" target="_blank" style="color: #E97451; text-decoration: underline;">
+                      Ajouter à Google Calendar
+                    </a>
+                  </li>
+                `).join('')}
               </ul>
 
               <h3>Votre lien d'accès</h3>
@@ -85,9 +145,18 @@ export async function POST(req: Request) {
       }
 
       try {
+        console.log('Attempting to send email to:', metadata.email)
         await sgMail.send(msg)
+        console.log('Email sent successfully')
       } catch (error) {
         console.error('Error sending email:', error)
+        // Log the full error details
+        if (error.response) {
+          console.error('SendGrid error details:', {
+            body: error.response.body,
+            statusCode: error.response.statusCode
+          })
+        }
         throw error
       }
     }

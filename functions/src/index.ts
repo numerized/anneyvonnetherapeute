@@ -477,6 +477,7 @@ interface WebhookMetadata {
   email: string
   ticketType: TicketType
   currency: Currency
+  discount?: string
 }
 
 export const handleStripeWebhook = onRequest(
@@ -519,6 +520,33 @@ export const handleStripeWebhook = onRequest(
           throw new Error('Missing metadata in session')
         }
 
+        // Get the actual amount paid from the session
+        const amountTotal = session.amount_total || 0
+        const finalPrice = amountTotal / 100 // Convert from cents to whole currency units
+        const discountApplied = parseInt(metadata.discount || '0')
+
+        // Create calendar links for each date
+        const eventDates = [
+          { date: '2025-02-02', startTime: '19:00', endTime: '21:30' },
+          { date: '2025-02-09', startTime: '19:00', endTime: '21:30' },
+          { date: '2025-02-23', startTime: '19:00', endTime: '21:30' }
+        ]
+
+        const createGoogleCalendarLink = (date: string, startTime: string, endTime: string) => {
+          const start = `${date}T${startTime}:00+01:00`
+          const end = `${date}T${endTime}:00+01:00`
+          const text = encodeURIComponent('Formation "Mieux vivre l\'autre"')
+          const details = encodeURIComponent('Formation en ligne via Whereby\n\nLien de connexion: ' + WHEREBY_LINK.value())
+          const location = encodeURIComponent('En ligne via Whereby')
+          return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start.replace(/[-:+]/g, '')}/${end.replace(/[-:+]/g, '')}&details=${details}&location=${location}`
+        }
+
+        // Create calendar links for each date
+        const calendarLinks = eventDates.map(({ date, startTime, endTime }) => ({
+          date,
+          googleLink: createGoogleCalendarLink(date, startTime, endTime)
+        }))
+
         // Store ticket information in Firestore
         await getFirestore().collection('tickets').add({
           email: metadata.email,
@@ -531,13 +559,13 @@ export const handleStripeWebhook = onRequest(
         await sgMail.send({
           from: {
             email: senderEmail.value(),
-            name: 'Anne-Yvonne Thérapeute'
+            name: 'Anne-Yvonne Racine'
           },
           to: metadata.email,
-          subject: 'Votre billet pour la formation',
+          subject: 'Confirmation de votre inscription à la formation',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <img src="https://www.coeur-a-corps.org/images/logo.png" 
+              <img src="https://coeur-a-corps.org/images/logo.png" 
                    alt="Anne-Yvonne Thérapeute" 
                    style="width: 120px; height: auto; margin-bottom: 30px;"
               />
@@ -553,13 +581,25 @@ export const handleStripeWebhook = onRequest(
                 <li><strong>Dates :</strong> 2 + 9 + 23 février 2025 (3 soirées incluses)</li>
                 <li><strong>Horaire :</strong> 19h-21h30</li>
                 <li><strong>Format :</strong> Formation en ligne via Whereby (sans inscription ni installation requise)</li>
-                <li><strong>Montant réglé :</strong> 111 ${metadata.currency.toUpperCase()} (${metadata.currency.toUpperCase() === 'CHF' ? 'Francs Suisses' : 'Euros'})</li>
+                <li><strong>Montant réglé :</strong> ${finalPrice} ${metadata.currency.toUpperCase()} ${discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''}</li>
+              </ul>
+
+              <h3>Ajouter les dates à votre calendrier</h3>
+              <ul style="list-style: none; padding-left: 0;">
+                ${calendarLinks.map(({ date, googleLink }) => `
+                  <li style="margin-bottom: 10px;">
+                    <strong>${new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</strong> - 
+                    <a href="${googleLink}" target="_blank" style="color: #E97451; text-decoration: underline;">
+                      Ajouter à Google Calendar
+                    </a>
+                  </li>
+                `).join('')}
               </ul>
 
               <h3>Votre lien d'accès</h3>
               <p>Voici votre lien pour rejoindre la formation :</p>
               <p><a href="${WHEREBY_LINK.value()}" style="color: #E97451; text-decoration: underline;">${WHEREBY_LINK.value()}</a></p>
-              
+　　 　 　 　
               <h3>À propos de la formation</h3>
               <p>Cette formation en trois soirées vous guidera pour :</p>
               <ul>
@@ -569,7 +609,7 @@ export const handleStripeWebhook = onRequest(
               </ul>
 
               <p>Pour toute question, n'hésitez pas à me contacter via coeur-a-corps.org</p>
-              
+　　 　 　 　
               <p>Au plaisir de vous retrouver pour cette belle aventure !</p>
               <p>Anne-Yvonne</p>
             </div>
@@ -586,7 +626,7 @@ export const handleStripeWebhook = onRequest(
       }
     }
   }
-)
+);
 
 // Verify ticket access
 export const verifyTicketAccess = onRequest(
