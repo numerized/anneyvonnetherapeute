@@ -24,16 +24,8 @@ export function ProchainementHero({ hero, data }: HeroProps) {
     return img && typeof img === 'object' && img.asset && '_ref' in img.asset;
   }
 
-  // Generate image URLs
-  const logoUrl = (() => {
-    const builder = urlFor(data?.logo)
-    return builder?.url() ?? null
-  })()
-
-  const imageUrl = (() => {
-    const builder = urlFor(hero?.image)
-    return builder?.width(1920).height(1080).url() ?? null
-  })()
+  const logoAsset = data?.logo?.asset
+  const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
 
   return (
     <section 
@@ -47,24 +39,22 @@ export function ProchainementHero({ hero, data }: HeroProps) {
           className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10" 
           aria-hidden="true"
         />
-        {imageUrl && (
-          <Image 
-            src={imageUrl}
-            alt={hero?.image?.alt || 'Hero background'}
-            className="w-full h-full object-cover"
-            fill
-            priority
-            sizes="100vw"
-          />
-        )}
+        <Image 
+          src="/images/soon-back.jpg"
+          alt="Prochainement background"
+          fill
+          className="object-cover"
+          priority
+          quality={100}
+        />
       </div>
 
-      {/* Mobile Logo */}
+      {/* Mobile Logo and Login */}
       <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
           <Image 
             src={logoUrl}
-            alt={data.logo?.alt || "Logo"}
+            alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
             className="h-20 w-auto"
             width={300}
             height={300}

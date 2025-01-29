@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { CheckSquare, Square, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { ZenClickButton } from '@/components/ZenClickButton';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -87,13 +88,16 @@ export default function DashboardPage() {
               Bienvenue, {user.email} dans votre espace personnel.
             </p>
           </div>
-          <Button
-            variant="outline"
-            onClick={handleSignOut}
-            className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
-          >
-            Se déconnecter
-          </Button>
+          <div className="flex items-center gap-4">
+            <ZenClickButton />
+            <Button
+              variant="outline"
+              onClick={handleSignOut}
+              className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
+            >
+              Se déconnecter
+            </Button>
+          </div>
         </div>
 
         {/* Dashboard Cards */}
