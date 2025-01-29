@@ -7,6 +7,7 @@ import { createWebinarEmailTemplate, createCoachingEmailTemplate } from '@/lib/e
 // Initialize Stripe only if we have an API key
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+    //@ts-ignore
       apiVersion: '2023-10-16'
     })
   : null
