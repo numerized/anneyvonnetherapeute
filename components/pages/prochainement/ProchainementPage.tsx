@@ -16,6 +16,7 @@ export function ProchainementPage({ data, settings }: any) {
   const [currentImage, setCurrentImage] = useState<'tempoffer' | 'flyer'>('tempoffer')
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
+  const isCanceled = searchParams.get('canceled') === 'true'
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -123,24 +124,22 @@ export function ProchainementPage({ data, settings }: any) {
                   </div>
                 </div>
 
-                <div>
-                  <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
-                    <div className="space-y-4">
-                      <div className="flex flex-col gap-2">
-                        <div className="flex justify-between items-center text-primary-cream/80">
-                          <span>Tarif unique</span>
-                          <span className="text-primary-coral font-bold">999 EUROS/CHF</span>
+                <div className="flex-grow">
+                  <div className="h-full flex items-center justify-center">
+                    <div className="text-center">
+                      {isCanceled ? (
+                        <div className="space-y-4">
+                          <div className="text-2xl line-through text-primary-cream/60">999 EUROS/CHF</div>
+                          <div className="text-3xl text-primary-coral font-semibold">899 EUROS/CHF</div>
+                          <div className="bg-primary-coral/20 rounded-lg py-2 px-6 inline-block">
+                            <span className="text-primary-coral font-semibold">COEUR180</span>
+                            <span className="ml-2">-10%</span>
+                          </div>
                         </div>
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleTicketPurchase('standard')}
-                          className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream rounded-full py-2 text-sm transition-colors"
-                        >
-                          Réserver ma place
-                        </motion.button>
-                      </div>
-                      <p className="text-primary-cream/60 text-sm mt-4">
+                      ) : (
+                        <div className="text-3xl">999 EUROS/CHF</div>
+                      )}
+                      <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
                         L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
                       </p>
                     </div>
@@ -208,6 +207,7 @@ export function ProchainementPage({ data, settings }: any) {
                 setShowPurchaseModal(false)
                 setSelectedTicketType(null)
               }}
+              defaultCouponCode={isCanceled ? 'COEUR180' : undefined}
             />
           )}
         </>
