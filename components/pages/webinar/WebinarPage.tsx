@@ -1,20 +1,40 @@
 'use client'
 
-import { WebinarHero } from './WebinarHero'
 import { motion } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
-import { PurchaseTicket } from './PurchaseTicket'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-hot-toast'
+
+import { WebinarHero } from './WebinarHero'
+import { PurchaseTicket } from './PurchaseTicket'
 import PaymentSuccess from './PaymentSuccess'
 
-export function WebinarPage({ data, settings }: any) {
+interface Settings {
+  title?: string
+  description?: string
+  logo?: string
+  // Add other settings fields as needed
+}
+
+interface WebinarData {
+  hero: {
+    title: string
+    subtitle: string
+  }
+}
+
+interface WebinarPageProps {
+  data: WebinarData
+  settings: Settings
+}
+
+export function WebinarPage({ data, settings }: WebinarPageProps) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
-  const success = searchParams.get('success')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     // Check for successful payment
@@ -43,13 +63,34 @@ export function WebinarPage({ data, settings }: any) {
     }
   }
 
-  if (!data?.hero) {
-    return null
+  // Add validation for required data
+  if (!data?.hero?.title || !settings) {
+    console.error('Missing required data:', { data, settings })
+    setIsLoading(true)
+    return (
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="text-center text-white p-8">
+          <h1 className="text-3xl mb-4">Contenu en cours de chargement</h1>
+          <p>Merci de patienter quelques instants...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="text-center text-white p-8">
+          <h1 className="text-3xl mb-4">Contenu en cours de chargement</h1>
+          <p>Merci de patienter quelques instants...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <main className="flex-auto">
-      {success === 'true' ? (
+      {searchParams.get('success') === 'true' ? (
         <PaymentSuccess />
       ) : (
         <>
