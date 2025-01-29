@@ -77,13 +77,12 @@ export default function EvaluationHandicapRelationnelPage() {
             </p>
 
             <div className="mb-12">
-              <h3 className="text-xl font-bold mb-6">Section 1 : Relationnelle Sociale</h3>
-　　 　 　 　
+              <h3 className="text-xl font-bold mb-6 text-primary-forest">Section 1 : Relationnelle Sociale</h3>
               <ul className="list-none space-y-8 mb-12">
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Autonomie décisionnelle</span>
+                      <span className="block font-medium text-lg text-primary-forest">Autonomie décisionnelle</span>
                       <span className="text-sm text-gray-500 block">0 : Je suis incapable de prendre des décisions sans l'aval des autres.</span>
                       <span className="text-sm text-gray-500 block">10 : Je prends toutes mes décisions de manière totalement indépendante.</span>
                     </div>
@@ -100,7 +99,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Gestion du temps personnel</span>
+                      <span className="block font-medium text-lg text-primary-forest">Gestion du temps personnel</span>
                       <span className="text-sm text-gray-500 block">0 : Je consacre tout mon temps aux autres, sans moments pour moi.</span>
                       <span className="text-sm text-gray-500 block">10 : Je gère mon temps de manière totalement indépendante.</span>
                     </div>
@@ -117,7 +116,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Expression des opinions personnelles</span>
+                      <span className="block font-medium text-lg text-primary-forest">Expression des opinions personnelles</span>
                       <span className="text-sm text-gray-500 block">0 : Je n'exprime jamais mes opinions par peur de déplaire.</span>
                       <span className="text-sm text-gray-500 block">10 : J'exprime toujours mes opinions, sans tenir compte de l'impact sur les autres.</span>
                     </div>
@@ -134,7 +133,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Capacité à établir des limites</span>
+                      <span className="block font-medium text-lg text-primary-forest">Capacité à établir des limites</span>
                       <span className="text-sm text-gray-500 block">0 : Je suis incapable de dire non ou d'établir des limites dans mes relations.</span>
                       <span className="text-sm text-gray-500 block">10 : J'établis des limites strictes dans toutes mes interactions, sans flexibilité.</span>
                     </div>
@@ -151,7 +150,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Gestion de la solitude</span>
+                      <span className="block font-medium text-lg text-primary-forest">Gestion de la solitude</span>
                       <span className="text-sm text-gray-500 block">0 : Je suis incapable de rester seul, même pour de courtes périodes.</span>
                       <span className="text-sm text-gray-500 block">10 : Je préfère toujours être seul et évite toute interaction sociale.</span>
                     </div>
@@ -168,7 +167,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Indépendance émotionnelle</span>
+                      <span className="block font-medium text-lg text-primary-forest">Indépendance émotionnelle</span>
                       <span className="text-sm text-gray-500 block">0 : Mon bien-être émotionnel dépend entièrement des autres.</span>
                       <span className="text-sm text-gray-500 block">10 : Je suis totalement détaché émotionnellement des autres.</span>
                     </div>
@@ -185,7 +184,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Autonomie dans les activités quotidiennes</span>
+                      <span className="block font-medium text-lg text-primary-forest">Autonomie dans les activités quotidiennes</span>
                       <span className="text-sm text-gray-500 block">0 : J'ai besoin de l'aide ou de l'approbation des autres pour toutes mes activités.</span>
                       <span className="text-sm text-gray-500 block">10 : Je réalise toutes mes activités de manière totalement indépendante.</span>
                     </div>
@@ -202,7 +201,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Gestion des conflits sociaux</span>
+                      <span className="block font-medium text-lg text-primary-forest">Gestion des conflits sociaux</span>
                       <span className="text-sm text-gray-500 block">0 : J'évite tout conflit pour préserver mes relations, même à mon détriment.</span>
                       <span className="text-sm text-gray-500 block">10 : Je gère les conflits de manière unilatérale, sans chercher de compromis.</span>
                     </div>
@@ -219,7 +218,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Indépendance financière</span>
+                      <span className="block font-medium text-lg text-primary-forest">Indépendance financière</span>
                       <span className="text-sm text-gray-500 block">0 : Je dépends entièrement des autres pour mes finances.</span>
                       <span className="text-sm text-gray-500 block">10 : Je suis totalement indépendant(e) financièrement.</span>
                     </div>
@@ -236,7 +235,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Prise d'initiatives dans les interactions sociales</span>
+                      <span className="block font-medium text-lg text-primary-forest">Prise d'initiatives dans les interactions sociales</span>
                       <span className="text-sm text-gray-500 block">0 : J'attends toujours que les autres prennent l'initiative.</span>
                       <span className="text-sm text-gray-500 block">10 : Je prends toutes les initiatives sans demander l'avis des autres.</span>
                     </div>
@@ -254,13 +253,12 @@ export default function EvaluationHandicapRelationnelPage() {
 
             {/* Section 2: Relations Intimes */}
             <div className="mb-12">
-              <h3 className="text-xl font-bold mb-6">Section 2 : Relationnelle Intime et Amoureuse</h3>
-　　 　 　 　
+              <h3 className="text-xl font-bold mb-6 text-primary-forest">Section 2 : Relationnelle Intime et Amoureuse</h3>
               <ul className="list-none space-y-8 mb-12">
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Autonomie décisionnelle dans la relation</span>
+                      <span className="block font-medium text-lg text-primary-forest">Autonomie décisionnelle dans la relation</span>
                       <span className="text-sm text-gray-500 block">0 : Je suis incapable de prendre des décisions sans l'avis de mon/mes partenaire(s).</span>
                       <span className="text-sm text-gray-500 block">10 : Je prends toutes mes décisions sans tenir compte de l'avis de l'autre.</span>
                     </div>
@@ -277,7 +275,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Gestion du temps partagé</span>
+                      <span className="block font-medium text-lg text-primary-forest">Gestion du temps partagé</span>
                       <span className="text-sm text-gray-500 block">0 : Je consacre tout mon temps à mon/mes partenaire(s), sans moment pour moi.</span>
                       <span className="text-sm text-gray-500 block">10 : Je privilégie toujours mon propre emploi du temps.</span>
                     </div>
@@ -294,7 +292,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Expression des besoins émotionnels</span>
+                      <span className="block font-medium text-lg text-primary-forest">Expression des besoins émotionnels</span>
                       <span className="text-sm text-gray-500 block">0 : Je n'exprime jamais mes besoins émotionnels par peur de déranger.</span>
                       <span className="text-sm text-gray-500 block">10 : J'exprime mes besoins sans prendre en compte les limites de l'autre.</span>
                     </div>
@@ -311,7 +309,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Capacité à poser des limites dans la relation</span>
+                      <span className="block font-medium text-lg text-primary-forest">Capacité à poser des limites dans la relation</span>
                       <span className="text-sm text-gray-500 block">0 : Je suis incapable de poser des limites ou de dire non.</span>
                       <span className="text-sm text-gray-500 block">10 : Je pose des limites strictes et inflexibles.</span>
                     </div>
@@ -328,7 +326,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Gestion de l'attachement</span>
+                      <span className="block font-medium text-lg text-primary-forest">Gestion de l'attachement</span>
                       <span className="text-sm text-gray-500 block">0 : Je me sens totalement perdu(e) lorsque je suis loin de mon/mes partenaire(s).</span>
                       <span className="text-sm text-gray-500 block">10 : Je reste émotionnellement distant(e) et évite tout attachement.</span>
                     </div>
@@ -345,7 +343,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Indépendance émotionnelle dans la relation</span>
+                      <span className="block font-medium text-lg text-primary-forest">Indépendance émotionnelle dans la relation</span>
                       <span className="text-sm text-gray-500 block">0 : Mon bien-être émotionnel dépend entièrement de mon/mes partenaire(s).</span>
                       <span className="text-sm text-gray-500 block">10 : Je suis totalement insensible aux émotions de l'autre.</span>
                     </div>
@@ -362,7 +360,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Partage des responsabilités</span>
+                      <span className="block font-medium text-lg text-primary-forest">Partage des responsabilités</span>
                       <span className="text-sm text-gray-500 block">0 : J'attends que mon/mes partenaire(s) gèrent tous les aspects de la relation.</span>
                       <span className="text-sm text-gray-500 block">10 : Je m'occupe de tout, refusant toute aide de l'autre.</span>
                     </div>
@@ -379,7 +377,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Gestion des conflits relationnels</span>
+                      <span className="block font-medium text-lg text-primary-forest">Gestion des conflits relationnels</span>
                       <span className="text-sm text-gray-500 block">0 : J'évite systématiquement les conflits par crainte de nuire à la relation.</span>
                       <span className="text-sm text-gray-500 block">10 : Je traite les conflits de manière unilatérale, sans discussion.</span>
                     </div>
@@ -396,7 +394,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Intimité physique et affective</span>
+                      <span className="block font-medium text-lg text-primary-forest">Intimité physique et affective</span>
                       <span className="text-sm text-gray-500 block">0 : Je n'ose pas exprimer mes désirs ou besoins intimes.</span>
                       <span className="text-sm text-gray-500 block">10 : J'impose toujours mes désirs sans tenir compte du consentement.</span>
                     </div>
@@ -413,7 +411,7 @@ export default function EvaluationHandicapRelationnelPage() {
                 <li className="rating-item">
                   <div className="flex items-center justify-between mb-2">
                     <div className="space-y-1 flex-1 mr-4">
-                      <span className="block font-medium">Vision commune</span>
+                      <span className="block font-medium text-lg text-primary-forest">Vision commune</span>
                       <span className="text-sm text-gray-500 block">0 : Je me conforme toujours aux attentes de mon/mes partenaire(s).</span>
                       <span className="text-sm text-gray-500 block">10 : Je n'intègre jamais les attentes de l'autre dans mes projets.</span>
                     </div>
