@@ -3,7 +3,6 @@ import { IBM_Plex_Mono, PT_Serif, Montserrat, Aleo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from "sonner"
-import { ZenClickButton } from '@/components/ZenClickButton'
 import './globals.css'
 
 const aleo = Aleo({
@@ -54,7 +53,6 @@ export default function RootLayout({
     >
       <body className="font-montserrat antialiased">
         {children}
-        <ZenClickButton />
         <Toaster position="bottom-right" richColors closeButton />
         <Analytics />
         <SpeedInsights />
