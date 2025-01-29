@@ -80,19 +80,21 @@ export function ProchainementHero({ hero, data }: HeroProps) {
                 </div>
               )}
               {hero?.title && (
-                <motion.h1 
-                  id="hero-title"
-                  className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-black mb-2"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {hero.title}
-                </motion.h1>
+                <div className="text-[12px] sm:text-[14px] md:text-xl lg:text-2xl">
+                  <motion.h1 
+                    id="hero-title"
+                    className="text-primary-cream font-black mb-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {hero.title}
+                  </motion.h1>
+                </div>
               )}
               {hero?.subtitle && (
                 <motion.p 
-                  className="text-xl text-primary-cream/80 mb-4"
+                  className="text-sm text-primary-cream/80 mb-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
