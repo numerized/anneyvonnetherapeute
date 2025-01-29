@@ -19,4 +19,4 @@ export default defineCliConfig({
     basePath: './sanity'
   },
   studioHost: 'anneyvonnelanding'
-})
+} as any)

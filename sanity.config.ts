@@ -44,6 +44,10 @@ export default defineConfig({
       timeline,
     ],
   },
+  api: {
+    projectId,
+    dataset,
+  },
   plugins: [
     structureTool({
       structure: pageStructure([home, settings]),
@@ -64,4 +68,8 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion }),
   ],
+  cors: {
+    allowedOrigins: ['https://www.coeur-a-corps.org', 'http://localhost:3000'],
+    allowCredentials: true
+  }
 })
