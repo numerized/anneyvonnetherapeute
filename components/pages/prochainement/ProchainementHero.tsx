@@ -19,6 +19,13 @@ export function ProchainementHero({ hero, data }: HeroProps) {
     setIsClient(true)
   }, [])
 
+  const scrollToOffer = () => {
+    const offerSection = document.getElementById('offer-section')
+    if (offerSection) {
+      offerSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   // Type guard function
   const isValidImage = (img: any): img is { asset: { _ref: string } } => {
     return img && typeof img === 'object' && img.asset && '_ref' in img.asset;
@@ -88,7 +95,7 @@ export function ProchainementHero({ hero, data }: HeroProps) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    {hero.title}
+                    CŒUR À CORPS
                   </motion.h1>
                 </div>
               )}
@@ -102,20 +109,21 @@ export function ProchainementHero({ hero, data }: HeroProps) {
                   {hero.subtitle}
                 </motion.p>
               )}
-              {hero?.ctaButton && (
-                <motion.div 
-                  className="mt-8"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
+              
+              {/* CTA Button */}
+              <motion.div
+                className="mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <button
+                  onClick={scrollToOffer}
+                  className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200"
                 >
-                  <div
-                    className="inline-block bg-primary-coral text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold text-sm md:text-base cursor-default"
-                  >
-                    PROCHAINEMENT
-                  </div>
-                </motion.div>
-              )}
+                  Découvrir l'offre
+                </button>
+              </motion.div>
             </div>
           </div>
         </div>
