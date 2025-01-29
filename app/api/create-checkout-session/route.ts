@@ -26,6 +26,9 @@ const TICKET_PRICES = {
   }
 }
 
+// Test coupon code for 99% discount
+const TEST_COUPON = 'TEST180YYY'
+
 export async function POST(req: Request) {
   try {
     // Log environment variables (without exposing sensitive data)
@@ -49,26 +52,33 @@ export async function POST(req: Request) {
       )
     }
 
-    const productConfig = TICKET_PRICES[ticketType as keyof typeof TICKET_PRICES]?.[productType]
-    if (!productConfig) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('Missing Stripe secret key')
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2023-10-16',
+    })
+
+    const priceData = TICKET_PRICES[ticketType as keyof typeof TICKET_PRICES]?.[productType as keyof (typeof TICKET_PRICES)['standard']]
+    if (!priceData) {
       return NextResponse.json(
         { error: 'Invalid ticket type or product type' },
         { status: 400 }
       )
     }
 
-    // Get the appropriate amount based on whether there's a discount
-    const finalAmount = hasDiscount 
-      ? productConfig.discountedAmount?.[currency.toLowerCase() as keyof typeof productConfig.amount] 
-      : productConfig.amount[currency.toLowerCase() as keyof typeof productConfig.amount]
+    const amount = hasDiscount ? priceData.discountedAmount[currency.toLowerCase()] : priceData.amount[currency.toLowerCase()]
+    
+    let finalAmount = amount
+    let discountMessage = hasDiscount ? 'Early bird discount applied' : ''
 
-    // Initialize Stripe inside the handler
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      //@ts-ignore
-      apiVersion: '2024-12-18.acacia'
-    })
+    // Apply test coupon if provided
+    if (couponCode === TEST_COUPON) {
+      finalAmount = 100 // 1 EUR/CHF in cents
+      discountMessage = 'Test discount (1 EUR/CHF)'
+    }
 
-    // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -76,8 +86,8 @@ export async function POST(req: Request) {
           price_data: {
             currency: currency.toLowerCase(),
             product_data: {
-              name: productConfig.name,
-              description: hasDiscount ? `Accès à la formation en direct (Code promo : ${couponCode})` : 'Accès à la formation en direct'
+              name: priceData.name,
+              description: `${discountMessage}`,
             },
             unit_amount: finalAmount,
           },
@@ -85,22 +95,20 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}/${productType}?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/${productType}?success=true`,
       cancel_url: `${origin}/${productType}?canceled=true`,
       customer_email: email,
       metadata: {
         ticketType,
-        email,
-        currency: currency.toLowerCase(),
+        productType,
         hasDiscount: hasDiscount ? 'true' : 'false',
-        couponCode: couponCode || '',
-        productType
+        testCoupon: couponCode === TEST_COUPON ? 'true' : 'false'
       }
     })
 
     return NextResponse.json({ sessionId: session.id })
-  } catch (err) {
-    console.error('Error creating checkout session:', err)
+  } catch (error) {
+    console.error('Checkout session error:', error)
     return NextResponse.json(
       { error: 'Error creating checkout session' },
       { status: 500 }
