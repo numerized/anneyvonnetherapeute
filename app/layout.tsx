@@ -33,12 +33,8 @@ export const metadata: Metadata = {
   title: 'Anne-Yvonne Thérapeute',
   description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
   icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/images/logo.png', type: 'image/png' }
-    ],
-    apple: { url: '/images/logo.png', type: 'image/png' }
-  },
+    icon: '/images/logo.png'
+  }
 }
 
 export default function RootLayout({
@@ -49,8 +45,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${serif.variable} ${mono.variable} ${montserrat.variable} ${aleo.variable}`}
+      className={`${serif.variable} ${montserrat.variable} ${mono.variable} ${aleo.variable}`}
     >
+      <head>
+        <link rel="icon" href="/images/logo.png" type="image/png" />
+      </head>
       <body className="font-montserrat antialiased">
         {children}
         <Toaster position="bottom-right" richColors closeButton />

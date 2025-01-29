@@ -1,26 +1,26 @@
 'use client'
 
 import { ProchainementHero } from './ProchainementHero'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import { PurchaseTicket } from './PurchaseTicket'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import PaymentSuccess from './PaymentSuccess'
 import Image from 'next/image'
+import { Stats } from '@/components/shared/Stats'
 
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
+  const [currentImage, setCurrentImage] = useState<'tempoffer' | 'flyer'>('tempoffer')
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
 
   useEffect(() => {
-    // Check for successful payment
     if (searchParams.get('success') === 'true') {
       toast.success('Paiement réussi ! Vous recevrez un email avec les détails d\'accès.')
     }
-    // Check for canceled payment
     if (searchParams.get('canceled') === 'true') {
       toast.error('Le paiement a été annulé.')
     }
@@ -31,9 +31,20 @@ export function ProchainementPage({ data, settings }: any) {
     setShowPurchaseModal(true)
   }
 
+  const toggleImage = () => {
+    setCurrentImage(current => current === 'tempoffer' ? 'flyer' : 'tempoffer')
+  }
+
   if (!data?.hero) {
     return null
   }
+
+  const statsItems = [
+    { value: '95%', label: 'Taux de satisfaction client' },
+    { value: '500+', label: 'Couples accompagnés' },
+    { value: '20', label: 'Années d\'expérience' },
+    { value: '85%', label: 'Amélioration des relations' }
+  ]
 
   return (
     <main className="flex-auto">
@@ -57,21 +68,34 @@ export function ProchainementPage({ data, settings }: any) {
                 </div>
               </div>
               
-              {/* Offer Image */}
-              <div className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden">
-                <Image
-                  src="/images/tempoffer.webp"
-                  alt="Offre temporaire"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+              {/* Offer Image with Animation */}
+              <div 
+                id="offer-section"
+                className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
+                onClick={toggleImage}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentImage}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={`/images/${currentImage}.webp`}
+                      alt={currentImage === 'tempoffer' ? 'Offre temporaire' : 'Flyer de la formation'}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
-              
-
               {/* Event Details and Price Grid */}
-              <div className="grid md:grid-cols-2 gap-8 mb-12 auto-rows-fr">
+              <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
                 <div>
                   <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
                     <ul className="space-y-4 text-primary-cream/80 m-0">
@@ -125,7 +149,7 @@ export function ProchainementPage({ data, settings }: any) {
               </div>
 
               {/* Rest of the content... */}
-              <div className="bg-primary-forest rounded-[32px] p-8 mb-12 shadow-lg">
+              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
                 <h2 className="text-2xl font-medium text-primary-coral mb-6">
                   Explorez vos relations sous un nouveau prisme
                 </h2>
@@ -168,6 +192,11 @@ export function ProchainementPage({ data, settings }: any) {
                   </p>
                 </div>
               </div>
+              {/* Stats Section */}
+              <Stats
+                title="Une approche unique de la thérapie relationnelle"
+                items={statsItems}
+              />
             </div>
           </section>
 

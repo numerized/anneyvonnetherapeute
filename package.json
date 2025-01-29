@@ -3,11 +3,12 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next",
+    "dev": "cross-env NODE_ENV=development next dev",
+    "dev:prod": "cross-env NODE_ENV=production next dev",
     "format": "npx prettier --write . --ignore-path .gitignore",
     "lint": "next lint .",
     "lint:fix": "npm run format && npm run lint -- --fix",
-    "start": "next start",
+    "start": "cross-env NODE_ENV=production next start",
     "type-check": "tsc --noEmit"
   },
   "prettier": {
@@ -66,6 +67,7 @@
     "@types/node": "^22.10.0",
     "@types/react": "19.0.2",
     "autoprefixer": "10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "8.57.1",
     "eslint-config-next": "^15.1.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
