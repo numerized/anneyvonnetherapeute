@@ -79,7 +79,7 @@ export function ProchainementPage({ data, settings }: any) {
               
 
               {/* Event Details and Price Grid */}
-              <div className="grid md:grid-cols-2 gap-8 mb-12 auto-rows-fr">
+              <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
                 <div>
                   <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
                     <ul className="space-y-4 text-primary-cream/80 m-0">
@@ -135,7 +135,7 @@ export function ProchainementPage({ data, settings }: any) {
               
 
               {/* Rest of the content... */}
-              <div className="bg-primary-forest rounded-[32px] p-8 mb-12 shadow-lg">
+              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
                 <h2 className="text-2xl font-medium text-primary-coral mb-6">
                   Explorez vos relations sous un nouveau prisme
                 </h2>
