@@ -16,4 +16,6 @@ export const client = createClient({
     enabled: true,
     studioUrl: '/studio',
   },
+  token: process.env.SANITY_API_TOKEN,
+  withCredentials: true,
 })

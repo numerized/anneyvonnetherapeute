@@ -53,7 +53,7 @@ export function ProchainementPage({ data, settings }: any) {
         <PaymentSuccess />
       ) : (
         <>
-          <ProchainementHero hero={data.hero} data={settings} />
+          <ProchainementHero hero={data.hero} data={settings} onShowPurchase={() => setShowPurchaseModal(true)} />
           
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
@@ -70,30 +70,32 @@ export function ProchainementPage({ data, settings }: any) {
               </div>
               
               {/* Offer Image with Animation */}
-              <div 
-                id="offer-section"
-                className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
-                onClick={toggleImage}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentImage}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute inset-0"
-                  >
-                    <Image
-                      src={`/images/${currentImage}.webp`}
-                      alt={currentImage === 'tempoffer' ? 'Offre temporaire' : 'Flyer de la formation'}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+              {!isCanceled && (
+                <div 
+                  id="offer-section"
+                  className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
+                  onClick={toggleImage}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentImage}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute inset-0"
+                    >
+                      <Image
+                        src={`/images/${currentImage}.webp`}
+                        alt={currentImage === 'tempoffer' ? 'Offre temporaire' : 'Flyer de la formation'}
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              )}
 
               {/* Event Details and Price Grid */}
               <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
@@ -142,6 +144,12 @@ export function ProchainementPage({ data, settings }: any) {
                       <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
                         L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
                       </p>
+                      <button
+                        onClick={() => setShowPurchaseModal(true)}
+                        className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
+                      >
+                        {isCanceled ? 'Profiter de l\'offre -10%' : 'Réserver ma place'}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -200,13 +208,10 @@ export function ProchainementPage({ data, settings }: any) {
           </section>
 
           {/* Purchase Modal */}
-          {showPurchaseModal && selectedTicketType && (
-            <PurchaseTicket
-              ticketType={selectedTicketType}
-              onClose={() => {
-                setShowPurchaseModal(false)
-                setSelectedTicketType(null)
-              }}
+          {showPurchaseModal && (
+            <PurchaseTicket 
+              ticketType="standard"
+              onClose={() => setShowPurchaseModal(false)}
               defaultCouponCode={isCanceled ? 'COEUR180' : undefined}
             />
           )}
