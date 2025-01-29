@@ -6,14 +6,22 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useSearchParams } from 'next/navigation'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
   data: any
+  onShowPurchase?: () => void
 }
 
-export function ProchainementHero({ hero, data }: HeroProps) {
+export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   const [isClient, setIsClient] = useState(false)
+  const searchParams = useSearchParams()
+  const isCanceled = searchParams.get('canceled') === 'true'
+
+  if (isCanceled) {
+    return null
+  }
 
   useEffect(() => {
     setIsClient(true)
@@ -118,7 +126,12 @@ export function ProchainementHero({ hero, data }: HeroProps) {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <button
-                  onClick={scrollToOffer}
+                  onClick={() => {
+                    scrollToOffer()
+                    if (onShowPurchase) {
+                      onShowPurchase()
+                    }
+                  }}
                   className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200"
                 >
                   Découvrir l'offre
