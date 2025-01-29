@@ -23,12 +23,17 @@ export function PurchaseTicket({ ticketType, onClose, defaultCouponCode }: Purch
 
   const basePrice = 999
   const discountedPrice = 899
-  const finalPrice = hasDiscount ? discountedPrice : basePrice
+  const testPrice = 1 // 1 EUR/CHF for test purchases
+  
+  const getDisplayPrice = () => {
+    if (couponCode === 'TEST180YYY') return testPrice
+    return hasDiscount ? discountedPrice : basePrice
+  }
 
   const handleCouponChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const code = e.target.value.toUpperCase()
     setCouponCode(code)
-    setHasDiscount(code === 'COEUR180')
+    setHasDiscount(code === 'COEUR180' || code === 'TEST180YYY')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -152,7 +157,8 @@ export function PurchaseTicket({ ticketType, onClose, defaultCouponCode }: Purch
               />
               {hasDiscount && (
                 <p className="mt-2 text-primary-coral">
-                  Code promo appliqué : {discountedPrice} {currency.toUpperCase()}
+                  Code promo appliqué : {getDisplayPrice()} {currency.toUpperCase()}
+                  {couponCode === 'TEST180YYY' ? ' (Test 1 EUR/CHF)' : ' (Early bird -10%)'}
                 </p>
               )}
             </div>
@@ -166,7 +172,7 @@ export function PurchaseTicket({ ticketType, onClose, defaultCouponCode }: Purch
                   </span>
                 )}
                 <span className="text-2xl font-bold text-primary-coral">
-                  {finalPrice} {currency.toUpperCase()}
+                  {getDisplayPrice()} {currency.toUpperCase()}
                 </span>
               </div>
             </div>
