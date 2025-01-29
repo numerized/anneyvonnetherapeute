@@ -123,123 +123,168 @@ const createWebinarEmailTemplate = (finalPrice: number, currency: string, discou
   </div>
 `
 
+const stripe = new Stripe(
+  process.env.NODE_ENV === 'development'
+    ? process.env.STRIPE_SECRET_KEY_DEVELOPMENT!
+    : process.env.STRIPE_SECRET_KEY!,
+  {
+    apiVersion: '2024-12-18.acacia'
+  }
+)
+
+const webhookSecret = process.env.NODE_ENV === 'development'
+  ? process.env.STRIPE_WEBHOOK_SECRET_DEVELOPMENT!
+  : process.env.STRIPE_WEBHOOK_SECRET!
+
 export async function POST(req: Request) {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      //@ts-ignore
-      apiVersion: '2024-12-18.acacia'
-    })
-
     const body = await req.text()
-    const sig = req.headers.get('stripe-signature')
+    const headersList = await headers()
+    const signature = headersList.get('stripe-signature')
 
-    if (!sig) {
-      return NextResponse.json({ error: 'No signature' }, { status: 400 })
+    let event: Stripe.Event
+
+    try {
+      event = stripe.webhooks.constructEvent(body, signature!, webhookSecret)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      console.log(`❌ Error message: ${errorMessage}`)
+      return NextResponse.json(
+        { message: `Webhook Error: ${errorMessage}` },
+        { status: 400 }
+      )
     }
 
-    const event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
+    console.log('✅ Success:', event.id)
 
-    console.log('Webhook event received:', event.type)
+    const permittedEvents: string[] = [
+      'checkout.session.completed',
+      'payment_intent.succeeded',
+      'payment_intent.payment_failed',
+    ]
 
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object as Stripe.Checkout.Session
-      console.log('Session data:', {
-        id: session.id,
-        amountTotal: session.amount_total,
-        metadata: session.metadata
-      })
-
-      const metadata = session.metadata as {
-        email: string
-        ticketType: string
-        currency: string
-        productType: string
-        hasDiscount: string
-      } | null
-
-      if (!metadata?.email || !metadata?.ticketType || !metadata?.currency) {
-        throw new Error('Missing metadata in session')
-      }
-
-      const amountTotal = session.amount_total || 0
-      const finalPrice = amountTotal / 100
-      const hasDiscount = metadata.hasDiscount === 'true'
-
-      // Create calendar links for webinar
-      const eventDates = [
-        { date: '2025-02-02', startTime: '19:00', endTime: '21:30' },
-        { date: '2025-02-09', startTime: '19:00', endTime: '21:30' },
-        { date: '2025-02-23', startTime: '19:00', endTime: '21:30' }
-      ]
-
-      const createGoogleCalendarLink = (date: string, startTime: string, endTime: string) => {
-        const start = `${date}T${startTime}:00+01:00`
-        const end = `${date}T${endTime}:00+01:00`
-        const text = encodeURIComponent('Formation "Mieux vivre l\'autre"')
-        const details = encodeURIComponent(
-          'Formation en ligne via Whereby\n\nLien de connexion: ' + process.env.WHEREBY_LINK
-        )
-        const location = encodeURIComponent('En ligne via Whereby')
-        return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start.replace(
-          /[-:+]/g,
-          ''
-        )}/${end.replace(/[-:+]/g, '')}&details=${details}&location=${location}`
-      }
-
-      const calendarLinks = eventDates.map(({ date, startTime, endTime }) => ({
-        date,
-        googleLink: createGoogleCalendarLink(date, startTime, endTime)
-      }))
-
-      // Determine which email template to use based on productType
-      const emailTemplate =
-        metadata.productType === 'prochainement'
-          ? createCoachingEmailTemplate(metadata.email, finalPrice, metadata.currency, hasDiscount ? 10 : 0)
-          : createWebinarEmailTemplate(
-              finalPrice,
-              metadata.currency,
-              hasDiscount ? 10 : 0,
-              calendarLinks,
-              process.env.WHEREBY_LINK!
-            )
-
-      // Send confirmation email
-      const msg = {
-        to: metadata.email,
-        from: {
-          email: 'a.ra@bluewin.ch',
-          name: 'Anne-Yvonne Racine'
-        },
-        subject:
-          metadata.productType === 'prochainement'
-            ? 'Confirmation de votre inscription au Coaching Relationnel'
-            : 'Confirmation de votre inscription à la formation',
-        html: emailTemplate
-      }
-
+    if (permittedEvents.includes(event.type)) {
       try {
-        console.log('Attempting to send email to:', metadata.email)
-        await sgMail.send(msg)
-        console.log('Email sent successfully')
-      } catch (error) {
-        console.error('Error sending email:', error)
-        if (error.response) {
-          console.error('SendGrid error details:', {
-            body: error.response.body,
-            statusCode: error.response.statusCode
-          })
+        switch (event.type) {
+          case 'checkout.session.completed':
+            const session = event.data.object as Stripe.Checkout.Session
+            console.log('Session data:', {
+              id: session.id,
+              amountTotal: session.amount_total,
+              metadata: session.metadata
+            })
+
+            const metadata = session.metadata as {
+              email: string
+              ticketType: string
+              currency: string
+              productType: string
+              hasDiscount: string
+            } | null
+
+            if (!metadata?.email || !metadata?.ticketType || !metadata?.currency) {
+              throw new Error('Missing metadata in session')
+            }
+
+            const amountTotal = session.amount_total || 0
+            const finalPrice = amountTotal / 100
+            const hasDiscount = metadata.hasDiscount === 'true'
+
+            // Create calendar links for webinar
+            const eventDates = [
+              { date: '2025-02-02', startTime: '19:00', endTime: '21:30' },
+              { date: '2025-02-09', startTime: '19:00', endTime: '21:30' },
+              { date: '2025-02-23', startTime: '19:00', endTime: '21:30' }
+            ]
+
+            const createGoogleCalendarLink = (date: string, startTime: string, endTime: string) => {
+              const start = `${date}T${startTime}:00+01:00`
+              const end = `${date}T${endTime}:00+01:00`
+              const text = encodeURIComponent('Formation "Mieux vivre l\'autre"')
+              const details = encodeURIComponent(
+                'Formation en ligne via Whereby\n\nLien de connexion: ' + process.env.WHEREBY_LINK
+              )
+              const location = encodeURIComponent('En ligne via Whereby')
+              return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${start.replace(
+                /[-:+]/g,
+                ''
+              )}/${end.replace(/[-:+]/g, '')}&details=${details}&location=${location}`
+            }
+
+            const calendarLinks = eventDates.map(({ date, startTime, endTime }) => ({
+              date,
+              googleLink: createGoogleCalendarLink(date, startTime, endTime)
+            }))
+
+            // Determine which email template to use based on productType
+            const emailTemplate =
+              metadata.productType === 'prochainement'
+                ? createCoachingEmailTemplate(metadata.email, finalPrice, metadata.currency, hasDiscount ? 10 : 0)
+                : createWebinarEmailTemplate(
+                    finalPrice,
+                    metadata.currency,
+                    hasDiscount ? 10 : 0,
+                    calendarLinks,
+                    process.env.WHEREBY_LINK!
+                  )
+
+            // Send confirmation email
+            const msg = {
+              to: metadata.email,
+              from: {
+                email: 'a.ra@bluewin.ch',
+                name: 'Anne-Yvonne Racine'
+              },
+              subject:
+                metadata.productType === 'prochainement'
+                  ? 'Confirmation de votre inscription au Coaching Relationnel'
+                  : 'Confirmation de votre inscription à la formation',
+              html: emailTemplate
+            }
+
+            try {
+              console.log('Attempting to send email to:', metadata.email)
+              await sgMail.send(msg)
+              console.log('Email sent successfully')
+            } catch (error) {
+              console.error('Error sending email:', error)
+              if (error.response) {
+                console.error('SendGrid error details:', {
+                  body: error.response.body,
+                  statusCode: error.response.statusCode
+                })
+              }
+              throw error
+            }
+            break
+          case 'payment_intent.payment_failed':
+            const paymentIntent = event.data.object as Stripe.PaymentIntent
+            console.log(
+              `❌ Payment failed: ${paymentIntent.last_payment_error?.message}`
+            )
+            break
+          case 'payment_intent.succeeded':
+            const paymentSuccess = event.data.object as Stripe.PaymentIntent
+            console.log(`💰 PaymentIntent status: ${paymentSuccess.status}`)
+            break
+          default:
+            throw new Error(`Unhandled event: ${event.type}`)
         }
-        throw error
+      } catch (error) {
+        console.log(error)
+        return NextResponse.json(
+          { message: 'Webhook handler failed' },
+          { status: 500 }
+        )
       }
     }
 
-    return NextResponse.json({ received: true })
-  } catch (err) {
-    console.error('Webhook error:', err)
-    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 400 })
+    return NextResponse.json({ message: 'Received' }, { status: 200 })
+  } catch (error) {
+    console.error('Webhook error:', error)
+    return NextResponse.json(
+      { message: 'Webhook handler failed' },
+      { status: 500 }
+    )
   }
 }
