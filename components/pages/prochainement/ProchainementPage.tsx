@@ -54,7 +54,7 @@ export function ProchainementPage({ data, settings }: any) {
       ) : (
         <>
           <ProchainementHero hero={data.hero} data={settings} onShowPurchase={() => setShowPurchaseModal(true)} />
-          
+
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
@@ -68,10 +68,10 @@ export function ProchainementPage({ data, settings }: any) {
                   <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>OFFRE EXCLUSIVE LIMITÉE</p>
                 </div>
               </div>
-              
+
               {/* Offer Image with Animation */}
               {!isCanceled && (
-                <div 
+                <div
                   id="offer-section"
                   className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
                   onClick={toggleImage}
@@ -99,32 +99,6 @@ export function ProchainementPage({ data, settings }: any) {
 
               {/* Event Details and Price Grid */}
               <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
-                <div>
-                  <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
-                    <ul className="space-y-4 text-primary-cream/80 m-0">
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>OPTIMISEZ VOS RELATIONS EN 1 MOIS</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>SPECIAL DIVERSITÉS</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>COACHING INDIVIDUEL 24/24 SUR 1 MOIS</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>ÉCHANGES QUOTIDIENS VIA TELEGRAM</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>TROIS SEANCES DE THÉRAPIE À LA CARTE VIA ZOOM</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
 
                 <div className="flex-grow">
                   <div className="h-full flex items-center justify-center">
@@ -153,6 +127,35 @@ export function ProchainementPage({ data, settings }: any) {
                     </div>
                   </div>
                 </div>
+
+                <div>
+                  <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
+                    <ul className="space-y-4 text-primary-cream/80 m-0">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>OPTIMISEZ VOS RELATIONS EN 1 MOIS</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>SPECIAL DIVERSITÉS</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>COACHING INDIVIDUEL 24/24 SUR 1 MOIS</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>ÉCHANGES QUOTIDIENS VIA TELEGRAM</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>TROIS SEANCES DE THÉRAPIE À LA CARTE VIA ZOOM</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+
               </div>
 
               {/* Rest of the content... */}
@@ -160,15 +163,15 @@ export function ProchainementPage({ data, settings }: any) {
                 <h2 className="text-2xl font-medium text-primary-coral mb-6">
                   Explorez vos relations sous un nouveau prisme
                 </h2>
-                
+
                 <div className="space-y-6 text-primary-cream/80">
                   <p>
-                    Ce programme n'est pas une simple démarche d'accompagnement. C'est une exploration méthodique de vos dynamiques relationnelles, 
+                    Ce programme n'est pas une simple démarche d'accompagnement. C'est une exploration méthodique de vos dynamiques relationnelles,
                     fondée sur une analyse fine et des outils concrets.
                   </p>
-                  
+
                   <p>
-                    Chaque interaction, chaque blocage, chaque incompréhension est porteur de sens. Ce coaching vous invite à déchiffrer 
+                    Chaque interaction, chaque blocage, chaque incompréhension est porteur de sens. Ce coaching vous invite à déchiffrer
                     ces messages sous-jacents et à comprendre ce qui, parfois, freine ou complexifie vos liens personnels et professionnels.
                   </p>
 
@@ -189,8 +192,8 @@ export function ProchainementPage({ data, settings }: any) {
                   </ul>
 
                   <p>
-                    En 1 mois, avec un accompagnement continu et des séances ciblées, vous développerez des compétences relationnelles tangibles, 
-                    applicables immédiatement dans votre quotidien. Loin des approches stéréotypées, ce programme vous offre une structure 
+                    En 1 mois, avec un accompagnement continu et des séances ciblées, vous développerez des compétences relationnelles tangibles,
+                    applicables immédiatement dans votre quotidien. Loin des approches stéréotypées, ce programme vous offre une structure
                     rationnelle et rigoureuse pour atteindre une maîtrise de vos interactions.
                   </p>
 
@@ -209,7 +212,7 @@ export function ProchainementPage({ data, settings }: any) {
 
           {/* Purchase Modal */}
           {showPurchaseModal && (
-            <PurchaseTicket 
+            <PurchaseTicket
               ticketType="standard"
               onClose={() => setShowPurchaseModal(false)}
               defaultCouponCode={isCanceled ? 'COEUR180' : undefined}
