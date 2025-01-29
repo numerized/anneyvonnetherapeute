@@ -124,17 +124,13 @@ const createWebinarEmailTemplate = (finalPrice: number, currency: string, discou
 `
 
 const stripe = new Stripe(
-  process.env.NODE_ENV === 'development'
-    ? process.env.STRIPE_SECRET_KEY_DEVELOPMENT!
-    : process.env.STRIPE_SECRET_KEY!,
+  process.env.STRIPE_SECRET_KEY!,
   {
     apiVersion: '2024-12-18.acacia'
   }
 )
 
-const webhookSecret = process.env.NODE_ENV === 'development'
-  ? process.env.STRIPE_WEBHOOK_SECRET_DEVELOPMENT!
-  : process.env.STRIPE_WEBHOOK_SECRET!
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(req: Request) {
   try {
