@@ -7,7 +7,7 @@ export default function PaymentSuccess() {
   return (
     <div className="min-h-screen bg-primary-forest flex items-center justify-center px-4">
       <div className="max-w-2xl w-full">
-        <div className="bg-primary-forest/30 rounded-[24px] p-8 text-center">
+        <div className="bg-primary-forest/60 rounded-[24px] p-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

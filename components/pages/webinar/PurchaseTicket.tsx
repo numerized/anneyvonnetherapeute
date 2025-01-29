@@ -20,7 +20,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
   const [error, setError] = useState('')
   const [discount, setDiscount] = useState(0)
 
-  const basePrice = 111
+  const basePrice = 1
   const finalPrice = discount > 0 ? basePrice * (1 - discount / 100) : basePrice
 
   const handleCouponChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,8 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
           ticketType,
           currency,
           discount,
-          couponCode: couponCode || undefined
+          couponCode: couponCode || undefined,
+          productType: 'webinar'
         }),
       })
 
