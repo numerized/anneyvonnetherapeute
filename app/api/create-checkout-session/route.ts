@@ -1,9 +1,35 @@
+'use server'
+
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
 
+interface PriceConfig {
+  amount: {
+    chf: number
+    eur: number
+  }
+  name: string
+  discountedAmount?: {
+    chf: number
+    eur: number
+  }
+}
+
+interface TicketPrices {
+  standard: {
+    prochainement: PriceConfig & {
+      discountedAmount: {
+        chf: number
+        eur: number
+      }
+    }
+    webinar: PriceConfig
+  }
+}
+
 // Ticket types and prices
-const TICKET_PRICES = {
+const TICKET_PRICES: TicketPrices = {
   standard: {
     prochainement: {
       amount: {
@@ -69,7 +95,14 @@ export async function POST(req: Request) {
       )
     }
 
-    const amount = hasDiscount ? priceData.discountedAmount[currency.toLowerCase()] : priceData.amount[currency.toLowerCase()]
+    // Get base amount first
+    const baseAmount = priceData.amount[currency.toLowerCase() as keyof typeof priceData.amount]
+    
+    // Calculate amount with early bird discount if applicable
+    let amount = baseAmount
+    if (hasDiscount && 'discountedAmount' in priceData) {
+      amount = priceData.discountedAmount[currency.toLowerCase() as keyof typeof priceData.amount]
+    }
     
     let finalAmount = amount
     let discountMessage = hasDiscount ? 'Early bird discount applied' : ''
