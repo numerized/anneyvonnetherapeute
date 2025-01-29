@@ -70,6 +70,7 @@ export function ProchainementPage({ data, settings }: any) {
               
               {/* Offer Image with Animation */}
               <div 
+                id="offer-section"
                 className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
                 onClick={toggleImage}
               >
