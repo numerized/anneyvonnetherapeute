@@ -56,7 +56,7 @@ export function WebinarPage({ data, settings }: any) {
           <WebinarHero hero={data.hero} data={settings} />
           
           {/* Festival Section */}
-          <section className="py-24 bg-primary-forest/30">
+          <section className="py-24 bg-primary-forest">
             <div className="max-w-4xl mx-auto px-6">
               {/* Header */}
               <div className="text-center mb-12">
@@ -107,7 +107,7 @@ export function WebinarPage({ data, settings }: any) {
               {/* Event Details */}
               <div className="grid md:grid-cols-2 gap-8 mb-12 auto-rows-fr">
                 <div>
-                  <div className="bg-primary-forest/30 rounded-[24px] p-6">
+                  <div className="bg-primary-forest/60 rounded-[24px] p-6">
                     <h3 className="text-xl font-light text-primary-cream mb-4">Détails de l'événement</h3>
                     <ul className="space-y-4 text-primary-cream/80">
                       <li className="flex items-start gap-2">
@@ -131,13 +131,13 @@ export function WebinarPage({ data, settings }: any) {
                 </div>
 
                 <div>
-                  <div className="bg-primary-forest/30 rounded-[24px] p-6">
+                  <div className="bg-primary-forest/60 rounded-[24px] p-6">
                     <h3 className="text-xl font-light text-primary-cream mb-4">Tarif</h3>
                     <div className="space-y-4">
                       <div className="flex flex-col gap-2">
                         <div className="flex justify-between items-center text-primary-cream/80">
                           <span>Tarif unique</span>
-                          <span className="text-primary-coral font-bold">111 CHF/EUROS</span>
+                          <span className="text-primary-coral font-bold">1 CHF/EUROS</span>
                         </div>
                         <motion.button
                           whileHover={{ scale: 1.02 }}
@@ -157,7 +157,7 @@ export function WebinarPage({ data, settings }: any) {
               </div>
 
               {/* Description */}
-              <div className="bg-primary-forest/30 rounded-[24px] p-6 mb-12">
+              <div className="bg-primary-forest/60 rounded-[24px] p-6 mb-12">
                 <h3 className="text-xl font-light text-primary-cream mb-4">À propos de l'événement</h3>
                 <div className="space-y-4 text-primary-cream/80">
                   <p>
