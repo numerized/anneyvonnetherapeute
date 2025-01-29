@@ -10,15 +10,16 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 interface PurchaseTicketProps {
   ticketType: 'standard' | 'vip'
   onClose: () => void
+  defaultCouponCode?: string
 }
 
-export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
+export function PurchaseTicket({ ticketType, onClose, defaultCouponCode }: PurchaseTicketProps) {
   const [email, setEmail] = useState('')
   const [currency, setCurrency] = useState('eur')
-  const [couponCode, setCouponCode] = useState('')
+  const [couponCode, setCouponCode] = useState(defaultCouponCode || '')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [hasDiscount, setHasDiscount] = useState(false)
+  const [hasDiscount, setHasDiscount] = useState(!!defaultCouponCode)
 
   const basePrice = 999
   const discountedPrice = 899
