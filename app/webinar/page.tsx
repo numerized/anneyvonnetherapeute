@@ -1,21 +1,22 @@
-'use client'
+'use server'
 
 import { WebinarPage } from '@/components/pages/webinar/WebinarPage'
 import { client } from '@/sanity/lib/client'
-import { useEffect, useState } from 'react'
 
-export default function WebinarRoute() {
-  const [settings, setSettings] = useState<any>(null)
+async function getSettings() {
+  try {
+    return await client.fetch(`*[_type == "settings"][0]`, {}, {
+      cache: 'force-cache',
+      next: { revalidate: 3600 } // revalidate every hour
+    })
+  } catch (error) {
+    console.error('Error fetching settings:', error)
+    return null
+  }
+}
 
-  useEffect(() => {
-    async function fetchSettings() {
-      const settings = await client.fetch(`*[_type == "settings"][0]`)
-      setSettings(settings)
-    }
-    fetchSettings()
-  }, [])
-
-  console.log('WebinarRoute rendering:', { settings })
+export default async function WebinarRoute() {
+  const settings = await getSettings()
 
   const pageData = {
     hero: {
