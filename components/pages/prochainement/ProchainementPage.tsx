@@ -7,6 +7,7 @@ import { PurchaseTicket } from './PurchaseTicket'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import PaymentSuccess from './PaymentSuccess'
+import Image from 'next/image'
 
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
@@ -45,28 +46,43 @@ export function ProchainementPage({ data, settings }: any) {
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
+
               {/* Header */}
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   COACHING RELATIONNEL 7/7
                 </h2>
-                <div className="text-lg md:text-xl text-primary-cream/80">
-                  <p className="font-bold mb-4">OFFRE EXCLUSIVE LIMITÉE</p>
-                  <p className="mb-4">
-                    OPTIMISEZ VOS RELATIONS EN 1 MOIS
-                  </p>
-                  <p className="mb-6">
-                    SPECIAL DIVERSITÉS
-                  </p>
+                <div className="text-lg md:text-xl">
+                  <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>OFFRE EXCLUSIVE LIMITÉE</p>
                 </div>
               </div>
+              
+              {/* Offer Image */}
+              <div className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden">
+                <Image
+                  src="/images/tempoffer.webp"
+                  alt="Offre temporaire"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+
+              
 
               {/* Event Details and Price Grid */}
               <div className="grid md:grid-cols-2 gap-8 mb-12 auto-rows-fr">
                 <div>
                   <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
-                    <h3 className="text-xl font-light text-primary-cream mb-4">Détails de l'événement</h3>
-                    <ul className="space-y-4 text-primary-cream/80">
+                    <ul className="space-y-4 text-primary-cream/80 m-0">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>OPTIMISEZ VOS RELATIONS EN 1 MOIS</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary-coral">♦</span>
+                        <span>SPECIAL DIVERSITÉS</span>
+                      </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary-coral">♦</span>
                         <span>COACHING INDIVIDUEL 24/24 SUR 1 MOIS</span>
@@ -85,7 +101,6 @@ export function ProchainementPage({ data, settings }: any) {
 
                 <div>
                   <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
-                    <h3 className="text-xl font-light text-primary-cream mb-4">Tarif</h3>
                     <div className="space-y-4">
                       <div className="flex flex-col gap-2">
                         <div className="flex justify-between items-center text-primary-cream/80">
@@ -127,7 +142,7 @@ export function ProchainementPage({ data, settings }: any) {
                   </p>
 
                   <p className="font-medium mb-4">Les résultats ne résident pas dans des promesses vagues, mais dans une transformation palpable :</p>
-                  <ul className="space-y-4 text-primary-cream/80">
+                  <ul className="space-y-4 text-primary-cream/80 m-0">
                     <li className="flex items-start gap-2">
                       <span className="text-primary-coral">♦</span>
                       <span>Une lucidité accrue sur vos comportements et leurs impacts.</span>
@@ -148,7 +163,7 @@ export function ProchainementPage({ data, settings }: any) {
                     rationnelle et rigoureuse pour atteindre une maîtrise de vos interactions.
                   </p>
 
-                  <p className="italic font-medium text-primary-coral">
+                  <p className="italic font-medium" style={{ color: '#D9B70D' }}>
                     Comprendre, c'est changer. Êtes-vous prêt à repenser vos relations à la lumière d'une démarche précise et impactante ?
                   </p>
                 </div>
