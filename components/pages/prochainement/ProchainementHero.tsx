@@ -1,12 +1,13 @@
 'use client'
 
-import { urlFor } from '@/sanity/lib/image'
-import type { HomePagePayload } from '@/types'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+import { urlFor } from '@/sanity/lib/image'
+import type { HomePagePayload } from '@/types'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -19,13 +20,13 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   const searchParams = useSearchParams()
   const isCanceled = searchParams.get('canceled') === 'true'
 
-  if (isCanceled) {
-    return null
-  }
-
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  if (isCanceled) {
+    return null
+  }
 
   const scrollToOffer = () => {
     const offerSection = document.getElementById('offer-section')
