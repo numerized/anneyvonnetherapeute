@@ -3,6 +3,7 @@
 import { WebinarPage } from '@/components/pages/webinar/WebinarPage'
 import { client } from '@/sanity/lib/client'
 import { draftMode } from 'next/headers'
+import { Suspense } from 'react'
 
 const DEFAULT_SETTINGS = {
   title: 'Anne Yvonne',
@@ -50,8 +51,23 @@ async function getSettings() {
   }
 }
 
+function WebinarPageWrapper({ data, settings }: { data: any; settings: any }) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="animate-pulse">Chargement...</div>
+        </div>
+      </div>
+    }>
+      <WebinarPage data={data} settings={settings} />
+    </Suspense>
+  )
+}
+
 export default async function WebinarRoute() {
-  const isDraftMode = draftMode().isEnabled
+  // draftMode() returns a Promise in newer versions of Next.js
+  const { isEnabled: isDraftMode } = await draftMode()
 
   try {
     const settings = await getSettings()
@@ -63,7 +79,7 @@ export default async function WebinarRoute() {
       }
     }
 
-    return <WebinarPage data={pageData} settings={settings} />
+    return <WebinarPageWrapper data={pageData} settings={settings} />
   } catch (error) {
     console.error('Error in WebinarRoute:', error)
     

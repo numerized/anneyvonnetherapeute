@@ -32,17 +32,18 @@ export function WebinarPage({ data, settings }: WebinarPageProps) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    setIsLoading(false)
     // Check for successful payment
-    if (searchParams.get('success') === 'true') {
+    if (searchParams?.get('success') === 'true') {
       toast.success('Paiement réussi ! Vous recevrez un email avec les détails d\'accès.')
     }
     // Check for canceled payment
-    if (searchParams.get('canceled') === 'true') {
+    if (searchParams?.get('canceled') === 'true') {
       toast.error('Le paiement a été annulé.')
     }
   }, [searchParams])
@@ -66,7 +67,6 @@ export function WebinarPage({ data, settings }: WebinarPageProps) {
   // Add validation for required data
   if (!data?.hero?.title || !settings) {
     console.error('Missing required data:', { data, settings })
-    setIsLoading(true)
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
         <div className="text-center text-white p-8">
@@ -80,9 +80,8 @@ export function WebinarPage({ data, settings }: WebinarPageProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
-        <div className="text-center text-white p-8">
-          <h1 className="text-3xl mb-4">Contenu en cours de chargement</h1>
-          <p>Merci de patienter quelques instants...</p>
+        <div className="text-center text-white">
+          <div className="animate-pulse">Chargement...</div>
         </div>
       </div>
     )
@@ -90,7 +89,7 @@ export function WebinarPage({ data, settings }: WebinarPageProps) {
 
   return (
     <main className="flex-auto">
-      {searchParams.get('success') === 'true' ? (
+      {searchParams?.get('success') === 'true' ? (
         <PaymentSuccess />
       ) : (
         <>
