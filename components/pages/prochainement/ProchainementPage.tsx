@@ -1,7 +1,7 @@
 'use client'
 
 import { ProchainementHero } from './ProchainementHero'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import { PurchaseTicket } from './PurchaseTicket'
 import { useSearchParams } from 'next/navigation'
@@ -13,15 +13,14 @@ import { Stats } from '@/components/shared/Stats'
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
+  const [currentImage, setCurrentImage] = useState<'tempoffer' | 'flyer'>('tempoffer')
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
 
   useEffect(() => {
-    // Check for successful payment
     if (searchParams.get('success') === 'true') {
       toast.success('Paiement réussi ! Vous recevrez un email avec les détails d\'accès.')
     }
-    // Check for canceled payment
     if (searchParams.get('canceled') === 'true') {
       toast.error('Le paiement a été annulé.')
     }
@@ -30,6 +29,10 @@ export function ProchainementPage({ data, settings }: any) {
   const handleTicketPurchase = (type: 'standard' | 'vip') => {
     setSelectedTicketType(type)
     setShowPurchaseModal(true)
+  }
+
+  const toggleImage = () => {
+    setCurrentImage(current => current === 'tempoffer' ? 'flyer' : 'tempoffer')
   }
 
   if (!data?.hero) {
@@ -65,18 +68,30 @@ export function ProchainementPage({ data, settings }: any) {
                 </div>
               </div>
               
-              {/* Offer Image */}
-              <div className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden">
-                <Image
-                  src="/images/tempoffer.webp"
-                  alt="Offre temporaire"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+              {/* Offer Image with Animation */}
+              <div 
+                className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
+                onClick={toggleImage}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentImage}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={`/images/${currentImage}.webp`}
+                      alt={currentImage === 'tempoffer' ? 'Offre temporaire' : 'Flyer de la formation'}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
-
-              
 
               {/* Event Details and Price Grid */}
               <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
@@ -131,8 +146,6 @@ export function ProchainementPage({ data, settings }: any) {
                   </div>
                 </div>
               </div>
-
-              
 
               {/* Rest of the content... */}
               <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
