@@ -18,19 +18,16 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
   const [couponCode, setCouponCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [discount, setDiscount] = useState(0)
+  const [hasDiscount, setHasDiscount] = useState(false)
 
-  const basePrice = 111
-  const finalPrice = discount > 0 ? basePrice * (1 - discount / 100) : basePrice
+  const basePrice = 999
+  const discountedPrice = 899
+  const finalPrice = hasDiscount ? discountedPrice : basePrice
 
   const handleCouponChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const code = e.target.value.toUpperCase()
     setCouponCode(code)
-    if (code === 'POESIE180') {
-      setDiscount(50)
-    } else {
-      setDiscount(0)
-    }
+    setHasDiscount(code === 'COEUR180')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,7 +45,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
           email,
           ticketType,
           currency,
-          discount,
+          hasDiscount,
           couponCode: couponCode || undefined
         }),
       })
@@ -152,9 +149,9 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
                 className="w-full px-4 py-2 rounded-full bg-primary-dark/30 text-primary-cream border border-primary-cream/20 focus:border-primary-coral outline-none uppercase"
                 placeholder="Entrez votre code promo"
               />
-              {discount > 0 && (
+              {hasDiscount && (
                 <p className="mt-2 text-primary-coral">
-                  Code promo appliqué : -{discount}% de réduction
+                  Code promo appliqué : {discountedPrice} {currency.toUpperCase()}
                 </p>
               )}
             </div>
@@ -162,7 +159,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
             <div className="mt-6 text-center">
               <p className="text-primary-cream/80">Prix total :</p>
               <div className="flex items-center justify-center gap-2">
-                {discount > 0 && (
+                {hasDiscount && (
                   <span className="text-primary-cream/60 line-through">
                     {basePrice} {currency.toUpperCase()}
                   </span>

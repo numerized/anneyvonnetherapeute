@@ -7,8 +7,12 @@ const TICKET_PRICES = {
   standard: {
     prochainement: {
       amount: {
-        chf: 11100, // 111 CHF in centimes
-        eur: 11100  // 111 EUR in cents
+        chf: 99900, // 999 CHF in centimes
+        eur: 99900  // 999 EUR in cents
+      },
+      discountedAmount: {
+        chf: 89900, // 899 CHF in centimes
+        eur: 89900  // 899 EUR in cents
       },
       name: 'Formation - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
     },
@@ -31,8 +35,8 @@ export async function POST(req: Request) {
     })
 
     const body = await req.json()
-    const { ticketType, email, currency, discount, couponCode, productType = 'prochainement' } = body
-    console.log('Request data:', { ticketType, email, currency, discount, couponCode, productType })
+    const { ticketType, email, currency, hasDiscount, couponCode, productType = 'prochainement' } = body
+    console.log('Request data:', { ticketType, email, currency, hasDiscount, couponCode, productType })
 
     const headersList = await headers()
     const origin = headersList.get('origin')
@@ -53,9 +57,10 @@ export async function POST(req: Request) {
       )
     }
 
-    // Calculate discounted amount if applicable
-    const baseAmount = productConfig.amount[currency.toLowerCase() as keyof typeof productConfig.amount]
-    const finalAmount = discount ? Math.round(baseAmount * (1 - discount / 100)) : baseAmount
+    // Get the appropriate amount based on whether there's a discount
+    const finalAmount = hasDiscount 
+      ? productConfig.discountedAmount?.[currency.toLowerCase() as keyof typeof productConfig.amount] 
+      : productConfig.amount[currency.toLowerCase() as keyof typeof productConfig.amount]
 
     // Initialize Stripe inside the handler
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -72,7 +77,7 @@ export async function POST(req: Request) {
             currency: currency.toLowerCase(),
             product_data: {
               name: productConfig.name,
-              description: discount > 0 ? `Accès à la formation en direct (Code promo : ${couponCode})` : 'Accès à la formation en direct'
+              description: hasDiscount ? `Accès à la formation en direct (Code promo : ${couponCode})` : 'Accès à la formation en direct'
             },
             unit_amount: finalAmount,
           },
@@ -87,7 +92,7 @@ export async function POST(req: Request) {
         ticketType,
         email,
         currency: currency.toLowerCase(),
-        discount: discount ? discount.toString() : '0',
+        hasDiscount: hasDiscount ? 'true' : 'false',
         couponCode: couponCode || '',
         productType
       }
