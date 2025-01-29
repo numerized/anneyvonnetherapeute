@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import PaymentSuccess from './PaymentSuccess'
 import Image from 'next/image'
+import { Stats } from '@/components/shared/Stats'
 
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
@@ -34,6 +35,13 @@ export function ProchainementPage({ data, settings }: any) {
   if (!data?.hero) {
     return null
   }
+
+  const statsItems = [
+    { value: '95%', label: 'Taux de satisfaction client' },
+    { value: '500+', label: 'Couples accompagnés' },
+    { value: '20', label: 'Années d\'expérience' },
+    { value: '85%', label: 'Amélioration des relations' }
+  ]
 
   return (
     <main className="flex-auto">
@@ -124,6 +132,8 @@ export function ProchainementPage({ data, settings }: any) {
                 </div>
               </div>
 
+              
+
               {/* Rest of the content... */}
               <div className="bg-primary-forest rounded-[32px] p-8 mb-12 shadow-lg">
                 <h2 className="text-2xl font-medium text-primary-coral mb-6">
@@ -168,6 +178,11 @@ export function ProchainementPage({ data, settings }: any) {
                   </p>
                 </div>
               </div>
+              {/* Stats Section */}
+              <Stats
+                title="Une approche unique de la thérapie relationnelle"
+                items={statsItems}
+              />
             </div>
           </section>
 
