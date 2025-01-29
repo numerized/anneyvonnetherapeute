@@ -28,7 +28,14 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
     return null
   }
 
-  const scrollToOffer = () => {
+  const handlePurchase = async () => {
+    if (process.env.NODE_ENV === 'development') {
+      const shouldUseTestCoupon = window.confirm('Voulez-vous utiliser le code promo de test (99% de réduction) ?')
+      if (shouldUseTestCoupon) {
+        onShowPurchase?.()
+        return
+      }
+    }
     const offerSection = document.getElementById('offer-section')
     if (offerSection) {
       offerSection.scrollIntoView({ behavior: 'smooth' })
@@ -127,12 +134,7 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <button
-                  onClick={() => {
-                    scrollToOffer()
-                    if (onShowPurchase) {
-                      onShowPurchase()
-                    }
-                  }}
+                  onClick={handlePurchase}
                   className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200"
                 >
                   Découvrir l'offre
@@ -142,6 +144,11 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
           </div>
         </div>
       </div>
+      {process.env.NODE_ENV === 'development' && (
+        <div className="absolute bottom-4 left-4 bg-yellow-500/20 p-4 rounded-lg text-white">
+          <p className="text-sm">Code promo test: TEST180YYY (1 EUR/CHF)</p>
+        </div>
+      )}
     </section>
   )
 }

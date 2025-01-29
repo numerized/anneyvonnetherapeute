@@ -17,5 +17,14 @@ export const client = createClient({
     studioUrl: '/studio',
   },
   token: process.env.SANITY_API_TOKEN,
-  withCredentials: true,
+})
+
+// Create a preview client with auth token
+export const previewClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: process.env.SANITY_API_READ_TOKEN,
+  perspective: 'previewDrafts',
 })
