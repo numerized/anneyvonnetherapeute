@@ -144,11 +144,6 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
           </div>
         </div>
       </div>
-      {process.env.NODE_ENV === 'development' && (
-        <div className="absolute bottom-4 left-4 bg-yellow-500/20 p-4 rounded-lg text-white">
-          <p className="text-sm">Code promo test: TEST180YYY (1 EUR/CHF)</p>
-        </div>
-      )}
     </section>
   )
 }
