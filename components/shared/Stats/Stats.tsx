@@ -4,7 +4,7 @@ import { StatsProps } from './types'
 export function Stats({ title, items }: StatsProps) {
   return (
     <section 
-      className="bg-primary-dark py-20 -mx-[2rem] md:-mx-[4rem] lg:-mx-[6rem]"
+      className="py-20 -mx-[2rem] md:-mx-[4rem] lg:-mx-[6rem]"
       aria-labelledby="stats-title"
     >
       <div className="mx-[2rem] md:mx-[4rem] lg:mx-[6rem]">
