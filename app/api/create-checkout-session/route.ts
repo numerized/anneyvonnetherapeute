@@ -100,8 +100,9 @@ export async function POST(req: Request) {
     
     // Calculate amount with early bird discount if applicable
     let amount = baseAmount
-    if (hasDiscount && 'discountedAmount' in priceData) {
-      amount = priceData.discountedAmount[currency.toLowerCase() as keyof typeof priceData.amount]
+    if (hasDiscount && 'discountedAmount' in priceData && priceData.discountedAmount) {
+      const discountedAmount = priceData.discountedAmount[currency.toLowerCase() as keyof typeof priceData.amount]
+      amount = discountedAmount ?? baseAmount // Fallback to base amount if discounted amount is undefined
     }
     
     let finalAmount = amount
