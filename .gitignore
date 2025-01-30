@@ -46,3 +46,5 @@ studio/.env.development
 .sanity/runtime/app.js
 .sanity/runtime/index.html
 firebase-debug.log
+.env.development
+.env.production
