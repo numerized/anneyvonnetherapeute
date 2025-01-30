@@ -91,10 +91,10 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
                 </div>
               )}
               {hero?.title && (
-                <div className="text-[12px] sm:text-[14px] md:text-xl lg:text-2xl">
+                <div>
                   <motion.h1 
                     id="hero-title"
-                    className="text-primary-cream font-black mb-2"
+                    className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-black mb-2"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -113,7 +113,6 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
                   {hero.subtitle}
                 </motion.p>
               )}
-              
               {/* CTA Button */}
               <motion.div
                 className="mt-8"
