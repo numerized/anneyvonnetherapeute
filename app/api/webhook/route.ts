@@ -64,20 +64,24 @@ export async function POST(req: Request) {
       })
 
       const metadata = session.metadata as {
-        email: string
         ticketType: string
-        currency: string
         productType: string
         hasDiscount: string
       } | null
 
-      if (!metadata?.email || !metadata?.ticketType || !metadata?.currency) {
-        throw new Error('Missing metadata in session')
+      if (!metadata?.ticketType || !metadata?.productType) {
+        throw new Error('Missing required metadata in session')
       }
 
       const amountTotal = session.amount_total || 0
       const finalPrice = amountTotal / 100
       const hasDiscount = metadata.hasDiscount === 'true'
+      const customerEmail = session.customer_details?.email
+      const currency = session.currency?.toUpperCase() || 'EUR'
+
+      if (!customerEmail) {
+        throw new Error('Customer email is missing from session')
+      }
 
       // Create calendar links for webinar
       const eventDates = [
@@ -108,10 +112,10 @@ export async function POST(req: Request) {
       // Determine which email template to use based on productType
       const emailTemplate =
         metadata.productType === 'prochainement'
-          ? createCoachingEmailTemplate(metadata.email, finalPrice, metadata.currency, hasDiscount ? 10 : 0)
+          ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, hasDiscount ? 10 : 0)
           : createWebinarEmailTemplate(
               finalPrice,
-              metadata.currency,
+              currency,
               hasDiscount ? 10 : 0,
               calendarLinks,
               process.env.WHEREBY_LINK!
@@ -125,7 +129,7 @@ export async function POST(req: Request) {
 
       // Send confirmation email
       const msg = {
-        to: metadata.email,
+        to: customerEmail,
         from: {
           email: 'a.ra@bluewin.ch',
           name: 'Anne-Yvonne Racine'
@@ -138,7 +142,7 @@ export async function POST(req: Request) {
       }
 
       try {
-        console.log('Attempting to send email to:', metadata.email)
+        console.log('Attempting to send email to:', customerEmail)
         await sgMail.send(msg)
         console.log('Email sent successfully')
       } catch (error) {

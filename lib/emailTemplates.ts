@@ -23,7 +23,7 @@ export const createCoachingEmailTemplate = (email: string, finalPrice: number, c
       <ul>
         <li><strong>Durée :</strong> 1 mois d'accompagnement intensif</li>
         <li><strong>Format :</strong> Coaching individuel via Telegram et séances Zoom</li>
-        <li><strong>Montant réglé :</strong> ${finalPrice} ${currency.toUpperCase()} ${
+        <li><strong>Montant réglé :</strong> ${finalPrice} ${currency} ${
           discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''
         }</li>
       </ul>
@@ -77,7 +77,7 @@ export const createWebinarEmailTemplate = (
         <li><strong>Dates :</strong> 2 + 9 + 23 février 2025 (3 soirées incluses)</li>
         <li><strong>Horaire :</strong> 19h-21h30</li>
         <li><strong>Format :</strong> Formation en ligne via Whereby (sans inscription ni installation requise)</li>
-        <li><strong>Montant réglé :</strong> ${finalPrice} ${currency.toUpperCase()} ${
+        <li><strong>Montant réglé :</strong> ${finalPrice} ${currency} ${
           discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''
         }</li>
       </ul>
