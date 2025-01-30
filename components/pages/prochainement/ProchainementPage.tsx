@@ -93,6 +93,9 @@ export function ProchainementPage({ data, settings }: any) {
                         className="object-cover"
                         priority
                       />
+                      <div className="absolute inset-0 z-10" style={{
+                        background: 'linear-gradient(-55deg, transparent 25%, rgba(18, 44, 28, 0.2) 40%, rgba(18, 44, 28, 0.35) 70%)'
+                      }} />
                     </motion.div>
                   </AnimatePresence>
                 </div>
