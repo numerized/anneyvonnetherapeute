@@ -158,7 +158,7 @@ export function PurchaseTicket({ ticketType, onClose, defaultCouponCode }: Purch
               {hasDiscount && (
                 <p className="mt-2 text-primary-coral">
                   Code promo appliqué : {getDisplayPrice()} {currency.toUpperCase()}
-                  {couponCode === 'TEST180YYY' ? ' (Test 1 EUR/CHF)' : ' (Early bird -10%)'}
+                  {couponCode === 'TEST180YYY' ? ` (Test 1 ${currency.toUpperCase()})` : ' (-10%)'}
                 </p>
               )}
             </div>

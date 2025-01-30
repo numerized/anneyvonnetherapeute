@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     // Get base amount first
     const baseAmount = priceData.amount[currency.toLowerCase() as keyof typeof priceData.amount]
     
-    // Calculate amount with early bird discount if applicable
+    // Calculate amount with discount if applicable
     let amount = baseAmount
     if (hasDiscount && 'discountedAmount' in priceData && priceData.discountedAmount) {
       const discountedAmount = priceData.discountedAmount[currency.toLowerCase() as keyof typeof priceData.amount]
@@ -106,12 +106,12 @@ export async function POST(req: Request) {
     }
     
     let finalAmount = amount
-    let discountMessage = hasDiscount ? 'Early bird discount applied' : ''
+    let discountMessage = hasDiscount ? 'Discount applied' : ''
 
     // Apply test coupon if provided
     if (couponCode === TEST_COUPON) {
       finalAmount = 100 // 1 EUR/CHF in cents
-      discountMessage = 'Test discount (1 EUR/CHF)'
+      discountMessage = `Test discount (1 ${currency.toUpperCase()})`
     }
 
     const session = await stripe.checkout.sessions.create({
