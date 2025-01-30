@@ -20,10 +20,10 @@ export default function PaymentSuccess() {
               Merci pour votre inscription au webinar. Vous recevrez bientôt un email avec tous les détails d'accès.
             </p>
             <Link 
-              href="/"
-              className="inline-block bg-primary-coral hover:bg-primary-rust text-primary-cream px-6 py-3 rounded-full transition-colors"
+              href="/prochainement"
+              className="inline-flex items-center px-6 py-3 rounded-full bg-primary-coral hover:bg-primary-rust transition-colors duration-200 text-primary-cream font-medium"
             >
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Link>
           </motion.div>
         </div>

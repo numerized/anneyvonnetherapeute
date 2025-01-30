@@ -17,7 +17,7 @@ export function ProchainementPage({ data, settings }: any) {
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
   const isCanceled = searchParams.get('canceled') === 'true'
-  const currency = settings.currency
+  const currency = settings?.currency || 'EUR'
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -106,15 +106,15 @@ export function ProchainementPage({ data, settings }: any) {
                     <div className="text-center">
                       {isCanceled ? (
                         <div className="space-y-4">
-                          <div className="text-2xl line-through text-primary-cream/60">{`999 ${currency.toUpperCase()}`}</div>
-                          <div className="text-3xl text-primary-coral font-semibold">{`899 ${currency.toUpperCase()}`}</div>
+                          <div className="text-2xl line-through text-primary-cream/60">{`999 ${currency?.toUpperCase()}`}</div>
+                          <div className="text-3xl text-primary-coral font-semibold">{`899 ${currency?.toUpperCase()}`}</div>
                           <div className="bg-primary-coral/20 rounded-lg py-2 px-6 inline-block">
                             <span className="text-primary-coral font-semibold">COEUR180</span>
                             <span className="ml-2">-10%</span>
                           </div>
                         </div>
                       ) : (
-                        <div className="text-3xl">{`999 ${currency.toUpperCase()}`}</div>
+                        <div className="text-3xl">{`999 ${currency?.toUpperCase()}`}</div>
                       )}
                       <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
                         L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
