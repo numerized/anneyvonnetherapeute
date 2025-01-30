@@ -1,11 +1,13 @@
 'use client'
 
 import { type FC } from 'react'
+
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface DecisionStageCardProps {
-  onShowPromo?: () => void;
+  onShowPromo?: () => void
 }
 
 export function DecisionStageCard({ onShowPromo }: DecisionStageCardProps) {
@@ -16,12 +18,15 @@ export function DecisionStageCard({ onShowPromo }: DecisionStageCardProps) {
           <h3 className="text-2xl text-primary-cream font-light mb-2 text-right">
             RESTER OU PARTIR, DECIDEZ-VOUS
           </h3>
-          <p className="text-primary-coral italic text-right">Médiation / Coaching pour une décision consciente</p>
+          <p className="text-primary-coral italic text-right">
+            Médiation / Coaching pour une décision consciente
+          </p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
           <p className="text-primary-cream/90 italic">
-            "On ne change pas une relation sans d'abord transformer ceux qui la vivent"
+            "On ne change pas une relation sans d'abord transformer ceux qui la
+            vivent"
           </p>
         </blockquote>
 

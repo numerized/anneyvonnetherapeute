@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+
 import { EvaluationModal } from '@/components/modals/EvaluationModal'
+import { Button } from '@/components/ui/button'
 
 export function EvaluationSection() {
   const [isEvaluationOpen, setIsEvaluationOpen] = useState(false)
@@ -17,10 +18,13 @@ export function EvaluationSection() {
                 Évaluez votre handicap relationnel
               </h2>
               <p className="text-xl text-primary-cream/80">
-                Découvrez votre niveau d'autonomie dans vos relations sociales et intimes. Notre questionnaire vous aide à identifier vos forces et vos axes d'amélioration pour des relations plus épanouissantes.
+                Découvrez votre niveau d'autonomie dans vos relations sociales
+                et intimes. Notre questionnaire vous aide à identifier vos
+                forces et vos axes d'amélioration pour des relations plus
+                épanouissantes.
               </p>
             </div>
-            <Button 
+            <Button
               onClick={() => setIsEvaluationOpen(true)}
               size="lg"
               className="bg-primary-coral hover:bg-primary-rust text-primary-cream text-lg px-8 py-6 rounded-full transition-all duration-300"
@@ -31,9 +35,9 @@ export function EvaluationSection() {
         </div>
       </section>
 
-      <EvaluationModal 
-        isOpen={isEvaluationOpen} 
-        onClose={() => setIsEvaluationOpen(false)} 
+      <EvaluationModal
+        isOpen={isEvaluationOpen}
+        onClose={() => setIsEvaluationOpen(false)}
       />
     </>
   )

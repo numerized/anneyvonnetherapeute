@@ -21,7 +21,11 @@ export interface HomePageProps {
   settings?: any
 }
 
-export function HomePage({ data, encodeDataAttribute, settings }: HomePageProps) {
+export function HomePage({
+  data,
+  encodeDataAttribute,
+  settings,
+}: HomePageProps) {
   // Default to an empty object to allow previews on non-existent documents
   const { overview = [], title = '', hero, statistics = [] } = data ?? {}
 
@@ -33,11 +37,11 @@ export function HomePage({ data, encodeDataAttribute, settings }: HomePageProps)
       {/* Stats Section */}
       {statistics && statistics.length > 0 && (
         <div className="max-w-7xl mx-auto px-6">
-          <Stats 
+          <Stats
             title="Une approche unique de la thérapie relationnelle"
-            items={statistics.map(stat => ({
+            items={statistics.map((stat) => ({
               value: stat.number,
-              label: stat.label
+              label: stat.label,
             }))}
           />
         </div>
@@ -47,13 +51,15 @@ export function HomePage({ data, encodeDataAttribute, settings }: HomePageProps)
       <About />
 
       <TherapyQuestionnaire />
-      
+
       <ProfessionalTraining />
       <AiCompanion />
       <EvaluationSection />
 
       <div className="max-w-7xl mx-auto px-6 space-y-20">
-        {title && !hero && <Header centered title={title} description={overview} />}
+        {title && !hero && (
+          <Header centered title={title} description={overview} />
+        )}
       </div>
     </>
   )

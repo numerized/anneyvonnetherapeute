@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+
 import { PricingPlans } from '@/components/pages/pricing/PricingPlans'
 
 export const metadata: Metadata = {
@@ -9,9 +10,9 @@ export const metadata: Metadata = {
 export default function PricingPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-0 xl:p-24">
-      <br/>
-      <br/>
-      <br/>
+      <br />
+      <br />
+      <br />
       <PricingPlans />
     </main>
   )

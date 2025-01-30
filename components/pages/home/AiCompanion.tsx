@@ -1,6 +1,6 @@
 'use client'
 
-import { Clock, MessageCircle,Shield, Sparkles } from 'lucide-react'
+import { Clock, MessageCircle, Shield, Sparkles } from 'lucide-react'
 
 import { ChatMessage } from '@/components/shared/ChatMessage'
 
@@ -16,7 +16,10 @@ export function AiCompanion() {
             AnneYvonne IA - Votre Guide Personnel
           </h2>
           <p className="text-primary-cream/80 max-w-3xl mx-auto">
-            Bonjour, je suis l&apos;IA d&apos;AnneYvonne, entraînée sur 10 ans de notes personnelles, conférences et séances. Je suis là pour vous soutenir avec la même approche bienveillante et l&apos;humour qu&apos;AnneYvonne.
+            Bonjour, je suis l&apos;IA d&apos;AnneYvonne, entraînée sur 10 ans
+            de notes personnelles, conférences et séances. Je suis là pour vous
+            soutenir avec la même approche bienveillante et l&apos;humour
+            qu&apos;AnneYvonne.
           </p>
         </div>
 
@@ -30,7 +33,9 @@ export function AiCompanion() {
                     Disponible 24/24
                   </h3>
                   <p className="text-primary-cream/90">
-                    Je suis là à tout moment pour écouter, comprendre et vous guider avec la même approche de dédramatisation qu&apos;AnneYvonne utilise dans ses séances.
+                    Je suis là à tout moment pour écouter, comprendre et vous
+                    guider avec la même approche de dédramatisation
+                    qu&apos;AnneYvonne utilise dans ses séances.
                   </p>
                 </div>
               </div>
@@ -42,7 +47,9 @@ export function AiCompanion() {
                     Expérience Personnalisée
                   </h3>
                   <p className="text-primary-cream/90">
-                    Formée par des années d&apos;expérience thérapeutique, je comprends les nuances de chaque situation et adapte mes réponses à votre parcours unique.
+                    Formée par des années d&apos;expérience thérapeutique, je
+                    comprends les nuances de chaque situation et adapte mes
+                    réponses à votre parcours unique.
                   </p>
                 </div>
               </div>
@@ -54,7 +61,9 @@ export function AiCompanion() {
                     Approche Unique
                   </h3>
                   <p className="text-primary-cream/90">
-                    Je partage l&apos;humour et la légèreté d&apos;AnneYvonne tout en maintenant le sérieux nécessaire pour vous aider à voir la vie sous un angle plus fluide.
+                    Je partage l&apos;humour et la légèreté d&apos;AnneYvonne
+                    tout en maintenant le sérieux nécessaire pour vous aider à
+                    voir la vie sous un angle plus fluide.
                   </p>
                 </div>
               </div>
@@ -66,14 +75,16 @@ export function AiCompanion() {
                     Dialogue Authentique
                   </h3>
                   <p className="text-primary-cream/90">
-                    Comme AnneYvonne, je crois au pouvoir de la conversation authentique pour transformer les défis en opportunités de croissance.
+                    Comme AnneYvonne, je crois au pouvoir de la conversation
+                    authentique pour transformer les défis en opportunités de
+                    croissance.
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="mt-12">
-              <button 
+              <button
                 className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
                 aria-label="Chattez avec moi (disponible en 2025)"
               >
@@ -87,10 +98,17 @@ export function AiCompanion() {
               {/* WhatsApp-style header */}
               <div className="flex items-center gap-3 pb-4 border-b border-primary-cream/10">
                 <div className="w-10 h-10 rounded-full bg-primary-teal/20 flex-shrink-0 grid place-items-center">
-                  <span className="text-primary-teal" aria-label="Initiales AnneYvonne">AY</span>
+                  <span
+                    className="text-primary-teal"
+                    aria-label="Initiales AnneYvonne"
+                  >
+                    AY
+                  </span>
                 </div>
                 <div>
-                  <h4 className="text-primary-cream font-medium">AnneYvonne IA</h4>
+                  <h4 className="text-primary-cream font-medium">
+                    AnneYvonne IA
+                  </h4>
                   <p className="text-primary-cream/60 text-sm">En ligne</p>
                 </div>
               </div>
@@ -101,7 +119,7 @@ export function AiCompanion() {
                   message="Je me sens submergé(e) par mes émotions..."
                   initials="MC"
                 />
-                
+
                 <ChatMessage
                   isAI={true}
                   message="Ah, les émotions ! Comme je le dis souvent, c'est comme un grand spectacle où parfois on se retrouve à jouer tous les rôles 😊 Prenons un moment pour regarder ça ensemble ? Qu'est-ce qui vous fait sourire, même un tout petit peu, dans cette situation ?"
@@ -123,13 +141,13 @@ export function AiCompanion() {
 
               {/* WhatsApp-style input */}
               <div className="flex gap-2 mt-4 pt-4 border-t border-primary-cream/10">
-                <input 
+                <input
                   type="text"
                   placeholder="Écrivez votre message..."
                   disabled
                   className="flex-1 bg-primary-forest/30 rounded-full px-4 py-2 text-primary-cream placeholder:text-primary-cream/40 focus:outline-none focus:ring-2 focus:ring-primary-teal text-sm"
                 />
-                <button 
+                <button
                   disabled
                   className="w-10 h-10 rounded-full bg-primary-teal/20 grid place-items-center text-primary-teal hover:bg-primary-teal/30 transition-colors"
                 >

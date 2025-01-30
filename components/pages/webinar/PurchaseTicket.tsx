@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+
 import { loadStripe } from '@stripe/stripe-js'
 import { motion } from 'framer-motion'
 
 // Initialize Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+)
 
 interface PurchaseTicketProps {
   ticketType: 'standard' | 'vip'
@@ -50,7 +53,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
           currency,
           discount,
           couponCode: couponCode || undefined,
-          productType: 'webinar'
+          productType: 'webinar',
         }),
       })
 
@@ -90,7 +93,10 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-primary-cream/80 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-primary-cream/80 mb-2"
+              >
                 Email
               </label>
               <input
@@ -110,7 +116,9 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
               </label>
               <div className="flex gap-8 justify-center">
                 <label className="flex flex-col items-center gap-3 cursor-pointer group">
-                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}>
+                  <div
+                    className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
+                  >
                     <input
                       type="radio"
                       name="currency"
@@ -119,13 +127,23 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
                       onChange={(e) => setCurrency(e.target.value)}
                       className="sr-only"
                     />
-                    <span className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}>EUR</span>
+                    <span
+                      className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}
+                    >
+                      EUR
+                    </span>
                   </div>
-                  <span className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}>Euros</span>
+                  <span
+                    className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
+                  >
+                    Euros
+                  </span>
                 </label>
 
                 <label className="flex flex-col items-center gap-3 cursor-pointer group">
-                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'chf' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}>
+                  <div
+                    className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'chf' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
+                  >
                     <input
                       type="radio"
                       name="currency"
@@ -134,15 +152,26 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
                       onChange={(e) => setCurrency(e.target.value)}
                       className="sr-only"
                     />
-                    <span className={`text-2xl font-bold transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}>CHF</span>
+                    <span
+                      className={`text-2xl font-bold transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}
+                    >
+                      CHF
+                    </span>
                   </div>
-                  <span className={`text-sm transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/60'}`}>Francs Suisses</span>
+                  <span
+                    className={`text-sm transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
+                  >
+                    Francs Suisses
+                  </span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label htmlFor="coupon" className="block text-primary-cream/80 mb-2">
+              <label
+                htmlFor="coupon"
+                className="block text-primary-cream/80 mb-2"
+              >
                 Code promo (optionnel)
               </label>
               <input
@@ -174,9 +203,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
               </div>
             </div>
 
-            {error && (
-              <p className="text-red-500 text-sm">{error}</p>
-            )}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
 
             <button
               type="submit"

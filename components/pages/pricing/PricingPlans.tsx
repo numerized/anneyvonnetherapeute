@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { Heart, Users, Sparkles, Info, Check, Minus } from 'lucide-react'
+
 import clsx from 'clsx'
+import { Check, Heart, Info, Minus,Sparkles, Users } from 'lucide-react'
 
 const plans = [
   {
     name: 'Thérapie Relationnelle Individuelle',
-    description: 'Pour ceux qui souhaitent se reconnecter à eux-mêmes et transformer leur vie.',
+    description:
+      'Pour ceux qui souhaitent se reconnecter à eux-mêmes et transformer leur vie.',
     icon: Heart,
     price: '120',
     duration: 'la séance',
@@ -17,14 +19,15 @@ const plans = [
       'Définition du thème thérapeutique',
       'Suivi personnalisé',
       'Exercices pratiques',
-      'Support entre les séances'
+      'Support entre les séances',
     ],
     buttonText: 'Commencer',
-    buttonLink: '/contact'
+    buttonLink: '/contact',
   },
   {
     name: 'Thérapie Relationnelle de Couple',
-    description: 'Pour les couples en désir d\'harmonie, qui souhaitent mieux s\'entendre et se comprendre.',
+    description:
+      "Pour les couples en désir d'harmonie, qui souhaitent mieux s'entendre et se comprendre.",
     icon: Users,
     price: '150',
     duration: 'la séance',
@@ -34,15 +37,16 @@ const plans = [
       'Bilan relationnel complet',
       'Outils de communication',
       'Exercices pratiques en couple',
-      'Support entre les séances'
+      'Support entre les séances',
     ],
     buttonText: 'Commencer',
     buttonLink: '/contact',
-    highlight: true
+    highlight: true,
   },
   {
     name: 'Very Important Therapy',
-    description: 'Un accompagnement unique, totalement personnalisé et flexible selon vos besoins.',
+    description:
+      'Un accompagnement unique, totalement personnalisé et flexible selon vos besoins.',
     icon: Sparkles,
     price: 'Sur mesure',
     duration: '',
@@ -52,11 +56,11 @@ const plans = [
       'Sessions flexibles',
       'Support illimité',
       'Programme personnalisé',
-      'Suivi intensif'
+      'Suivi intensif',
     ],
     buttonText: 'Me contacter',
-    buttonLink: '/contact'
-  }
+    buttonLink: '/contact',
+  },
 ]
 
 const features = [
@@ -65,57 +69,57 @@ const features = [
     tooltip: 'Une séance de 30 minutes pour faire connaissance',
     basic: true,
     business: true,
-    enterprise: true
+    enterprise: true,
   },
   {
     name: 'Durée des séances',
     tooltip: 'Durée standard des séances',
     basic: '1h',
     business: '1h30',
-    enterprise: 'Flexible'
+    enterprise: 'Flexible',
   },
   {
     name: 'Bilan relationnel',
     tooltip: 'Évaluation complète de votre situation',
     basic: false,
     business: true,
-    enterprise: true
+    enterprise: true,
   },
   {
     name: 'Outils de communication',
     tooltip: 'Techniques et méthodes pour améliorer la communication',
     basic: false,
     business: true,
-    enterprise: true
+    enterprise: true,
   },
   {
     name: 'Exercices pratiques',
     tooltip: 'Exercices personnalisés à faire entre les séances',
     basic: true,
     business: true,
-    enterprise: true
+    enterprise: true,
   },
   {
     name: 'Support entre séances',
     tooltip: 'Possibilité de contact entre les séances',
     basic: false,
     business: true,
-    enterprise: true
+    enterprise: true,
   },
   {
     name: 'Programme personnalisé',
     tooltip: 'Plan thérapeutique sur mesure',
     basic: false,
     business: false,
-    enterprise: true
+    enterprise: true,
   },
   {
     name: 'Disponibilité prioritaire',
     tooltip: 'Accès prioritaire aux rendez-vous',
     basic: false,
     business: false,
-    enterprise: true
-  }
+    enterprise: true,
+  },
 ]
 
 export function PricingPlans() {
@@ -142,24 +146,35 @@ export function PricingPlans() {
                 'relative flex flex-col p-8 rounded-[32px]',
                 plan.highlight
                   ? 'bg-primary-forest/80 text-primary-cream ring-2 ring-primary-coral'
-                  : 'bg-primary-forest/20 text-primary-cream'
+                  : 'bg-primary-forest/20 text-primary-cream',
               )}
             >
               <div className="mb-4">
-                <Icon className={clsx(
-                  'w-8 h-8',
-                  plan.highlight ? 'text-primary-coral' : 'text-primary-cream/80'
-                )} />
+                <Icon
+                  className={clsx(
+                    'w-8 h-8',
+                    plan.highlight
+                      ? 'text-primary-coral'
+                      : 'text-primary-cream/80',
+                  )}
+                />
               </div>
 
               <h3 className="text-2xl font-light mb-2">{plan.name}</h3>
-              <p className="text-sm text-primary-cream/80 mb-8">{plan.description}</p>
+              <p className="text-sm text-primary-cream/80 mb-8">
+                {plan.description}
+              </p>
 
               <div className="mb-8">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-light">{plan.price}{plan.duration && '€'}</span>
+                  <span className="text-4xl font-light">
+                    {plan.price}
+                    {plan.duration && '€'}
+                  </span>
                   {plan.duration && (
-                    <span className="text-sm text-primary-cream/70">/ {plan.duration}</span>
+                    <span className="text-sm text-primary-cream/70">
+                      / {plan.duration}
+                    </span>
                   )}
                 </div>
               </div>
@@ -168,7 +183,9 @@ export function PricingPlans() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
                     <span className="text-primary-coral">♦</span>
-                    <span className="text-sm text-primary-cream/90">{feature}</span>
+                    <span className="text-sm text-primary-cream/90">
+                      {feature}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -179,7 +196,7 @@ export function PricingPlans() {
                   'inline-flex justify-center items-center px-6 py-3 text-sm font-medium rounded-full transition-colors',
                   plan.highlight
                     ? 'bg-primary-coral hover:bg-primary-coral/90 text-primary-cream'
-                    : 'bg-primary-forest hover:bg-primary-forest/90 text-primary-cream'
+                    : 'bg-primary-forest hover:bg-primary-forest/90 text-primary-cream',
                 )}
               >
                 {plan.buttonText}
@@ -193,7 +210,7 @@ export function PricingPlans() {
         <h3 className="text-2xl font-light text-primary-cream mb-8 text-center">
           Comparaison détaillée des offres
         </h3>
-        
+
         <div className="w-full">
           <div className="grid grid-cols-4 gap-4 mb-4 text-primary-cream/90">
             <div className="text-left font-medium">Fonctionnalités</div>
@@ -213,7 +230,7 @@ export function PricingPlans() {
                   <Info className="w-4 h-4 text-primary-cream/40" />
                 )}
               </div>
-              
+
               <div className="flex justify-center items-center text-primary-cream/80">
                 {typeof feature.basic === 'boolean' ? (
                   feature.basic ? (

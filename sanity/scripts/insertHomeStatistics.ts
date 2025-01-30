@@ -20,34 +20,34 @@ const statistics = {
       _key: '1',
       _type: 'statistic',
       number: '95%',
-      label: 'Taux de satisfaction client'
+      label: 'Taux de satisfaction client',
     },
     {
       _key: '2',
       _type: 'statistic',
       number: '500+',
-      label: 'Couples accompagnés'
+      label: 'Couples accompagnés',
     },
     {
       _key: '3',
       _type: 'statistic',
       number: '20',
-      label: 'Années d\'expérience'
+      label: "Années d'expérience",
     },
     {
       _key: '4',
       _type: 'statistic',
       number: '85%',
-      label: 'Amélioration des relations'
-    }
-  ]
+      label: 'Amélioration des relations',
+    },
+  ],
 }
 
 // Update the home document with the statistics
 client
   .patch('home')
   .set({
-    statistics: statistics.statistics
+    statistics: statistics.statistics,
   })
   .commit()
   .then((res) => {

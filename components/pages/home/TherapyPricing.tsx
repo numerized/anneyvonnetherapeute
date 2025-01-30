@@ -1,19 +1,20 @@
 'use client'
 
-import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
 import { useState } from 'react'
+
+import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
 
 import { IndividualPromoModal } from '@/components/global/IndividualPromoModal'
 import { PromoModal } from '@/components/global/PromoModal'
 import { VitPromoModal } from '@/components/global/VitPromoModal'
 
-import { Benefit } from './Benefit'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
 import { MenTherapyCard } from './pricing/MenTherapyCard'
 import { SexologyTherapyCard } from './pricing/SexologyTherapyCard'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { WomenTherapyCard } from './pricing/WomenTherapyCard'
+import { Benefit } from './Benefit'
 
 interface TherapyPricingProps {
   className?: string
@@ -21,7 +22,8 @@ interface TherapyPricingProps {
 
 export function TherapyPricing({ className }: TherapyPricingProps) {
   const [showPromoModal, setShowPromoModal] = useState(false)
-  const [showIndividualPromoModal, setShowIndividualPromoModal] = useState(false)
+  const [showIndividualPromoModal, setShowIndividualPromoModal] =
+    useState(false)
   const [showVitPromoModal, setShowVitPromoModal] = useState(false)
 
   const handleShowPromo = (modalType: string) => {
@@ -56,16 +58,29 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
             <CoupleTherapyCard onShowPromo={() => handleShowPromo('promo')} />
             <SexologyTherapyCard onShowPromo={() => handleShowPromo('promo')} />
             <MenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
-            <WomenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
-            <IndividualTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+            <WomenTherapyCard
+              onShowPromo={() => handleShowPromo('individual')}
+            />
+            <IndividualTherapyCard
+              onShowPromo={() => handleShowPromo('individual')}
+            />
             <VitTherapyCard onShowPromo={() => handleShowPromo('vit')} />
           </div>
         </div>
       </section>
 
-      <PromoModal isOpen={showPromoModal} onClose={() => setShowPromoModal(false)} />
-      <IndividualPromoModal isOpen={showIndividualPromoModal} onClose={() => setShowIndividualPromoModal(false)} />
-      <VitPromoModal isOpen={showVitPromoModal} onClose={() => setShowVitPromoModal(false)} />
+      <PromoModal
+        isOpen={showPromoModal}
+        onClose={() => setShowPromoModal(false)}
+      />
+      <IndividualPromoModal
+        isOpen={showIndividualPromoModal}
+        onClose={() => setShowIndividualPromoModal(false)}
+      />
+      <VitPromoModal
+        isOpen={showVitPromoModal}
+        onClose={() => setShowVitPromoModal(false)}
+      />
     </>
   )
 }

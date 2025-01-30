@@ -1,10 +1,1218 @@
-var ye=Object.defineProperty;var xe=(e,n,t)=>n in e?ye(e,n,{enumerable:!0,configurable:!0,writable:!0,value:t}):e[n]=t;var $=(e,n,t)=>(xe(e,typeof n!="symbol"?n+"":n,t),t);import{$ as ge,a0 as be,r as p,aR as Y,bx as Z,by as q,bz as A,bA as Ie,f as ie,ar as L,j as d,bB as K,bC as U,V as Pe,i as we,be as oe,A as je,bD as ve,bE as ke,bF as D,aZ as Ee,bG as H,bH as _e,bI as Se,bp as Re,bJ as Ce,bK as Te,bL as De,bM as $e,bN as Le,bO as ze,bP as le,bt as Me,ab as C,k as V,bQ as B,bR as F,C as O,a as de,H as Oe,S as J,T as _,m as X,o as N,bS as ce,bT as Ne,bU as Ae,bV as Ve,bW as Be,bX as We,z as ee,F as te,bi as He,bY as Fe,bZ as ne,b_ as Q,b$ as Ge,c0 as Ke,c1 as Ue,al as Je,c2 as ue,bb as Ye,c3 as Ze,aO as qe,c4 as Qe,c5 as Xe,c6 as z,c7 as et,c8 as tt,c9 as nt,ca as at}from"./sanity-033f6ba9.js";function rt(){return ge(function(e,n){var t,s=!1;e.subscribe(be(n,function(r){var o=t;t=r,s&&n.next([o,r]),s=!0}))})}const st=[];function it(e){const{children:n,flatIndex:t,index:s,params:r,payload:o,siblingIndex:a}=e,{navigate:i,navigateIntent:l,resolvePathFromState:f}=Y(),c=Z(),{panes:m,expand:y}=Ce(),u=p.useMemo(()=>(c==null?void 0:c.panes)||st,[c==null?void 0:c.panes]),h=p.useMemo(()=>m==null?void 0:m[m.length-2],[m]),b=s-1,j=p.useCallback(x=>{const I=u[b]||[],w=I[a],S=x(I,w),fe=[...u.slice(0,b),S,...u.slice(b+1)];return{...c||{},panes:fe}},[b,u,c,a]),P=p.useCallback(x=>{const I=j(x);return setTimeout(()=>i(I),0),I},[j,i]),v=p.useCallback(x=>{const I=j((w,S)=>[...w.slice(0,a),{...S,params:x},...w.slice(a+1)]);return f(I)},[j,f,a]),g=p.useCallback(x=>{P((I,w)=>[...I.slice(0,a),{...w,payload:x},...I.slice(a+1)])},[P,a]),E=p.useCallback(x=>{P((I,w)=>[...I.slice(0,a),{...w,params:x},...I.slice(a+1)])},[P,a]),k=p.useCallback(({id:x,parentRefPath:I,type:w,template:S})=>{i({panes:[...u.slice(0,b+1),[{id:x,params:{template:S.id,parentRefPath:Te(I),type:w},payload:S.params}]]})},[b,i,u]),R=p.useMemo(()=>({index:t,groupIndex:b,siblingIndex:a,payload:o,params:r,hasGroupSiblings:u[b]?u[b].length>1:!1,groupLength:u[b]?u[b].length:0,routerPanesState:u,ChildLink:De,BackLink:t?$e:void 0,ReferenceChildLink:Le,handleEditReference:k,ParameterizedLink:ze,replaceCurrent:(x={})=>{P(()=>[{id:x.id||"",payload:x.payload,params:x.params||{}}])},closeCurrent:()=>{P((x,I)=>x.length>1?x.filter(w=>w!==I):x)},closeCurrentAndAfter:(x=!0)=>{x&&h&&y(h.element),i({panes:[...u.slice(0,b)]})},duplicateCurrent:x=>{P((I,w)=>{const S={...w,payload:(x==null?void 0:x.payload)||w.payload,params:(x==null?void 0:x.params)||w.params};return[...I.slice(0,a),S,...I.slice(a)]})},setView:x=>{const I=le(r,"view");return E(x?{...I,view:x}:I)},setParams:E,setPayload:g,createPathWithParams:v,navigateIntent:l}),[t,b,a,o,r,u,k,E,g,v,l,P,h,i,y]);return d.jsx(Me.Provider,{value:R,children:n})}class T extends Error{constructor({message:t,context:s,helpId:r,cause:o}){super(t);$(this,"cause");$(this,"context");$(this,"helpId");this.name="PaneResolutionError",this.context=s,this.helpId=r,this.cause=o}}const ae=new WeakMap;function W(e){const n=ae.get(e);if(n)return n;const t=tt();return ae.set(e,t),t}const ot=e=>!!e&&typeof(e==null?void 0:e.then)=="function",lt=e=>q(e)?typeof e.serialize=="function":!1,dt=e=>(n,t,s)=>{try{return e(n,t,s)}catch(r){throw r instanceof T?r:new T({message:typeof(r==null?void 0:r.message)=="string"?r.message:"",context:t,cause:r})}},ct=e=>(...n)=>e(...n).pipe(nt(1),at());function pe(e){const n=dt(ct(e((t,s,r)=>{if(!t)throw new T({message:"Pane returned no child",context:s,helpId:"structure-item-returned-no-child"});return ot(t)||Qe(t)?Xe(t).pipe(Q(o=>n(o,s,r))):lt(t)?n(t.serialize(s),s,r):typeof t=="function"?n(t(s.id,s),s,r):z(t)})));return n}const re=new WeakMap;function he(e,n){const t=re.get(e)||new Map;if(t){const o=t.get(n);if(o)return o}const s=e[n];if(typeof s!="function")throw new Error(`Expected property \`${n}\` to be a function but got ${typeof s} instead.`);const r=s.bind(e);return t.set(n,r),re.set(e,t),r}async function ut(e){const n=new Map,t=pe(a=>(i,l,f)=>{const c=i&&`${W(i)}-${l.path.join("__")}`,m=c&&n.get(c);if(m)return m;const y=a(i,l,f);return c&&n.set(c,y),y}),s=[[{id:`__edit__${e.params.id}`,params:{...le(e.params,["id"]),type:e.params.type},payload:e.payload}]];async function r({currentId:a,flatIndex:i,intent:l,params:f,parent:c,path:m,payload:y,unresolvedPane:u,levelIndex:h,structureContext:b}){var E;if(!u)return[];const{id:j,type:P,...v}=f,g=await ue(t(u,{id:a,splitIndex:0,parent:c,path:m,index:i,params:{},payload:void 0,structureContext:b},i));return g.type==="document"&&g.id===j?[{panes:[...m.slice(0,m.length-1).map(k=>[{id:k}]),[{id:j,params:v,payload:y}]],depthIndex:m.length,levelIndex:h}]:(E=g.canHandleIntent)!=null&&E.call(g,l,f,{pane:g,index:i})||g.type==="documentList"&&g.schemaTypeName===P&&g.options.filter==="_type == $type"?[{panes:[...m.map(k=>[{id:k}]),[{id:f.id,params:v,payload:y}]],depthIndex:m.length,levelIndex:h}]:g.type==="list"&&g.child&&g.items?(await Promise.all(g.items.map((k,R)=>k.type==="divider"?Promise.resolve([]):r({currentId:k._id||k.id,flatIndex:i+1,intent:l,params:f,parent:g,path:[...m,k.id],payload:y,unresolvedPane:typeof g.child=="function"?he(g,"child"):g.child,levelIndex:R,structureContext:b})))).flat():[]}const o=(await r({currentId:"root",flatIndex:0,levelIndex:0,intent:e.intent,params:e.params,parent:null,path:[],payload:e.payload,unresolvedPane:e.rootPaneNode,structureContext:e.structureContext})).sort((a,i)=>a.depthIndex===i.depthIndex?a.levelIndex-i.levelIndex:a.depthIndex-i.depthIndex)[0];return o?o.panes:s}const pt=(e,n)=>{const t=e.replace(/^__edit__/,""),{params:s,payload:r,structureContext:{resolveDocumentNode:o}}=n,{type:a,template:i}=s;if(!a)throw new Error(`Document type for document with ID ${t} was not provided in the router params.`);let l=o({schemaType:a,documentId:t}).id("editor");return i&&(l=l.initialValueTemplate(i,r)),l.serialize()};function ht(e){var n,t;return`contextHash(${JSON.stringify({id:e.id,parentId:parent&&W(parent),path:e.path,index:e.index,splitIndex:e.splitIndex,serializeOptionsIndex:(n=e.serializeOptions)==null?void 0:n.index,serializeOptionsPath:(t=e.serializeOptions)==null?void 0:t.path})})`}const se=e=>{const n={type:e.type,id:e.routerPaneSibling.id,params:e.routerPaneSibling.params||{},payload:e.routerPaneSibling.payload||null,flatIndex:e.flatIndex,groupIndex:e.groupIndex,siblingIndex:e.siblingIndex,path:e.path,paneNode:e.type==="resolvedMeta"?W(e.paneNode):null};return`metaHash(${JSON.stringify(n)})`};function M({unresolvedPane:e,flattenedRouterPanes:n,parent:t,path:s,resolvePane:r,structureContext:o}){const[a,...i]=n,l=i[0],f={id:a.routerPaneSibling.id,splitIndex:a.siblingIndex,parent:t,path:[...s,a.routerPaneSibling.id],index:a.flatIndex,params:a.routerPaneSibling.params||{},payload:a.routerPaneSibling.payload,structureContext:o};try{return r(e,f,a.flatIndex).pipe(Q(c=>{const m={type:"resolvedMeta",...a,paneNode:c,path:f.path},y=i.map((h,b)=>({type:"loading",path:[...f.path,...i.slice(b).map((j,P)=>`[${h.flatIndex+P}]`)],paneNode:null,...h}));if(!i.length)return z([m]);let u;return l!=null&&l.routerPaneSibling.id.startsWith("__edit__")?u=M({unresolvedPane:pt,flattenedRouterPanes:i,parent:t,path:f.path,resolvePane:r,structureContext:o}):a.groupIndex===(l==null?void 0:l.groupIndex)?u=M({unresolvedPane:e,flattenedRouterPanes:i,parent:t,path:s,resolvePane:r,structureContext:o}):u=M({unresolvedPane:typeof c.child=="function"?he(c,"child"):c.child,flattenedRouterPanes:i,parent:c,path:f.path,resolvePane:r,structureContext:o}),et(z([m,...y]),u.pipe(C(h=>[m,...h])))}))}catch(c){if(c instanceof T&&(c.context&&console.warn(`Pane resolution error at index ${c.context.index}${c.context.splitIndex>0?` for split pane index ${c.context.splitIndex}`:""}: ${c.message}${c.helpId?` - see ${ce(c.helpId)}`:""}`,c),c.helpId==="structure-item-returned-no-child"))return z([]);throw c}}function mt({routerPanesStream:e,rootPaneNode:n,initialCacheState:t={cacheKeysByFlatIndex:[],flattenedRouterPanes:[],resolvedPaneCache:new Map,resolvePane:()=>Ke},structureContext:s}){return e.pipe(C(r=>[[{id:"root"}],...r]),C(r=>r.flatMap((o,a)=>o.map((i,l)=>({routerPaneSibling:i,groupIndex:a,siblingIndex:l}))).map((o,a)=>({...o,flatIndex:a}))),Fe([]),rt(),C(([r,o])=>{for(let a=0;a<o.length;a++){const i=r[a],l=o[a];if(!U(i,l))return{flattenedRouterPanes:o,diffIndex:a}}return{flattenedRouterPanes:o,diffIndex:o.length}}),ne((r,o)=>{const{cacheKeysByFlatIndex:a,resolvedPaneCache:i}=r,{flattenedRouterPanes:l,diffIndex:f}=o,c=a.slice(0,f+1),m=a.slice(f+1),y=new Set(c.flatMap(h=>Array.from(h))),u=m.flatMap(h=>Array.from(h)).filter(h=>!y.has(h));for(const h of u)i.delete(h);return{flattenedRouterPanes:l,cacheKeysByFlatIndex:a,resolvedPaneCache:i,resolvePane:pe(h=>(b,j,P)=>{const v=b&&`${W(b)}-${ht(j)}`,g=v&&i.get(v);if(g)return g;const E=h(b,j,P);if(!v)return E;const k=a[P]||new Set;return k.add(v),a[P]=k,i.set(v,E),E})}},t),Q(({flattenedRouterPanes:r,resolvePane:o})=>M({unresolvedPane:n,flattenedRouterPanes:r,parent:null,path:[],resolvePane:o,structureContext:s}))).pipe(ne((r,o)=>o.map((a,i)=>{const l=r[i];return!l||a.type!=="loading"?a:l.routerPaneSibling.id===a.routerPaneSibling.id?l:a}),[]),Ge((r,o)=>{if(r.length!==o.length)return!1;for(let a=0;a<o.length;a++){const i=r[a],l=o[a];if(se(i)!==se(l))return!1}return!0}))}function ft(){const e=p.useMemo(()=>new Ue(1),[]),n=p.useMemo(()=>e.asObservable().pipe(C(s=>(s==null?void 0:s.panes)||[])),[e]),{state:t}=Y();return p.useEffect(()=>{e.next(t)},[t,e]),n}function yt(){const[e,n]=p.useState();if(e)throw e;const{structureContext:t,rootPaneNode:s}=A(),[r,o]=p.useState({paneDataItems:[],resolvedPanes:[],routerPanes:[]}),a=ft();return p.useEffect(()=>{const i=mt({rootPaneNode:s,routerPanesStream:a,structureContext:t}).pipe(C(l=>{const f=l.reduce((y,u)=>{const h=y[u.groupIndex]||[];return h[u.siblingIndex]=u.routerPaneSibling,y[u.groupIndex]=h,y},[]),c=f.length,m=l.map(y=>{const{groupIndex:u,flatIndex:h,siblingIndex:b,routerPaneSibling:j,path:P}=y,v=j.id,g=f[u+1];return{active:u===c-2,childItemId:(g==null?void 0:g[0].id)??null,index:h,itemId:j.id,groupIndex:u,key:`${y.type==="loading"?"unknown":y.paneNode.id}-${v}-${b}`,pane:y.type==="loading"?D:y.paneNode,params:j.params||{},path:P.join(";"),payload:j.payload,selected:h===l.length-1,siblingIndex:b}});return{paneDataItems:m,routerPanes:f,resolvedPanes:m.map(y=>y.pane)}})).subscribe({next:l=>o(l),error:l=>n(l)});return()=>i.unsubscribe()},[s,a,t]),r}async function xt(e,n,t){if(n&&t)return{id:n,type:t};if(!n&&t)return{id:Je(),type:t};if(n&&!t){const s=await ue(e.resolveTypeForDocument(n));return{id:n,type:s}}throw new T({message:"Neither document `id` or `type` was provided when trying to resolve intent."})}const gt={},bt=p.memo(function(){const{navigate:e}=Y(),n=Z(p.useCallback(i=>{const l=typeof i.intent=="string"?i.intent:void 0;return l?{intent:l,params:q(i.params)?i.params:gt,payload:i.payload}:void 0},[])),{rootPaneNode:t,structureContext:s}=A(),r=Ie(),[o,a]=p.useState(null);if(o)throw o;return p.useEffect(()=>{if(n){const{intent:i,params:l,payload:f}=n;let c=!1;async function m(){const{id:y,type:u}=await xt(r,typeof l.id=="string"?l.id:void 0,typeof l.type=="string"?l.type:void 0);if(c)return;const h=await ut({intent:i,params:{...l,id:y,type:u},payload:f,rootPaneNode:t,structureContext:s});c||e({panes:h},{replace:!0})}return m().catch(a),()=>{c=!0}}},[r,n,e,t,s]),null}),It=ie.span`
+var ye = Object.defineProperty
+var xe = (e, n, t) =>
+  n in e
+    ? ye(e, n, { enumerable: !0, configurable: !0, writable: !0, value: t })
+    : (e[n] = t)
+var $ = (e, n, t) => (xe(e, typeof n != 'symbol' ? n + '' : n, t), t)
+import {
+  $ as ge,
+  a0 as be,
+  r as p,
+  aR as Y,
+  bx as Z,
+  by as q,
+  bz as A,
+  bA as Ie,
+  f as ie,
+  ar as L,
+  j as d,
+  bB as K,
+  bC as U,
+  V as Pe,
+  i as we,
+  be as oe,
+  A as je,
+  bD as ve,
+  bE as ke,
+  bF as D,
+  aZ as Ee,
+  bG as H,
+  bH as _e,
+  bI as Se,
+  bp as Re,
+  bJ as Ce,
+  bK as Te,
+  bL as De,
+  bM as $e,
+  bN as Le,
+  bO as ze,
+  bP as le,
+  bt as Me,
+  ab as C,
+  k as V,
+  bQ as B,
+  bR as F,
+  C as O,
+  a as de,
+  H as Oe,
+  S as J,
+  T as _,
+  m as X,
+  o as N,
+  bS as ce,
+  bT as Ne,
+  bU as Ae,
+  bV as Ve,
+  bW as Be,
+  bX as We,
+  z as ee,
+  F as te,
+  bi as He,
+  bY as Fe,
+  bZ as ne,
+  b_ as Q,
+  b$ as Ge,
+  c0 as Ke,
+  c1 as Ue,
+  al as Je,
+  c2 as ue,
+  bb as Ye,
+  c3 as Ze,
+  aO as qe,
+  c4 as Qe,
+  c5 as Xe,
+  c6 as z,
+  c7 as et,
+  c8 as tt,
+  c9 as nt,
+  ca as at,
+} from './sanity-033f6ba9.js'
+function rt() {
+  return ge(function (e, n) {
+    var t,
+      s = !1
+    e.subscribe(
+      be(n, function (r) {
+        var o = t
+        ;(t = r), s && n.next([o, r]), (s = !0)
+      }),
+    )
+  })
+}
+const st = []
+function it(e) {
+  const {
+      children: n,
+      flatIndex: t,
+      index: s,
+      params: r,
+      payload: o,
+      siblingIndex: a,
+    } = e,
+    { navigate: i, navigateIntent: l, resolvePathFromState: f } = Y(),
+    c = Z(),
+    { panes: m, expand: y } = Ce(),
+    u = p.useMemo(
+      () => (c == null ? void 0 : c.panes) || st,
+      [c == null ? void 0 : c.panes],
+    ),
+    h = p.useMemo(() => (m == null ? void 0 : m[m.length - 2]), [m]),
+    b = s - 1,
+    j = p.useCallback(
+      (x) => {
+        const I = u[b] || [],
+          w = I[a],
+          S = x(I, w),
+          fe = [...u.slice(0, b), S, ...u.slice(b + 1)]
+        return { ...(c || {}), panes: fe }
+      },
+      [b, u, c, a],
+    ),
+    P = p.useCallback(
+      (x) => {
+        const I = j(x)
+        return setTimeout(() => i(I), 0), I
+      },
+      [j, i],
+    ),
+    v = p.useCallback(
+      (x) => {
+        const I = j((w, S) => [
+          ...w.slice(0, a),
+          { ...S, params: x },
+          ...w.slice(a + 1),
+        ])
+        return f(I)
+      },
+      [j, f, a],
+    ),
+    g = p.useCallback(
+      (x) => {
+        P((I, w) => [...I.slice(0, a), { ...w, payload: x }, ...I.slice(a + 1)])
+      },
+      [P, a],
+    ),
+    E = p.useCallback(
+      (x) => {
+        P((I, w) => [...I.slice(0, a), { ...w, params: x }, ...I.slice(a + 1)])
+      },
+      [P, a],
+    ),
+    k = p.useCallback(
+      ({ id: x, parentRefPath: I, type: w, template: S }) => {
+        i({
+          panes: [
+            ...u.slice(0, b + 1),
+            [
+              {
+                id: x,
+                params: { template: S.id, parentRefPath: Te(I), type: w },
+                payload: S.params,
+              },
+            ],
+          ],
+        })
+      },
+      [b, i, u],
+    ),
+    R = p.useMemo(
+      () => ({
+        index: t,
+        groupIndex: b,
+        siblingIndex: a,
+        payload: o,
+        params: r,
+        hasGroupSiblings: u[b] ? u[b].length > 1 : !1,
+        groupLength: u[b] ? u[b].length : 0,
+        routerPanesState: u,
+        ChildLink: De,
+        BackLink: t ? $e : void 0,
+        ReferenceChildLink: Le,
+        handleEditReference: k,
+        ParameterizedLink: ze,
+        replaceCurrent: (x = {}) => {
+          P(() => [
+            { id: x.id || '', payload: x.payload, params: x.params || {} },
+          ])
+        },
+        closeCurrent: () => {
+          P((x, I) => (x.length > 1 ? x.filter((w) => w !== I) : x))
+        },
+        closeCurrentAndAfter: (x = !0) => {
+          x && h && y(h.element), i({ panes: [...u.slice(0, b)] })
+        },
+        duplicateCurrent: (x) => {
+          P((I, w) => {
+            const S = {
+              ...w,
+              payload: (x == null ? void 0 : x.payload) || w.payload,
+              params: (x == null ? void 0 : x.params) || w.params,
+            }
+            return [...I.slice(0, a), S, ...I.slice(a)]
+          })
+        },
+        setView: (x) => {
+          const I = le(r, 'view')
+          return E(x ? { ...I, view: x } : I)
+        },
+        setParams: E,
+        setPayload: g,
+        createPathWithParams: v,
+        navigateIntent: l,
+      }),
+      [t, b, a, o, r, u, k, E, g, v, l, P, h, i, y],
+    )
+  return d.jsx(Me.Provider, { value: R, children: n })
+}
+class T extends Error {
+  constructor({ message: t, context: s, helpId: r, cause: o }) {
+    super(t)
+    $(this, 'cause')
+    $(this, 'context')
+    $(this, 'helpId')
+    ;(this.name = 'PaneResolutionError'),
+      (this.context = s),
+      (this.helpId = r),
+      (this.cause = o)
+  }
+}
+const ae = new WeakMap()
+function W(e) {
+  const n = ae.get(e)
+  if (n) return n
+  const t = tt()
+  return ae.set(e, t), t
+}
+const ot = (e) => !!e && typeof (e == null ? void 0 : e.then) == 'function',
+  lt = (e) => (q(e) ? typeof e.serialize == 'function' : !1),
+  dt = (e) => (n, t, s) => {
+    try {
+      return e(n, t, s)
+    } catch (r) {
+      throw r instanceof T
+        ? r
+        : new T({
+            message:
+              typeof (r == null ? void 0 : r.message) == 'string'
+                ? r.message
+                : '',
+            context: t,
+            cause: r,
+          })
+    }
+  },
+  ct =
+    (e) =>
+    (...n) =>
+      e(...n).pipe(nt(1), at())
+function pe(e) {
+  const n = dt(
+    ct(
+      e((t, s, r) => {
+        if (!t)
+          throw new T({
+            message: 'Pane returned no child',
+            context: s,
+            helpId: 'structure-item-returned-no-child',
+          })
+        return ot(t) || Qe(t)
+          ? Xe(t).pipe(Q((o) => n(o, s, r)))
+          : lt(t)
+            ? n(t.serialize(s), s, r)
+            : typeof t == 'function'
+              ? n(t(s.id, s), s, r)
+              : z(t)
+      }),
+    ),
+  )
+  return n
+}
+const re = new WeakMap()
+function he(e, n) {
+  const t = re.get(e) || new Map()
+  if (t) {
+    const o = t.get(n)
+    if (o) return o
+  }
+  const s = e[n]
+  if (typeof s != 'function')
+    throw new Error(
+      `Expected property \`${n}\` to be a function but got ${typeof s} instead.`,
+    )
+  const r = s.bind(e)
+  return t.set(n, r), re.set(e, t), r
+}
+async function ut(e) {
+  const n = new Map(),
+    t = pe((a) => (i, l, f) => {
+      const c = i && `${W(i)}-${l.path.join('__')}`,
+        m = c && n.get(c)
+      if (m) return m
+      const y = a(i, l, f)
+      return c && n.set(c, y), y
+    }),
+    s = [
+      [
+        {
+          id: `__edit__${e.params.id}`,
+          params: { ...le(e.params, ['id']), type: e.params.type },
+          payload: e.payload,
+        },
+      ],
+    ]
+  async function r({
+    currentId: a,
+    flatIndex: i,
+    intent: l,
+    params: f,
+    parent: c,
+    path: m,
+    payload: y,
+    unresolvedPane: u,
+    levelIndex: h,
+    structureContext: b,
+  }) {
+    var E
+    if (!u) return []
+    const { id: j, type: P, ...v } = f,
+      g = await ue(
+        t(
+          u,
+          {
+            id: a,
+            splitIndex: 0,
+            parent: c,
+            path: m,
+            index: i,
+            params: {},
+            payload: void 0,
+            structureContext: b,
+          },
+          i,
+        ),
+      )
+    return g.type === 'document' && g.id === j
+      ? [
+          {
+            panes: [
+              ...m.slice(0, m.length - 1).map((k) => [{ id: k }]),
+              [{ id: j, params: v, payload: y }],
+            ],
+            depthIndex: m.length,
+            levelIndex: h,
+          },
+        ]
+      : ((E = g.canHandleIntent) != null &&
+            E.call(g, l, f, { pane: g, index: i })) ||
+          (g.type === 'documentList' &&
+            g.schemaTypeName === P &&
+            g.options.filter === '_type == $type')
+        ? [
+            {
+              panes: [
+                ...m.map((k) => [{ id: k }]),
+                [{ id: f.id, params: v, payload: y }],
+              ],
+              depthIndex: m.length,
+              levelIndex: h,
+            },
+          ]
+        : g.type === 'list' && g.child && g.items
+          ? (
+              await Promise.all(
+                g.items.map((k, R) =>
+                  k.type === 'divider'
+                    ? Promise.resolve([])
+                    : r({
+                        currentId: k._id || k.id,
+                        flatIndex: i + 1,
+                        intent: l,
+                        params: f,
+                        parent: g,
+                        path: [...m, k.id],
+                        payload: y,
+                        unresolvedPane:
+                          typeof g.child == 'function'
+                            ? he(g, 'child')
+                            : g.child,
+                        levelIndex: R,
+                        structureContext: b,
+                      }),
+                ),
+              )
+            ).flat()
+          : []
+  }
+  const o = (
+    await r({
+      currentId: 'root',
+      flatIndex: 0,
+      levelIndex: 0,
+      intent: e.intent,
+      params: e.params,
+      parent: null,
+      path: [],
+      payload: e.payload,
+      unresolvedPane: e.rootPaneNode,
+      structureContext: e.structureContext,
+    })
+  ).sort((a, i) =>
+    a.depthIndex === i.depthIndex
+      ? a.levelIndex - i.levelIndex
+      : a.depthIndex - i.depthIndex,
+  )[0]
+  return o ? o.panes : s
+}
+const pt = (e, n) => {
+  const t = e.replace(/^__edit__/, ''),
+    {
+      params: s,
+      payload: r,
+      structureContext: { resolveDocumentNode: o },
+    } = n,
+    { type: a, template: i } = s
+  if (!a)
+    throw new Error(
+      `Document type for document with ID ${t} was not provided in the router params.`,
+    )
+  let l = o({ schemaType: a, documentId: t }).id('editor')
+  return i && (l = l.initialValueTemplate(i, r)), l.serialize()
+}
+function ht(e) {
+  var n, t
+  return `contextHash(${JSON.stringify({ id: e.id, parentId: parent && W(parent), path: e.path, index: e.index, splitIndex: e.splitIndex, serializeOptionsIndex: (n = e.serializeOptions) == null ? void 0 : n.index, serializeOptionsPath: (t = e.serializeOptions) == null ? void 0 : t.path })})`
+}
+const se = (e) => {
+  const n = {
+    type: e.type,
+    id: e.routerPaneSibling.id,
+    params: e.routerPaneSibling.params || {},
+    payload: e.routerPaneSibling.payload || null,
+    flatIndex: e.flatIndex,
+    groupIndex: e.groupIndex,
+    siblingIndex: e.siblingIndex,
+    path: e.path,
+    paneNode: e.type === 'resolvedMeta' ? W(e.paneNode) : null,
+  }
+  return `metaHash(${JSON.stringify(n)})`
+}
+function M({
+  unresolvedPane: e,
+  flattenedRouterPanes: n,
+  parent: t,
+  path: s,
+  resolvePane: r,
+  structureContext: o,
+}) {
+  const [a, ...i] = n,
+    l = i[0],
+    f = {
+      id: a.routerPaneSibling.id,
+      splitIndex: a.siblingIndex,
+      parent: t,
+      path: [...s, a.routerPaneSibling.id],
+      index: a.flatIndex,
+      params: a.routerPaneSibling.params || {},
+      payload: a.routerPaneSibling.payload,
+      structureContext: o,
+    }
+  try {
+    return r(e, f, a.flatIndex).pipe(
+      Q((c) => {
+        const m = { type: 'resolvedMeta', ...a, paneNode: c, path: f.path },
+          y = i.map((h, b) => ({
+            type: 'loading',
+            path: [
+              ...f.path,
+              ...i.slice(b).map((j, P) => `[${h.flatIndex + P}]`),
+            ],
+            paneNode: null,
+            ...h,
+          }))
+        if (!i.length) return z([m])
+        let u
+        return (
+          l != null && l.routerPaneSibling.id.startsWith('__edit__')
+            ? (u = M({
+                unresolvedPane: pt,
+                flattenedRouterPanes: i,
+                parent: t,
+                path: f.path,
+                resolvePane: r,
+                structureContext: o,
+              }))
+            : a.groupIndex === (l == null ? void 0 : l.groupIndex)
+              ? (u = M({
+                  unresolvedPane: e,
+                  flattenedRouterPanes: i,
+                  parent: t,
+                  path: s,
+                  resolvePane: r,
+                  structureContext: o,
+                }))
+              : (u = M({
+                  unresolvedPane:
+                    typeof c.child == 'function' ? he(c, 'child') : c.child,
+                  flattenedRouterPanes: i,
+                  parent: c,
+                  path: f.path,
+                  resolvePane: r,
+                  structureContext: o,
+                })),
+          et(z([m, ...y]), u.pipe(C((h) => [m, ...h])))
+        )
+      }),
+    )
+  } catch (c) {
+    if (
+      c instanceof T &&
+      (c.context &&
+        console.warn(
+          `Pane resolution error at index ${c.context.index}${c.context.splitIndex > 0 ? ` for split pane index ${c.context.splitIndex}` : ''}: ${c.message}${c.helpId ? ` - see ${ce(c.helpId)}` : ''}`,
+          c,
+        ),
+      c.helpId === 'structure-item-returned-no-child')
+    )
+      return z([])
+    throw c
+  }
+}
+function mt({
+  routerPanesStream: e,
+  rootPaneNode: n,
+  initialCacheState: t = {
+    cacheKeysByFlatIndex: [],
+    flattenedRouterPanes: [],
+    resolvedPaneCache: new Map(),
+    resolvePane: () => Ke,
+  },
+  structureContext: s,
+}) {
+  return e
+    .pipe(
+      C((r) => [[{ id: 'root' }], ...r]),
+      C((r) =>
+        r
+          .flatMap((o, a) =>
+            o.map((i, l) => ({
+              routerPaneSibling: i,
+              groupIndex: a,
+              siblingIndex: l,
+            })),
+          )
+          .map((o, a) => ({ ...o, flatIndex: a })),
+      ),
+      Fe([]),
+      rt(),
+      C(([r, o]) => {
+        for (let a = 0; a < o.length; a++) {
+          const i = r[a],
+            l = o[a]
+          if (!U(i, l)) return { flattenedRouterPanes: o, diffIndex: a }
+        }
+        return { flattenedRouterPanes: o, diffIndex: o.length }
+      }),
+      ne((r, o) => {
+        const { cacheKeysByFlatIndex: a, resolvedPaneCache: i } = r,
+          { flattenedRouterPanes: l, diffIndex: f } = o,
+          c = a.slice(0, f + 1),
+          m = a.slice(f + 1),
+          y = new Set(c.flatMap((h) => Array.from(h))),
+          u = m.flatMap((h) => Array.from(h)).filter((h) => !y.has(h))
+        for (const h of u) i.delete(h)
+        return {
+          flattenedRouterPanes: l,
+          cacheKeysByFlatIndex: a,
+          resolvedPaneCache: i,
+          resolvePane: pe((h) => (b, j, P) => {
+            const v = b && `${W(b)}-${ht(j)}`,
+              g = v && i.get(v)
+            if (g) return g
+            const E = h(b, j, P)
+            if (!v) return E
+            const k = a[P] || new Set()
+            return k.add(v), (a[P] = k), i.set(v, E), E
+          }),
+        }
+      }, t),
+      Q(({ flattenedRouterPanes: r, resolvePane: o }) =>
+        M({
+          unresolvedPane: n,
+          flattenedRouterPanes: r,
+          parent: null,
+          path: [],
+          resolvePane: o,
+          structureContext: s,
+        }),
+      ),
+    )
+    .pipe(
+      ne(
+        (r, o) =>
+          o.map((a, i) => {
+            const l = r[i]
+            return !l || a.type !== 'loading'
+              ? a
+              : l.routerPaneSibling.id === a.routerPaneSibling.id
+                ? l
+                : a
+          }),
+        [],
+      ),
+      Ge((r, o) => {
+        if (r.length !== o.length) return !1
+        for (let a = 0; a < o.length; a++) {
+          const i = r[a],
+            l = o[a]
+          if (se(i) !== se(l)) return !1
+        }
+        return !0
+      }),
+    )
+}
+function ft() {
+  const e = p.useMemo(() => new Ue(1), []),
+    n = p.useMemo(
+      () =>
+        e.asObservable().pipe(C((s) => (s == null ? void 0 : s.panes) || [])),
+      [e],
+    ),
+    { state: t } = Y()
+  return (
+    p.useEffect(() => {
+      e.next(t)
+    }, [t, e]),
+    n
+  )
+}
+function yt() {
+  const [e, n] = p.useState()
+  if (e) throw e
+  const { structureContext: t, rootPaneNode: s } = A(),
+    [r, o] = p.useState({
+      paneDataItems: [],
+      resolvedPanes: [],
+      routerPanes: [],
+    }),
+    a = ft()
+  return (
+    p.useEffect(() => {
+      const i = mt({
+        rootPaneNode: s,
+        routerPanesStream: a,
+        structureContext: t,
+      })
+        .pipe(
+          C((l) => {
+            const f = l.reduce((y, u) => {
+                const h = y[u.groupIndex] || []
+                return (
+                  (h[u.siblingIndex] = u.routerPaneSibling),
+                  (y[u.groupIndex] = h),
+                  y
+                )
+              }, []),
+              c = f.length,
+              m = l.map((y) => {
+                const {
+                    groupIndex: u,
+                    flatIndex: h,
+                    siblingIndex: b,
+                    routerPaneSibling: j,
+                    path: P,
+                  } = y,
+                  v = j.id,
+                  g = f[u + 1]
+                return {
+                  active: u === c - 2,
+                  childItemId: (g == null ? void 0 : g[0].id) ?? null,
+                  index: h,
+                  itemId: j.id,
+                  groupIndex: u,
+                  key: `${y.type === 'loading' ? 'unknown' : y.paneNode.id}-${v}-${b}`,
+                  pane: y.type === 'loading' ? D : y.paneNode,
+                  params: j.params || {},
+                  path: P.join(';'),
+                  payload: j.payload,
+                  selected: h === l.length - 1,
+                  siblingIndex: b,
+                }
+              })
+            return {
+              paneDataItems: m,
+              routerPanes: f,
+              resolvedPanes: m.map((y) => y.pane),
+            }
+          }),
+        )
+        .subscribe({ next: (l) => o(l), error: (l) => n(l) })
+      return () => i.unsubscribe()
+    }, [s, a, t]),
+    r
+  )
+}
+async function xt(e, n, t) {
+  if (n && t) return { id: n, type: t }
+  if (!n && t) return { id: Je(), type: t }
+  if (n && !t) {
+    const s = await ue(e.resolveTypeForDocument(n))
+    return { id: n, type: s }
+  }
+  throw new T({
+    message:
+      'Neither document `id` or `type` was provided when trying to resolve intent.',
+  })
+}
+const gt = {},
+  bt = p.memo(function () {
+    const { navigate: e } = Y(),
+      n = Z(
+        p.useCallback((i) => {
+          const l = typeof i.intent == 'string' ? i.intent : void 0
+          return l
+            ? {
+                intent: l,
+                params: q(i.params) ? i.params : gt,
+                payload: i.payload,
+              }
+            : void 0
+        }, []),
+      ),
+      { rootPaneNode: t, structureContext: s } = A(),
+      r = Ie(),
+      [o, a] = p.useState(null)
+    if (o) throw o
+    return (
+      p.useEffect(() => {
+        if (n) {
+          const { intent: i, params: l, payload: f } = n
+          let c = !1
+          async function m() {
+            const { id: y, type: u } = await xt(
+              r,
+              typeof l.id == 'string' ? l.id : void 0,
+              typeof l.type == 'string' ? l.type : void 0,
+            )
+            if (c) return
+            const h = await ut({
+              intent: i,
+              params: { ...l, id: y, type: u },
+              payload: f,
+              rootPaneNode: t,
+              structureContext: s,
+            })
+            c || e({ panes: h }, { replace: !0 })
+          }
+          return (
+            m().catch(a),
+            () => {
+              c = !0
+            }
+          )
+        }
+      }, [r, n, e, t, s]),
+      null
+    )
+  }),
+  It = ie.span`
   &:not(:last-child)::after {
     content: ' ➝ ';
     opacity: 0.5;
   }
-`;function Pt(e){return e.replace(/\(\.\.\.\)\./g,`(...)
-  .`).replace(/__WEBPACK_IMPORTED_MODULE_\d+_+/g,"").replace(/___default\./g,".").replace(new RegExp(` \\(https?:\\/\\/${window.location.host}`,"g")," (")}function wt({error:e}){if(!(e instanceof T))throw e;const{cause:n}=e,{t}=V(B),s=(n==null?void 0:n.stack)||e.stack,r=s&&!(n instanceof F)&&!e.message.includes("Module build failed:"),o=n instanceof F?n.path:[],a=n instanceof F&&n.helpId||e.helpId,i=p.useCallback(()=>{window.location.reload()},[]);return d.jsx(O,{height:"fill",overflow:"auto",padding:4,sizing:"border",tone:"critical",children:d.jsxs(de,{children:[d.jsx(Oe,{as:"h2",children:t("structure-error.header.text")}),d.jsxs(O,{marginTop:4,padding:4,radius:2,overflow:"auto",shadow:1,tone:"inherit",children:[o.length>0&&d.jsxs(J,{space:2,children:[d.jsx(_,{size:1,weight:"medium",children:t("structure-error.structure-path.label")}),d.jsx(X,{children:o.slice(1).map((l,f)=>d.jsx(It,{children:l},`${l}-${f}`))})]}),d.jsxs(J,{marginTop:4,space:2,children:[d.jsx(_,{size:1,weight:"medium",children:t("structure-error.error.label")}),d.jsx(X,{children:r?Pt(s):e.message})]}),a&&d.jsx(N,{marginTop:4,children:d.jsx(_,{children:d.jsx("a",{href:ce(a),rel:"noopener noreferrer",target:"_blank",children:t("structure-error.docs-link.text")})})}),d.jsx(N,{marginTop:4,children:d.jsx(Ne,{text:t("structure-error.reload-button.text"),icon:Ae,tone:"primary",onClick:i})})]})]})})}function jt(e){const{isSelected:n,pane:t,paneKey:s}=e,r=q(t)&&t.type||null,{t:o}=V(B);return d.jsxs(Ve,{id:s,selected:n,children:[d.jsx(Be,{title:o("panes.unknown-pane-type.title")}),d.jsx(We,{children:d.jsx(N,{padding:4,children:typeof r=="string"?d.jsx(_,{as:"p",muted:!0,children:d.jsx(ee,{t:o,i18nKey:"panes.unknown-pane-type.unknown-type.text",values:{type:r}})}):d.jsx(_,{as:"p",muted:!0,children:d.jsx(ee,{t:o,i18nKey:"panes.unknown-pane-type.missing-type.text"})})})})]})}const vt={component:p.lazy(()=>L(()=>import("./index-b83b734f.js"),["static/index-b83b734f.js","static/sanity-033f6ba9.js"])),document:p.lazy(()=>L(()=>import("./sanity-033f6ba9.js").then(e=>e.cD),[]).then(function(e){return e.pane})),documentList:p.lazy(()=>L(()=>import("./sanity-033f6ba9.js").then(e=>e.cD),[]).then(function(e){return e.pane$1})),list:p.lazy(()=>L(()=>import("./index2-0eb51cfc.js"),["static/index2-0eb51cfc.js","static/sanity-033f6ba9.js"]))},kt=p.memo(function(e){const{active:n,childItemId:t,groupIndex:s,index:r,itemId:o,pane:a,paneKey:i,params:l,payload:f,path:c,selected:m,siblingIndex:y}=e,u=vt[a.type]||jt;return d.jsx(it,{flatIndex:r,index:s,params:l,payload:f,siblingIndex:y,children:d.jsx(p.Suspense,{fallback:d.jsx(K,{paneKey:i,path:c,selected:m}),children:d.jsx(u,{childItemId:t||"",index:r,itemId:o,isActive:n,isSelected:m,paneKey:i,pane:a})})})},({params:e={},payload:n=null,...t},{params:s={},payload:r=null,...o})=>{if(!U(e,s)||!U(n,r))return!1;const a=new Set([...Object.keys(t),...Object.keys(o)]);for(const i of a)if(t[i]!==o[i])return!1;return!0});function Et(){const{t:e}=V(B);return d.jsx(O,{height:"fill",children:d.jsx(te,{align:"center",height:"fill",justify:"center",padding:4,sizing:"border",children:d.jsx(de,{width:0,children:d.jsx(O,{padding:4,radius:2,shadow:1,tone:"caution",children:d.jsxs(te,{children:[d.jsx(N,{children:d.jsx(_,{size:1,children:d.jsx(He,{})})}),d.jsxs(J,{flex:1,marginLeft:3,space:3,children:[d.jsx(_,{as:"h1",size:1,weight:"medium",children:e("no-document-types-screen.title")}),d.jsx(_,{as:"p",muted:!0,size:1,children:e("no-document-types-screen.subtitle")}),d.jsx(_,{as:"p",muted:!0,size:1,children:d.jsx("a",{href:"https://www.sanity.io/docs/create-a-schema-and-configure-sanity-studio",target:"_blank",rel:"noreferrer",children:e("no-document-types-screen.link-text")})})]})]})})})})})}const _t=e=>{const{documentId:n,documentType:t}=e,s=Ye(n,t),r=oe(),{t:o}=V(B),a=!(s!=null&&s.published)&&!(s!=null&&s.draft),i=(s==null?void 0:s.draft)||(s==null?void 0:s.published),l=r.get(t),{value:f,isLoading:c}=Ze({enabled:!0,schemaType:l,value:i}),m=a?o("browser-document-title.new-document",{schemaType:(l==null?void 0:l.title)||(l==null?void 0:l.name)}):(f==null?void 0:f.title)||o("browser-document-title.untitled-document"),y=s.ready&&!c,u=me(m);return p.useEffect(()=>{y&&(document.title=u)},[m,y,u]),null},G=e=>{const{title:n}=e,t=me(n);return p.useEffect(()=>{document.title=t},[t,n]),null},St=e=>{const{resolvedPanes:n}=e;if(!(n!=null&&n.length))return null;const t=n[n.length-1];return Ct(t)?d.jsx(G,{}):Rt(t)?t!=null&&t.title?d.jsx(G,{title:t.title}):d.jsx(_t,{documentId:t.options.id,documentType:t.options.type}):d.jsx(G,{title:t==null?void 0:t.title})};function me(e){const n=A().structureContext.title;return[e,n].filter(t=>t).join(" | ")}function Rt(e){return e!==D&&e.type==="document"}function Ct(e){return e===D}const Tt=ie(qe)`
+`
+function Pt(e) {
+  return e
+    .replace(
+      /\(\.\.\.\)\./g,
+      `(...)
+  .`,
+    )
+    .replace(/__WEBPACK_IMPORTED_MODULE_\d+_+/g, '')
+    .replace(/___default\./g, '.')
+    .replace(new RegExp(` \\(https?:\\/\\/${window.location.host}`, 'g'), ' (')
+}
+function wt({ error: e }) {
+  if (!(e instanceof T)) throw e
+  const { cause: n } = e,
+    { t } = V(B),
+    s = (n == null ? void 0 : n.stack) || e.stack,
+    r = s && !(n instanceof F) && !e.message.includes('Module build failed:'),
+    o = n instanceof F ? n.path : [],
+    a = (n instanceof F && n.helpId) || e.helpId,
+    i = p.useCallback(() => {
+      window.location.reload()
+    }, [])
+  return d.jsx(O, {
+    height: 'fill',
+    overflow: 'auto',
+    padding: 4,
+    sizing: 'border',
+    tone: 'critical',
+    children: d.jsxs(de, {
+      children: [
+        d.jsx(Oe, { as: 'h2', children: t('structure-error.header.text') }),
+        d.jsxs(O, {
+          marginTop: 4,
+          padding: 4,
+          radius: 2,
+          overflow: 'auto',
+          shadow: 1,
+          tone: 'inherit',
+          children: [
+            o.length > 0 &&
+              d.jsxs(J, {
+                space: 2,
+                children: [
+                  d.jsx(_, {
+                    size: 1,
+                    weight: 'medium',
+                    children: t('structure-error.structure-path.label'),
+                  }),
+                  d.jsx(X, {
+                    children: o
+                      .slice(1)
+                      .map((l, f) => d.jsx(It, { children: l }, `${l}-${f}`)),
+                  }),
+                ],
+              }),
+            d.jsxs(J, {
+              marginTop: 4,
+              space: 2,
+              children: [
+                d.jsx(_, {
+                  size: 1,
+                  weight: 'medium',
+                  children: t('structure-error.error.label'),
+                }),
+                d.jsx(X, { children: r ? Pt(s) : e.message }),
+              ],
+            }),
+            a &&
+              d.jsx(N, {
+                marginTop: 4,
+                children: d.jsx(_, {
+                  children: d.jsx('a', {
+                    href: ce(a),
+                    rel: 'noopener noreferrer',
+                    target: '_blank',
+                    children: t('structure-error.docs-link.text'),
+                  }),
+                }),
+              }),
+            d.jsx(N, {
+              marginTop: 4,
+              children: d.jsx(Ne, {
+                text: t('structure-error.reload-button.text'),
+                icon: Ae,
+                tone: 'primary',
+                onClick: i,
+              }),
+            }),
+          ],
+        }),
+      ],
+    }),
+  })
+}
+function jt(e) {
+  const { isSelected: n, pane: t, paneKey: s } = e,
+    r = (q(t) && t.type) || null,
+    { t: o } = V(B)
+  return d.jsxs(Ve, {
+    id: s,
+    selected: n,
+    children: [
+      d.jsx(Be, { title: o('panes.unknown-pane-type.title') }),
+      d.jsx(We, {
+        children: d.jsx(N, {
+          padding: 4,
+          children:
+            typeof r == 'string'
+              ? d.jsx(_, {
+                  as: 'p',
+                  muted: !0,
+                  children: d.jsx(ee, {
+                    t: o,
+                    i18nKey: 'panes.unknown-pane-type.unknown-type.text',
+                    values: { type: r },
+                  }),
+                })
+              : d.jsx(_, {
+                  as: 'p',
+                  muted: !0,
+                  children: d.jsx(ee, {
+                    t: o,
+                    i18nKey: 'panes.unknown-pane-type.missing-type.text',
+                  }),
+                }),
+        }),
+      }),
+    ],
+  })
+}
+const vt = {
+    component: p.lazy(() =>
+      L(
+        () => import('./index-b83b734f.js'),
+        ['static/index-b83b734f.js', 'static/sanity-033f6ba9.js'],
+      ),
+    ),
+    document: p.lazy(() =>
+      L(() => import('./sanity-033f6ba9.js').then((e) => e.cD), []).then(
+        function (e) {
+          return e.pane
+        },
+      ),
+    ),
+    documentList: p.lazy(() =>
+      L(() => import('./sanity-033f6ba9.js').then((e) => e.cD), []).then(
+        function (e) {
+          return e.pane$1
+        },
+      ),
+    ),
+    list: p.lazy(() =>
+      L(
+        () => import('./index2-0eb51cfc.js'),
+        ['static/index2-0eb51cfc.js', 'static/sanity-033f6ba9.js'],
+      ),
+    ),
+  },
+  kt = p.memo(
+    function (e) {
+      const {
+          active: n,
+          childItemId: t,
+          groupIndex: s,
+          index: r,
+          itemId: o,
+          pane: a,
+          paneKey: i,
+          params: l,
+          payload: f,
+          path: c,
+          selected: m,
+          siblingIndex: y,
+        } = e,
+        u = vt[a.type] || jt
+      return d.jsx(it, {
+        flatIndex: r,
+        index: s,
+        params: l,
+        payload: f,
+        siblingIndex: y,
+        children: d.jsx(p.Suspense, {
+          fallback: d.jsx(K, { paneKey: i, path: c, selected: m }),
+          children: d.jsx(u, {
+            childItemId: t || '',
+            index: r,
+            itemId: o,
+            isActive: n,
+            isSelected: m,
+            paneKey: i,
+            pane: a,
+          }),
+        }),
+      })
+    },
+    (
+      { params: e = {}, payload: n = null, ...t },
+      { params: s = {}, payload: r = null, ...o },
+    ) => {
+      if (!U(e, s) || !U(n, r)) return !1
+      const a = new Set([...Object.keys(t), ...Object.keys(o)])
+      for (const i of a) if (t[i] !== o[i]) return !1
+      return !0
+    },
+  )
+function Et() {
+  const { t: e } = V(B)
+  return d.jsx(O, {
+    height: 'fill',
+    children: d.jsx(te, {
+      align: 'center',
+      height: 'fill',
+      justify: 'center',
+      padding: 4,
+      sizing: 'border',
+      children: d.jsx(de, {
+        width: 0,
+        children: d.jsx(O, {
+          padding: 4,
+          radius: 2,
+          shadow: 1,
+          tone: 'caution',
+          children: d.jsxs(te, {
+            children: [
+              d.jsx(N, {
+                children: d.jsx(_, { size: 1, children: d.jsx(He, {}) }),
+              }),
+              d.jsxs(J, {
+                flex: 1,
+                marginLeft: 3,
+                space: 3,
+                children: [
+                  d.jsx(_, {
+                    as: 'h1',
+                    size: 1,
+                    weight: 'medium',
+                    children: e('no-document-types-screen.title'),
+                  }),
+                  d.jsx(_, {
+                    as: 'p',
+                    muted: !0,
+                    size: 1,
+                    children: e('no-document-types-screen.subtitle'),
+                  }),
+                  d.jsx(_, {
+                    as: 'p',
+                    muted: !0,
+                    size: 1,
+                    children: d.jsx('a', {
+                      href: 'https://www.sanity.io/docs/create-a-schema-and-configure-sanity-studio',
+                      target: '_blank',
+                      rel: 'noreferrer',
+                      children: e('no-document-types-screen.link-text'),
+                    }),
+                  }),
+                ],
+              }),
+            ],
+          }),
+        }),
+      }),
+    }),
+  })
+}
+const _t = (e) => {
+    const { documentId: n, documentType: t } = e,
+      s = Ye(n, t),
+      r = oe(),
+      { t: o } = V(B),
+      a = !(s != null && s.published) && !(s != null && s.draft),
+      i = (s == null ? void 0 : s.draft) || (s == null ? void 0 : s.published),
+      l = r.get(t),
+      { value: f, isLoading: c } = Ze({ enabled: !0, schemaType: l, value: i }),
+      m = a
+        ? o('browser-document-title.new-document', {
+            schemaType:
+              (l == null ? void 0 : l.title) || (l == null ? void 0 : l.name),
+          })
+        : (f == null ? void 0 : f.title) ||
+          o('browser-document-title.untitled-document'),
+      y = s.ready && !c,
+      u = me(m)
+    return (
+      p.useEffect(() => {
+        y && (document.title = u)
+      }, [m, y, u]),
+      null
+    )
+  },
+  G = (e) => {
+    const { title: n } = e,
+      t = me(n)
+    return (
+      p.useEffect(() => {
+        document.title = t
+      }, [t, n]),
+      null
+    )
+  },
+  St = (e) => {
+    const { resolvedPanes: n } = e
+    if (!(n != null && n.length)) return null
+    const t = n[n.length - 1]
+    return Ct(t)
+      ? d.jsx(G, {})
+      : Rt(t)
+        ? t != null && t.title
+          ? d.jsx(G, { title: t.title })
+          : d.jsx(_t, {
+              documentId: t.options.id,
+              documentType: t.options.type,
+            })
+        : d.jsx(G, { title: t == null ? void 0 : t.title })
+  }
+function me(e) {
+  const n = A().structureContext.title
+  return [e, n].filter((t) => t).join(' | ')
+}
+function Rt(e) {
+  return e !== D && e.type === 'document'
+}
+function Ct(e) {
+  return e === D
+}
+const Tt = ie(qe)`
   min-height: 100%;
   min-width: 320px;
-`,Dt=Pe("mod+s"),$t=p.memo(function({onPaneChange:e}){var u;const{push:n}=we(),t=oe(),{layoutCollapsed:s,setLayoutCollapsed:r}=A(),{paneDataItems:o,resolvedPanes:a}=yt(),i=Z(p.useCallback(h=>typeof h.intent=="string",[])),{sanity:{media:l}}=je(),[f,c]=p.useState(null),m=p.useCallback(()=>r(!0),[r]),y=p.useCallback(()=>r(!1),[r]);return p.useEffect(()=>{a.length&&e(a)},[e,a]),p.useEffect(()=>{const h=b=>{Dt(b)&&(b.preventDefault(),n({closable:!0,id:"auto-save-message",status:"info",title:"Your work is automatically saved!",duration:4e3}))};return window.addEventListener("keydown",h),()=>window.removeEventListener("keydown",h)},[n]),(u=t._original)!=null&&u.types.some(ve)?d.jsxs(ke,{element:f||null,children:[d.jsxs(Tt,{flex:1,height:s?void 0:"fill",minWidth:l[1],onCollapse:m,onExpand:y,children:[o.map(({active:h,childItemId:b,groupIndex:j,itemId:P,key:v,pane:g,index:E,params:k,path:R,payload:x,siblingIndex:I,selected:w})=>d.jsx(p.Fragment,{children:g===D?d.jsx(K,{paneKey:v,path:R,selected:w}):d.jsx(kt,{active:h,groupIndex:j,index:E,pane:g,childItemId:b,itemId:P,paneKey:v,params:k,payload:x,path:R,selected:w,siblingIndex:I})},`${g===D?"loading":g.type}-${E}`)),o.length<=1&&i&&d.jsx(K,{paneKey:"intent-resolver"})]}),d.jsx(St,{resolvedPanes:a}),d.jsx("div",{"data-portal":"",ref:c})]}):d.jsx(Et,{})});function Mt({tool:{options:e}}){const{unstable_sources:n}=Ee(),[t]=n,{source:s,defaultDocumentNode:r,structure:o}=e||{};p.useEffect(()=>(H([]),()=>H([])),[]);const[{error:a},i]=p.useState({error:null});return a?d.jsx(wt,{error:a}):d.jsx(_e,{onCatch:i,children:d.jsx(Se,{name:s||t.name,children:d.jsxs(Re,{defaultDocumentNode:r,structure:o,children:[d.jsx($t,{onPaneChange:H}),d.jsx(bt,{})]})})})}export{Mt as default};
+`,
+  Dt = Pe('mod+s'),
+  $t = p.memo(function ({ onPaneChange: e }) {
+    var u
+    const { push: n } = we(),
+      t = oe(),
+      { layoutCollapsed: s, setLayoutCollapsed: r } = A(),
+      { paneDataItems: o, resolvedPanes: a } = yt(),
+      i = Z(p.useCallback((h) => typeof h.intent == 'string', [])),
+      {
+        sanity: { media: l },
+      } = je(),
+      [f, c] = p.useState(null),
+      m = p.useCallback(() => r(!0), [r]),
+      y = p.useCallback(() => r(!1), [r])
+    return (
+      p.useEffect(() => {
+        a.length && e(a)
+      }, [e, a]),
+      p.useEffect(() => {
+        const h = (b) => {
+          Dt(b) &&
+            (b.preventDefault(),
+            n({
+              closable: !0,
+              id: 'auto-save-message',
+              status: 'info',
+              title: 'Your work is automatically saved!',
+              duration: 4e3,
+            }))
+        }
+        return (
+          window.addEventListener('keydown', h),
+          () => window.removeEventListener('keydown', h)
+        )
+      }, [n]),
+      (u = t._original) != null && u.types.some(ve)
+        ? d.jsxs(ke, {
+            element: f || null,
+            children: [
+              d.jsxs(Tt, {
+                flex: 1,
+                height: s ? void 0 : 'fill',
+                minWidth: l[1],
+                onCollapse: m,
+                onExpand: y,
+                children: [
+                  o.map(
+                    ({
+                      active: h,
+                      childItemId: b,
+                      groupIndex: j,
+                      itemId: P,
+                      key: v,
+                      pane: g,
+                      index: E,
+                      params: k,
+                      path: R,
+                      payload: x,
+                      siblingIndex: I,
+                      selected: w,
+                    }) =>
+                      d.jsx(
+                        p.Fragment,
+                        {
+                          children:
+                            g === D
+                              ? d.jsx(K, { paneKey: v, path: R, selected: w })
+                              : d.jsx(kt, {
+                                  active: h,
+                                  groupIndex: j,
+                                  index: E,
+                                  pane: g,
+                                  childItemId: b,
+                                  itemId: P,
+                                  paneKey: v,
+                                  params: k,
+                                  payload: x,
+                                  path: R,
+                                  selected: w,
+                                  siblingIndex: I,
+                                }),
+                        },
+                        `${g === D ? 'loading' : g.type}-${E}`,
+                      ),
+                  ),
+                  o.length <= 1 &&
+                    i &&
+                    d.jsx(K, { paneKey: 'intent-resolver' }),
+                ],
+              }),
+              d.jsx(St, { resolvedPanes: a }),
+              d.jsx('div', { 'data-portal': '', ref: c }),
+            ],
+          })
+        : d.jsx(Et, {})
+    )
+  })
+function Mt({ tool: { options: e } }) {
+  const { unstable_sources: n } = Ee(),
+    [t] = n,
+    { source: s, defaultDocumentNode: r, structure: o } = e || {}
+  p.useEffect(() => (H([]), () => H([])), [])
+  const [{ error: a }, i] = p.useState({ error: null })
+  return a
+    ? d.jsx(wt, { error: a })
+    : d.jsx(_e, {
+        onCatch: i,
+        children: d.jsx(Se, {
+          name: s || t.name,
+          children: d.jsxs(Re, {
+            defaultDocumentNode: r,
+            structure: o,
+            children: [d.jsx($t, { onPaneChange: H }), d.jsx(bt, {})],
+          }),
+        }),
+      })
+}
+export { Mt as default }

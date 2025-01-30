@@ -1,8 +1,9 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { Heart, Users, User, BookOpen } from 'lucide-react'
+
+import { AnimatePresence,motion } from 'framer-motion'
+import { BookOpen,Heart, User, Users } from 'lucide-react'
 
 interface QuestionnaireRewardProps {
   isOpen: boolean
@@ -10,7 +11,11 @@ interface QuestionnaireRewardProps {
   situation?: 'couple' | 'individual'
 }
 
-export function QuestionnaireReward({ isOpen, onClose, situation }: QuestionnaireRewardProps) {
+export function QuestionnaireReward({
+  isOpen,
+  onClose,
+  situation,
+}: QuestionnaireRewardProps) {
   const [showParticles, setShowParticles] = useState(false)
 
   useEffect(() => {
@@ -45,7 +50,7 @@ export function QuestionnaireReward({ isOpen, onClose, situation }: Questionnair
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
                     className="absolute top-4 left-4 w-12 h-12 rounded-full bg-primary-coral/10 flex items-center justify-center"
                   >
                     <Heart className="w-6 h-6 text-primary-cream" />
@@ -53,7 +58,7 @@ export function QuestionnaireReward({ isOpen, onClose, situation }: Questionnair
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: [0, 1.2, 1] }}
-                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                    transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
                     className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-primary-cream/10 flex items-center justify-center"
                   >
                     {situation === 'couple' ? (
@@ -87,7 +92,8 @@ export function QuestionnaireReward({ isOpen, onClose, situation }: Questionnair
                   Merci pour votre sincérité
                 </h2>
                 <p className="text-primary-cream/90 text-lg mb-8 text-left">
-                  Votre honnêteté est la première étape vers un véritable changement. Je suis là pour vous accompagner dans ce voyage.
+                  Votre honnêteté est la première étape vers un véritable
+                  changement. Je suis là pour vous accompagner dans ce voyage.
                 </p>
                 <div className="text-left">
                   <motion.button

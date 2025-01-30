@@ -1,25 +1,27 @@
-'use client';
+'use client'
 
-import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Play, Pause } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useRef,useState } from 'react'
+
+import { motion } from 'framer-motion'
+import { Pause,Play } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 export function ZenClickButton() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const handleClick = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current) return
 
     if (isPlaying) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
     } else {
-      audioRef.current.play();
+      audioRef.current.play()
     }
-    setIsPlaying(!isPlaying);
-  };
+    setIsPlaying(!isPlaying)
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -53,5 +55,5 @@ export function ZenClickButton() {
         onEnded={() => setIsPlaying(false)}
       />
     </div>
-  );
+  )
 }

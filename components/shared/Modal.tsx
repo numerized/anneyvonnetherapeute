@@ -1,6 +1,7 @@
+import { Fragment } from 'react'
+
 import { Dialog, Transition } from '@headlessui/react'
 import { X } from 'lucide-react'
-import { Fragment } from 'react'
 
 interface ModalProps {
   isOpen: boolean
@@ -10,7 +11,13 @@ interface ModalProps {
   children: React.ReactNode
 }
 
-export function Modal({ isOpen, onClose, title, subtitle, children }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  subtitle,
+  children,
+}: ModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -49,20 +56,21 @@ export function Modal({ isOpen, onClose, title, subtitle, children }: ModalProps
 
                 {/* Title */}
                 <div className="mb-4 mt-8">
-                  <Dialog.Title as="h3" className="text-3xl text-primary-coral font-light mb-2">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-3xl text-primary-coral font-light mb-2"
+                  >
                     {title}
                   </Dialog.Title>
                   {subtitle && (
-                    <p className="text-primary-cream/90 text-lg italic">{subtitle}</p>
+                    <p className="text-primary-cream/90 text-lg italic">
+                      {subtitle}
+                    </p>
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="mt-4">
-                  {children}
-                </div>
-
-                
+                <div className="mt-4">{children}</div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

@@ -1,74 +1,94 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState } from 'react'
-import { Users, User, Sparkles, Heart, ArrowUpRight, Target, Users2, Clock } from 'lucide-react'
+
+import { AnimatePresence, motion } from 'framer-motion'
+import {
+  ArrowUpRight,
+  Clock,
+  Heart,
+  Sparkles,
+  Target,
+  User,
+  Users,
+  Users2,
+} from 'lucide-react'
+
 import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { scrollToSection } from '@/utils/scroll'
 
-import { BeginningStageCard } from './stages/BeginningStageCard'
-import { CheckupStageCard } from './stages/CheckupStageCard'
+import { TherapyPromoModal } from './modals/TherapyPromoModal'
 import { CoupleTherapyCard } from './pricing/CoupleTherapyCard'
-import { DecisionStageCard } from './stages/DecisionStageCard'
 import { IndividualTherapyCard } from './pricing/IndividualTherapyCard'
 import { MenTherapyCard } from './pricing/MenTherapyCard'
 import { SexologyTherapyCard } from './pricing/SexologyTherapyCard'
-import { TherapyPromoModal } from './modals/TherapyPromoModal'
 import { VitTherapyCard } from './pricing/VitTherapyCard'
 import { WomenTherapyCard } from './pricing/WomenTherapyCard'
+import { BeginningStageCard } from './stages/BeginningStageCard'
+import { CheckupStageCard } from './stages/CheckupStageCard'
+import { DecisionStageCard } from './stages/DecisionStageCard'
 
 type TherapyOption = {
   title: string
   description: string
-  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision' | 'sexology' | 'men' | 'women'
+  type:
+    | 'couple'
+    | 'individual'
+    | 'vit'
+    | 'beginning'
+    | 'checkup'
+    | 'decision'
+    | 'sexology'
+    | 'men'
+    | 'women'
 }
 
 const therapyOptions: TherapyOption[] = [
   {
     title: 'FORFAIT COUPLE',
     description: 'Thérapie de couple',
-    type: 'couple'
+    type: 'couple',
   },
   {
     title: 'FORFAIT INDIVIDUEL',
     description: 'Thérapie individuelle',
-    type: 'individual'
+    type: 'individual',
   },
   {
     title: 'FORFAIT VIT',
     description: 'Thérapie intensive',
-    type: 'vit'
+    type: 'vit',
   },
   {
     title: 'FORFAIT HOMME',
     description: 'Programme de transformation sexuelle pour hommes',
-    type: 'men'
+    type: 'men',
   },
   {
     title: 'FORFAIT FEMME',
     description: 'Voyage vers une sexualité libérée et épanouie pour femmes',
-    type: 'women'
+    type: 'women',
   },
   {
     title: 'FORFAIT SEXOLOGIE',
     description: 'Thérapie sexologique',
-    type: 'sexology'
+    type: 'sexology',
   },
   {
     title: 'FORFAIT DÉMARRAGE',
     description: 'Pour bien démarrer',
-    type: 'beginning'
+    type: 'beginning',
   },
   {
     title: 'FORFAIT BILAN',
     description: 'Pour faire le point',
-    type: 'checkup'
+    type: 'checkup',
   },
   {
     title: 'FORFAIT DÉCISION',
     description: 'Pour prendre une décision',
-    type: 'decision'
-  }
+    type: 'decision',
+  },
 ]
 
 export function TherapyQuestionnaire() {
@@ -78,21 +98,23 @@ export function TherapyQuestionnaire() {
     need: '',
     intimacyFocus: false,
     gender: '',
-    stage: ''
+    stage: '',
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
-  const [selectedTherapyType, setSelectedTherapyType] = useState<TherapyOption['type'] | null>(null)
+  const [selectedTherapyType, setSelectedTherapyType] = useState<
+    TherapyOption['type'] | null
+  >(null)
   const [showReward, setShowReward] = useState(false)
   const questionnaireRef = useRef<HTMLElement>(null)
 
   const handleSituationSelect = (situation: string) => {
-    setAnswers(prev => ({ ...prev, situation }))
+    setAnswers((prev) => ({ ...prev, situation }))
     setStep(2)
   }
 
   const handleNeedSelect = (need: string) => {
-    setAnswers(prev => ({ ...prev, need }))
+    setAnswers((prev) => ({ ...prev, need }))
 
     if (need === 'intimacy' && answers.situation === 'individual') {
       setStep(3) // Go to gender selection
@@ -102,32 +124,36 @@ export function TherapyQuestionnaire() {
     let recommended: TherapyOption[] = []
     switch (need) {
       case 'regular':
-        recommended = [therapyOptions.find(option => option.type === 'individual')!]
+        recommended = [
+          therapyOptions.find((option) => option.type === 'individual')!,
+        ]
         break
       case 'intensive':
-        recommended = [therapyOptions.find(option => option.type === 'vit')!]
+        recommended = [therapyOptions.find((option) => option.type === 'vit')!]
         break
       case 'intimacy':
         if (answers.situation === 'couple') {
           recommended = [
-            therapyOptions.find(option => option.type === 'sexology')!,
-            therapyOptions.find(option => option.type === 'couple')!
+            therapyOptions.find((option) => option.type === 'sexology')!,
+            therapyOptions.find((option) => option.type === 'couple')!,
           ]
         }
         break
       case 'start':
-        recommended = [therapyOptions.find(option => option.type === 'beginning')!]
+        recommended = [
+          therapyOptions.find((option) => option.type === 'beginning')!,
+        ]
         break
       case 'improve':
         recommended = [
-          therapyOptions.find(option => option.type === 'checkup')!,
-          therapyOptions.find(option => option.type === 'couple')!
+          therapyOptions.find((option) => option.type === 'checkup')!,
+          therapyOptions.find((option) => option.type === 'couple')!,
         ]
         break
       case 'decide':
         recommended = [
-          therapyOptions.find(option => option.type === 'decision')!,
-          therapyOptions.find(option => option.type === 'couple')!
+          therapyOptions.find((option) => option.type === 'decision')!,
+          therapyOptions.find((option) => option.type === 'couple')!,
         ]
         break
     }
@@ -138,32 +164,41 @@ export function TherapyQuestionnaire() {
   }
 
   const handleGenderSelect = (gender: 'male' | 'female') => {
-    setAnswers(prev => ({ ...prev, gender }))
-    const recommended: TherapyOption[] = [{
-      title: gender === 'male' ? 'FORFAIT HOMME' : 'FORFAIT FEMME',
-      description: gender === 'male'
-        ? 'Programme de transformation sexuelle pour hommes'
-        : 'Voyage vers une sexualité libérée et épanouie pour femmes',
-      type: gender === 'male' ? 'men' : 'women'
-    }]
+    setAnswers((prev) => ({ ...prev, gender }))
+    const recommended: TherapyOption[] = [
+      {
+        title: gender === 'male' ? 'FORFAIT HOMME' : 'FORFAIT FEMME',
+        description:
+          gender === 'male'
+            ? 'Programme de transformation sexuelle pour hommes'
+            : 'Voyage vers une sexualité libérée et épanouie pour femmes',
+        type: gender === 'male' ? 'men' : 'women',
+      },
+    ]
     setRecommendations(recommended)
     setShowReward(true)
     setStep(4)
   }
 
   const handleStageSelect = (stage: string) => {
-    setAnswers(prev => ({ ...prev, stage }))
+    setAnswers((prev) => ({ ...prev, stage }))
     let recommended: TherapyOption[]
 
     switch (stage) {
       case 'beginning':
-        recommended = therapyOptions.filter(option => option.type === 'beginning')
+        recommended = therapyOptions.filter(
+          (option) => option.type === 'beginning',
+        )
         break
       case 'checkup':
-        recommended = therapyOptions.filter(option => option.type === 'checkup')
+        recommended = therapyOptions.filter(
+          (option) => option.type === 'checkup',
+        )
         break
       case 'decision':
-        recommended = therapyOptions.filter(option => option.type === 'decision')
+        recommended = therapyOptions.filter(
+          (option) => option.type === 'decision',
+        )
         break
       default:
         recommended = []
@@ -176,7 +211,13 @@ export function TherapyQuestionnaire() {
 
   const handleRestart = () => {
     setStep(1)
-    setAnswers({ situation: '', need: '', intimacyFocus: false, gender: '', stage: '' })
+    setAnswers({
+      situation: '',
+      need: '',
+      intimacyFocus: false,
+      gender: '',
+      stage: '',
+    })
     setRecommendations([])
     setShowReward(false)
     scrollToSection('questionnaire')
@@ -190,19 +231,37 @@ export function TherapyQuestionnaire() {
   const renderCard = (type: TherapyOption['type']) => {
     switch (type) {
       case 'couple':
-        return <CoupleTherapyCard onShowPromo={() => handleShowPromo('couple')} />
+        return (
+          <CoupleTherapyCard onShowPromo={() => handleShowPromo('couple')} />
+        )
       case 'individual':
-        return <IndividualTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+        return (
+          <IndividualTherapyCard
+            onShowPromo={() => handleShowPromo('individual')}
+          />
+        )
       case 'vit':
         return <VitTherapyCard onShowPromo={() => handleShowPromo('vit')} />
       case 'beginning':
-        return <BeginningStageCard onShowPromo={() => handleShowPromo('beginning')} />
+        return (
+          <BeginningStageCard
+            onShowPromo={() => handleShowPromo('beginning')}
+          />
+        )
       case 'checkup':
-        return <CheckupStageCard onShowPromo={() => handleShowPromo('checkup')} />
+        return (
+          <CheckupStageCard onShowPromo={() => handleShowPromo('checkup')} />
+        )
       case 'decision':
-        return <DecisionStageCard onShowPromo={() => handleShowPromo('decision')} />
+        return (
+          <DecisionStageCard onShowPromo={() => handleShowPromo('decision')} />
+        )
       case 'sexology':
-        return <SexologyTherapyCard onShowPromo={() => handleShowPromo('sexology')} />
+        return (
+          <SexologyTherapyCard
+            onShowPromo={() => handleShowPromo('sexology')}
+          />
+        )
       case 'men':
         return <MenTherapyCard onShowPromo={() => handleShowPromo('men')} />
       case 'women':
@@ -233,11 +292,16 @@ export function TherapyQuestionnaire() {
           <div className="relative">
             <div className="max-w-2xl mx-auto text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-light text-primary-coral">
-                {step === 4 ? (recommendations.length === 1 ? 'Notre recommandation pour vous' : 'Nos recommandations pour vous') : 'Quelle thérapie vous correspond ?'}
+                {step === 4
+                  ? recommendations.length === 1
+                    ? 'Notre recommandation pour vous'
+                    : 'Nos recommandations pour vous'
+                  : 'Quelle thérapie vous correspond ?'}
               </h2>
               {step !== 4 && (
                 <p className="text-lg mt-4">
-                  Répondez à deux questions simples pour découvrir nos recommandations personnalisées
+                  Répondez à deux questions simples pour découvrir nos
+                  recommandations personnalisées
                 </p>
               )}
             </div>
@@ -253,7 +317,9 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6 p-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Quelle est votre situation ?</h3>
+                  <h3 className="text-xl text-primary-cream mb-6">
+                    Quelle est votre situation ?
+                  </h3>
                   <div className="grid gap-4">
                     <button
                       onClick={() => handleSituationSelect('couple')}
@@ -261,7 +327,10 @@ export function TherapyQuestionnaire() {
                     >
                       <div className="flex items-center gap-3">
                         <Users className="w-5 h-5 flex-shrink-0" />
-                        <span>Je suis en couple ou je souhaite travailler sur ma relation</span>
+                        <span>
+                          Je suis en couple ou je souhaite travailler sur ma
+                          relation
+                        </span>
                       </div>
                     </button>
                     <button
@@ -283,7 +352,9 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6 p-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Que souhaitez-vous ?</h3>
+                  <h3 className="text-xl text-primary-cream mb-6">
+                    Que souhaitez-vous ?
+                  </h3>
                   <div className="grid gap-4">
                     <button
                       onClick={() => handleNeedSelect('start')}
@@ -309,7 +380,9 @@ export function TherapyQuestionnaire() {
                     >
                       <div className="flex items-center gap-3">
                         <Target className="w-5 h-5 flex-shrink-0" />
-                        <span>Prendre une décision sur l'avenir de notre relation</span>
+                        <span>
+                          Prendre une décision sur l'avenir de notre relation
+                        </span>
                       </div>
                     </button>
                     <button
@@ -331,7 +404,9 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6 p-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Je souhaite :</h3>
+                  <h3 className="text-xl text-primary-cream mb-6">
+                    Je souhaite :
+                  </h3>
                   <div className="space-y-4">
                     <button
                       onClick={() => handleNeedSelect('regular')}
@@ -370,21 +445,27 @@ export function TherapyQuestionnaire() {
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6 p-8"
                 >
-                  <h3 className="text-xl text-primary-cream mb-6">Vous êtes :</h3>
+                  <h3 className="text-xl text-primary-cream mb-6">
+                    Vous êtes :
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
                       className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
                       onClick={() => handleGenderSelect('male')}
                     >
                       <h4 className="text-xl mb-2">Un homme</h4>
-                      <p className="text-primary-cream/70">Programme de transformation sexuelle pour hommes</p>
+                      <p className="text-primary-cream/70">
+                        Programme de transformation sexuelle pour hommes
+                      </p>
                     </button>
                     <button
                       className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
                       onClick={() => handleGenderSelect('female')}
                     >
                       <h4 className="text-xl mb-2">Une femme</h4>
-                      <p className="text-primary-cream/70">Voyage vers une sexualité libérée et épanouie</p>
+                      <p className="text-primary-cream/70">
+                        Voyage vers une sexualité libérée et épanouie
+                      </p>
                     </button>
                   </div>
                 </motion.div>
@@ -397,11 +478,12 @@ export function TherapyQuestionnaire() {
                   className="grid grid-cols-12 gap-8 mt-12"
                 >
                   {recommendations.map((option) => (
-                    <div key={option.type}
+                    <div
+                      key={option.type}
                       className={`col-span-12 ${
-                        recommendations.length === 1 
-                          ? (option.type === 'men' || option.type === 'women')
-                            ? 'md:col-span-12' 
+                        recommendations.length === 1
+                          ? option.type === 'men' || option.type === 'women'
+                            ? 'md:col-span-12'
                             : 'md:col-span-6 md:col-start-4'
                           : 'md:col-span-6'
                       } ${recommendations.length === 1 ? 'mx-auto max-w-4xl' : ''}`}
@@ -443,8 +525,6 @@ export function TherapyQuestionnaire() {
           situation={answers.situation as 'couple' | 'individual'}
         />
       )}
-
-
 
       <TherapyPromoModal
         isOpen={showModal}

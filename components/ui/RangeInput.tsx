@@ -15,17 +15,17 @@ interface RangeInputProps {
   style?: CSSProperties
 }
 
-export function RangeInput({ 
+export function RangeInput({
   id,
-  value, 
-  onChange, 
-  min = "0", 
-  max = "10", 
+  value,
+  onChange,
+  min = '0',
+  max = '10',
   minLabel,
   maxLabel,
-  step = "1", 
-  className = "", 
-  style 
+  step = '1',
+  className = '',
+  style,
 }: RangeInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value)
@@ -34,22 +34,28 @@ export function RangeInput({
   return (
     <div className="relative py-4">
       <style jsx>{`
-        input[type="range"] {
+        input[type='range'] {
           -webkit-appearance: none;
           appearance: none;
           width: 100%;
           height: 24px;
-          background: linear-gradient(to bottom, transparent 45%, #e2e8f0 45%, #e2e8f0 55%, transparent 55%);
+          background: linear-gradient(
+            to bottom,
+            transparent 45%,
+            #e2e8f0 45%,
+            #e2e8f0 55%,
+            transparent 55%
+          );
           cursor: pointer;
           outline: none;
         }
 
-        input[type="range"]::-webkit-slider-thumb {
+        input[type='range']::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           width: 24px;
           height: 24px;
-          background: #FF6B6B;
+          background: #ff6b6b;
           border-radius: 50%;
           cursor: pointer;
           border: 2px solid white;
@@ -57,10 +63,10 @@ export function RangeInput({
           transition: all 0.2s ease;
         }
 
-        input[type="range"]::-moz-range-thumb {
+        input[type='range']::-moz-range-thumb {
           width: 24px;
           height: 24px;
-          background: #FF6B6B;
+          background: #ff6b6b;
           border-radius: 50%;
           cursor: pointer;
           border: 2px solid white;
@@ -68,24 +74,24 @@ export function RangeInput({
           transition: all 0.2s ease;
         }
 
-        input[type="range"]::-webkit-slider-thumb:hover {
+        input[type='range']::-webkit-slider-thumb:hover {
           transform: scale(1.1);
           box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
         }
 
-        input[type="range"]::-moz-range-thumb:hover {
+        input[type='range']::-moz-range-thumb:hover {
           transform: scale(1.1);
           box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
         }
 
-        input[type="range"]::-webkit-slider-runnable-track {
+        input[type='range']::-webkit-slider-runnable-track {
           width: 100%;
           height: 24px;
           cursor: pointer;
           background: transparent;
         }
 
-        input[type="range"]::-moz-range-track {
+        input[type='range']::-moz-range-track {
           width: 100%;
           height: 24px;
           cursor: pointer;
@@ -93,16 +99,16 @@ export function RangeInput({
         }
 
         @media print {
-          input[type="range"] {
+          input[type='range'] {
             height: 20px;
           }
 
-          input[type="range"]::-webkit-slider-thumb {
+          input[type='range']::-webkit-slider-thumb {
             width: 20px;
             height: 20px;
           }
 
-          input[type="range"]::-moz-range-thumb {
+          input[type='range']::-moz-range-thumb {
             width: 20px;
             height: 20px;
           }

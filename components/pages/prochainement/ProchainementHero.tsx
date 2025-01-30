@@ -1,10 +1,11 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+
+import { motion } from 'framer-motion'
 
 import { urlFor } from '@/sanity/lib/image'
 import type { HomePagePayload } from '@/types'
@@ -36,21 +37,23 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   }
 
   const logoAsset = data?.logo?.asset
-  const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
+  const logoUrl = logoAsset?.path
+    ? `https://cdn.sanity.io/${logoAsset.path}`
+    : null
 
   return (
-    <section 
+    <section
       className="relative min-h-[600px] grid place-items-center pt-24 md:pt-0"
       id="prochainement"
       role="main"
       aria-labelledby="hero-title"
     >
       <div className="absolute inset-0">
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10" 
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10"
           aria-hidden="true"
         />
-        <Image 
+        <Image
           src="/images/soon-back.jpg"
           alt="Prochainement background"
           fill
@@ -63,9 +66,12 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
       {/* Mobile Logo and Login */}
       <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
-          <Image 
+          <Image
             src={logoUrl}
-            alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+            alt={
+              data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() ||
+              'Logo'
+            }
             className="h-20 w-auto"
             width={300}
             height={300}
@@ -81,7 +87,7 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
             <div className="w-full text-center">
               {hero?.badge && (
                 <div className="flex justify-center">
-                  <div 
+                  <div
                     className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4"
                     role="presentation"
                     aria-label={hero.badge.ariaLabel}
@@ -92,7 +98,7 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
               )}
               {hero?.title && (
                 <div>
-                  <motion.h1 
+                  <motion.h1
                     id="hero-title"
                     className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-black mb-2"
                     initial={{ opacity: 0, y: 20 }}
@@ -104,7 +110,7 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
                 </div>
               )}
               {hero?.subtitle && (
-                <motion.p 
+                <motion.p
                   className="text-sm text-primary-cream/80 mb-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import Stripe from 'stripe'
 
 export async function POST(req: Request) {
@@ -8,7 +9,7 @@ export async function POST(req: Request) {
     if (!sessionId) {
       return NextResponse.json(
         { error: 'Session ID is required' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
     if (session.payment_status !== 'paid') {
       return NextResponse.json(
         { error: 'Payment not completed' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
     console.error('Error checking session:', err)
     return NextResponse.json(
       { error: 'Error checking session' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

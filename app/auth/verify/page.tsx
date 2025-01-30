@@ -1,77 +1,83 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
-import { app } from '@/lib/firebase';
-import { toast } from 'sonner';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+import {
+  getAuth,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+} from 'firebase/auth'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { app } from '@/lib/firebase'
 
 export default function VerifyPage() {
-  const [isVerifying, setIsVerifying] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [isVerifying, setIsVerifying] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     async function verifyEmail() {
-      const auth = getAuth(app);
-      
+      const auth = getAuth(app)
+
       try {
         // Check if this is a sign-in link
         if (!isSignInWithEmailLink(auth, window.location.href)) {
-          setError('invalid-link');
-          return;
+          setError('invalid-link')
+          return
         }
 
         // Get the email from localStorage
-        const email = window.localStorage.getItem('emailForSignIn');
+        const email = window.localStorage.getItem('emailForSignIn')
         if (!email) {
-          setError('no-email');
-          return;
+          setError('no-email')
+          return
         }
 
         // Sign in with email link
-        await signInWithEmailLink(auth, email, window.location.href);
-        
+        await signInWithEmailLink(auth, email, window.location.href)
+
         // Clear email from storage
-        window.localStorage.removeItem('emailForSignIn');
-        
+        window.localStorage.removeItem('emailForSignIn')
+
         // Success! Redirect to dashboard
-        toast.success('Connexion réussie !');
-        router.push('/dashboard');
+        toast.success('Connexion réussie !')
+        router.push('/dashboard')
       } catch (error: any) {
-        console.error('Verification error:', error);
-        
+        console.error('Verification error:', error)
+
         if (error.code === 'auth/invalid-action-code') {
-          setError('invalid-link');
+          setError('invalid-link')
         } else {
-          setError('unknown');
+          setError('unknown')
         }
-        
+
         toast.error(
           error.code === 'auth/invalid-action-code'
             ? "Le lien n'est plus valide. Veuillez demander un nouveau lien."
-            : "Une erreur s'est produite. Veuillez réessayer."
-        );
+            : "Une erreur s'est produite. Veuillez réessayer.",
+        )
       } finally {
-        setIsVerifying(false);
+        setIsVerifying(false)
       }
     }
 
-    verifyEmail();
-  }, [router]);
+    verifyEmail()
+  }, [router])
 
   const getErrorMessage = () => {
     switch (error) {
       case 'invalid-link':
-        return "Ce lien n'est plus valide. Veuillez demander un nouveau lien de connexion.";
+        return "Ce lien n'est plus valide. Veuillez demander un nouveau lien de connexion."
       case 'no-email':
-        return "Nous n'avons pas pu retrouver votre email. Veuillez réessayer de vous connecter.";
+        return "Nous n'avons pas pu retrouver votre email. Veuillez réessayer de vous connecter."
       default:
-        return "Une erreur s'est produite lors de la vérification. Veuillez réessayer.";
+        return "Une erreur s'est produite lors de la vérification. Veuillez réessayer."
     }
-  };
+  }
 
   return (
     <div className="relative min-h-screen grid place-items-center bg-primary-forest">
@@ -91,12 +97,13 @@ export default function VerifyPage() {
               <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
                 Erreur de vérification
               </h2>
-              <p className="mt-2 text-primary-cream/80">
-                {getErrorMessage()}
-              </p>
+              <p className="mt-2 text-primary-cream/80">{getErrorMessage()}</p>
               <div className="mt-4">
                 <Link href="/login">
-                  <Button variant="outline" className="text-primary-cream hover:text-primary-coral">
+                  <Button
+                    variant="outline"
+                    className="text-primary-cream hover:text-primary-coral"
+                  >
                     Retour à la connexion
                   </Button>
                 </Link>
@@ -115,5 +122,5 @@ export default function VerifyPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

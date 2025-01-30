@@ -1,10 +1,8 @@
-import '@/styles/index.css'
-
+import { Suspense } from 'react'
 import type { Metadata, Viewport } from 'next'
 import dynamic from 'next/dynamic'
 import { draftMode } from 'next/headers'
 import { toPlainText } from 'next-sanity'
-import { Suspense } from 'react'
 
 import { Footer } from '@/components/global/Footer'
 import { Navbar } from '@/components/global/Navbar'
@@ -12,6 +10,8 @@ import NotificationBanner from '@/components/global/NotificationBanner/Notificat
 // import IntroTemplate from '@/intro-template'
 import { urlForOpenGraphImage } from '@/sanity/lib/utils'
 import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
+
+import '@/styles/index.css'
 
 const LiveVisualEditing = dynamic(
   () => import('@/sanity/loader/LiveVisualEditing'),
@@ -50,7 +50,7 @@ export default async function IndexRoute({
   children: React.ReactNode
 }) {
   return (
-    (<div className="flex min-h-screen flex-col bg-primary-dark text-primary-cream">
+    <div className="flex min-h-screen flex-col bg-primary-dark text-primary-cream">
       {(await draftMode()).isEnabled && <LiveVisualEditing />}
       <Suspense>
         <Navbar />
@@ -61,6 +61,6 @@ export default async function IndexRoute({
       <Suspense>
         <Footer />
       </Suspense>
-    </div>)
-  );
+    </div>
+  )
 }

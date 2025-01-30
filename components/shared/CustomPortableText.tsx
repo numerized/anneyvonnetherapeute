@@ -3,6 +3,7 @@ import {
   type PortableTextBlock,
   type PortableTextComponents,
 } from 'next-sanity'
+
 import type { Image } from 'sanity'
 
 import ImageBox from '@/components/shared/ImageBox'

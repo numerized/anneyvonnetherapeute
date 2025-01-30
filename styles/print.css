@@ -132,7 +132,7 @@
 
   /* Maintain text colors */
   .text-primary-coral {
-    color: #FF6B6B !important;
+    color: #ff6b6b !important;
   }
 
   /* Print layout */
@@ -187,7 +187,7 @@
   }
 
   /* Style range inputs for print */
-  input[type="range"] {
+  input[type='range'] {
     -webkit-appearance: none !important;
     appearance: none !important;
     background: #e2e8f0 !important;
@@ -195,20 +195,20 @@
     border-radius: 0.25rem !important;
   }
 
-  input[type="range"]::-webkit-slider-thumb {
+  input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none !important;
     appearance: none !important;
     width: 1rem !important;
     height: 1rem !important;
-    background: #FF6B6B !important;
+    background: #ff6b6b !important;
     border-radius: 50% !important;
     cursor: pointer !important;
   }
 
-  input[type="range"]::-moz-range-thumb {
+  input[type='range']::-moz-range-thumb {
     width: 1rem !important;
     height: 1rem !important;
-    background: #FF6B6B !important;
+    background: #ff6b6b !important;
     border-radius: 50% !important;
     cursor: pointer !important;
     border: none !important;
@@ -246,7 +246,11 @@
   /* Add lines for empty textareas */
   textarea:empty,
   textarea:not(:focus):placeholder-shown {
-    background-image: linear-gradient(transparent, transparent calc(2rem - 1px), #e2e8f0 calc(2rem - 1px)) !important;
+    background-image: linear-gradient(
+      transparent,
+      transparent calc(2rem - 1px),
+      #e2e8f0 calc(2rem - 1px)
+    ) !important;
     background-size: 100% 2rem !important;
     line-height: 2rem !important;
     min-height: 10rem !important;

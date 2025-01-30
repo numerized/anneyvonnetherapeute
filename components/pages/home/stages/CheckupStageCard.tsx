@@ -1,11 +1,13 @@
 'use client'
 
 import { type FC } from 'react'
+
 import { Calendar, FileText, MessageSquare } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface CheckupStageCardProps {
-  onShowPromo?: () => void;
+  onShowPromo?: () => void
 }
 
 export function CheckupStageCard({ onShowPromo }: CheckupStageCardProps) {
@@ -16,12 +18,15 @@ export function CheckupStageCard({ onShowPromo }: CheckupStageCardProps) {
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             CHECK UP RELATIONNEL
           </h3>
-          <p className="text-primary-coral italic text-right">La relation est vivante, elle évolue</p>
+          <p className="text-primary-coral italic text-right">
+            La relation est vivante, elle évolue
+          </p>
         </div>
 
         <blockquote className="border-l-4 border-primary-coral pl-4 my-4">
           <p className="text-primary-cream/90 italic">
-            "On ne change pas une relation sans d'abord transformer ceux qui la vivent"
+            "On ne change pas une relation sans d'abord transformer ceux qui la
+            vivent"
           </p>
         </blockquote>
 

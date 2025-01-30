@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
-import { IBM_Plex_Mono, PT_Serif, Montserrat, Aleo } from 'next/font/google'
+import { Aleo,IBM_Plex_Mono, Montserrat, PT_Serif } from 'next/font/google'
+
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Toaster } from "sonner"
+import { Toaster } from 'sonner'
+
 import './globals.css'
 
 const aleo = Aleo({
@@ -33,8 +35,8 @@ export const metadata: Metadata = {
   title: 'Anne-Yvonne Thérapeute',
   description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
   icons: {
-    icon: '/images/logo.png'
-  }
+    icon: '/images/logo.png',
+  },
 }
 
 export default function RootLayout({

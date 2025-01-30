@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useCallback,useEffect, useRef, useState } from 'react'
 
 interface StatItemProps {
   value: string
@@ -15,9 +15,7 @@ export function StatItem({ value, label }: StatItemProps) {
   const nonNumericPart = value.replace(/[0-9]/g, '')
 
   const easeInOutCubic = (t: number): number => {
-    return t < 0.5
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
   }
 
   const startAnimation = useCallback(() => {
@@ -30,10 +28,10 @@ export function StatItem({ value, label }: StatItemProps) {
       if (!startTime) startTime = currentTime
       const elapsed = currentTime - startTime
       const progress = Math.min(elapsed / duration, 1)
-      
+
       const easedProgress = easeInOutCubic(progress)
       const current = Math.round(easedProgress * numericValue)
-      
+
       setDisplayValue(`${current}${nonNumericPart}`)
 
       if (progress < 1) {
@@ -53,7 +51,7 @@ export function StatItem({ value, label }: StatItemProps) {
           startAnimation()
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     )
 
     if (elementRef.current) {
@@ -64,18 +62,18 @@ export function StatItem({ value, label }: StatItemProps) {
   }, [hasAnimated, startAnimation])
 
   return (
-    <div 
+    <div
       ref={elementRef}
       className="text-center bg-primary-forest/30 p-6 rounded-[24px]"
       role="listitem"
     >
-      <p 
+      <p
         className="text-primary-coral text-5xl font-black mb-2"
         aria-hidden="true"
       >
         {displayValue}
       </p>
-      <p 
+      <p
         className="text-primary-cream/80 text-sm md:text-base"
         aria-label={`${value} ${label}`}
       >

@@ -13,8 +13,11 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const params = await props.params;
+export async function generateMetadata(
+  props: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const params = await props.params
   const { data: page } = await loadPage(params.slug)
 
   return {
@@ -30,7 +33,7 @@ export function generateStaticParams() {
 }
 
 export default async function PageSlugRoute(props: Props) {
-  const params = await props.params;
+  const params = await props.params
   const initial = await loadPage(params.slug)
 
   if ((await draftMode()).isEnabled) {

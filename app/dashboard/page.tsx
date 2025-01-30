@@ -1,48 +1,50 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getAuth, signOut, User } from 'firebase/auth';
-import { app } from '@/lib/firebase';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { CheckSquare, Square, Loader2 } from 'lucide-react';
-import Link from 'next/link';
-import { ZenClickButton } from '@/components/ZenClickButton';
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import { getAuth, signOut, User } from 'firebase/auth'
+import { CheckSquare, Loader2,Square } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { ZenClickButton } from '@/components/ZenClickButton'
+import { app } from '@/lib/firebase'
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
     evaluation: false,
     questionnaire: false,
     appointment: false,
-  });
-  const router = useRouter();
+  })
+  const router = useRouter()
 
   useEffect(() => {
-    const auth = getAuth(app);
+    const auth = getAuth(app)
 
     // Set initial state
     if (auth.currentUser) {
-      setUser(auth.currentUser);
-      setLoading(false);
-      return;
+      setUser(auth.currentUser)
+      setLoading(false)
+      return
     }
 
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        setUser(user);
+        setUser(user)
       } else {
         // If not authenticated, redirect to login
-        router.push('/login');
-        toast.error('Please sign in to access the dashboard');
+        router.push('/login')
+        toast.error('Please sign in to access the dashboard')
       }
-      setLoading(false);
-    });
+      setLoading(false)
+    })
 
-    return () => unsubscribe();
-  }, [router]);
+    return () => unsubscribe()
+  }, [router])
 
   // Don't render anything while loading
   if (loading) {
@@ -52,38 +54,40 @@ export default function DashboardPage() {
           <Loader2 className="w-6 h-6 animate-spin text-primary-cream/80" />
         </div>
       </div>
-    );
+    )
   }
 
   if (!user) {
-    return null;
+    return null
   }
 
   const handleSignOut = async () => {
     try {
-      const auth = getAuth(app);
-      await signOut(auth);
-      router.push('/login');
-      toast.success('Successfully signed out');
+      const auth = getAuth(app)
+      await signOut(auth)
+      router.push('/login')
+      toast.success('Successfully signed out')
     } catch (error) {
-      console.error('Error signing out:', error);
-      toast.error('Failed to sign out');
+      console.error('Error signing out:', error)
+      toast.error('Failed to sign out')
     }
-  };
+  }
 
   const toggleCheckbox = (id: string) => {
-    setCheckedItems(prev => ({
+    setCheckedItems((prev) => ({
       ...prev,
-      [id]: !prev[id]
-    }));
-  };
+      [id]: !prev[id],
+    }))
+  }
 
   return (
     <div className="min-h-screen bg-primary-forest p-8">
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Conversion 180° d'Amour</h1>
+            <h1 className="text-4xl font-black text-primary-cream tracking-tight">
+              Conversion 180° d'Amour
+            </h1>
             <p className="mt-2 text-primary-cream/80">
               Bienvenue, {user.email} dans votre espace personnel.
             </p>
@@ -106,7 +110,12 @@ export default function DashboardPage() {
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
               {/* TODO Section */}
               <div className="mb-8">
-                <h2 className="text-4xl font-black tracking-tight mb-4" style={{ color: '#D9B70D' }}>À faire</h2>
+                <h2
+                  className="text-4xl font-black tracking-tight mb-4"
+                  style={{ color: '#D9B70D' }}
+                >
+                  À faire
+                </h2>
                 <div className="space-y-4">
                   {/* Evaluation Item */}
                   <div className="flex items-start gap-3">
@@ -128,7 +137,8 @@ export default function DashboardPage() {
                         Formulaire d'Évaluation du Handicap Relationnel
                       </Link>
                       <p className="text-sm text-primary-cream/60">
-                        Évaluez votre niveau d'autonomie dans vos relations sociales et intimes
+                        Évaluez votre niveau d'autonomie dans vos relations
+                        sociales et intimes
                       </p>
                     </div>
                   </div>
@@ -153,7 +163,8 @@ export default function DashboardPage() {
                         Remplir le questionnaire d'estime de soi
                       </Link>
                       <p className="text-sm text-primary-cream/60">
-                        Un questionnaire pour mieux comprendre votre relation avec vous-même
+                        Un questionnaire pour mieux comprendre votre relation
+                        avec vous-même
                       </p>
                     </div>
                   </div>
@@ -189,9 +200,12 @@ export default function DashboardPage() {
             {/* Capsules Section */}
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 flex flex-col">
               <div>
-                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Capsules</h2>
+                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">
+                  Capsules
+                </h2>
                 <p className="text-sm text-primary-cream/80 mb-4">
-                  Accédez à nos capsules vidéo pour votre développement personnel
+                  Accédez à nos capsules vidéo pour votre développement
+                  personnel
                 </p>
               </div>
               <div className="mt-auto flex justify-end">
@@ -206,7 +220,9 @@ export default function DashboardPage() {
 
             <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 flex flex-col">
               <div>
-                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Votre prochain rendez-vous</h2>
+                <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">
+                  Votre prochain rendez-vous
+                </h2>
                 <p className="text-sm text-primary-cream/80 mb-4">
                   Planifiez votre prochaine séance de coaching
                 </p>
@@ -224,5 +240,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

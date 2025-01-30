@@ -1,13 +1,16 @@
 'use client'
 
 import { BookOpen, Calendar, MessageSquare } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface IndividualTherapyCardProps {
   onShowPromo: (modalType: string) => void
 }
 
-export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProps) {
+export function IndividualTherapyCard({
+  onShowPromo,
+}: IndividualTherapyCardProps) {
   return (
     <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
@@ -36,7 +39,10 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
               </li>
               <li className="flex items-center gap-2 m-0">
                 <span className="text-primary-coral">♦</span>
-                <span>30' de séance gratuite : identifier le thème et le parcours thérapeutique ensemble</span>
+                <span>
+                  30' de séance gratuite : identifier le thème et le parcours
+                  thérapeutique ensemble
+                </span>
               </li>
             </ul>
           </div>
@@ -46,7 +52,9 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           {/* COMPACT Package */}
           <div className="bg-primary-forest/30 rounded-[24px] p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light text-left">COMPACT</h3>
+              <h3 className="text-2xl text-primary-coral font-light text-left">
+                COMPACT
+              </h3>
               <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">2850 €</p>
                 <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
@@ -67,7 +75,9 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           {/* RELAX Package */}
           <div className="bg-primary-forest/30 rounded-[24px] p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light text-left">RELAX</h3>
+              <h3 className="text-2xl text-primary-coral font-light text-left">
+                RELAX
+              </h3>
               <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">2850 €</p>
                 <p className="text-primary-cream/70 pb-1">(3 x 950€)</p>
@@ -88,7 +98,9 @@ export function IndividualTherapyCard({ onShowPromo }: IndividualTherapyCardProp
           {/* MINI Package */}
           <div className="bg-primary-forest/30 rounded-[24px] p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light text-left">MINI</h3>
+              <h3 className="text-2xl text-primary-coral font-light text-left">
+                MINI
+              </h3>
               <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">950 €</p>
               </div>

@@ -9,18 +9,28 @@ interface NavLinksProps {
   setShowAppointmentModal: (show: boolean) => void
 }
 
-export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: NavLinksProps) {
-  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchor: string) => {
-    e.preventDefault();
-    setIsMenuOpen(false);
-    scrollToSection(anchor);
-  };
+export function NavLinks({
+  menuItems,
+  setIsMenuOpen,
+  setShowAppointmentModal,
+}: NavLinksProps) {
+  const handleAnchorClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    anchor: string,
+  ) => {
+    e.preventDefault()
+    setIsMenuOpen(false)
+    scrollToSection(anchor)
+  }
 
   return (
     <>
       {menuItems?.map((menuItem, key) => {
         if (menuItem.linkType === 'reference' && menuItem.reference) {
-          const href = resolveHref(menuItem.reference._type, menuItem.reference.slug?.current)
+          const href = resolveHref(
+            menuItem.reference._type,
+            menuItem.reference.slug?.current,
+          )
           if (!href) {
             return null
           }
@@ -28,9 +38,7 @@ export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: 
             <Link
               key={key}
               className={`text-lg hover:text-primary-teal transition-colors ${
-                menuItem.reference._type === 'home'
-                  ? 'font-extrabold'
-                  : ''
+                menuItem.reference._type === 'home' ? 'font-extrabold' : ''
               }`}
               href={href}
               onClick={() => setIsMenuOpen(false)}

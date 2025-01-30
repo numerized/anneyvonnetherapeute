@@ -1,9 +1,28 @@
 {
   "extends": "next",
   "plugins": ["simple-import-sort"],
+  "ignorePatterns": ["dist/**/*"],
   "rules": {
-    "simple-import-sort/imports": "warn",
-    "simple-import-sort/exports": "warn",
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          // React and Next.js related imports
+          ["^react", "^next", "^@next"],
+          // External libraries
+          ["^@?\\w"],
+          // Internal modules (anything that starts with @/)
+          ["^@/"],
+          // Parent imports
+          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+          // Other relative imports
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+          // Style imports
+          ["^.+\\.s?css$"]
+        ]
+      }
+    ],
+    "simple-import-sort/exports": "error",
     "react-hooks/exhaustive-deps": "error",
     "react/no-unescaped-entities": 0
   }

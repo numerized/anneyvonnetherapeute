@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import { RangeInput } from '@/components/ui/RangeInput'
 
 interface QuestionnairePage2Props {
@@ -8,13 +9,16 @@ interface QuestionnairePage2Props {
   onNext: () => void
 }
 
-export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Props) {
+export function QuestionnairePage2({
+  onPrevious,
+  onNext,
+}: QuestionnairePage2Props) {
   const [date] = useState(() => {
     const today = new Date()
     return today.toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   })
   const [strengths, setStrengths] = useState('')
@@ -23,11 +27,11 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
   const [ratings, setRatings] = useState({
     confidence: '1',
     satisfaction: '1',
-    needs: '1'
+    needs: '1',
   })
 
   const handleRatingChange = (field: keyof typeof ratings, value: string) => {
-    setRatings(prev => ({ ...prev, [field]: value }))
+    setRatings((prev) => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -45,16 +49,22 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
             </div>
           </div>
 
-          <h2 className="text-xl text-gray-600 italic mb-8">Mon état des lieux relationnel</h2>
+          <h2 className="text-xl text-gray-600 italic mb-8">
+            Mon état des lieux relationnel
+          </h2>
 
           <div className="mb-12">
-            <h3 className="text-xl font-bold mb-6 italic">Évaluez-vous sur les aspects suivants</h3>
-            
+            <h3 className="text-xl font-bold mb-6 italic">
+              Évaluez-vous sur les aspects suivants
+            </h3>
+
             <ul className="list-none space-y-8 mb-12">
               <li className="rating-item">
                 <div className="flex items-center justify-between mb-2">
                   <span className="italic">Confiance en soi</span>
-                  <span className="text-4xl font-light text-primary-coral">{ratings.confidence}</span>
+                  <span className="text-4xl font-light text-primary-coral">
+                    {ratings.confidence}
+                  </span>
                 </div>
                 <RangeInput
                   value={ratings.confidence}
@@ -63,18 +73,28 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
               </li>
               <li className="rating-item">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="italic">Satisfaction dans mes relations actuelles</span>
-                  <span className="text-4xl font-light text-primary-coral">{ratings.satisfaction}</span>
+                  <span className="italic">
+                    Satisfaction dans mes relations actuelles
+                  </span>
+                  <span className="text-4xl font-light text-primary-coral">
+                    {ratings.satisfaction}
+                  </span>
                 </div>
                 <RangeInput
                   value={ratings.satisfaction}
-                  onChange={(value) => handleRatingChange('satisfaction', value)}
+                  onChange={(value) =>
+                    handleRatingChange('satisfaction', value)
+                  }
                 />
               </li>
               <li className="rating-item">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="italic">Capacité à exprimer mes besoins</span>
-                  <span className="text-4xl font-light text-primary-coral">{ratings.needs}</span>
+                  <span className="italic">
+                    Capacité à exprimer mes besoins
+                  </span>
+                  <span className="text-4xl font-light text-primary-coral">
+                    {ratings.needs}
+                  </span>
                 </div>
                 <RangeInput
                   value={ratings.needs}
@@ -85,7 +105,9 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
 
             <div className="space-y-8">
               <div className="question-group">
-                <h3 className="text-lg font-medium text-gray-700 italic mb-6">Mes points forts</h3>
+                <h3 className="text-lg font-medium text-gray-700 italic mb-6">
+                  Mes points forts
+                </h3>
                 <textarea
                   value={strengths}
                   onChange={(e) => setStrengths(e.target.value)}
@@ -95,7 +117,9 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
               </div>
 
               <div className="question-group">
-                <h3 className="text-lg font-medium text-gray-700 italic mb-6">Mes axes à renforcer</h3>
+                <h3 className="text-lg font-medium text-gray-700 italic mb-6">
+                  Mes axes à renforcer
+                </h3>
                 <textarea
                   value={improvements}
                   onChange={(e) => setImprovements(e.target.value)}
@@ -105,7 +129,9 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
               </div>
 
               <div className="question-group">
-                <h3 className="text-lg font-medium text-gray-700 italic mb-6">J'ai compris que...</h3>
+                <h3 className="text-lg font-medium text-gray-700 italic mb-6">
+                  J'ai compris que...
+                </h3>
                 <textarea
                   value={understanding}
                   onChange={(e) => setUnderstanding(e.target.value)}
@@ -136,8 +162,8 @@ export function QuestionnairePage2({ onPrevious, onNext }: QuestionnairePage2Pro
         </div>
 
         <blockquote className="text-primary-coral italic text-sm mt-8 print:hidden">
-          "Comme un diamant brut, ma valeur est innée et inaltérable ;
-          ni les regards ni les jugements ne sauraient l'entamer."
+          "Comme un diamant brut, ma valeur est innée et inaltérable ; ni les
+          regards ni les jugements ne sauraient l'entamer."
         </blockquote>
       </div>
     </div>

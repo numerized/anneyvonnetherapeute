@@ -17,15 +17,19 @@ const recipientEmail = defineSecret('RECIPIENT_EMAIL')
 
 // Helper function to generate unsubscribe token
 function generateUnsubscribeToken(email: string, secret: string): string {
-  const hmac = crypto.createHmac('sha256', secret);
-  hmac.update(email);
-  return hmac.digest('hex');
+  const hmac = crypto.createHmac('sha256', secret)
+  hmac.update(email)
+  return hmac.digest('hex')
 }
 
 // Verify unsubscribe token
-function verifyUnsubscribeToken(email: string, token: string, secret: string): boolean {
-  const expectedToken = generateUnsubscribeToken(email, secret);
-  return token === expectedToken;
+function verifyUnsubscribeToken(
+  email: string,
+  token: string,
+  secret: string,
+): boolean {
+  const expectedToken = generateUnsubscribeToken(email, secret)
+  return token === expectedToken
 }
 
 // Helper function to create email template with logo
@@ -40,18 +44,18 @@ function createEmailTemplate(content: string): string {
       </div>
       ${content}
     </div>
-  `;
+  `
 }
 
 export const sendContactEmail = onRequest(
-  { 
+  {
     cors: [
       'http://localhost:3000',
       'https://www.coeur-a-corps.org',
-      'https://www.coeur-a-corps.org'
+      'https://www.coeur-a-corps.org',
     ],
-    secrets: [sendgridApiKey, recipientEmail, senderEmail]
-  }, 
+    secrets: [sendgridApiKey, recipientEmail, senderEmail],
+  },
   async (request, response) => {
     try {
       // Log request details
@@ -76,7 +80,7 @@ export const sendContactEmail = onRequest(
       console.log('Checking secrets:', {
         hasApiKey: !!sendgridApiKey.value(),
         recipientEmail: recipientEmail.value(),
-        senderEmail: senderEmail.value()
+        senderEmail: senderEmail.value(),
       })
 
       const apiKey = sendgridApiKey.value()
@@ -92,23 +96,23 @@ export const sendContactEmail = onRequest(
         <p><strong>Email :</strong> ${email}</p>
         <p><strong>Message :</strong></p>
         <p style="white-space: pre-wrap;">${message}</p>
-      `;
+      `
 
       const msg = {
         to: recipientEmail.value(),
         from: {
           email: senderEmail.value(),
-          name: 'Anne-Yvonne Thérapeute'  // This should match your verified sender name in SendGrid
+          name: 'Anne-Yvonne Thérapeute', // This should match your verified sender name in SendGrid
         },
         replyTo: email,
         subject: `Nouveau message de ${name}`,
-        html: createEmailTemplate(emailContent)
+        html: createEmailTemplate(emailContent),
       }
 
       console.log('Attempting to send email with config:', {
         to: msg.to,
         from: msg.from,
-        subject: msg.subject
+        subject: msg.subject,
       })
 
       try {
@@ -119,7 +123,7 @@ export const sendContactEmail = onRequest(
         console.error('SendGrid Error:', {
           error: sendGridError,
           response: (sendGridError as any).response?.body,
-          statusCode: (sendGridError as any).statusCode
+          statusCode: (sendGridError as any).statusCode,
         })
         throw sendGridError
       }
@@ -129,36 +133,41 @@ export const sendContactEmail = onRequest(
         message: sendGridError.message,
         code: sendGridError.code,
         response: sendGridError.response?.body,
-        statusCode: sendGridError.statusCode
+        statusCode: sendGridError.statusCode,
       })
 
-      response.status(500).json({ 
+      response.status(500).json({
         error: 'Failed to send email',
         details: sendGridError.message,
         code: sendGridError.code,
         statusCode: sendGridError.statusCode,
-        sendGridResponse: sendGridError.response?.body
+        sendGridResponse: sendGridError.response?.body,
       })
     }
-  }
+  },
 )
 
 // Handle newsletter unsubscribe
 export const handleNewsletterUnsubscribe = onRequest(
-  { 
+  {
     cors: [
       'http://localhost:3000',
       'https://www.coeur-a-corps.org',
-      'https://www.coeur-a-corps.org'
+      'https://www.coeur-a-corps.org',
     ],
-    secrets: [UNSUBSCRIBE_SECRET]
-  }, 
+    secrets: [UNSUBSCRIBE_SECRET],
+  },
   async (request, response) => {
     try {
-      const email = request.query.email as string;
-      const token = request.query.token as string;
+      const email = request.query.email as string
+      const token = request.query.token as string
 
-      if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
+      if (
+        !email ||
+        !token ||
+        typeof email !== 'string' ||
+        typeof token !== 'string'
+      ) {
         response.status(400).send(`
           <html>
             <head>
@@ -172,8 +181,8 @@ export const handleNewsletterUnsubscribe = onRequest(
               <p>Le lien de désabonnement est invalide ou a expiré.</p>
             </body>
           </html>
-        `);
-        return;
+        `)
+        return
       }
 
       // Verify token
@@ -191,29 +200,30 @@ export const handleNewsletterUnsubscribe = onRequest(
               <p>Le lien de désabonnement est invalide ou a expiré.</p>
             </body>
           </html>
-        `);
-        return;
+        `)
+        return
       }
 
       // Get all documents with this email from the newsletter collection
-      const db = getFirestore();
-      const newsletterQuery = await db.collection('newsletter')
+      const db = getFirestore()
+      const newsletterQuery = await db
+        .collection('newsletter')
         .where('email', '==', email)
-        .get();
+        .get()
 
       // Store unsubscribe record with timestamp
       await db.collection('newsletter-unsubscribed').add({
         email: email,
         unsubscribedAt: FieldValue.serverTimestamp(),
-        previousSubscriptionIds: newsletterQuery.docs.map(doc => doc.id)
-      });
+        previousSubscriptionIds: newsletterQuery.docs.map((doc) => doc.id),
+      })
 
       // Delete all documents with this email
-      const batch = db.batch();
+      const batch = db.batch()
       newsletterQuery.docs.forEach((doc) => {
-        batch.delete(doc.ref);
-      });
-      await batch.commit();
+        batch.delete(doc.ref)
+      })
+      await batch.commit()
 
       // Return success page
       response.send(`
@@ -230,9 +240,9 @@ export const handleNewsletterUnsubscribe = onRequest(
             <p>Nous espérons vous revoir bientôt !</p>
           </body>
         </html>
-      `);
+      `)
     } catch (error) {
-      console.error('Error handling unsubscribe:', error);
+      console.error('Error handling unsubscribe:', error)
       response.status(500).send(`
         <html>
           <head>
@@ -246,41 +256,44 @@ export const handleNewsletterUnsubscribe = onRequest(
             <p>Une erreur est survenue lors du désabonnement. Veuillez réessayer plus tard.</p>
           </body>
         </html>
-      `);
+      `)
     }
-  }
-);
+  },
+)
 
 // Send welcome email when new newsletter subscriber is added
 export const sendNewsletterWelcomeEmail = onDocumentCreated(
   {
     document: 'newsletter/{documentId}',
-    secrets: [sendgridApiKey, senderEmail, UNSUBSCRIBE_SECRET]
+    secrets: [sendgridApiKey, senderEmail, UNSUBSCRIBE_SECRET],
   },
   async (event: { data: admin.firestore.DocumentSnapshot | undefined }) => {
     try {
-      const snapshot = event.data;
+      const snapshot = event.data
       if (!snapshot) {
-        console.error('No data associated with the event');
-        return;
+        console.error('No data associated with the event')
+        return
       }
 
-      const data = snapshot.data();
+      const data = snapshot.data()
       if (!data || !data.email) {
-        console.error('No email found in the document. Data:', data);
-        return;
+        console.error('No email found in the document. Data:', data)
+        return
       }
 
-      const subscriberEmail = data.email;
-      console.log('Preparing welcome email for:', subscriberEmail);
+      const subscriberEmail = data.email
+      console.log('Preparing welcome email for:', subscriberEmail)
 
       // Generate unsubscribe token
-      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET.value());
-      const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
+      const unsubscribeToken = generateUnsubscribeToken(
+        subscriberEmail,
+        UNSUBSCRIBE_SECRET.value(),
+      )
+      const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`
 
       // Initialize SendGrid
-      sgMail.setApiKey(sendgridApiKey.value());
-      console.log('SendGrid initialized with API key');
+      sgMail.setApiKey(sendgridApiKey.value())
+      console.log('SendGrid initialized with API key')
 
       // Configure SendGrid
       const emailContent = `
@@ -323,56 +336,58 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
             Se Désabonner
           </a>
         </div>
-      `;
+      `
 
       // Email template
       const msg = {
         to: subscriberEmail,
         from: {
           email: senderEmail.value(),
-          name: 'Anne-Yvonne Thérapeute'
+          name: 'Anne-Yvonne Thérapeute',
         },
         subject: 'Bienvenue à nos capsules audio - Anne-Yvonne Thérapeute',
-        html: createEmailTemplate(emailContent)
-      };
+        html: createEmailTemplate(emailContent),
+      }
 
-      console.log('Sending welcome email to:', subscriberEmail);
-      
+      console.log('Sending welcome email to:', subscriberEmail)
+
       try {
-        await sgMail.send(msg);
-        console.log('Welcome email sent successfully to:', subscriberEmail);
-        
+        await sgMail.send(msg)
+        console.log('Welcome email sent successfully to:', subscriberEmail)
+
         // Update document to mark email as sent
         await snapshot.ref.update({
           welcomeEmailSent: true,
-          welcomeEmailSentAt: admin.firestore.FieldValue.serverTimestamp()
-        });
-        console.log('Document updated with email sent status');
+          welcomeEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+        })
+        console.log('Document updated with email sent status')
       } catch (error: unknown) {
-        console.error('SendGrid error:', error);
+        console.error('SendGrid error:', error)
         // Type assertion for SendGrid error
         interface SendGridError {
           response?: {
-            body?: unknown;
-            headers?: unknown;
-            statusCode?: number;
-          };
+            body?: unknown
+            headers?: unknown
+            statusCode?: number
+          }
         }
-        
-        const sendGridError = error as SendGridError;
+
+        const sendGridError = error as SendGridError
         if (sendGridError.response) {
           console.error('SendGrid response:', {
             body: sendGridError.response.body,
             headers: sendGridError.response.headers,
-            status: sendGridError.response.statusCode
-          });
+            status: sendGridError.response.statusCode,
+          })
         }
-        throw error;
+        throw error
       }
-
     } catch (error) {
-      console.error('Error in sendNewsletterWelcomeEmail:', error);
-      throw new Error('Failed to send welcome email: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Error in sendNewsletterWelcomeEmail:', error)
+      throw new Error(
+        'Failed to send welcome email: ' +
+          (error instanceof Error ? error.message : 'Unknown error'),
+      )
     }
-  }
-);
+  },
+)
