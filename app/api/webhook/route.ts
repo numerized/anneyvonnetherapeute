@@ -8,7 +8,7 @@ import { createWebinarEmailTemplate, createCoachingEmailTemplate } from '@/lib/e
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
     //@ts-ignore
-      apiVersion: '2024-12-18.acacia'
+      apiVersion: '2025-01-27.acacia'
     })
   : null
 
