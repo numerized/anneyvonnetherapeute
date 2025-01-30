@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function PaymentSuccess() {
   const searchParams = useSearchParams()
@@ -9,7 +9,7 @@ export default function PaymentSuccess() {
   const [retrying, setRetrying] = useState(false)
   const sessionId = searchParams.get('session_id')
 
-  const checkSession = async () => {
+  const checkSession = useCallback(async () => {
     try {
       const response = await fetch('/api/check-session', {
         method: 'POST',
@@ -40,7 +40,7 @@ export default function PaymentSuccess() {
       setIsLoading(false)
       setRetrying(false)
     }
-  }
+  }, [sessionId])
 
   const handleRetry = () => {
     setError(null)
@@ -63,7 +63,7 @@ export default function PaymentSuccess() {
     }
 
     checkSession()
-  }, [sessionId])
+  }, [sessionId, checkSession])
 
   if (isLoading) {
     return (
