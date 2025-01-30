@@ -29,22 +29,10 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   }
 
   const handlePurchase = async () => {
-    if (process.env.NODE_ENV === 'development') {
-      const shouldUseTestCoupon = window.confirm('Voulez-vous utiliser le code promo de test (99% de réduction) ?')
-      if (shouldUseTestCoupon) {
-        onShowPurchase?.()
-        return
-      }
-    }
     const offerSection = document.getElementById('offer-section')
     if (offerSection) {
       offerSection.scrollIntoView({ behavior: 'smooth' })
     }
-  }
-
-  // Type guard function
-  const isValidImage = (img: any): img is { asset: { _ref: string } } => {
-    return img && typeof img === 'object' && img.asset && '_ref' in img.asset;
   }
 
   const logoAsset = data?.logo?.asset
