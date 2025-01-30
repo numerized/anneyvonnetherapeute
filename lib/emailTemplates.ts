@@ -16,13 +16,13 @@ export const createCoachingEmailTemplate = (email: string, finalPrice: number, c
       <ul style="list-style: none; padding-left: 0;">
         <li style="margin-bottom: 10px;">♦ COACHING INDIVIDUEL 24/24 SUR 1 MOIS</li>
         <li style="margin-bottom: 10px;">♦ ÉCHANGES QUOTIDIENS VIA TELEGRAM</li>
-        <li style="margin-bottom: 10px;">♦ TROIS SEANCES DE THÉRAPIE À LA CARTE VIA ZOOM</li>
+        <li style="margin-bottom: 10px;">♦ TROIS SEANCES DE THÉRAPIE À LA CARTE VIA WHEREBY</li>
       </ul>
 
       <h3>Détails pratiques</h3>
       <ul>
         <li><strong>Durée :</strong> 1 mois d'accompagnement intensif</li>
-        <li><strong>Format :</strong> Coaching individuel via Telegram et séances Zoom</li>
+        <li><strong>Format :</strong> Coaching individuel via Telegram et séances Whereby</li>
         <li><strong>Montant réglé :</strong> ${finalPrice} ${currency} ${
           discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''
         }</li>

@@ -149,7 +149,7 @@ export function ProchainementPage({ data, settings }: any) {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary-coral">♦</span>
-                        <span>TROIS SEANCES DE THÉRAPIE À LA CARTE VIA ZOOM</span>
+                        <span>TROIS SEANCES DE THÉRAPIE À LA CARTE VIA WHEREBY</span>
                       </li>
                     </ul>
                   </div>

@@ -67,6 +67,7 @@ export async function POST(req: Request) {
         ticketType: string
         productType: string
         hasDiscount: string
+        testCoupon: string
       } | null
 
       if (!metadata?.ticketType || !metadata?.productType) {
@@ -76,6 +77,7 @@ export async function POST(req: Request) {
       const amountTotal = session.amount_total || 0
       const finalPrice = amountTotal / 100
       const hasDiscount = metadata.hasDiscount === 'true'
+      const isTestCoupon = metadata.testCoupon === 'true'
       const customerEmail = session.customer_details?.email
       const currency = session.currency?.toUpperCase() || 'EUR'
 
@@ -112,11 +114,11 @@ export async function POST(req: Request) {
       // Determine which email template to use based on productType
       const emailTemplate =
         metadata.productType === 'prochainement'
-          ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, hasDiscount ? 10 : 0)
+          ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, isTestCoupon ? -1 : (hasDiscount ? 10 : 0))
           : createWebinarEmailTemplate(
               finalPrice,
               currency,
-              hasDiscount ? 10 : 0,
+              isTestCoupon ? -1 : (hasDiscount ? 10 : 0),
               calendarLinks,
               process.env.WHEREBY_LINK!
             )
