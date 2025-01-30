@@ -18,8 +18,8 @@ ol {
 }
 
 @font-face {
-  font-family: 'Nove';
-  src: url('./Nove.otf') format('opentype');
+  font-family: 'Tan';
+  src: url('tan.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

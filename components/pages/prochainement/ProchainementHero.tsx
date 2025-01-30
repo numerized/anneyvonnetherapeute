@@ -122,7 +122,7 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
               >
                 <button
                   onClick={handlePurchase}
-                  className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200"
+                  className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200 animate-glow"
                 >
                   Découvrir l'offre
                 </button>
