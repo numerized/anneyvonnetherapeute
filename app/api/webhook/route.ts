@@ -8,7 +8,7 @@ import { createWebinarEmailTemplate, createCoachingEmailTemplate } from '@/lib/e
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
     //@ts-ignore
-      apiVersion: '2023-10-16'
+      apiVersion: '2024-12-18.acacia'
     })
   : null
 
@@ -26,11 +26,11 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = await req.text()
-    const headersList = await headers()
-    const signature = headersList.get('stripe-signature')
+    const rawBody = await req.text()
+    const signature = (await headers()).get('stripe-signature')
 
     if (!signature) {
+      console.error('No signature found in request')
       return NextResponse.json(
         { error: 'No signature found in request' },
         { status: 400 }
@@ -40,10 +40,13 @@ export async function POST(req: Request) {
     let event: Stripe.Event
 
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
+      // Construct the event from the raw body
+      event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-      console.log(`❌ Error message: ${errorMessage}`)
+      console.error(`❌ Webhook signature verification failed:`, errorMessage)
+      console.error('Signature:', signature)
+      console.error('Webhook Secret:', webhookSecret?.slice(0, 5) + '...')
       return NextResponse.json(
         { message: `Webhook Error: ${errorMessage}` },
         { status: 400 }
