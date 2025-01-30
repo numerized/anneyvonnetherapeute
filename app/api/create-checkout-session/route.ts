@@ -130,7 +130,7 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}/${productType}?success=true`,
+      success_url: `${origin}/${productType}?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/${productType}?canceled=true`,
       customer_email: email,
       metadata: {
