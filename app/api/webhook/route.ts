@@ -8,26 +8,39 @@ import { createWebinarEmailTemplate, createCoachingEmailTemplate } from '@/lib/e
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
     //@ts-ignore
-      apiVersion: '2025-01-27.acacia'
+      apiVersion: '2024-12-18.acacia'
     })
   : null
 
 // Initialize webhook secret
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
+// Buffer the request body for signature verification
+async function buffer(readable: ReadableStream) {
+  const chunks = []
+  const reader = readable.getReader()
+  
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    chunks.push(value)
+  }
+  
+  return Buffer.concat(chunks)
+}
+
 export async function POST(req: Request) {
-  // Check if Stripe is properly initialized
   if (!stripe || !webhookSecret) {
-    console.error('Stripe has not been initialized')
+    console.error('Stripe configuration missing')
     return NextResponse.json(
-      { error: 'Stripe configuration is missing' },
+      { error: 'Stripe configuration missing' },
       { status: 500 }
     )
   }
 
   try {
-    const rawBody = await req.text()
-    const signature = (await headers()).get('stripe-signature')
+    const headersList = headers()
+    const signature = headersList.get('stripe-signature')
 
     if (!signature) {
       console.error('No signature found in request')
@@ -37,53 +50,39 @@ export async function POST(req: Request) {
       )
     }
 
+    // Get the raw body as a buffer
+    const rawBody = await buffer(req.body)
+
     let event: Stripe.Event
 
     try {
-      // Construct the event from the raw body
-      event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret)
+      event = stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        webhookSecret
+      )
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-      console.error(`❌ Webhook signature verification failed:`, errorMessage)
-      console.error('Signature:', signature)
-      console.error('Webhook Secret:', webhookSecret?.slice(0, 5) + '...')
+      console.error('Webhook signature verification failed:', err)
       return NextResponse.json(
-        { message: `Webhook Error: ${errorMessage}` },
+        { error: 'Webhook signature verification failed' },
         { status: 400 }
       )
     }
 
-    console.log('✅ Success:', event.id)
-
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session
-      console.log('Session data:', {
-        id: session.id,
-        amountTotal: session.amount_total,
-        metadata: session.metadata
-      })
+      const metadata = session.metadata
+      const customerEmail = session.customer_details?.email
 
-      const metadata = session.metadata as {
-        ticketType: string
-        productType: string
-        hasDiscount: string
-        testCoupon: string
-      } | null
-
-      if (!metadata?.ticketType || !metadata?.productType) {
-        throw new Error('Missing required metadata in session')
+      if (!customerEmail || !metadata?.ticketType || !metadata?.productType) {
+        throw new Error('Missing required session data')
       }
 
       const amountTotal = session.amount_total || 0
       const finalPrice = amountTotal / 100
+      const currency = session.currency?.toUpperCase() || 'EUR'
       const hasDiscount = metadata.hasDiscount === 'true'
       const isTestCoupon = metadata.testCoupon === 'true'
-      const customerEmail = session.customer_details?.email
-      const currency = session.currency?.toUpperCase() || 'EUR'
-
-      if (!customerEmail) {
-        throw new Error('Customer email is missing from session')
-      }
 
       // Create calendar links for webinar
       const eventDates = [
@@ -111,52 +110,34 @@ export async function POST(req: Request) {
         googleLink: createGoogleCalendarLink(date, startTime, endTime)
       }))
 
-      // Determine which email template to use based on productType
-      const emailTemplate =
-        metadata.productType === 'prochainement'
-          ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, isTestCoupon ? -1 : (hasDiscount ? 10 : 0))
-          : createWebinarEmailTemplate(
-              finalPrice,
-              currency,
-              isTestCoupon ? -1 : (hasDiscount ? 10 : 0),
-              calendarLinks,
-              process.env.WHEREBY_LINK!
-            )
+      // Select email template
+      const emailTemplate = metadata.productType === 'prochainement'
+        ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, isTestCoupon ? -1 : (hasDiscount ? 10 : 0))
+        : createWebinarEmailTemplate(
+            finalPrice,
+            currency,
+            isTestCoupon ? -1 : (hasDiscount ? 10 : 0),
+            calendarLinks,
+            process.env.WHEREBY_LINK!
+          )
 
-      // Initialize SendGrid
+      // Send email
       if (!process.env.SENDGRID_API_KEY) {
-        throw new Error('SendGrid API key is missing')
+        throw new Error('SendGrid API key missing')
       }
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-      // Send confirmation email
-      const msg = {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+      await sgMail.send({
         to: customerEmail,
         from: {
           email: 'a.ra@bluewin.ch',
           name: 'Anne-Yvonne Racine'
         },
-        subject:
-          metadata.productType === 'prochainement'
-            ? 'Confirmation de votre inscription au Coaching Relationnel'
-            : 'Confirmation de votre inscription à la formation',
+        subject: metadata.productType === 'prochainement'
+          ? 'Confirmation de votre inscription au Coaching Relationnel'
+          : 'Confirmation de votre inscription à la formation',
         html: emailTemplate
-      }
-
-      try {
-        console.log('Attempting to send email to:', customerEmail)
-        await sgMail.send(msg)
-        console.log('Email sent successfully')
-      } catch (error) {
-        console.error('Error sending email:', error)
-        if ((error as any).response) {
-          console.error('SendGrid error details:', {
-            body: (error as any).response.body,
-            statusCode: (error as any).response.statusCode
-          })
-        }
-        throw error
-      }
+      })
     }
 
     return NextResponse.json({ received: true })

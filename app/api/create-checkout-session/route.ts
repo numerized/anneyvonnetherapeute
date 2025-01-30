@@ -122,7 +122,7 @@ export async function POST(req: Request) {
             currency: currency.toLowerCase(),
             product_data: {
               name: priceData.name,
-              description: `${discountMessage}`,
+              ...(discountMessage && { description: discountMessage })
             },
             unit_amount: finalAmount,
           },
