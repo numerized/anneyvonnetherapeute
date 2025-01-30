@@ -1,8 +1,11 @@
 'use client'
 
+import { urlForImage } from '@/sanity/lib/utils'
 import { Facebook, Instagram, Linkedin, Music, Youtube } from 'lucide-react'
 import type { PortableTextBlock } from 'next-sanity'
 import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 import { CustomPortableText } from '@/components//shared/CustomPortableText'
 import type { SettingsPayload } from '@/types'
@@ -38,26 +41,33 @@ export default function Footer(props: FooterProps) {
     placeholder: 'Votre adresse email'
   }
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const logoUrl = data?.logo?.asset?.url;
 
   if (!footer || footer.length === 0) return null;
 
   return (
     <footer className="bg-primary-dark py-16" role="contentinfo">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Column 1 - Main Info */}
-          <div>
-            <div className="text-primary-cream/80 text-right">
-              <CustomPortableText
-                paragraphClasses="text-md md:text-xl mb-4"
-                value={footer}
-              />
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-5xl mx-auto">
+          {/* Column 1 - Logo */}
+          <div className="flex items-center justify-center lg:col-span-4">
+            {logoUrl && (
+              <Link href="/accueil" className="flex-shrink-0 block">
+                <Image 
+                  src={logoUrl}
+                  alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+                  className="w-auto h-[200px] lg:h-[263px] rounded-[24px]"
+                  width={500}
+                  height={500}
+                  priority
+                />
+              </Link>
+            )}
           </div>
 
           {/* Column 2 - Newsletter */}
-          <div>
-            <div className="bg-primary-forest/30 rounded-[24px] p-6">
+          <div className="flex items-center justify-center lg:col-span-8">
+            <div className="bg-primary-forest/30 rounded-[24px] p-6 w-full">
               <h3 className="text-2xl text-primary-cream font-bold mb-4">
                 {newsletter.title}
               </h3>
@@ -130,7 +140,7 @@ export default function Footer(props: FooterProps) {
 
         {/* Bottom Section */}
         <div className="mt-16 pt-8 border-t border-primary-teal/20">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
             <div className="flex space-x-6 text-primary-cream/80">
               <a href="/mentions-legales" className="hover:text-primary-cream focus:outline-none focus:ring-2 focus:ring-primary-teal rounded-md px-2 py-1">
                 Mentions légales
