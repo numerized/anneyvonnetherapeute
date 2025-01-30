@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "cross-env NODE_ENV=development next dev",
+    "dev": "concurrently \"cross-env NODE_ENV=development next dev\" \"stripe listen --forward-to localhost:3000/api/webhook\"",
     "dev:prod": "cross-env NODE_ENV=production next dev",
     "format": "npx prettier --write . --ignore-path .gitignore",
     "lint": "next lint .",
@@ -37,6 +37,7 @@
     "class-variance-authority": "^0.7.1",
     "classnames": "2.5.1",
     "clsx": "^2.1.1",
+    "concurrently": "^7.6.0",
     "date-fns": "4.1.0",
     "dotenv": "^16.4.5",
     "firebase": "^11.1.0",

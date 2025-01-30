@@ -15,20 +15,6 @@ const stripe = process.env.STRIPE_SECRET_KEY
 // Initialize webhook secret
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
-// Buffer the request body for signature verification
-async function buffer(readable: ReadableStream) {
-  const chunks = []
-  const reader = readable.getReader()
-  
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    chunks.push(value)
-  }
-  
-  return Buffer.concat(chunks)
-}
-
 export async function POST(req: Request) {
   if (!stripe || !webhookSecret) {
     console.error('Stripe configuration missing')
@@ -39,8 +25,9 @@ export async function POST(req: Request) {
   }
 
   try {
-    const headersList = headers()
-    const signature = headersList.get('stripe-signature')
+    const text = await req.text();
+    const headersList = await headers();
+    const signature = headersList.get('stripe-signature');
 
     if (!signature) {
       console.error('No signature found in request')
@@ -50,17 +37,14 @@ export async function POST(req: Request) {
       )
     }
 
-    // Get the raw body as a buffer
-    const rawBody = await buffer(req.body)
-
-    let event: Stripe.Event
+    let event: Stripe.Event;
 
     try {
       event = stripe.webhooks.constructEvent(
-        rawBody,
+        text,
         signature,
         webhookSecret
-      )
+      );
     } catch (err) {
       console.error('Webhook signature verification failed:', err)
       return NextResponse.json(
