@@ -19,6 +19,8 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   const [isClient, setIsClient] = useState(false)
   const searchParams = useSearchParams()
   const isCanceled = searchParams.get('canceled') === 'true'
+  const couponCode = searchParams.get('coupon')
+  const hasDiscount = isCanceled || couponCode === 'COEUR180'
 
   useEffect(() => {
     setIsClient(true)
@@ -89,6 +91,19 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
                     {hero.badge.text}
                   </div>
                 </div>
+              )}
+              {hasDiscount && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="flex justify-center mb-4"
+                >
+                  <div className="bg-primary-coral/20 text-primary-coral px-4 py-2 rounded-[24px] text-sm">
+                    Code promo COEUR180 (-10%) appliqué !
+
+                  </div>
+                </motion.div>
               )}
               {hero?.title && (
                 <div>
