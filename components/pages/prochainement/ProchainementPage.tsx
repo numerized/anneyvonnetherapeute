@@ -1,13 +1,13 @@
 'use client'
 
-import { ProchainementHero } from './ProchainementHero'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
-import { PurchaseTicket } from './PurchaseTicket'
-import { useSearchParams } from 'next/navigation'
-import { toast } from 'react-hot-toast'
-import PaymentSuccess from './PaymentSuccess'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
+import { toast } from 'sonner'
+import { ProchainementHero } from './ProchainementHero'
+import { PurchaseTicket } from './PurchaseTicket'
+import PaymentSuccess from './PaymentSuccess'
 import { Stats } from '@/components/shared/Stats'
 
 export function ProchainementPage({ data, settings }: any) {
@@ -20,15 +20,6 @@ export function ProchainementPage({ data, settings }: any) {
   const couponCode = searchParams.get('coupon')
   const currency = settings?.currency || 'EUR'
   const hasDiscount = isCanceled || couponCode === 'COEUR180'
-
-  useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      toast.success('Paiement réussi ! Vous recevrez un email avec les détails d\'accès.')
-    }
-    if (searchParams.get('canceled') === 'true') {
-      toast.error('Le paiement a été annulé.')
-    }
-  }, [searchParams])
 
   const handleTicketPurchase = (type: 'standard' | 'vip') => {
     setSelectedTicketType(type)
@@ -213,6 +204,60 @@ export function ProchainementPage({ data, settings }: any) {
                 title="Une approche unique de la thérapie relationnelle"
                 items={statsItems}
               />
+
+              {/* Presentation Section */}
+              <div className="mb-16 bg-primary-dark/30 rounded-[32px] overflow-hidden">
+                <div className="grid md:grid-cols-2 gap-8 p-8">
+                  {/* Image Column */}
+                  <div className="relative md:h-full">
+                    <div className="md:hidden relative aspect-[4/3] rounded-2xl overflow-hidden">
+                      <Image
+                        src="/images/crop_pres.webp"
+                        alt="Anne Yvonne Racine"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        quality={75}
+                        priority
+                      />
+                    </div>
+                    <div className="hidden md:block relative h-full min-h-[500px] rounded-2xl overflow-hidden">
+                      <Image
+                        src="/images/crop_pres.webp"
+                        alt="Anne Yvonne Racine"
+                        fill
+                        className="object-cover"
+                        sizes="50vw"
+                        quality={75}
+                        priority
+                      />
+                    </div>
+                  </div>
+
+                  {/* Text Column */}
+                  <div className="space-y-6 text-primary-cream">
+                    <div>
+                      <h3 className="text-2xl font-light text-primary-coral mb-2">UNE HISTOIRE D'ENGAGEMENT</h3>
+                      <p className="text-lg mb-4">Anne Yvonne Racine et Cœurs à Corps, en quelques phrases.</p>
+                    </div>
+
+                    <div className="space-y-4 text-primary-cream/90">
+                      <p>
+                        Depuis plus de 50 ans, ma vie et mon parcours professionnel m'ont guidée vers une quête essentielle pour moi, de mieux: comprendre, d'explorer profondément et de transformer la manière dont nous nous relions à nous-mêmes, aux autres et au monde.
+                      </p>
+                      <p>
+                        Avec Cœur à Corps, je rassemble tout ce que mes expériences de vie et mon engagement thérapeutique m'ont appris pour offrir une plateforme dédiée à la Nouvelle Relation. Une relation qui ne se limite plus à la simple réaction, mais qui s'ouvre à une conscience profonde des enjeux individuels et collectifs.
+                      </p>
+                      <p>
+                        Cette démarche s'articule autour de trois axes fondamentaux : Amour, Désir et Esprit. Ensemble, ils nous invitent à retourner à la source de notre désir d'amour, à explorer ce qui nous anime vraiment et à grandir, à la fois individuellement et dans nos relations.
+                      </p>
+                      <p>
+                        Cœur à Corps propose un espace unique, UNE CONVERSION à 180 DEGRES D'AMOUR conçue avec des personnes incroyables dans une atmosphère que je ne pensais pas pouvoir un jour connaitre. Un espace conçu pour offrir à chacun la liberté et la tranquillité nécessaires d'avancer, à son rythme et là où il a le désir d'aller.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
