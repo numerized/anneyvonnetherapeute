@@ -301,14 +301,10 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
             <a href="https://www.coeur-a-corps.org/prochainement?coupon=COEUR180" 
                style="color: #E8927C; text-decoration: underline; font-weight: bold;">
-              Réserver votre séance avec la réduction
+              Réservez votre coaching relationnel avec la réduction
             </a>
           </p>
         </div>
-        
-        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-          Vous recevrez régulièrement des contenus exclusifs, des méditations guidées et des exercices pratiques pour vous accompagner dans votre cheminement personnel.
-        </p>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
           Je vous invite à découvrir dès maintenant nos capsules audio en cliquant sur le lien ci-dessous :
@@ -319,6 +315,24 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
              style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
             Accéder aux Capsules
           </a>
+        </div>
+
+        <div style="background-color: #F8F4E3; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
+            Formulaire d'Évaluation du Handicap Relationnel
+          </h2>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+            Profitez de faire le test et découvrez votre taux de handicap relationnel. Cet outil vous permettra de mieux comprendre vos schémas relationnels et d'identifier les domaines 
+            où vous pourriez souhaiter progresser.
+          </p>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="https://www.coeur-a-corps.org/evaluation-handicap-relationnel?email=${encodeURIComponent(subscriberEmail)}" 
+               style="display: inline-block; background-color: #122C1C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
+              Commencer le test
+            </a>
+          </div>
         </div>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
