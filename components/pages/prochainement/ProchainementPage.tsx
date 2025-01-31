@@ -17,7 +17,9 @@ export function ProchainementPage({ data, settings }: any) {
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
   const isCanceled = searchParams.get('canceled') === 'true'
+  const couponCode = searchParams.get('coupon')
   const currency = settings?.currency || 'EUR'
+  const hasDiscount = isCanceled || couponCode === 'COEUR180'
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -107,7 +109,7 @@ export function ProchainementPage({ data, settings }: any) {
                 <div className="flex-grow">
                   <div className="h-full flex items-center justify-center">
                     <div className="text-center">
-                      {isCanceled ? (
+                      {hasDiscount ? (
                         <div className="space-y-4">
                           <div className="text-2xl line-through text-primary-cream/60">{`999 ${currency?.toUpperCase()}`}</div>
                           <div className="text-3xl text-primary-coral font-semibold">{`899 ${currency?.toUpperCase()}`}</div>
@@ -126,7 +128,7 @@ export function ProchainementPage({ data, settings }: any) {
                         onClick={() => setShowPurchaseModal(true)}
                         className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
                       >
-                        {isCanceled ? 'Profiter de l\'offre -10%' : 'Réserver ma place'}
+                        {hasDiscount ? 'Profiter de l\'offre -10%' : 'Réserver ma place'}
                       </button>
                     </div>
                   </div>
@@ -219,7 +221,7 @@ export function ProchainementPage({ data, settings }: any) {
             <PurchaseTicket
               ticketType="standard"
               onClose={() => setShowPurchaseModal(false)}
-              defaultCouponCode={isCanceled ? 'COEUR180' : undefined}
+              defaultCouponCode={isCanceled ? 'COEUR180' : couponCode || undefined}
             />
           )}
         </>
