@@ -290,9 +290,21 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           Chère/Cher abonné(e),
         </p>
         
-        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-          Je suis ravie de vous accueillir dans notre communauté. Merci d'avoir rejoint notre newsletter pour accéder à nos capsules audio.
-        </p>
+        <div style="background-color: #F8F4E3; border-radius: 8px; padding: 20px; margin: 25px 0;">
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+            <strong style="color: #E8927C;">🎁 Cadeau de bienvenue</strong><br>
+            Pour vous remercier de votre inscription, bénéficiez de <strong>10% de réduction</strong> sur notre offre de lancement avec le code :
+          </p>
+          <div style="background-color: #E8927C; color: white; text-align: center; padding: 12px; border-radius: 6px; margin: 15px 0;">
+            <span style="font-size: 20px; font-weight: bold; letter-spacing: 1px;">COEUR180</span>
+          </div>
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+            <a href="https://www.coeur-a-corps.org/prochainement?coupon=COEUR180" 
+               style="color: #E8927C; text-decoration: underline; font-weight: bold;">
+              Réserver votre séance avec la réduction
+            </a>
+          </p>
+        </div>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
           Vous recevrez régulièrement des contenus exclusifs, des méditations guidées et des exercices pratiques pour vous accompagner dans votre cheminement personnel.
