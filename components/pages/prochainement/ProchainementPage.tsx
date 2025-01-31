@@ -329,7 +329,7 @@ export function ProchainementPage({ data, settings }: any) {
                                 <div className="absolute top-4 right-4 flex gap-4 z-20">
                                   {/* Title bubble */}
                                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                                    <span className="text-white font-medium">INTRODUCTION AU DEVELOPPEMENT RELATIONNEL</span>
+                                    <span className="text-white font-medium">INTRODUCTION</span>
                                   </div>
                                 </div>
                                 {/* Play/Pause button */}
