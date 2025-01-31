@@ -44,6 +44,11 @@ export function ProchainementPage({ data, settings }: any) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
+        // Pause the second video if it's playing
+        if (videoRef2.current && isPlaying2) {
+          videoRef2.current.pause()
+          setIsPlaying2(false)
+        }
         videoRef.current.play()
       }
       setIsPlaying(!isPlaying)
@@ -55,6 +60,11 @@ export function ProchainementPage({ data, settings }: any) {
       if (isPlaying2) {
         videoRef2.current.pause()
       } else {
+        // Pause the first video if it's playing
+        if (videoRef.current && isPlaying) {
+          videoRef.current.pause()
+          setIsPlaying(false)
+        }
         videoRef2.current.play()
       }
       setIsPlaying2(!isPlaying2)
