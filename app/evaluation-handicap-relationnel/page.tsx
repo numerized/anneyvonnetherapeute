@@ -4,12 +4,16 @@ import { useState } from 'react'
 import { RangeInput } from '@/components/ui/RangeInput'
 import { EvaluationResults } from '@/components/pages/evaluation/EvaluationResults'
 import { motion } from 'framer-motion'
+import { useSearchParams } from 'next/navigation'
 
 interface RatingSection {
   [key: string]: string
 }
 
 export default function EvaluationHandicapRelationnelPage() {
+  const searchParams = useSearchParams()
+  const email = searchParams.get('email')
+
   const [date] = useState(() => {
     const today = new Date()
     return today.toLocaleDateString('fr-FR', {
@@ -64,9 +68,17 @@ export default function EvaluationHandicapRelationnelPage() {
               <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-primary-coral md:max-w-[70%]">
                 Formulaire d'Évaluation du Handicap Relationnel
               </h1>
-              <div className="text-right text-sm md:text-base">
-                <span className="text-gray-600">Date: </span>
-                <span className="text-gray-700">{date}</span>
+              <div className="text-right space-y-2">
+                <div className="text-sm md:text-base">
+                  <span className="text-gray-600">Date : </span>
+                  <span className="text-gray-700">{date}</span>
+                </div>
+                {email && (
+                  <div className="text-sm md:text-base">
+                    <span className="text-gray-600">Email : </span>
+                    <span className="text-gray-700">{email}</span>
+                  </div>
+                )}
               </div>
             </div>
 

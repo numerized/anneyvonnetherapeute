@@ -164,6 +164,25 @@ export function EvaluationResults({ socialRatings, intimateRatings }: Evaluation
           </div>
         </div>
       </div>
+
+      {/* Welcome Gift Section */}
+      <div className="mt-8 p-6 bg-primary-coral/10 rounded-lg border-2 border-primary-coral/20">
+        <h3 className="text-xl font-bold text-primary-coral mb-2">🎁 Cadeau de bienvenue</h3>
+        <p className="text-gray-700 mb-4">
+          Pour vous remercier de votre inscription, bénéficiez de 10% de réduction sur notre offre de lancement avec le code :
+        </p>
+        <div className="bg-white p-4 rounded-lg text-center mb-4">
+          <span className="text-2xl font-bold text-primary-coral">COEUR180</span>
+        </div>
+        <div className="text-center">
+          <a 
+            href="/prochainement?coupon=COEUR180"
+            className="inline-block bg-primary-coral hover:bg-primary-rust transition-colors text-white font-semibold px-6 py-3 rounded-lg"
+          >
+            Découvrir l'offre
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
