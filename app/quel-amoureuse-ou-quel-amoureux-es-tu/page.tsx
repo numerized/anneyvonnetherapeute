@@ -121,8 +121,8 @@ function QuelAmoureuxPage() {
           <div className="flex-grow">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
               <div className="md:max-w-[70%]">
-                <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-primary-coral mb-4 leading-tight">Quel amoureuse ou quel amoureux es-tu ?</h1>
-                <p className="font-bold text-primary-forest"> 100% confidentiel : Aucune donnée n'est stockée ni conservée</p>
+                <h1 className="!text-3xl !sm:text-4xl !md:text-5xl !lg:text-6xl !font-bold !text-primary-coral !mb-4 !leading-normal">Quel amoureuse ou quel amoureux es-tu ?</h1>
+                <p className="font-bold text-primary-forest text-base"> 100% confidentiel : Aucune donnée n'est stockée ni conservée</p>
               </div>
               <div className="text-right space-y-2">
                 <div className="text-sm md:text-base">
@@ -141,16 +141,16 @@ function QuelAmoureuxPage() {
             {!showResults ? (
               <>
                 <div className="prose prose-lg max-w-none mb-12">
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm">
                     Une chose est certaine, la relation amoureuse peut se révéler particulièrement complexe pour les personnes neuroatypiques ! 
                     Si toi aussi tu te brises le coeur autant que tu te casses la tête, alors ce TEST est pour toi !
                   </p>
                   
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm">
                     Pour les amoureux.ses neuroatypiques, les défis sont nombreux et les difficultés relationnelles s'enchainent, pourtant…
                   </p>
 
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm">
                     Il se cache dans chacune des diversités des « pépites » relationnelles souvent cachées sous des couches d'adaptation, 
                     d'anxiété, de peur de rejet… et autres conséquences des relations du passé, des perles uniques et rares de créativité 
                     amoureuse, d'empathie, de sensibilité, de perspicacité et d'intuition qui fait toute la différence !
