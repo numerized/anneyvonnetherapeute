@@ -311,7 +311,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         </p>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://www.coeur-a-corps.org/capsules" 
+          <a href="https://www.coeur-a-corps.org/prochainement#capsules" 
              style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
             Accéder aux Capsules
           </a>
