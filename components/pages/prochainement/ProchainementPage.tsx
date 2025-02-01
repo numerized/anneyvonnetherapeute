@@ -301,7 +301,7 @@ export function ProchainementPage({ data, settings }: any) {
               </div>
 
               {/* Audio Capsules Section */}
-              <div className="mt-24">
+              <div className="mt-24" id="capsules">
                 <h2 className="text-3xl md:text-4xl font-medium text-primary-coral mb-12 text-center">
                   CAPSULES AUDIO
                 </h2>
