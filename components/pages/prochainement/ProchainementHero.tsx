@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { urlFor } from '@/sanity/lib/image'
 import type { HomePagePayload } from '@/types'
+import React, { Suspense } from 'react';
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -14,7 +15,7 @@ interface HeroProps {
   onShowPurchase?: () => void
 }
 
-export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
+function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -211,3 +212,13 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
     </section>
   )
 }
+
+function ProchainementHeroWrapper({ hero, data, onShowPurchase }: HeroProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProchainementHero hero={hero} data={data} onShowPurchase={onShowPurchase} />
+    </Suspense>
+  );
+}
+
+export default ProchainementHeroWrapper;

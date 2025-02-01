@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 
@@ -28,7 +28,15 @@ interface WebinarPageProps {
   settings: Settings
 }
 
-export function WebinarPage({ data, settings }: WebinarPageProps) {
+function WebinarPageWrapper({ data, settings }: WebinarPageProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WebinarPage data={data} settings={settings} />
+    </Suspense>
+  );
+}
+
+function WebinarPage({ data, settings }: WebinarPageProps) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -276,3 +284,5 @@ export function WebinarPage({ data, settings }: WebinarPageProps) {
     </main>
   )
 }
+
+export default WebinarPageWrapper;
