@@ -155,7 +155,7 @@ export default function QuelAmoureuxPage() {
                     amoureuse, d'empathie, de sensibilité, de perspicacité et d'intuition qui fait toute la différence !
                   </p>
 
-                  <p className="text-gray-600">
+                  <p className="text-primary-coral font-bold text-center text-lg my-8">
                     🤍🤍 Alors, avant d'attendre d'être aimé.e comme nous nous l'imaginons, il serait bien de commencer à apprendre à aimer, 
                     à devenir des amoureux compétents 🤍🤍
                   </p>
@@ -168,57 +168,62 @@ export default function QuelAmoureuxPage() {
                 <div className="space-y-8">
                   {questions.map((question, index) => (
                     <div key={question.id} className="bg-gray-50 rounded-2xl p-6 shadow-sm">
-                      <div className="flex items-start gap-4 mb-4">
-                        <span className="text-primary-coral font-medium">
-                          {index + 1}/{questions.length}
-                        </span>
-                        <h3 className="text-lg text-gray-800">
-                          {question.text}
-                          {question.required && <span className="text-primary-coral ml-1">*</span>}
-                        </h3>
-                      </div>
+                      <div className="flex items-start gap-6">
+                        <div className="flex flex-col items-center justify-center shrink-0">
+                          <span className="text-4xl font-light text-primary-coral">
+                            {index + 1}
+                          </span>
+                          <span className="text-sm text-gray-400">/ {questions.length}</span>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg text-gray-800 mb-4">
+                            {question.text}
+                            {question.required && <span className="text-primary-coral ml-1">*</span>}
+                          </h3>
 
-                      <RadioGroup 
-                        value={answers[question.id] || ''} 
-                        onChange={(value) => handleAnswerChange(question.id, value)}
-                        className="mt-4"
-                      >
-                        <div className="space-y-3">
-                          {options.map((option) => (
-                            <RadioGroup.Option
-                              key={option.id}
-                              value={option.id}
-                              className={({ active, checked }) =>
-                                `${active ? 'ring-2 ring-primary-coral/60 ring-offset-2' : ''}
-                                ${checked ? 'bg-primary-coral/10' : 'bg-white'}
-                                relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none hover:bg-gray-50 transition-all duration-200`
-                              }
-                            >
-                              {({ checked }) => (
-                                <div className="flex w-full items-center justify-between">
-                                  <div className="flex items-center">
-                                    <div className="text-sm">
-                                      <RadioGroup.Label
-                                        as="p"
-                                        className={`font-medium ${
-                                          checked ? 'text-primary-coral' : 'text-gray-900'
-                                        }`}
-                                      >
-                                        {option.label}
-                                      </RadioGroup.Label>
-                                    </div>
-                                  </div>
-                                  {checked && (
-                                    <div className="shrink-0 text-primary-coral">
-                                      <CheckIcon className="h-6 w-6" />
+                          <RadioGroup 
+                            value={answers[question.id] || ''} 
+                            onChange={(value) => handleAnswerChange(question.id, value)}
+                            className="mt-4"
+                          >
+                            <div className="space-y-3">
+                              {options.map((option) => (
+                                <RadioGroup.Option
+                                  key={option.id}
+                                  value={option.id}
+                                  className={({ active, checked }) =>
+                                    `${active ? 'ring-2 ring-primary-coral/60 ring-offset-2' : ''}
+                                    ${checked ? 'bg-primary-coral/10 shadow-[0_8px_20px_rgba(255,127,102,0.25)]' : 'bg-white shadow-[0_4px_12px_rgba(255,127,102,0.15)]'}
+                                    relative flex cursor-pointer rounded-lg px-5 py-4 focus:outline-none hover:shadow-[0_12px_24px_rgba(255,127,102,0.3)] transition-all duration-200`
+                                  }
+                                >
+                                  {({ checked }) => (
+                                    <div className="flex w-full items-center justify-between">
+                                      <div className="flex items-center">
+                                        <div className="text-sm">
+                                          <RadioGroup.Label
+                                            as="p"
+                                            className={`font-medium ${
+                                              checked ? 'text-primary-coral' : 'text-gray-900'
+                                            }`}
+                                          >
+                                            {option.label}
+                                          </RadioGroup.Label>
+                                        </div>
+                                      </div>
+                                      {checked && (
+                                        <div className="shrink-0 text-primary-coral">
+                                          <CheckIcon className="h-6 w-6" />
+                                        </div>
+                                      )}
                                     </div>
                                   )}
-                                </div>
-                              )}
-                            </RadioGroup.Option>
-                          ))}
+                                </RadioGroup.Option>
+                              ))}
+                            </div>
+                          </RadioGroup>
                         </div>
-                      </RadioGroup>
+                      </div>
                     </div>
                   ))}
                 </div>
