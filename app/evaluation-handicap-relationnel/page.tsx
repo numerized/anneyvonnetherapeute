@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { RangeInput } from '@/components/ui/RangeInput'
 import { EvaluationResults } from '@/components/pages/evaluation/EvaluationResults'
 import { motion } from 'framer-motion'
@@ -10,7 +10,7 @@ interface RatingSection {
   [key: string]: string
 }
 
-export default function EvaluationHandicapRelationnelPage() {
+function EvaluationContent() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
 
@@ -484,5 +484,17 @@ export default function EvaluationHandicapRelationnelPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-primary-forest p-4 md:p-8 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    }>
+      <EvaluationContent />
+    </Suspense>
   )
 }

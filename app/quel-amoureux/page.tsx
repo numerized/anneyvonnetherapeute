@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { RadioGroup } from '@headlessui/react'
@@ -93,7 +93,7 @@ const options = [
   { id: 'rarely', label: 'Très peu' }
 ]
 
-export default function QuelAmoureuxPage() {
+function QuelAmoureuxContent() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
 
@@ -221,5 +221,17 @@ function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
         strokeLinejoin="round"
       />
     </svg>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-primary-forest p-4 md:p-8 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    }>
+      <QuelAmoureuxContent />
+    </Suspense>
   )
 }
