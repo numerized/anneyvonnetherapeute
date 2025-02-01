@@ -1,6 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
+import Link from 'next/link'
 
 interface ResultsProps {
   answers: Record<string, string>
@@ -98,6 +101,7 @@ const calculateProfile = (answers: Record<string, string>): Profile => {
 
 export function RelationshipResults({ answers, onReset }: ResultsProps) {
   const profile = calculateProfile(answers)
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
 
   return (
     <motion.div
@@ -148,17 +152,45 @@ export function RelationshipResults({ answers, onReset }: ResultsProps) {
         </ul>
       </div>
 
-      <div className="text-center mt-8">
-        <p className="text-gray-600 mb-6">
-          N'oublie pas : ta façon d'aimer est unique et précieuse. Ta neurodiversité t'apporte une sensibilité et une profondeur particulières dans tes relations.
-        </p>
-        <button
-          onClick={onReset}
-          className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-all duration-200"
-        >
-          Refaire le test
-        </button>
+      <div className="bg-[#FFF5F5] rounded-2xl p-8">
+        <div className="text-center space-y-6">
+          <div>
+            <h3 className="text-xl font-semibold text-primary-forest mb-2 flex items-center justify-center gap-2">
+              <span role="img" aria-label="gift">🎁</span>
+              Cadeau de bienvenue
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Pour vous remercier de votre inscription, bénéficiez de 10% de réduction sur notre offre de lancement avec le code :
+            </p>
+            <div className="bg-white px-6 py-3 rounded-lg shadow-sm mx-auto max-w-xs">
+              <span className="text-2xl font-semibold text-primary-coral">COEUR180</span>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <Link
+              href="/prochainement?coupon=COEUR180"
+              className="inline-block bg-[#E9A6A0] hover:bg-[#E9A6A0]/90 text-white px-8 py-3 rounded-full transition-all duration-200"
+            >
+              Découvrir l'offre
+            </Link>
+            <button
+              onClick={onReset}
+              className="block mx-auto text-gray-600 hover:text-primary-coral transition-colors duration-200"
+            >
+              Refaire le test
+            </button>
+          </div>
+        </div>
       </div>
+
+      {showPurchaseModal && (
+        <PurchaseTicket
+          ticketType="standard"
+          onClose={() => setShowPurchaseModal(false)}
+          defaultCouponCode="COEUR180"
+        />
+      )}
     </motion.div>
   )
 }
