@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { RadioGroup } from '@headlessui/react'
@@ -94,7 +94,7 @@ const options = [
   { id: 'rarely', label: 'Très peu' }
 ]
 
-export default function QuelAmoureuxPage() {
+function QuelAmoureuxPage() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
 
@@ -252,6 +252,16 @@ export default function QuelAmoureuxPage() {
     </main>
   )
 }
+
+function QuelAmoureuxPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QuelAmoureuxPage />
+    </Suspense>
+  );
+}
+
+export default QuelAmoureuxPageWrapper;
 
 function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
