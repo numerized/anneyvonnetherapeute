@@ -15,7 +15,7 @@ interface HeroProps {
   onShowPurchase?: () => void
 }
 
-function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
+export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -213,12 +213,10 @@ function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   )
 }
 
-function ProchainementHeroWrapper({ hero, data, onShowPurchase }: HeroProps) {
+export function ProchainementHeroWrapper({ hero, data, onShowPurchase }: HeroProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ProchainementHero hero={hero} data={data} onShowPurchase={onShowPurchase} />
     </Suspense>
   );
 }
-
-export default ProchainementHeroWrapper;
