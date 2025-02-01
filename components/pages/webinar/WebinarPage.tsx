@@ -28,15 +28,7 @@ interface WebinarPageProps {
   settings: Settings
 }
 
-function WebinarPageWrapper({ data, settings }: WebinarPageProps) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <WebinarPage data={data} settings={settings} />
-    </Suspense>
-  );
-}
-
-function WebinarPage({ data, settings }: WebinarPageProps) {
+export function WebinarPage({ data, settings }: WebinarPageProps) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip' | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -285,4 +277,10 @@ function WebinarPage({ data, settings }: WebinarPageProps) {
   )
 }
 
-export default WebinarPageWrapper;
+export function WebinarPageWrapper({ data, settings }: WebinarPageProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <WebinarPage data={data} settings={settings} />
+    </Suspense>
+  );
+}
