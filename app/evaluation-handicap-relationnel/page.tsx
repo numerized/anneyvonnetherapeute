@@ -66,8 +66,8 @@ function EvaluationContent() {
           <div className="flex-grow">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
               <div className="md:max-w-[70%]">
-                <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-primary-coral mb-4 leading-tight">Formulaire d'Évaluation du Handicap Relationnel</h1>
-                <p className="font-bold text-primary-forest"> 100% confidentiel : Aucune donnée n'est stockée ni conservée</p>
+                <h1 className="!text-3xl !sm:text-4xl !md:text-5xl !lg:text-6xl !font-bold !text-primary-coral !mb-4 !leading-normal">Formulaire d'Évaluation du Handicap Relationnel</h1>
+                <p className="font-bold text-primary-forest text-base"> 100% confidentiel : Aucune donnée n'est stockée ni conservée</p>
               </div>
               <div className="text-right space-y-2">
                 <div className="text-sm md:text-base">
@@ -83,7 +83,7 @@ function EvaluationContent() {
               </div>
             </div>
 
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-600 text-sm mb-8">
               Ce formulaire est divisé en deux parties : l'une centrée sur vos interactions sociales générales, 
               l'autre sur vos relations intimes ou amoureuses. Pour chaque affirmation, évaluez votre situation 
               actuelle en choisissant une note de 0 (dépendance totale) à 10 (indépendance totale).
