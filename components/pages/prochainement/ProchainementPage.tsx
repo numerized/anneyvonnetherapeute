@@ -46,13 +46,37 @@ export function ProchainementPage({ data, settings }: any) {
         capsulesSectionRef.current?.scrollIntoView({ behavior: 'smooth' })
       }, 500)
     }
-  }, [])
+
+    // Listen for stop capsule videos event from hero
+    const handleStopCapsuleVideos = () => {
+      if (videoRef.current && isPlaying) {
+        videoRef.current.pause()
+        setIsPlaying(false)
+      }
+      if (videoRef2.current && isPlaying2) {
+        videoRef2.current.pause()
+        setIsPlaying2(false)
+      }
+    }
+    window.addEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
+    
+    return () => {
+      window.removeEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
+    }
+  }, [isPlaying, isPlaying2])
 
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
+        // Stop header video if playing and update its state
+        const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement
+        if (headerVideo) {
+          headerVideo.pause()
+          // Update header's play button state through a custom event
+          window.dispatchEvent(new CustomEvent('headerVideoPause'))
+        }
         // Pause the second video if it's playing
         if (videoRef2.current && isPlaying2) {
           videoRef2.current.pause()
@@ -69,6 +93,13 @@ export function ProchainementPage({ data, settings }: any) {
       if (isPlaying2) {
         videoRef2.current.pause()
       } else {
+        // Stop header video if playing and update its state
+        const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement
+        if (headerVideo) {
+          headerVideo.pause()
+          // Update header's play button state through a custom event
+          window.dispatchEvent(new CustomEvent('headerVideoPause'))
+        }
         // Pause the first video if it's playing
         if (videoRef.current && isPlaying) {
           videoRef.current.pause()

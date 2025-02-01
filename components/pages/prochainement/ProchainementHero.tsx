@@ -26,6 +26,16 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
 
   useEffect(() => {
     setIsClient(true)
+    
+    // Listen for pause events from capsules section
+    const handleHeaderVideoPause = () => {
+      setIsPlaying(false)
+    }
+    window.addEventListener('headerVideoPause', handleHeaderVideoPause)
+    
+    return () => {
+      window.removeEventListener('headerVideoPause', handleHeaderVideoPause)
+    }
   }, [])
 
   const togglePlay = () => {
@@ -33,6 +43,8 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
+        // Stop any playing capsule videos
+        window.dispatchEvent(new CustomEvent('stopCapsuleVideos'))
         videoRef.current.play()
       }
       setIsPlaying(!isPlaying)
@@ -166,7 +178,8 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
                         <>
                           <video
                             ref={videoRef}
-                            className="absolute top-auto bottom-0 left-0 w-full max-h-[300px] object-cover rounded-[32px] shadow-2xl"
+                            data-header-video
+                            className="absolute inset-0 w-full h-full object-cover"
                             playsInline
                             webkit-playsinline="true"
                             src="/videos/INTRODUCTION AU DEVELOPPEMENT RELATIONNEL.mp4"
