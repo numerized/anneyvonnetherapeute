@@ -120,9 +120,10 @@ function QuelAmoureuxPage() {
         <div className="flex flex-col h-full print-container">
           <div className="flex-grow">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-primary-coral md:max-w-[70%]">
-                Quel.le amoureuse ou amoureux es-tu ?
-              </h1>
+              <div className="md:max-w-[70%]">
+                <h1 className="text-2xl sm:text-2xl md:text-3xl font-bold text-primary-coral mb-4 leading-tight">Quel amoureuse ou quel amoureux es-tu ?</h1>
+                <p className="font-bold text-primary-forest"> 100% confidentiel : Aucune donnée n'est stockée ni conservée</p>
+              </div>
               <div className="text-right space-y-2">
                 <div className="text-sm md:text-base">
                   <span className="text-gray-600">Date : </span>
@@ -156,8 +157,7 @@ function QuelAmoureuxPage() {
                   </p>
 
                   <p className="text-primary-coral font-bold text-center text-lg my-8">
-                    🤍🤍 Alors, avant d'attendre d'être aimé.e comme nous nous l'imaginons, il serait bien de commencer à apprendre à aimer, 
-                    à devenir des amoureux compétents 🤍🤍
+                    
                   </p>
 
                   <p className="text-gray-600 font-medium">
