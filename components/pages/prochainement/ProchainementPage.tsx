@@ -44,7 +44,7 @@ export function ProchainementPage({ data, settings }: any) {
     if (hash === '#capsules' && capsulesSectionRef.current) {
       setTimeout(() => {
         capsulesSectionRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+      }, 500)
     }
   }, [])
 
