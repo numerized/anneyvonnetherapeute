@@ -334,6 +334,24 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
             </a>
           </div>
         </div>
+
+        <div style="background-color: #FFF5F5; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
+            Découvrez Votre Profil Amoureux
+          </h2>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+            Explorez votre style relationnel unique avec notre nouveau questionnaire "Quel.le amoureuse ou amoureux es-tu ?". 
+            Découvrez vos forces et vos zones de croissance dans vos relations amoureuses, spécialement conçu pour les personnes neuroatypiques.
+          </p>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="https://www.coeur-a-corps.org/quel-amoureuse-ou-quel-amoureux-es-tu?email=${encodeURIComponent(subscriberEmail)}" 
+               style="display: inline-block; background-color: #FF7F66; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
+              Découvrir mon profil
+            </a>
+          </div>
+        </div>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
           À très bientôt,<br>
