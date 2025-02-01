@@ -149,7 +149,7 @@ export function Hero({ hero, data }: HeroProps) {
             {/* Right side - Video */}
             <div className="w-full md:w-1/2 flex items-center justify-center">
               <div className="relative w-full max-w-[300px] aspect-[4/3]">
-                <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
+                <div className="absolute inset-0 rounded-[32px] overflow-hidden">
                   <div className="absolute inset-[12px]">
                     <div className="w-full h-full relative overflow-hidden rounded-[32px]">
                       {isClient && (

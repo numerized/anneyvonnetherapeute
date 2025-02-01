@@ -310,7 +310,7 @@ export function ProchainementPage({ data, settings }: any) {
                   {/* First Capsule */}
                   <div className="flex items-center justify-center">
                     <div className="relative w-full max-w-[600px] aspect-[4/3]">
-                      <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
+                      <div className="absolute inset-0 rounded-[32px] overflow-hidden">
                         <div className="absolute inset-[12px]">
                           <div className="w-full h-full relative overflow-hidden rounded-[32px]">
                             {isClient && (
@@ -361,7 +361,7 @@ export function ProchainementPage({ data, settings }: any) {
                   {/* Second Capsule */}
                   <div className="flex items-center justify-center">
                     <div className="relative w-full max-w-[600px] aspect-[4/3]">
-                      <div className="absolute inset-0 border-[3px] border-primary-coral rounded-[32px] overflow-hidden">
+                      <div className="absolute inset-0 rounded-[32px] overflow-hidden">
                         <div className="absolute inset-[12px]">
                           <div className="w-full h-full relative overflow-hidden rounded-[32px]">
                             {isClient && (
