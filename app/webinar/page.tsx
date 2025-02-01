@@ -1,6 +1,6 @@
 'use server'
 
-import { WebinarPage } from '@/components/pages/webinar/WebinarPage'
+import { WebinarPageWrapper as WebinarPage } from '@/components/pages/webinar/WebinarPage'
 import { client } from '@/sanity/lib/client'
 import { draftMode } from 'next/headers'
 import { Suspense } from 'react'
