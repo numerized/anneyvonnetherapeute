@@ -96,7 +96,7 @@ export default function PaymentSuccess() {
             href="/prochainement"
             className="inline-flex items-center px-6 py-3 rounded-full bg-primary-forest hover:bg-primary-forest/80 transition-colors duration-200 text-primary-cream font-medium"
           >
-            Retour à l&apos;accueil
+            Retour
           </Link>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function PaymentSuccess() {
         href="/prochainement"
         className="inline-flex items-center px-6 py-3 rounded-full bg-primary-coral hover:bg-primary-rust transition-colors duration-200 text-primary-cream font-medium"
       >
-        Retour à l&apos;accueil
+        Retour
       </Link>
     </div>
   )
