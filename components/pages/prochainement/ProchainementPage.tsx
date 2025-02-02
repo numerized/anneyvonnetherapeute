@@ -18,7 +18,6 @@ export function ProchainementPage({ data, settings }: any) {
   const [isPlaying2, setIsPlaying2] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
-  const [currentImage, setCurrentImage] = useState<'tempoffer' | 'flyer'>('tempoffer')
   const searchParams = useSearchParams()
   const success = searchParams.get('success')
   const isCanceled = searchParams.get('canceled') === 'true'
@@ -30,10 +29,6 @@ export function ProchainementPage({ data, settings }: any) {
   const handleTicketPurchase = (type: 'standard' | 'vip') => {
     setSelectedTicketType(type)
     setShowPurchaseModal(true)
-  }
-
-  const toggleImage = () => {
-    setCurrentImage(current => current === 'tempoffer' ? 'flyer' : 'tempoffer')
   }
 
   useEffect(() => {
@@ -144,34 +139,22 @@ export function ProchainementPage({ data, settings }: any) {
                 </div>
               </div>
 
-              {/* Offer Image with Animation */}
+              {/* Offer Image */}
               {!isCanceled && (
                 <div
                   id="offer-section"
-                  className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden cursor-pointer"
-                  onClick={toggleImage}
+                  className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden"
                 >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentImage}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute inset-0"
-                    >
-                      <Image
-                        src={`/images/${currentImage}.webp`}
-                        alt={currentImage === 'tempoffer' ? 'Offre temporaire' : 'Flyer de la formation'}
-                        fill
-                        className="object-cover"
-                        priority
-                      />
-                      <div className="absolute inset-0 z-10" style={{
-                        background: 'linear-gradient(-55deg, transparent 25%, rgba(18, 44, 28, 0.2) 40%, rgba(18, 44, 28, 0.35) 70%)'
-                      }} />
-                    </motion.div>
-                  </AnimatePresence>
+                  <Image
+                    src="/images/tempoffer.webp"
+                    alt="Offre temporaire"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 z-10" style={{
+                    background: 'linear-gradient(-55deg, transparent 25%, rgba(18, 44, 28, 0.2) 40%, rgba(18, 44, 28, 0.35) 70%)'
+                  }} />
                 </div>
               )}
 
