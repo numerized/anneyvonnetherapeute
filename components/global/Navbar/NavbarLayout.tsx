@@ -152,7 +152,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
             <div className="flex justify-end items-center relative">
               {logoUrl && (
                 <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
-                  <Link href="/accueil" className="flex-shrink-0">
+                  <Link href="/" className="flex-shrink-0">
                     <Image 
                       src={logoUrl}
                       alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}

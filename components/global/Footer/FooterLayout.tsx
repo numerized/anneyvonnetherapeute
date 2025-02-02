@@ -52,7 +52,7 @@ return (
         {/* Column 1 - Logo */}
         <div className="flex items-center justify-center lg:col-span-4">
           {logoUrl && (
-            <Link href="/accueil" className="flex-shrink-0 block">
+            <Link href="/" className="flex-shrink-0 block">
               <Image
                 src={logoUrl}
                 alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
