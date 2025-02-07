@@ -9,10 +9,10 @@ export default function LivePage() {
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl md:text-4xl font-medium text-primary-coral mb-4">
-            Session Live
+            Le Live
           </h1>
           <p className="text-lg text-primary-cream/80 max-w-2xl mx-auto">
-            Bienvenue dans votre espace de thérapie en ligne. Assurez-vous d'avoir une connexion internet stable et un environnement calme pour une expérience optimale.
+            Bienvenue, assurez-vous d'avoir un environnement calme pour une expérience optimale.
           </p>
         </div>
 
