@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { CheckSquare, Square, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
+import { CalendarManager } from '@/components/dashboard/CalendarManager';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -222,6 +223,11 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Add Calendar Manager section */}
+        <section className="mt-12 mb-12">
+          <CalendarManager />
+        </section>
       </div>
     </div>
   );
