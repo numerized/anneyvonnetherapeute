@@ -20,6 +20,7 @@ export default function DashboardPage() {
     appointment: false,
   });
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [hasAppointment, setHasAppointment] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -210,15 +211,24 @@ export default function DashboardPage() {
               <div>
                 <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Votre prochain rendez-vous</h2>
                 <p className="text-sm text-primary-cream/80 mb-4">
-                  Planifiez votre prochaine séance de coaching
+                  {hasAppointment 
+                    ? "Votre rendez-vous a été confirmé !"
+                    : "Planifiez votre prochaine séance de coaching"}
                 </p>
               </div>
-              <div className="mt-auto flex justify-end">
+              <div className="mt-auto flex justify-between items-center">
+                {hasAppointment && (
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary-coral/20 text-primary-coral text-sm font-medium">
+                      Confirmé
+                    </span>
+                  </div>
+                )}
                 <button
                   onClick={() => setIsCalendlyOpen(true)}
                   className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
                 >
-                  Prendre rendez-vous
+                  {hasAppointment ? "Modifier le rendez-vous" : "Prendre rendez-vous"}
                 </button>
               </div>
             </div>
@@ -229,6 +239,11 @@ export default function DashboardPage() {
         <CalendlyModal 
           isOpen={isCalendlyOpen}
           onClose={() => setIsCalendlyOpen(false)}
+          onEventScheduled={() => {
+            setHasAppointment(true);
+            toast.success("Rendez-vous confirmé !");
+            toggleCheckbox('appointment');
+          }}
         />
       </div>
     </div>
