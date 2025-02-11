@@ -2,14 +2,23 @@
 
 import { InlineWidget } from 'react-calendly';
 import { X } from 'lucide-react';
+import { useCalendlyEventListener } from 'react-calendly';
 
 interface CalendlyModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onEventScheduled: () => void;
 }
 
-export function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
+export function CalendlyModal({ isOpen, onClose, onEventScheduled }: CalendlyModalProps) {
   if (!isOpen) return null;
+
+  useCalendlyEventListener({
+    onEventScheduled: (e) => {
+      onEventScheduled();
+      onClose();
+    }
+  });
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
