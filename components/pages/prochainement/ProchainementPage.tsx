@@ -276,7 +276,7 @@ export function ProchainementPage({ data, settings }: any) {
                   <div className="relative md:h-full">
                     <div className="md:hidden relative aspect-[4/3] rounded-2xl overflow-hidden">
                       <Image
-                        src="/images/anneyv-presentation.webp"
+                        src="/images/anneyv-presentation2.webp"
                         alt="Anne Yvonne Racine"
                         fill
                         className="object-cover"
@@ -287,7 +287,7 @@ export function ProchainementPage({ data, settings }: any) {
                     </div>
                     <div className="hidden md:block relative h-full min-h-[500px] rounded-2xl overflow-hidden">
                       <Image
-                        src="/images/anneyv-presentation.webp"
+                        src="/images/anneyv-presentation2.webp"
                         alt="Anne Yvonne Racine"
                         fill
                         className="object-cover"
