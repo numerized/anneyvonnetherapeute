@@ -16,7 +16,7 @@ export function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
       <div className="relative w-full h-full max-w-7xl mx-auto p-4">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-50 p-2 rounded-full bg-primary-forest/80 text-primary-cream hover:bg-primary-forest transition-colors"
+          className="absolute top-6 left-6 z-50 p-2 rounded-full bg-primary-forest/80 text-primary-cream hover:bg-primary-forest transition-colors"
         >
           <X className="w-6 h-6" />
         </button>
