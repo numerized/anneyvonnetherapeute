@@ -10,6 +10,7 @@ import { CheckSquare, Square, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { CalendarManager } from '@/components/dashboard/CalendarManager';
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -19,6 +20,7 @@ export default function DashboardPage() {
     questionnaire: false,
     appointment: false,
   });
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -172,12 +174,12 @@ export default function DashboardPage() {
                       )}
                     </button>
                     <div className="grid gap-1.5 leading-none">
-                      <Link
-                        href="/appointment"
+                      <button
+                        onClick={() => setIsCalendlyOpen(true)}
                         className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
                       >
                         Prendre rendez-vous avec votre coach
-                      </Link>
+                      </button>
                       <p className="text-sm text-primary-cream/60">
                         Planifiez votre prochaine séance de coaching
                       </p>
@@ -213,12 +215,12 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="mt-auto flex justify-end">
-                <Link
-                  href="/appointment"
+                <button
+                  onClick={() => setIsCalendlyOpen(true)}
                   className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
                 >
                   Prendre rendez-vous
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -228,6 +230,12 @@ export default function DashboardPage() {
         <section className="mt-12 mb-12">
           <CalendarManager />
         </section>
+
+        {/* Calendly Modal */}
+        <CalendlyModal 
+          isOpen={isCalendlyOpen}
+          onClose={() => setIsCalendlyOpen(false)}
+        />
       </div>
     </div>
   );
