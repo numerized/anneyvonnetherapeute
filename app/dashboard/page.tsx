@@ -9,7 +9,6 @@ import { toast } from 'sonner';
 import { CheckSquare, Square, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
-import { CalendarManager } from '@/components/dashboard/CalendarManager';
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
 
 export default function DashboardPage() {
@@ -225,11 +224,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        {/* Add Calendar Manager section */}
-        <section className="mt-12 mb-12">
-          <CalendarManager />
-        </section>
 
         {/* Calendly Modal */}
         <CalendlyModal 
