@@ -1,10 +1,13 @@
 'use client'
 
 import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
+import { Modal } from '@/components/shared/Modal'
 import { useState } from 'react'
 
 export default function LivePage() {
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isTestModalOpen, setIsTestModalOpen] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
 
   return (
     <main className="flex-auto">
@@ -123,12 +126,12 @@ export default function LivePage() {
               </p>
             </div>
             <div className="flex justify-end mt-auto pt-4">
-              <a 
-                href="/quel-amoureuse-ou-quel-amoureux-es-tu"
+              <button 
+                onClick={() => setIsTestModalOpen(true)}
                 className="bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
               >
                 Commencer le test
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -138,6 +141,31 @@ export default function LivePage() {
           <WherebyEmbed />
         </div>
       </div>
+
+      {/* Test Modal */}
+      <Modal
+        isOpen={isTestModalOpen}
+        onClose={() => setIsTestModalOpen(false)}
+        fullscreen
+      >
+        <div className="w-full h-screen p-0">
+          <div className="w-full h-full pb-24">
+            <iframe
+              src="/quel-amoureuse-ou-quel-amoureux-es-tu"
+              className="w-full h-full"
+              style={{ border: 'none' }}
+            />
+          </div>
+          <div className="fixed bottom-0 left-0 right-0 bg-primary-forest/95 backdrop-blur-sm p-4 flex justify-center">
+            <button
+              onClick={() => setIsTestModalOpen(false)}
+              className="bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors shadow-lg"
+            >
+              Fermer le test
+            </button>
+          </div>
+        </div>
+      </Modal>
     </main>
   )
 }
