@@ -60,6 +60,9 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
             <h3 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
               Le live commencera le 18 février à 19h
             </h3>
+            <h2 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
+              "L'Amour à 2"
+            </h2>
             <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
               En attendant, n'oubliez pas de vous inscrire à la newsletter ci-dessus pour recevoir un rappel et toutes les informations nécessaires.
             </p>
