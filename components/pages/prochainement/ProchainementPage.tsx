@@ -124,10 +124,43 @@ export function ProchainementPage({ data, settings }: any) {
       ) : (
         <>
           <ProchainementHero hero={data.hero} data={settings} onShowPurchase={() => setShowPurchaseModal(true)} />
-
+          
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
+
+              
+              {/* Live Event Announcement */}
+              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+                  {/* Left Column - Date and Time */}
+                  <div className="w-full md:w-1/3 flex justify-center">
+                    <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
+                      <div className="text-primary-coral font-medium mb-2">PROCHAIN LIVE</div>
+                      <div className="text-2xl font-bold text-primary-cream mb-1">18 Février</div>
+                      <div className="text-xl text-primary-cream">19h00</div>
+                    </div>
+                  </div>
+
+                  {/* Right Column - Event Details */}
+                  <div className="w-full md:w-2/3">
+                    <h2 className="text-2xl font-medium text-primary-coral mb-4">
+                      LE LIVE D'ANNE YVONNE SUR LE DIVAN
+                    </h2>
+                    <p className="text-primary-cream/80 mb-6">
+                      Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.
+                    </p>
+                    <div className="flex justify-end">
+                      <a 
+                        href="/live" 
+                        className="inline-flex items-center bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
+                      >
+                        S'inscrire au live
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* Header */}
               <div className="text-center mb-12">
@@ -215,8 +248,6 @@ export function ProchainementPage({ data, settings }: any) {
                     </ul>
                   </div>
                 </div>
-
-
               </div>
 
               {/* Rest of the content... */}
