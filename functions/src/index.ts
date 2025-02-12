@@ -306,31 +306,28 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           </p>
         </div>
         
-        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-          Je vous invite à découvrir dès maintenant nos capsules audio en cliquant sur le lien ci-dessous :
-        </p>
-
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="https://www.coeur-a-corps.org/prochainement#capsules" 
-             style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
-            Accéder aux Capsules
-          </a>
-        </div>
-
-        <div style="background-color: #F8F4E3; border-radius: 16px; padding: 24px; margin: 30px 0;">
-          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
-            Formulaire d'Évaluation du Handicap Relationnel
+        <div style="background-color: #3f6c67; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(24px, 4.5vw); margin-bottom: 15px; line-height: 1.3; text-align: center;">
+            LE LIVE D'ANNE YVONNE SUR LE DIVAN
           </h2>
           
-          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-            Profitez de faire le test et découvrez votre taux de handicap relationnel. Cet outil vous permettra de mieux comprendre vos schémas relationnels et d'identifier les domaines 
-            où vous pourriez souhaiter progresser.
+          <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; opacity: 0.8; text-align: center;">
+            Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.
           </p>
 
-          <div style="text-align: center; margin-top: 20px;">
-            <a href="https://www.coeur-a-corps.org/evaluation-handicap-relationnel?email=${encodeURIComponent(subscriberEmail)}" 
-               style="display: inline-block; background-color: #122C1C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
-              Commencer le test
+          <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+            <strong>Le 18 février à 19h</strong>
+          </p>
+
+          <div style="text-align: center;">
+            <a href="https://www.coeur-a-corps.org/live" 
+               style="display: inline-block; background-color: #E8927C; color: #F8F4E3; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px; margin: 0 8px;">
+              Accéder au Live
+            </a>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Live%20d%27Anne%20Yvonne%20sur%20le%20Divan%20-%20L%27amour%20%C3%A0%202&details=Le%20live%20mensuel%20sur%20le%20th%C3%A8me%20du%20mois%3A%20l%27amour%20%C3%A0%202.%20Rejoignez-nous%20sur%20www.coeur-a-corps.org%2Flive&dates=20250218T180000Z%2F20250218T190000Z&location=www.coeur-a-corps.org%2Flive" 
+               target="_blank"
+               style="display: inline-block; background-color: #F8F4E3; color: #122C1C; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px; margin: 0 8px;">
+              📅 Ajouter au calendrier
             </a>
           </div>
         </div>
@@ -348,7 +345,24 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           <div style="text-align: center; margin-top: 20px;">
             <a href="https://www.coeur-a-corps.org/quel-amoureuse-ou-quel-amoureux-es-tu?email=${encodeURIComponent(subscriberEmail)}" 
                style="display: inline-block; background-color: #FF7F66; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
-              Découvrir mon profil
+              Découvrir mon profil amoureux
+            </a>
+          </div>
+        </div>
+        
+        <div style="background-color: #F8F4E3; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
+            Nos Capsules Audio
+          </h2>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+            Je vous invite à découvrir dès maintenant nos capsules audio pour enrichir votre parcours relationnel.
+          </p>
+
+          <div style="text-align: left;">
+            <a href="https://www.coeur-a-corps.org/prochainement#capsules" 
+               style="display: inline-block; background-color: #E8927C; color: #F8F4E3; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px;">
+              Accéder aux Capsules
             </a>
           </div>
         </div>
@@ -376,7 +390,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           email: senderEmail.value(),
           name: 'Anne-Yvonne Thérapeute'
         },
-        subject: 'Bienvenue à nos capsules audio - Anne-Yvonne Thérapeute',
+        subject: 'Bienvenue, vous avez souscrit à notre newsletter - Anne-Yvonne Thérapeute',
         html: createEmailTemplate(emailContent)
       };
 
