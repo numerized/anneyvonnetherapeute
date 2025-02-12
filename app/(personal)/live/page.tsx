@@ -31,7 +31,7 @@ export default function LivePage() {
               {isSubscribed ? (
                 <div className="mt-4">
                   <p className="text-primary-coral font-bold">Merci pour votre inscription !</p>
-                  <p className="text-primary-coral mt-2">Consultez votre email pour confirmer votre inscription au live.</p>
+                  <p className="text-primary-coral mt-2">Consultez votre email pour plus d'informations sur le live.</p>
                 </div>
               ) : (
                 <form className="space-y-4" onSubmit={async (e) => {
