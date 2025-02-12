@@ -123,9 +123,12 @@ export default function LivePage() {
               </p>
             </div>
             <div className="flex justify-end mt-auto pt-4">
-              <button className="bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors">
+              <a 
+                href="/quel-amoureuse-ou-quel-amoureux-es-tu"
+                className="bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
+              >
                 Commencer le test
-              </button>
+              </a>
             </div>
           </div>
         </div>
