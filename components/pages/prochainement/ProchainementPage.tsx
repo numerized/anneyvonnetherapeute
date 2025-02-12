@@ -9,6 +9,7 @@ import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHe
 import { PurchaseTicket } from './PurchaseTicket'
 import PaymentSuccess from './PaymentSuccess'
 import { Stats } from '@/components/shared/Stats'
+import Link from 'next/link'
 
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
@@ -151,12 +152,12 @@ export function ProchainementPage({ data, settings }: any) {
                       Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.
                     </p>
                     <div className="flex justify-end">
-                      <a 
+                      <Link 
                         href="/live" 
                         className="inline-flex items-center bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
                       >
                         S'inscrire au live
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
