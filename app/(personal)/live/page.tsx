@@ -12,8 +12,10 @@ export default function LivePage() {
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl md:text-4xl font-medium text-primary-coral mb-4">
-            Le Live
+          LE LIVE D’ANNE YVONNE
           </h1>
+          <h4>Sur le divan</h4>
+          <p className="text-primary-coral mt-2">Le 18 février à 19h</p>
         </div>
 
         {/* Two Column Layout */}

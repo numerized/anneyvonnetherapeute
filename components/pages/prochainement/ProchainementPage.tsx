@@ -129,7 +129,12 @@ export function ProchainementPage({ data, settings }: any) {
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
-
+            <div className="text-center mb-12">
+                <br/><br/>
+                <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
+                PROCHAIN LIVE
+                </h2>
+              </div>
               
               {/* Live Event Announcement */}
               <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
@@ -137,7 +142,7 @@ export function ProchainementPage({ data, settings }: any) {
                   {/* Left Column - Date and Time */}
                   <div className="w-full md:w-1/3 flex justify-center">
                     <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
-                      <div className="text-primary-coral font-medium mb-2">PROCHAIN LIVE</div>
+                      <div className="text-primary-coral font-medium mb-2">LIVE: L'amour à 2</div>
                       <div className="text-2xl font-bold text-primary-cream mb-1">18 Février</div>
                       <div className="text-xl text-primary-cream">19h00</div>
                     </div>
@@ -165,6 +170,7 @@ export function ProchainementPage({ data, settings }: any) {
 
               {/* Header */}
               <div className="text-center mb-12">
+                <br/><br/>
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   COACHING RELATIONNEL 7/7
                 </h2>
@@ -303,7 +309,7 @@ export function ProchainementPage({ data, settings }: any) {
 
               {/* Presentation Section */}
               <div className="mb-16 bg-primary-dark/30 rounded-[32px] overflow-hidden">
-                <div className="grid md:grid-cols-2 gap-8 p-8">
+                <div className="grid md:grid-cols-2 gap-6 p-6">
                   {/* Image Column */}
                   <div className="relative md:h-full">
                     <div className="md:hidden relative aspect-[4/3] rounded-2xl overflow-hidden">
@@ -317,7 +323,7 @@ export function ProchainementPage({ data, settings }: any) {
                         priority
                       />
                     </div>
-                    <div className="hidden md:block relative h-full min-h-[500px] rounded-2xl overflow-hidden">
+                    <div className="hidden md:block relative h-full min-h-[400px] rounded-2xl overflow-hidden">
                       <Image
                         src="/images/anneyv-presentation2.webp"
                         alt="Anne Yvonne Racine"
@@ -331,13 +337,13 @@ export function ProchainementPage({ data, settings }: any) {
                   </div>
 
                   {/* Text Column */}
-                  <div className="space-y-6 text-primary-cream">
+                  <div className="space-y-4 text-primary-cream">
                     <div>
-                      <h3 className="text-2xl font-light text-primary-coral mb-2">UNE HISTOIRE D'ENGAGEMENT</h3>
-                      <p className="text-lg mb-4">Anne Yvonne Racine et Cœurs à Corps, en quelques phrases.</p>
+                      <h3 className="text-xl font-light text-primary-coral mb-1">UNE HISTOIRE D'ENGAGEMENT</h3>
+                      <p className="text-base mb-3">Anne Yvonne Racine et Cœurs à Corps, en quelques phrases.</p>
                     </div>
 
-                    <div className="space-y-4 text-primary-cream/90">
+                    <div className="space-y-3 text-primary-cream/90 text-sm">
                       <p>
                         Depuis plus de 50 ans, ma vie et mon parcours professionnel m'ont guidée vers une quête essentielle pour moi, de mieux: comprendre, d'explorer profondément et de transformer la manière dont nous nous relions à nous-mêmes, aux autres et au monde.
                       </p>
@@ -348,7 +354,7 @@ export function ProchainementPage({ data, settings }: any) {
                         Cette démarche s'articule autour de trois axes fondamentaux : Amour, Désir et Esprit. Ensemble, ils nous invitent à retourner à la source de notre désir d'amour, à explorer ce qui nous anime vraiment et à grandir, à la fois individuellement et dans nos relations.
                       </p>
                       <p>
-                        Cœur à Corps propose un espace unique, UNE CONVERSION à 180 DEGRES D'AMOUR conçue avec des personnes incroyables dans une atmosphère que je ne pensais pas pouvoir un jour connaitre. Un espace conçu pour offrir à chacun la liberté et la tranquillité nécessaires d'avancer, à son rythme et là où il a le désir d'aller.
+                        Cœur à Corps propose un espace unique, <span className="font-medium">UNE CONVERSION à 180 DEGRES D'AMOUR</span> conçue avec des personnes incroyables dans une atmosphère que je ne pensais pas pouvoir un jour connaitre. Un espace conçu pour offrir à chacun la liberté et la tranquillité nécessaires d'avancer, à son rythme et là où il a le désir d'aller.
                       </p>
                     </div>
                   </div>
