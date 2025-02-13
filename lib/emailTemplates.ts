@@ -132,21 +132,21 @@ export const createGroupCoachingEmailTemplate = (email: string, finalPrice: numb
       <p>Merci pour votre inscription ! Voici les détails de votre programme de coaching :</p>
       
       <h3>Programme</h3>
-      <p>"Coaching Relationnel en Groupe : Transformez vos relations en 3 mois"<br/>
+      <p>"Dépassez vos schémas, vivez l'amour autrement"<br/>
       par Anne Yvonne Racine (coeur-a-corps.org)</p>
 
       <h3>Ce qui est inclus</h3>
       <ul style="list-style: none; padding-left: 0;">
-        <li style="margin-bottom: 10px;">♦ COACHING EN GROUPE HEBDOMADAIRE SUR 3 MOIS</li>
-        <li style="margin-bottom: 10px;">♦ ÉCHANGES VIA GROUPE TELEGRAM PRIVÉ</li>
-        <li style="margin-bottom: 10px;">♦ DOUZE SÉANCES DE GROUPE VIA WHEREBY</li>
-        <li style="margin-bottom: 10px;">♦ DEUX SÉANCES INDIVIDUELLES DE THÉRAPIE</li>
+        <li style="margin-bottom: 10px;">♦ TROIS SÉANCES INTENSIVES EN PETIT GROUPE (5 PERSONNES MAX)</li>
+        <li style="margin-bottom: 10px;">♦ EXERCICES PRATIQUES ET OUTILS DE TRANSFORMATION</li>
+        <li style="margin-bottom: 10px;">♦ ACCOMPAGNEMENT PERSONNALISÉ DANS UN CADRE INTIME</li>
       </ul>
 
       <h3>Détails pratiques</h3>
       <ul>
-        <li><strong>Durée :</strong> 3 mois d'accompagnement en groupe</li>
-        <li><strong>Format :</strong> Coaching en groupe via Whereby et séances individuelles</li>
+        <li><strong>Dates :</strong> 11, 18 et 25 mars 2025</li>
+        <li><strong>Horaire :</strong> 20h-21h30</li>
+        <li><strong>Format :</strong> Séances en ligne via Whereby (groupe de 5 personnes maximum)</li>
         <li><strong>Montant réglé :</strong> ${finalPrice} ${currency} ${
           discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''
         }</li>
@@ -155,25 +155,24 @@ export const createGroupCoachingEmailTemplate = (email: string, finalPrice: numb
       <h3>Prochaines étapes</h3>
       <p>Je vous contacterai personnellement dans les 24 heures via l'adresse ${email} pour :</p>
       <ul>
-        <li>Vous donner accès au groupe Telegram privé</li>
-        <li>Vous communiquer les dates et horaires des séances de groupe</li>
-        <li>Planifier vos deux séances individuelles</li>
+        <li>Vous donner accès à l'espace de coaching</li>
+        <li>Vous envoyer le lien Whereby pour les séances</li>
         <li>Répondre à toutes vos questions</li>
       </ul>
 
-      <h3>Ce que vous allez développer</h3>
+      <h3>Ce que vous allez découvrir</h3>
       <ul>
-        <li>Une meilleure compréhension de vos dynamiques relationnelles</li>
-        <li>Des outils concrets pour améliorer vos relations</li>
-        <li>Un soutien collectif dans votre transformation personnelle</li>
-        <li>Une capacité à créer des relations authentiques et épanouissantes</li>
+        <li>Pourquoi vous êtes attiré(e) par certains types de personnes et comment sortir des répétitions inconscientes</li>
+        <li>Comment distinguer l'amour réel du fantasme ou du besoin de validation</li>
+        <li>Comment aimer sans se perdre, sans s'accrocher ni exiger que l'autre vous comble</li>
+        <li>Comment ancrer un amour qui part de soi, sans attente, sans contrôle</li>
       </ul>
 
-      <p>En attendant notre premier contact, je vous invite à réfléchir aux aspects de vos relations que vous souhaitez particulièrement explorer et transformer dans un contexte de groupe.</p>
+      <p>En attendant notre première séance, je vous invite à réfléchir aux schémas relationnels que vous souhaitez transformer et aux nouvelles façons d'aimer que vous désirez explorer.</p>
       
       <p>Pour toute question urgente, n'hésitez pas à me contacter via coeur-a-corps.org</p>
       
-      <p>Au plaisir de commencer cette transformation ensemble !</p>
+      <p>Au plaisir de vous accompagner dans cette transformation !</p>
       <p>Anne Yvonne</p>
   </div>
 `
