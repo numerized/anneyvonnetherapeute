@@ -312,7 +312,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           </h2>
           
           <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; opacity: 0.8; text-align: center;">
-            Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.
+            Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».
           </p>
 
           <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
