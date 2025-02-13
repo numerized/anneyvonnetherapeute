@@ -149,13 +149,11 @@ export default function LivePage() {
         fullscreen
       >
         <div className="w-full h-screen p-0">
-          <div className="w-full h-full pb-24">
-            <iframe
-              src="/quel-amoureuse-ou-quel-amoureux-es-tu"
-              className="w-full h-full"
-              style={{ border: 'none' }}
-            />
-          </div>
+          <iframe
+            src="/quel-amoureuse-ou-quel-amoureux-es-tu"
+            className="w-full h-full"
+            style={{ border: 'none' }}
+          />
           <div className="fixed bottom-0 left-0 right-0 bg-primary-forest/95 backdrop-blur-sm p-4 flex justify-center">
             <button
               onClick={() => setIsTestModalOpen(false)}
