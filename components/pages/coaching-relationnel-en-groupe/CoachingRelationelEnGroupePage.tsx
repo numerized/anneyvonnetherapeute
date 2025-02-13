@@ -224,6 +224,14 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
               </div>
             </div>
           </section>
+          <div className="relative z-10">
+              <div className="max-w-7xl mx-auto px-6">
+                <Stats 
+                  title="Une approche unique de la thérapie relationnelle"
+                  items={statsItems}
+                />
+              </div>
+          </div>
         </>
       )}
     </main>
