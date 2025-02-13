@@ -29,7 +29,7 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
 
   if (!isLiveActive) {
     return (
-      <div className={`relative w-full ${className}`} style={{ paddingBottom: '56.25%' }}>
+      <div className={`relative w-full h-full flex flex-col ${className}`}>
         <div className="absolute inset-0 rounded-2xl overflow-hidden">
           {/* Background Image with Blur */}
           <div className="absolute inset-0">
@@ -61,7 +61,7 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
               Le live commencera le 18 février à 19h
             </h3>
             <h2 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
-              "L'Amour à 2"
+              "« Février, mon Cœur 🤍 »"
             </h2>
             <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
               En attendant, n'oubliez pas de vous inscrire à la newsletter ci-dessus pour recevoir un rappel et toutes les informations nécessaires.
@@ -82,11 +82,11 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
   }
 
   return (
-    <div className={`relative w-full ${className}`} style={{ paddingBottom: '56.25%' }}>
+    <div className={`relative w-full h-full flex flex-col ${className}`}>
       <iframe
         src="https://whereby.com/coeur-a-corps?minimal=1"
         allow="camera; microphone; fullscreen; speaker; display-capture"
-        className="absolute top-0 left-0 w-full h-full rounded-2xl"
+        className="w-full h-full rounded-2xl"
       ></iframe>
     </div>
   )
