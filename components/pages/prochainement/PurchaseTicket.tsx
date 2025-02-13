@@ -21,8 +21,8 @@ export function PurchaseTicket({ ticketType, onClose, defaultCouponCode }: Purch
   const [error, setError] = useState('')
   const [hasDiscount, setHasDiscount] = useState(!!defaultCouponCode)
 
-  const basePrice = 999
-  const discountedPrice = 899
+  const basePrice = 333
+  const discountedPrice = Math.round(basePrice * 0.9) // 10% discount
   const testPrice = 1 // 1 EUR/CHF for test purchases
   
   const getDisplayPrice = () => {
