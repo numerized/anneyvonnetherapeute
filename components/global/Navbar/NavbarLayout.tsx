@@ -1,19 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { app } from '@/lib/firebase';
-import Image from 'next/image';
-import Link from 'next/link';
-import { HiMenu, HiX } from 'react-icons/hi';
-import { Loader2 } from 'lucide-react';
-import { urlFor } from '@/sanity/lib/image';
-import { resolveHref } from '@/sanity/lib/utils';
-import { SettingsPayload } from '@/types';
-import { EmailForm } from '@/components/shared/EmailForm';
-import NotificationBanner from '../NotificationBanner/NotificationBanner';
-import { Menu, X } from 'lucide-react'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { Loader2, Menu, X } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { HiMenu, HiX } from 'react-icons/hi'
+
+import { EmailForm } from '@/components/shared/EmailForm'
+import { app } from '@/lib/firebase'
+import { urlFor } from '@/sanity/lib/image'
+import { resolveHref } from '@/sanity/lib/utils'
+import { SettingsPayload } from '@/types'
+import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
 interface NavbarProps {
   data: SettingsPayload
@@ -21,6 +21,10 @@ interface NavbarProps {
 
 export default function NavbarLayout({ data }: NavbarProps) {
   const menuItems = data?.menuItems || []
+  const pathname = usePathname()
+  const isProchainement = pathname === '/prochainement'
+  const isCoachingGroupe = pathname === '/coaching-relationnel-en-groupe'
+  const isLive = pathname === '/live'
   
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
@@ -28,9 +32,6 @@ export default function NavbarLayout({ data }: NavbarProps) {
 
   const logoAsset = data?.logo?.asset
   const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
-
-  const pathname = usePathname()
-  const isProchainement = pathname === '/prochainement'
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -44,6 +45,11 @@ export default function NavbarLayout({ data }: NavbarProps) {
 
     return () => unsubscribe();
   }, []);
+
+  // Don't render navbar on live or coaching-relationnel-en-groupe routes
+  if (isLive || isCoachingGroupe) {
+    return null
+  }
 
   // Don't render anything until we know the auth state
   if (isLoggedIn === undefined) {
@@ -167,7 +173,6 @@ export default function NavbarLayout({ data }: NavbarProps) {
                   </Link>
                 </div>
               )}
-              
               {/* Desktop Navigation */}
               {!isProchainement && data?.menuItems && (
                 <div className="hidden md:flex items-center space-x-8">
