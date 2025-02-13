@@ -120,3 +120,60 @@ export const createWebinarEmailTemplate = (
       <p>Anne Yvonne</p>
   </div>
 `
+
+// Helper function to create group coaching email template
+export const createGroupCoachingEmailTemplate = (email: string, finalPrice: number, currency: string, discountApplied: number) => `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <img src="https://coeur-a-corps.org/images/logo.png" 
+           alt="Anne Yvonne Relations" 
+           style="width: 120px; height: auto; margin-bottom: 30px;"
+      />
+      <h2>Confirmation d'inscription - Coaching Relationnel en Groupe</h2>
+      <p>Merci pour votre inscription ! Voici les détails de votre programme de coaching :</p>
+      
+      <h3>Programme</h3>
+      <p>"Coaching Relationnel en Groupe : Transformez vos relations en 3 mois"<br/>
+      par Anne Yvonne Racine (coeur-a-corps.org)</p>
+
+      <h3>Ce qui est inclus</h3>
+      <ul style="list-style: none; padding-left: 0;">
+        <li style="margin-bottom: 10px;">♦ COACHING EN GROUPE HEBDOMADAIRE SUR 3 MOIS</li>
+        <li style="margin-bottom: 10px;">♦ ÉCHANGES VIA GROUPE TELEGRAM PRIVÉ</li>
+        <li style="margin-bottom: 10px;">♦ DOUZE SÉANCES DE GROUPE VIA WHEREBY</li>
+        <li style="margin-bottom: 10px;">♦ DEUX SÉANCES INDIVIDUELLES DE THÉRAPIE</li>
+      </ul>
+
+      <h3>Détails pratiques</h3>
+      <ul>
+        <li><strong>Durée :</strong> 3 mois d'accompagnement en groupe</li>
+        <li><strong>Format :</strong> Coaching en groupe via Whereby et séances individuelles</li>
+        <li><strong>Montant réglé :</strong> ${finalPrice} ${currency} ${
+          discountApplied > 0 ? `(remise de ${discountApplied}% appliquée)` : ''
+        }</li>
+      </ul>
+
+      <h3>Prochaines étapes</h3>
+      <p>Je vous contacterai personnellement dans les 24 heures via l'adresse ${email} pour :</p>
+      <ul>
+        <li>Vous donner accès au groupe Telegram privé</li>
+        <li>Vous communiquer les dates et horaires des séances de groupe</li>
+        <li>Planifier vos deux séances individuelles</li>
+        <li>Répondre à toutes vos questions</li>
+      </ul>
+
+      <h3>Ce que vous allez développer</h3>
+      <ul>
+        <li>Une meilleure compréhension de vos dynamiques relationnelles</li>
+        <li>Des outils concrets pour améliorer vos relations</li>
+        <li>Un soutien collectif dans votre transformation personnelle</li>
+        <li>Une capacité à créer des relations authentiques et épanouissantes</li>
+      </ul>
+
+      <p>En attendant notre premier contact, je vous invite à réfléchir aux aspects de vos relations que vous souhaitez particulièrement explorer et transformer dans un contexte de groupe.</p>
+      
+      <p>Pour toute question urgente, n'hésitez pas à me contacter via coeur-a-corps.org</p>
+      
+      <p>Au plaisir de commencer cette transformation ensemble !</p>
+      <p>Anne Yvonne</p>
+  </div>
+`
