@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { PurchaseTicket } from './PurchaseTicket'
-import { CoachingRelationelEnGroupeHeroWrapper as CoachingRelationelEnGroupeHero } from './CoachingRelationelEnGroupeHero'
 import PaymentSuccess from './PaymentSuccess'
 import { Stats } from '@/components/shared/Stats'
 import Link from 'next/link'
@@ -98,10 +97,6 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
       }
       setIsPlaying2(!isPlaying2)
     }
-  }
-
-  if (!data?.hero) {
-    return null
   }
 
   const statsItems = [
