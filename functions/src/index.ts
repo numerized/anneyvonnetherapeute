@@ -320,9 +320,9 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           </p>
 
           <div style="text-align: center;">
-            <a href="https://www.coeur-a-corps.org/live" 
+            <a href="https://www.coeur-a-corps.org/live?email=${encodeURIComponent(subscriberEmail)}" 
                style="display: inline-block; background-color: #E8927C; color: #F8F4E3; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px; margin: 0 8px;">
-              Accéder au Live
+              Accéder au live
             </a>
             <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Live%20d%27Anne%20Yvonne%20sur%20le%20Divan%20-%20L%27amour%20%C3%A0%202&details=Le%20live%20mensuel%20sur%20le%20th%C3%A8me%20du%20mois%3A%20l%27amour%20%C3%A0%202.%20Rejoignez-nous%20sur%20www.coeur-a-corps.org%2Flive&dates=20250218T180000Z%2F20250218T190000Z&location=www.coeur-a-corps.org%2Flive" 
                target="_blank"
