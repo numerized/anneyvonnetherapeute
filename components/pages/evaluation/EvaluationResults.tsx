@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 interface RatingSection {
   [key: string]: string
 }
@@ -175,12 +177,12 @@ export function EvaluationResults({ socialRatings, intimateRatings }: Evaluation
           <span className="text-2xl font-bold text-primary-coral">COEUR180</span>
         </div>
         <div className="text-center">
-          <a 
+          <Link 
             href="/prochainement?coupon=COEUR180"
             className="inline-block bg-primary-coral hover:bg-primary-rust transition-colors text-white font-semibold px-6 py-3 rounded-lg"
           >
             Découvrir l'offre
-          </a>
+          </Link>
         </div>
       </div>
     </div>

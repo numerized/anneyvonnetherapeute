@@ -1,9 +1,11 @@
 'use client'
 
-import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
-import { Modal } from '@/components/shared/Modal'
-import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+
+import { Modal } from '@/components/shared/Modal'
+import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
 
 export default function LivePage() {
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -50,7 +52,7 @@ export default function LivePage() {
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-2xl md:text-4xl font-medium text-primary-coral mb-4">
-          LE LIVE
+            LE LIVE
           </h1>
           <h2>Sur le divan d'Anne Yvonne</h2>
           <p className="text-primary-coral mt-2">Le 18 février à 19h : Le live mensuel sur le thème du mois; « Février, mon Cœur ».</p>
@@ -179,7 +181,7 @@ export default function LivePage() {
               </p>
             </div>
             <div className="flex justify-end mt-auto pt-4">
-              <button 
+              <button
                 onClick={() => setIsTestModalOpen(true)}
                 className="bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
               >
@@ -200,14 +202,14 @@ export default function LivePage() {
 
         {/* Header */}
         <div className="text-center mb-12">
-                <br/><br/>
-                <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
-                  COACHING RELATIONNEL 7/7
-                </h2>
-                <div className="text-lg md:text-xl">
-                  <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>OFFRE EXCLUSIVE LIMITÉE</p>
-                </div>
-              </div>
+          <br/><br/>
+          <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
+            COACHING RELATIONNEL 7/7
+          </h2>
+          <div className="text-lg md:text-xl">
+            <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>OFFRE EXCLUSIVE LIMITÉE</p>
+          </div>
+        </div>
 
         {/* Event Details and Price Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
@@ -225,12 +227,12 @@ export default function LivePage() {
                 <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
                   L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
                 </p>
-                <a
+                <Link
                   href="/prochainement?coupon=COEUR180"
                   className="block w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
                 >
                   Profiter de l'offre -10%
-                </a>
+                </Link>
               </div>
             </div>
           </div>
