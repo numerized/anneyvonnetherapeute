@@ -138,7 +138,11 @@ export default function LivePage() {
 
         {/* Video Container - Full Width */}
         <div className="bg-primary-forest rounded-[32px] p-4 md:p-8 shadow-xl">
-          <WherebyEmbed />
+          <div className="mx-auto max-w-5xl">
+            <div className="relative h-[calc(56.25vw*2)] md:h-[calc(65vw)] md:max-h-[calc(65*48rem/100)]">
+              <WherebyEmbed className="absolute inset-0" />
+            </div>
+          </div>
         </div>
       </div>
 

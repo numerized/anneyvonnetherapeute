@@ -142,7 +142,7 @@ export function ProchainementPage({ data, settings }: any) {
                   {/* Left Column - Date and Time */}
                   <div className="w-full md:w-1/3 flex justify-center">
                     <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
-                      <div className="text-primary-coral font-medium mb-2">LIVE: L'amour à 2</div>
+                      <div className="text-primary-coral font-medium mb-2">LIVE: « Février, mon Cœur 🤍 »</div>
                       <div className="text-2xl font-bold text-primary-cream mb-1">18 Février</div>
                       <div className="text-xl text-primary-cream">19h00</div>
                     </div>
