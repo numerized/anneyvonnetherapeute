@@ -31,6 +31,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
 
   const pathname = usePathname()
   const isProchainement = pathname === '/prochainement'
+  const isCoachingGroupe = pathname === '/coaching-relationnel-en-groupe'
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -167,8 +168,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
                   </Link>
                 </div>
               )}
-              
-              {/* Desktop Navigation */}
+　　 　 　 　 {/* Desktop Navigation */}
               {!isProchainement && data?.menuItems && (
                 <div className="hidden md:flex items-center space-x-8">
                   {data.menuItems.map((item: any, index: number) => (
