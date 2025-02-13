@@ -230,7 +230,12 @@ function QuelAmoureuxPage() {
 
                 <div className="mt-8 flex justify-end">
                   <button
-                    onClick={() => setShowResults(true)}
+                    onClick={() => {
+                      setShowResults(true)
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 400)
+                    }}
                     className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-all duration-200"
                   >
                     Voir mes résultats
