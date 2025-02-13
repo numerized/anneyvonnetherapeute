@@ -112,8 +112,17 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
         <PaymentSuccess />
       ) : (
         <>
-          <section className="py-24 bg-primary-forest/80 rounded-3xl">
-            <div className="max-w-4xl mx-auto px-6">
+          <section className="py-24 bg-primary-forest/80 rounded-3xl relative overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <Image
+                src="/images/MIEUX VIVRE L'AUTRE.webp"
+                alt="Mieux Vivre L'autre"
+                fill
+                className="object-cover opacity-20"
+                priority
+              />
+            </div>
+            <div className="max-w-4xl mx-auto px-6 relative z-10">
               <div className="text-center mb-12">
                 <br/><br/>
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
