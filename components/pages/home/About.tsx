@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export function About() {
   return (
     <section 
@@ -44,7 +46,7 @@ export function About() {
               className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/50 via-50% to-primary-forest/20 z-10 rounded-[24px]" 
               aria-hidden="true"
             />
-            <img
+            <Image
               src="/images/about.webp"
               alt="Espace thérapeutique paisible"
               className="rounded-[24px] w-full aspect-[3/5] object-cover"
