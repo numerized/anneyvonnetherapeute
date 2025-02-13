@@ -32,6 +32,12 @@ export default function NavbarLayout({ data }: NavbarProps) {
   const pathname = usePathname()
   const isProchainement = pathname === '/prochainement'
   const isCoachingGroupe = pathname === '/coaching-relationnel-en-groupe'
+  const isLive = pathname === '/live'
+
+  // Don't render navbar on live or coaching-relationnel-en-groupe routes
+  if (isLive || isCoachingGroupe) {
+    return null
+  }
 
   useEffect(() => {
     const auth = getAuth(app);
