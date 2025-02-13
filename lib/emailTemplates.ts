@@ -2,7 +2,7 @@
 export const createCoachingEmailTemplate = (email: string, finalPrice: number, currency: string, discountApplied: number) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
-           alt="Anne Yvonne Thérapeute" 
+           alt="Anne Yvonne Relations" 
            style="width: 120px; height: auto; margin-bottom: 30px;"
       />
       <h2>Confirmation d'inscription - Coaching Relationnel 7/7</h2>
@@ -62,7 +62,7 @@ export const createWebinarEmailTemplate = (
 ) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
-           alt="Anne Yvonne Thérapeute" 
+           alt="Anne Yvonne Relations" 
            style="width: 120px; height: auto; margin-bottom: 30px;"
       />
       <h2>Confirmation d'inscription - Formation "Mieux vivre l'autre"</h2>
