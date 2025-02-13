@@ -34,7 +34,7 @@ function createEmailTemplate(content: string): string {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: left; margin-bottom: 30px;">
         <img src="https://www.coeur-a-corps.org/images/logo.png" 
-             alt="Anne Yvonne Thérapeute" 
+             alt="Anne Yvonne Relations" 
              style="width: 120px; height: auto;"
         />
       </div>
@@ -98,7 +98,7 @@ export const sendContactEmail = onRequest(
         to: recipientEmail.value(),
         from: {
           email: senderEmail.value(),
-          name: 'Anne Yvonne Thérapeute'  // This should match your verified sender name in SendGrid
+          name: 'Anne Yvonne Relations'  // This should match your verified sender name in SendGrid
         },
         replyTo: email,
         subject: `Nouveau message de ${name}`,
@@ -388,9 +388,9 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         to: subscriberEmail,
         from: {
           email: senderEmail.value(),
-          name: 'Anne Yvonne Thérapeute'
+          name: 'Anne Yvonne Relations'
         },
-        subject: 'Bienvenue, vous avez souscrit à notre newsletter - Anne Yvonne Thérapeute',
+        subject: 'Bienvenue, vous avez souscrit à notre newsletter - Anne Yvonne Relations',
         html: createEmailTemplate(emailContent)
       };
 

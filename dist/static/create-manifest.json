@@ -4,7 +4,7 @@
   "workspaces": [
     {
       "name": "default",
-      "title": "Anne Yvonne Thérapeute",
+      "title": "Anne Yvonne Relations",
       "basePath": "/studio",
       "dataset": "production",
       "schema": "36a9d061.create-schema.json",
