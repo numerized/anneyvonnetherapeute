@@ -139,7 +139,7 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
                       </p>
                       {showPurchaseModal && (
                         <PurchaseTicket
-                          ticketType="coaching-relationnel-en-groupe"
+                          ticketType="standard"
                           onClose={() => setShowPurchaseModal(false)}
                           defaultCouponCode={couponCode}
                         />
