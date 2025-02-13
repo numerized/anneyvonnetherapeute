@@ -15,9 +15,9 @@ export default function LivePage() {
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-2xl md:text-4xl font-medium text-primary-coral mb-4">
-          LE LIVE D'ANNE YVONNE
+          LE LIVE
           </h1>
-          <h2>Sur le divan</h2>
+          <h2>Sur le divan d'Anne Yvonne</h2>
           <p className="text-primary-coral mt-2">Le 18 février à 19h : Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.</p>
         </div>
 

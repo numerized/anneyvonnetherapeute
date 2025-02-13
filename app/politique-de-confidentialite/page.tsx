@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { ObfuscatedEmail } from '@/components/shared/ObfuscatedEmail'
 
 export const metadata: Metadata = {
-  title: 'Politique de Confidentialité | Anne-Yvonne Racine',
-  description: 'Politique de confidentialité et informations sur la protection des données personnelles du site web de Anne-Yvonne Racine.',
+  title: 'Politique de Confidentialité | Anne Yvonne Racine',
+  description: 'Politique de confidentialité et informations sur la protection des données personnelles du site web de Anne Yvonne Racine.',
   robots: 'noindex, nofollow'
 }
 

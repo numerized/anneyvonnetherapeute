@@ -149,7 +149,7 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
           <div className="relative w-full h-[300px] rounded-[24px] overflow-hidden">
             <Image
               src="/images/individual-session.webp"
-              alt="Séance individuelle avec Anne-Yvonne"
+              alt="Séance individuelle avec Anne Yvonne"
               fill
               className="object-cover"
             />

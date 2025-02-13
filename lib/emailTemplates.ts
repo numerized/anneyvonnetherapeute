@@ -2,7 +2,7 @@
 export const createCoachingEmailTemplate = (email: string, finalPrice: number, currency: string, discountApplied: number) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
-           alt="Anne-Yvonne Thérapeute" 
+           alt="Anne Yvonne Thérapeute" 
            style="width: 120px; height: auto; margin-bottom: 30px;"
       />
       <h2>Confirmation d'inscription - Coaching Relationnel 7/7</h2>
@@ -10,7 +10,7 @@ export const createCoachingEmailTemplate = (email: string, finalPrice: number, c
       
       <h3>Programme</h3>
       <p>"Coaching Relationnel 7/7 : Optimisez vos relations en 1 mois"<br/>
-      par Anne-Yvonne Racine (coeur-a-corps.org)</p>
+      par Anne Yvonne Racine (coeur-a-corps.org)</p>
 
       <h3>Ce qui est inclus</h3>
       <ul style="list-style: none; padding-left: 0;">
@@ -48,7 +48,7 @@ export const createCoachingEmailTemplate = (email: string, finalPrice: number, c
       <p>Pour toute question urgente, n'hésitez pas à me contacter via coeur-a-corps.org</p>
       
       <p>Au plaisir de commencer cette transformation ensemble !</p>
-      <p>Anne-Yvonne</p>
+      <p>Anne Yvonne</p>
   </div>
 `
 
@@ -62,7 +62,7 @@ export const createWebinarEmailTemplate = (
 ) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
-           alt="Anne-Yvonne Thérapeute" 
+           alt="Anne Yvonne Thérapeute" 
            style="width: 120px; height: auto; margin-bottom: 30px;"
       />
       <h2>Confirmation d'inscription - Formation "Mieux vivre l'autre"</h2>
@@ -70,7 +70,7 @@ export const createWebinarEmailTemplate = (
       
       <h3>Formation</h3>
       <p>"Mieux vivre l'autre : une formation pour élever la conscience relationnelle dans la diversité"<br/>
-      par Anne-Yvonne Racine (coeur-a-corps.org)</p>
+      par Anne Yvonne Racine (coeur-a-corps.org)</p>
 
       <h3>Détails pratiques</h3>
       <ul>
@@ -117,6 +117,6 @@ export const createWebinarEmailTemplate = (
       <p>Pour toute question, n'hésitez pas à me contacter via coeur-a-corps.org</p>
       
       <p>Au plaisir de vous retrouver pour cette belle aventure !</p>
-      <p>Anne-Yvonne</p>
+      <p>Anne Yvonne</p>
   </div>
 `
