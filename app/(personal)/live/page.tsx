@@ -18,7 +18,7 @@ export default function LivePage() {
           LE LIVE
           </h1>
           <h2>Sur le divan d'Anne Yvonne</h2>
-          <p className="text-primary-coral mt-2">Le 18 février à 19h : Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.</p>
+          <p className="text-primary-coral mt-2">Le 18 février à 19h : Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».</p>
         </div>
 
         {/* Two Column Layout */}

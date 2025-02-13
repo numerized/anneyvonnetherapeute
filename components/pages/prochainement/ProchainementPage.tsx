@@ -154,7 +154,7 @@ export function ProchainementPage({ data, settings }: any) {
                       LE LIVE D'ANNE YVONNE SUR LE DIVAN
                     </h2>
                     <p className="text-primary-cream/80 mb-6">
-                      Le live mensuel sur le thème du mois; ici c'est le mois DEUX, donc de l'amour à 2.
+                      Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».
                     </p>
                     <div className="flex justify-end">
                       <Link 
