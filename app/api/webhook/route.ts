@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
 import sgMail from '@sendgrid/mail'
-import { createWebinarEmailTemplate, createCoachingEmailTemplate } from '@/lib/emailTemplates'
+import { createWebinarEmailTemplate, createCoachingEmailTemplate, createGroupCoachingEmailTemplate } from '@/lib/emailTemplates'
 
 // Initialize Stripe only if we have an API key
 const stripe = process.env.STRIPE_SECRET_KEY 
@@ -97,13 +97,15 @@ export async function POST(req: Request) {
       // Select email template
       const emailTemplate = metadata.productType === 'prochainement'
         ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, isTestCoupon ? -1 : (hasDiscount ? 10 : 0))
-        : createWebinarEmailTemplate(
-            finalPrice,
-            currency,
-            isTestCoupon ? -1 : (hasDiscount ? 10 : 0),
-            calendarLinks,
-            process.env.WHEREBY_LINK!
-          )
+        : metadata.productType === 'coaching-relationnel-en-groupe'
+          ? createGroupCoachingEmailTemplate(customerEmail, finalPrice, currency, isTestCoupon ? -1 : (hasDiscount ? 10 : 0))
+          : createWebinarEmailTemplate(
+              finalPrice,
+              currency,
+              isTestCoupon ? -1 : (hasDiscount ? 10 : 0),
+              calendarLinks,
+              process.env.WHEREBY_LINK!
+            )
 
       // Send email
       if (!process.env.SENDGRID_API_KEY) {
@@ -119,7 +121,9 @@ export async function POST(req: Request) {
         },
         subject: metadata.productType === 'prochainement'
           ? 'Confirmation de votre inscription au Coaching Relationnel'
-          : 'Confirmation de votre inscription à la formation',
+          : metadata.productType === 'coaching-relationnel-en-groupe'
+            ? 'Confirmation de votre inscription au Coaching Relationnel en Groupe'
+            : 'Confirmation de votre inscription à la formation',
         html: emailTemplate
       })
     }
