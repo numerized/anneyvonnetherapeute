@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { toast } from 'sonner'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+import { PurchaseTicket } from '../prochainement/PurchaseTicket'
 import { CoachingRelationelEnGroupeHeroWrapper as CoachingRelationelEnGroupeHero } from './CoachingRelationelEnGroupeHero'
-import { PurchaseTicket } from './PurchaseTicket'
 import PaymentSuccess from './PaymentSuccess'
 import { Stats } from '@/components/shared/Stats'
 import Link from 'next/link'
+import { AnimatePresence } from 'framer-motion'
+import { toast } from 'sonner'
 
 export function CoachingRelationelEnGroupePage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
@@ -136,6 +137,13 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
                       <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
                         L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
                       </p>
+                      {showPurchaseModal && (
+                        <PurchaseTicket
+                          ticketType="coaching-relationnel-en-groupe"
+                          onClose={() => setShowPurchaseModal(false)}
+                          defaultCouponCode={couponCode}
+                        />
+                      )}
                       <button
                         onClick={() => setShowPurchaseModal(true)}
                         className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
