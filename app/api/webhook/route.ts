@@ -115,7 +115,7 @@ export async function POST(req: Request) {
         to: customerEmail,
         from: {
           email: 'a.ra@bluewin.ch',
-          name: 'Anne-Yvonne Racine'
+          name: 'Anne Yvonne Racine'
         },
         subject: metadata.productType === 'prochainement'
           ? 'Confirmation de votre inscription au Coaching Relationnel'

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { PricingPlans } from '@/components/pages/pricing/PricingPlans'
 
 export const metadata: Metadata = {
-  title: 'Tarifs | Anne-Yvonne',
+  title: 'Tarifs | Anne Yvonne',
   description: 'Découvrez nos différentes offres de thérapie relationnelle.',
 }
 

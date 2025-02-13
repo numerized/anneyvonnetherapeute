@@ -35,7 +35,7 @@ export function About() {
               </p>
             </div>
             <div className="text-right mt-8">
-              <span className="text-primary-teal text-2xl font-handwriting" aria-label="Signature">Anne-Yvonne Racine</span>
+              <span className="text-primary-teal text-2xl font-handwriting" aria-label="Signature">Anne Yvonne Racine</span>
             </div>
           </div>
 

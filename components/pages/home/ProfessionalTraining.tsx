@@ -89,7 +89,7 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
                   "Transmettez l'art de la thérapie relationnelle et faites partie du changement."
                 </p>
                 <p className="text-primary-teal font-handwriting text-lg">
-                  Anne-Yvonne Racine
+                  Anne Yvonne Racine
                 </p>
               </div>
             </div>
