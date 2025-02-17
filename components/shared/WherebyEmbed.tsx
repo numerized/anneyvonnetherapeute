@@ -84,7 +84,9 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
   return (
     <div className={`relative w-full h-full flex flex-col ${className}`}>
       <iframe
-        src="https://whereby.com/coeur-a-corps?minimal=1"
+        src={typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+          ? "https://whereby.com/rezokev"
+          : "https://whereby.com/coeur-a-corps?minimal=1"}
         allow="camera; microphone; fullscreen; speaker; display-capture"
         className="w-full h-full rounded-2xl"
       ></iframe>
