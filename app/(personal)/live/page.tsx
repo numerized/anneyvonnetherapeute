@@ -27,7 +27,7 @@ export default function LivePage() {
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
 
-      const parts = []
+      const parts: string[] = []
       if (days > 0) {
         parts.push(`${days} jour${days > 1 ? 's' : ''}`)
       }
