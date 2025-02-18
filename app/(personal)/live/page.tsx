@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 
 import { Modal } from '@/components/shared/Modal'
 import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
+import { Stats } from '@/components/shared/Stats'
 
 export default function LivePage() {
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -264,6 +265,16 @@ export default function LivePage() {
             </div>
           </div>
         </div>
+
+        {/* Stats Section */}
+        <Stats
+          items={[
+            { value: '95%', label: 'Taux de satisfaction client' },
+            { value: '500+', label: 'Couples accompagnés' },
+            { value: '20', label: 'Années d\'expérience' },
+            { value: '85%', label: 'Amélioration des relations' }
+          ]}
+        />
 
         {/* Group Coaching Offer */}
         <div className="text-center mb-12">
