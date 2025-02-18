@@ -268,6 +268,7 @@ export default function LivePage() {
 
         {/* Stats Section */}
         <Stats
+          title="Expertise et résultats"
           items={[
             { value: '95%', label: 'Taux de satisfaction client' },
             { value: '500+', label: 'Couples accompagnés' },
