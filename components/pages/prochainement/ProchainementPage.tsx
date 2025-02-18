@@ -161,7 +161,7 @@ export function ProchainementPage({ data, settings }: any) {
                         href="/live" 
                         className="inline-flex items-center bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
                       >
-                        S'inscrire au live
+                        Accéder au live
                       </Link>
                     </div>
                   </div>
