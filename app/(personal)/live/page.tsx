@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 
 import { Modal } from '@/components/shared/Modal'
 import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
+import { Stats } from '@/components/shared/Stats'
 
 export default function LivePage() {
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -242,23 +243,92 @@ export default function LivePage() {
               <ul className="space-y-4 text-primary-cream/80 m-0">
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>OPTIMISEZ VOS RELATIONS EN 1 MOIS</span>
+                  <span>Optimisez vos relations en 1 mois</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>SPECIAL DIVERSITÉS</span>
+                  <span>Special diversités</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>COACHING INDIVIDUEL 24/24 SUR 1 MOIS</span>
+                  <span>Coaching individuel 24/24 sur 1 mois</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>ÉCHANGES QUOTIDIENS VIA TELEGRAM</span>
+                  <span>Échanges quotidiens via Telegram</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>TROIS SEANCES DE THÉRAPIE À LA CARTE VIA WHEREBY</span>
+                  <span>Trois séances de thérapie à la carte via Whereby</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Section */}
+        <Stats
+          title="Expertise et résultats"
+          items={[
+            { value: '95%', label: 'Taux de satisfaction client' },
+            { value: '500+', label: 'Couples accompagnés' },
+            { value: '20', label: 'Années d\'expérience' },
+            { value: '85%', label: 'Amélioration des relations' }
+          ]}
+        />
+
+        {/* Group Coaching Offer */}
+        <div className="text-center mb-12">
+          <br/><br/>
+          <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
+            COACHING RELATIONNEL EN GROUPE
+          </h2>
+          <div className="text-lg md:text-xl">
+            <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>DÉPASSEZ VOS SCHÉMAS, VIVEZ L'AMOUR AUTREMENT</p>
+          </div>
+        </div>
+
+        {/* Group Coaching Details and Price Grid */}
+        <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
+          <div className="flex-grow">
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-3xl text-primary-coral font-semibold">333 EUR</div>
+                <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
+                  L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
+                </p>
+                <Link
+                  href="/coaching-relationnel-en-groupe"
+                  className="block w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
+                >
+                  Réserver ma place
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
+              <ul className="space-y-4 text-primary-cream/80 m-0">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral">♦</span>
+                  <span>Trois séances intensives (11, 18 et 25 mars)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral">♦</span>
+                  <span>Horaires : 20h-21h30</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral">♦</span>
+                  <span>Petits groupes (5 personnes max)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral">♦</span>
+                  <span>Exercices pratiques et prises de conscience</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary-coral">♦</span>
+                  <span>Transformation profonde de votre manière d'aimer</span>
                 </li>
               </ul>
             </div>
