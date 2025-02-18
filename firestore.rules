@@ -7,8 +7,9 @@ service cloud.firestore {
       allow read, write: if false;
     }
     
-    // Newsletter collection - allow adding new subscribers
+    // Newsletter collection - allow reading and adding new subscribers
     match /newsletter/{document} {
+      allow read: if true;  // Allow anyone to read
       allow create: if 
         // Must have an email field
         request.resource.data.keys().hasAll(['email']) &&
