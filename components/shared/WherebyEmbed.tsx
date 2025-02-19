@@ -9,6 +9,7 @@ interface WherebyEmbedProps {
 
 export function WherebyEmbed({ className }: WherebyEmbedProps) {
   const [isLiveActive, setIsLiveActive] = useState(false)
+  const [isLiveFinished, setIsLiveFinished] = useState(false)
 
   useEffect(() => {
     const checkLiveStatus = () => {
@@ -16,6 +17,7 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
       const liveStart = new Date('2025-02-18T18:00:00+01:00')
       const liveEnd = new Date('2025-02-18T22:00:00+01:00')
       setIsLiveActive(now >= liveStart && now <= liveEnd)
+      setIsLiveFinished(now > liveEnd)
     }
 
     // Check initially
@@ -57,24 +59,28 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
                 d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" 
               />
             </svg>
-            <h3 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
-              Le live commencera le 18 février à 19h
-            </h3>
-            <h2 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
-              "« Février, mon Cœur 🤍 »"
-            </h2>
-            <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
-              En attendant, n'oubliez pas de vous inscrire à la newsletter ci-dessus pour recevoir un rappel et toutes les informations nécessaires.
-            </p>
-            <a 
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Live%20d%27Anne%20Yvonne%20sur%20le%20Divan%20-%20L%27amour%20%C3%A0%202&details=Le%20live%20mensuel%20sur%20le%20th%C3%A8me%20du%20mois%3A%20l%27amour%20%C3%A0%202.%20Rejoignez-nous%20sur%20www.coeur-a-corps.org%2Flive&dates=20250218T180000Z%2F20250218T190000Z&location=www.coeur-a-corps.org%2Flive"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-primary-cream/10 hover:bg-primary-cream/20 text-primary-cream px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-colors backdrop-blur-sm text-sm sm:text-base"
-            >
-              <span>📅</span>
-              <span>Ajouter au calendrier</span>
-            </a>
+            {isLiveFinished ? (
+              <>
+                <h3 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
+                  Le live est terminé
+                </h3>
+                <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
+                  Merci d'avoir participé au live sur le thème "« Février, mon Cœur 🤍 »". N'oubliez pas de vous inscrire à la newsletter pour être informé(e) des prochains lives.
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
+                  Le live commencera le 18 février à 19h
+                </h3>
+                <h2 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
+                  "« Février, mon Cœur 🤍 »"
+                </h2>
+                <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
+                  En attendant, n'oubliez pas de vous inscrire à la newsletter ci-dessus pour recevoir un rappel et toutes les informations nécessaires.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
