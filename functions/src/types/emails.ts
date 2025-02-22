@@ -13,10 +13,10 @@ export enum TherapyEmailType {
 }
 
 export interface EmailTemplate {
-  templateId: string;
   subject: string;
   triggerType: 'immediate' | 'beforeSession' | 'afterSession';
   delayDays?: number;
+  getHtml: (data: Record<string, any>) => string;
 }
 
 export interface ScheduledEmail {
