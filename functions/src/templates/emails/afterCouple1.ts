@@ -42,6 +42,12 @@ export const afterCouple1Email: EmailTemplate = {
     </p>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+      Si vous souhaitez approfondir votre démarche et explorer de nouvelles pistes pour épanouir votre couple, le Cycle 2 de la "Parenthèse Thérapeutique" est fait pour vous !
+    </p>
+
+    ${createButton(data.cycle2Url, 'En savoir plus')}
+
+    <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       Je reste disponible pour toute question.
     </p>
   `)
