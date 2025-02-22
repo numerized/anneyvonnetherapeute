@@ -177,22 +177,9 @@ Je vous invite à réfléchir, avec ${data.partnerName}, aux points que vous sou
 À très bientôt.`)
   },
   [TherapyEmailType.AFTER_COUPLE_2]: {
-    subject: 'Suite à votre séance de couple',
-    triggerType: 'afterSession',
-    delayDays: 1,
-    getHtml: (data) => baseTemplate(`
-Bonjour ${data.name},
-
-Je vous remercie pour cette séance de couple. J'espère qu'elle vous a permis d'avancer ensemble dans votre réflexion.
-
-Notre prochaine séance est prévue pour le ${data.sessionDate}.
-
-Je me réjouis de poursuivre ce travail avec vous.`)
-  },
-  [TherapyEmailType.AFTER_COUPLE_3]: {
     subject: 'Suite de votre Parcours "Parenthèse Thérapeutique" – Prochaines Étapes',
     triggerType: 'afterSession',
-    delayDays: 14,
+    delayDays: 1,
     getHtml: (data) => baseTemplate(`
 Chers ${data.firstName1} et ${data.firstName2},
 
@@ -203,20 +190,19 @@ Dans les prochains jours, vous serez contactés par Julie, notre assistante, afi
 □ Si vous ne souhaitez pas être contactés pour cet entretien, veuillez cocher cette case et nous en tenir informés.
 
 Exploration de l'Intimité : Un Nouvel Élan Érotique
-Afin de poursuivre votre exploration de couple, je vous propose une réflexion sur votre vie érotique et sexuelle. Je vous invite à réaliser le test "ÉTAT DES LIEUX ÉROTIQUES ET SEXUELS" disponible ici : ${data.testUrl}
-Cette évaluation personnelle vous permettra d'identifier vos forces et vos besoins, et d'ouvrir un dialogue constructif sur ce pilier essentiel de votre relation.
+Afin de poursuivre votre exploration de couple, je vous propose une réflexion sur votre vie érotique et sexuelle. Je vous invite à réaliser le test "ÉTAT DES LIEUX ÉROTIQUES ET SEXUELS" disponible ici : ${data.testUrl}. Cette évaluation personnelle vous permettra d'identifier vos forces et vos besoins, et d'ouvrir un dialogue constructif sur ce pilier essentiel de votre relation.
 
-Envie de Continuer à GRANDIR ? Le Cycle 2 vous Attend !
-"Pour explorer une sexualité source de connexion profonde et d'épanouissement authentique – une érotique qui révèle votre unicité et la richesse de votre lien, sans chercher à combler un manque – le Cycle 2 ${data.cycle2Title} vous ouvre ses portes !
+Envie de Continuer ? Le Cycle 2 vous Attend !
+Si vous souhaitez approfondir votre démarche et explorer de nouvelles pistes pour épanouir votre couple, le Cycle 2 de la "Parenthèse Thérapeutique" est fait pour vous ! ${data.cycle2Url}
 
 En vous inscrivant dans les 6 prochains mois, bénéficiez d'une réduction exclusive grâce au code promo ${data.promoCode}.
 
-Pour vous inscrire au Cycle 2, visitez : ${data.cycle2Url}
-
 Je vous souhaite une belle continuation dans votre cheminement amoureux.
 
-Cordialement,`)
-  }
+Cordialement,
+Anne-Yvonne`)
+  },
+  
 };
 
 export async function sendTherapyEmail(
