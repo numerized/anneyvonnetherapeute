@@ -30,7 +30,8 @@ The Studio connects to Sanity Content Lake, which gives you hosted content APIs 
   - [Step 4. Deploy to production](#step-4-deploy-to-production)
 - [Questions and Answers](#questions-and-answers)
   - [It doesn't work! Where can I get help?](#it-doesnt-work-where-can-i-get-help)
-  - [How can I remove the "Next steps" block from my personal site?](#how-can-i-remove-the-next-steps-block-from-my-personal-website)
+  - [How can I remove the "Next steps" block from my personal website?](#how-can-i-remove-the-next-steps-block-from-my-personal-website)
+- [Liste des Emails et Contenus Associés](#liste-des-emails-et-contents-associés)
 - [Next steps](#next-steps)
 
 ## Project Overview
@@ -99,6 +100,77 @@ Alternatively, you can deploy without a `git` hosting provider using the Vercel 
 ```bash
 npx vercel --prod
 ```
+
+## Liste des Emails et Contenus Associés
+
+1. **mail_0**
+   - "Confirmation de votre inscription"
+   - Contenu : Confirmation de la Thérapie
+   - Formulaires : 
+     * Inscription, 
+     * Paiement
+     * 1ere date agenda
+
+2. **mail_1**
+   - "Bienvenue chez Cœur à Corps – Un voyage inspirant pour votre couple"
+   - Formulaires : 
+     * AVC_1
+     * AGENDA COMPLET
+     * CONDITIONS GENERALES
+     * PROFIL DU COUPLE
+     * ESPACE CLIENT
+
+3. **mail_2**
+   - "Suite de notre première séance – instructions et préparation"
+   - Contenu : 
+     * APC_1 
+     * Test de l'amoureux
+
+4. **mail_3**
+   - "Préparation à notre séance individuelle"
+   - Contenu :
+     * Capsule enfance
+     * CAPSULE "INTERDICTIONS
+     * OBLIGATIONS : COMMENT SE CONSTRUISENT NOS SCHEMAS RELATIONNELS"
+
+5. **mail_4**
+   - "Suite à votre séance individuelle"
+   - Contenu : 
+      * FORM_AS
+      * Vidéo "l'autorisation d'aimer"
+
+6. **mail_5**
+   - "Préparation pour votre deuxième séance individuelle"
+   - Contenu :
+     * FORM ENTRE2
+     * Test de dépendance relationnelle
+     * Capsule dépendance et rejet
+
+7. **mail_as2**
+   - "Suite à votre deuxième séance individuelle"
+   - Contenu :
+     * FORM_IAS - Test d'Estime de Soi
+     * CAPSULE DESIR DE SOI
+
+8. **mail_6**
+   - "Préparation Séance 3 - Célébration de votre Odyssée Intérieure"
+   - Contenu : 
+      * FORM_AT 
+      * FORMULAIRE INTROSPECTION _Entre 2
+
+9. **mail_7**
+   - "Préparation pour votre prochaine séance de couple"
+   - Contenu : 
+      * AVC_1_2
+
+10. **mail_8**
+    - "Suite de votre Parcours 'Parenthèse Thérapeutique' – Prochaines Étapes"
+    - Contenu :
+      * AUDIO PERSONNEL EN RETOUR
+      * TEST EQUILIBRE AMOUREUX
+      * Capsule "Le Couple Conscient"
+      * Test Etat des lieux sexuel
+      * Code promo sur Cycle 2 10%
 
 ## Questions and Answers
 
