@@ -89,7 +89,7 @@ const scheduleSessionEmails = async (
   switch(sessionType) {
     case 'couple_1':
       // After first couple session
-      await createScheduledEmail(TherapyEmailType.AFTER_FIRST_COUPLE, 1);
+      await createScheduledEmail(TherapyEmailType.AFTER_COUPLE_1, 1);
       break;
       
     case 'individual_1':

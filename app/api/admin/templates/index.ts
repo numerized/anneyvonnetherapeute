@@ -29,7 +29,7 @@ Le montant de ${data.paymentAmount} a bien été reçu.
 
 Je me réjouis de vous rencontrer et de commencer ce travail avec vous.`)
   },
-  [TherapyEmailType.AFTER_SCHEDULE]: {
+  [TherapyEmailType.BEFORE_COUPLE_1]: {
     subject: 'Votre agenda de thérapie',
     getHtml: (data) => baseTemplate(`
 Bonjour ${data.name},
@@ -40,7 +40,7 @@ Je vous rappelle que nous nous rencontrerons en ligne via Whereby.
 
 Je me réjouis de poursuivre ce travail avec vous.`)
   },
-  [TherapyEmailType.AFTER_FIRST_COUPLE]: {
+  [TherapyEmailType.AFTER_COUPLE_1]: {
     subject: 'Suite à votre première séance de couple',
     getHtml: (data) => baseTemplate(`
 Bonjour ${data.name},
