@@ -9,11 +9,10 @@ const baseTemplate = (content: string) => `
 <body>
   ${content}
   
-  Cordialement,
+  --
   Anne Yvonne
-  Thérapeute de couple
-  
-  Se désinscrire: \${unsubscribeUrl}
+  Relations
+  www.coeur-a-corps.org
 </body>
 </html>
 `;
