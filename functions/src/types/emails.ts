@@ -7,6 +7,7 @@ export enum TherapyEmailType {
   BEFORE_INDIV_2 = 'mail_5',        // 3 jours avant 2em séance individuelle
   AFTER_INDIV_2 = 'mail_as2',       // Apres Indiv 2
   BEFORE_INDIV_3 = 'mail_6',        // 3 jours avant séance individuelle
+  AFTER_INDIV_3 = 'mail_as3',       // Apres Indiv 3
   BEFORE_COUPLE_2 = 'mail_7',       // 5 jours avant séance de couple
   AFTER_COUPLE_2 = 'mail_8',        // 1 jour après séance de couple
 }

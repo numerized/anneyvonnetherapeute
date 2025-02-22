@@ -48,15 +48,15 @@ export default function AdminEmailsPage() {
 
   const emailButtons = [
     { type: TherapyEmailType.RESERVATION, label: 'Reservation Confirmation' },
-    { type: TherapyEmailType.BEFORE_COUPLE_1, label: 'After Schedule' },
-    { type: TherapyEmailType.AFTER_COUPLE_1, label: 'After First Couple' },
-    { type: TherapyEmailType.BEFORE_INDIV_1, label: 'Before Individual 1' },
-    { type: TherapyEmailType.AFTER_INDIV_1, label: 'After Individual 1' },
-    { type: TherapyEmailType.BEFORE_INDIV_2, label: 'Before Individual 2' },
-    { type: TherapyEmailType.AFTER_INDIV_2, label: 'After Individual 2' },
-    { type: TherapyEmailType.BEFORE_INDIV_3, label: 'Before Individual 3' },
-    { type: TherapyEmailType.BEFORE_COUPLE_2, label: 'Before Couple 2' },
-    { type: TherapyEmailType.AFTER_COUPLE_2, label: 'After Couple 2' }];
+    { type: TherapyEmailType.BEFORE_COUPLE_1, label: 'Before First Couple Session' },
+    { type: TherapyEmailType.AFTER_COUPLE_1, label: 'After First Couple Session' },
+    { type: TherapyEmailType.BEFORE_INDIV_1, label: 'Before First Individual Session' },
+    { type: TherapyEmailType.AFTER_INDIV_1, label: 'After First Individual Session' },
+    { type: TherapyEmailType.BEFORE_INDIV_2, label: 'Before Second Individual Session' },
+    { type: TherapyEmailType.AFTER_INDIV_2, label: 'After Second Individual Session' },
+    { type: TherapyEmailType.BEFORE_INDIV_3, label: 'Before Third Individual Session' },
+    { type: TherapyEmailType.BEFORE_COUPLE_2, label: 'Before Second Couple Session' },
+    { type: TherapyEmailType.AFTER_COUPLE_2, label: 'After Second Couple Session' }];
 
   if (!isAuthenticated) {
     return (
