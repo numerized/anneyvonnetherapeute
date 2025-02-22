@@ -1,26 +1,9 @@
 import * as sgMail from '@sendgrid/mail';
 import { defineSecret } from 'firebase-functions/params';
 import { TherapyEmailType } from '../types/emails';
-import { emailTemplates } from '../templates/emailTemplates';
+import { emailTemplates } from '../templates/emails';
 
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY');
-
-const baseTemplate = (content: string) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-</head>
-<body>
-  ${content}
-  
-  --
-  Anne Yvonne
-  Relations
-  www.coeur-a-corps.org
-</body>
-</html>
-`;
 
 export async function sendTherapyEmail(
   emailType: TherapyEmailType,
@@ -34,9 +17,9 @@ export async function sendTherapyEmail(
 
   const msg = {
     to: recipientEmail,
-    from: 'a.ra@bluewin.ch',
+    from: 'contact@coeur-a-corps.org',
     subject: template.subject,
-    html: template.getHtml(dynamicData)
+    html: template.getHtml(dynamicData),
   };
 
   try {

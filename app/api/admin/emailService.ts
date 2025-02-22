@@ -1,6 +1,6 @@
 import * as sgMail from '@sendgrid/mail';
 import { TherapyEmailType } from '@/functions/src/types/emails';
-import emailTemplates from './templates';
+import { emailTemplates } from '@functions/templates/emails';
 
 // Initialize SendGrid with your API key
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
@@ -21,7 +21,7 @@ export async function sendTestEmail(
   }
 
   // Validate sender email
-  const senderEmail = process.env.SENDER_EMAIL || 'a.ra@bluewin.ch';
+  const senderEmail = process.env.SENDER_EMAIL || 'contact@coeur-a-corps.org';
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailPattern.test(senderEmail)) {
     throw new Error('Invalid sender email format');
@@ -49,14 +49,6 @@ export async function sendTestEmail(
     await sgMail.send(msg);
   } catch (error) {
     console.error('Error sending email:', error);
-    if (error instanceof Error) {
-      // Log more details about the SendGrid error
-      const sendGridError = error as any;
-      if (sendGridError.response?.body) {
-        console.error('SendGrid error details:', JSON.stringify(sendGridError.response.body, null, 2));
-      }
-      throw new Error(`SendGrid error: ${error.message}. Check server logs for details.`);
-    }
     throw error;
   }
 }
