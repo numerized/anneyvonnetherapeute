@@ -8,7 +8,7 @@ const TEST_PASSWORD = 'TEST180YYY';
 export default function AdminEmailsPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('numerized@gmail.com');
   const [status, setStatus] = useState<string>('');
 
   const handleLogin = (e: React.FormEvent) => {
