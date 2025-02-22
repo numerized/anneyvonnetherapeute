@@ -114,10 +114,5 @@ const scheduleSessionEmails = async (
       await createScheduledEmail(TherapyEmailType.BEFORE_COUPLE_2, -5);
       await createScheduledEmail(TherapyEmailType.AFTER_COUPLE_2, 1);
       break;
-      
-    case 'couple_3':
-      // Two weeks after final couple session
-      await createScheduledEmail(TherapyEmailType.AFTER_COUPLE_3, 14);
-      break;
   }
 };
