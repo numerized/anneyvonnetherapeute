@@ -48,17 +48,15 @@ export default function AdminEmailsPage() {
 
   const emailButtons = [
     { type: TherapyEmailType.RESERVATION, label: 'Reservation Confirmation' },
-    { type: TherapyEmailType.AFTER_SCHEDULE, label: 'After Schedule' },
-    { type: TherapyEmailType.AFTER_FIRST_COUPLE, label: 'After First Couple' },
+    { type: TherapyEmailType.BEFORE_COUPLE_1, label: 'After Schedule' },
+    { type: TherapyEmailType.AFTER_COUPLE_1, label: 'After First Couple' },
     { type: TherapyEmailType.BEFORE_INDIV_1, label: 'Before Individual 1' },
     { type: TherapyEmailType.AFTER_INDIV_1, label: 'After Individual 1' },
     { type: TherapyEmailType.BEFORE_INDIV_2, label: 'Before Individual 2' },
     { type: TherapyEmailType.AFTER_INDIV_2, label: 'After Individual 2' },
     { type: TherapyEmailType.BEFORE_INDIV_3, label: 'Before Individual 3' },
     { type: TherapyEmailType.BEFORE_COUPLE_2, label: 'Before Couple 2' },
-    { type: TherapyEmailType.AFTER_COUPLE_2, label: 'After Couple 2' },
-    { type: TherapyEmailType.AFTER_COUPLE_3, label: 'After Couple 3' },
-  ];
+    { type: TherapyEmailType.AFTER_COUPLE_2, label: 'After Couple 2' }];
 
   if (!isAuthenticated) {
     return (
@@ -98,7 +96,7 @@ export default function AdminEmailsPage() {
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
         <h2 className="text-2xl font-bold mb-8 text-center">Email Testing Dashboard</h2>
-        
+
         <div className="mb-6">
           <label htmlFor="recipientEmail" className="block text-sm font-medium text-gray-700 mb-2">
             Recipient Email

@@ -1,7 +1,7 @@
 export enum TherapyEmailType {
   RESERVATION = 'mail_0',           // Dès réservation et paiement
-  AFTER_SCHEDULE = 'mail_1',        // Après agenda fixé
-  AFTER_FIRST_COUPLE = 'mail_2',    // 1 jour après première séance de couple
+  BEFORE_COUPLE_1 = 'mail_1',        // Après agenda fixé
+  AFTER_COUPLE_1 = 'mail_2',    // 1 jour après première séance de couple
   BEFORE_INDIV_1 = 'mail_3',        // 3 jours avant séance individuelle
   AFTER_INDIV_1 = 'mail_4',         // 1 jour après séance individuelle
   BEFORE_INDIV_2 = 'mail_5',        // 3 jours avant 2em séance individuelle
