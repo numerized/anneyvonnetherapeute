@@ -104,14 +104,20 @@ const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
       return;
     }
 
-    // Format names for combined greeting
-    const coupleNames = `${coupleInfo.femme.firstName} et ${coupleInfo.homme.firstName}`;
+    // Determine which name to use based on the event title
+    let name = `${coupleInfo.femme.firstName} et ${coupleInfo.homme.firstName}`;
+    if (event.title.includes('Homme')) {
+      name = coupleInfo.homme.firstName;
+    } else if (event.title.includes('Femme')) {
+      name = coupleInfo.femme.firstName;
+    }
+
     const amount = '750€'; // You might want to make this dynamic
     const firstSessionDate = processDate.seance1.toLocaleDateString('fr-FR');
 
     // Replace template variables and generate HTML
     const emailContent = emailTemplate.getHtml({
-      name: coupleNames,
+      name: name, // This will now be either the couple's names or individual name
       paymentAmount: amount,
       firstSessionDate: firstSessionDate,
       homme: {
