@@ -22,7 +22,7 @@ export const beforeIndiv2Email: EmailTemplate = {
     </p>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-      Vous pouvez accéder au test ici : ${createButton(data.testUrl, 'Accéder au test')}
+      Vous pouvez accéder au test ici : ${data.testUrl ? createButton(data.testUrl, 'Accéder au test') : ''}
     </p>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
