@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { FaEnvelope, FaUser, FaUserFriends } from 'react-icons/fa';
 import { TherapyTimelineEvent } from '@/functions/src/templates/types';
 import { EmailModal } from './EmailModal';
-import { emailTemplates } from '@/functions/src/templates/emails';
+import { emailTemplates } from '@/functions/src/templates/emails/index';
 import { TherapyEmailType } from '@/functions/src/types/emails';
 
 interface TherapyTimelineProps {
