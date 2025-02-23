@@ -88,9 +88,9 @@ const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
     const iconColor = getIconColor(event);
 
     return (
-      <div key={index} className="relative pl-12">
+      <div key={`timeline-${event.title}-${index}`} className={`relative ${isWomanEvent ? 'pl-12' : 'pl-12'}`}>
         {/* Icon */}
-        <div className="absolute left-0.5 -translate-x-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md">
+        <div className={`absolute ${isWomanEvent ? 'left-0.5' : 'left-0.5'} -translate-x-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md`}>
           <div style={{ color: iconColor }}>
             {event.type === 'email' ? (
               <FaEnvelope size={16} />
@@ -188,9 +188,13 @@ const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
           const isWomanEvent = isFemaleEvent(event);
           const isManEvent = isMaleEvent(event);
 
-          // If it's not a homme/femme event, render in single column
+          // If it's not a homme/femme event, render in single column spanning both
           if (!isWomanEvent && !isManEvent) {
-            return renderTimelineEvent(event, index);
+            return (
+              <div key={`event-${index}`} className="col-span-2 mx-auto w-2/3">
+                {renderTimelineEvent(event, index)}
+              </div>
+            );
           }
 
           // For homme/femme events, find the matching event for the other partner
@@ -205,13 +209,13 @@ const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
             // Only render when we find the man's event (to avoid duplicates)
             if (isManEvent) {
               return (
-                <div key={index} className="grid grid-cols-2 gap-4">
+                <div key={`event-pair-${index}`} className="grid grid-cols-2 gap-4">
                   {/* Left column - Homme */}
-                  <div>
+                  <div className="relative">
                     {renderTimelineEvent(event, index)}
                   </div>
                   {/* Right column - Femme */}
-                  <div>
+                  <div className="relative">
                     {matchingEvent && renderTimelineEvent(matchingEvent, index)}
                   </div>
                 </div>
