@@ -13,6 +13,6 @@ export const afterIndiv3Email: EmailTemplate = {
       Un grand merci pour la richesse de nos échanges lors de cette séance. Pour accompagner l'intégration de ce qui a émergé, je vous propose un temps d'introspection à travers ce formulaire structurant :
     </p>
 
-    ${createButton(data.cycle2Url, 'Accéder au formulaire')}
+    ${data.cycle2Url ? createButton(data.cycle2Url, 'Accéder au formulaire') : ''}
   `)
 };
