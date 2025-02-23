@@ -54,7 +54,11 @@ const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
     const titleToType: Record<string, TherapyEmailType> = {
       'Email de Bienvenue': TherapyEmailType.RESERVATION,
       'Suivi Première Séance': TherapyEmailType.AFTER_COUPLE_1,
-      'Suivi Séance Couple': TherapyEmailType.AFTER_COUPLE_2
+      'Suivi Séance Couple': TherapyEmailType.AFTER_COUPLE_2,
+      'Fin du Parcours Individuel - Femme': TherapyEmailType.AFTER_INDIV_3,
+      'Fin du Parcours Individuel - Homme': TherapyEmailType.AFTER_INDIV_3,
+      'Fin du Parcours Thérapeutique': TherapyEmailType.AFTER_COUPLE_2,
+      'Préparation Séance Finale de Couple': TherapyEmailType.BEFORE_COUPLE_2
     };
 
     if (titleToType[event.title]) {

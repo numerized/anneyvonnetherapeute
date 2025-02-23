@@ -23,7 +23,7 @@ export const emailTemplates: Record<TherapyEmailType, EmailTemplate> = {
   [TherapyEmailType.BEFORE_INDIV_3]: beforeIndiv3Email,
   [TherapyEmailType.AFTER_INDIV_3]: afterIndiv3Email,
   [TherapyEmailType.BEFORE_COUPLE_2]: beforeCouple2Email,
-  [TherapyEmailType.AFTER_COUPLE_2]: afterCouple2Email
+  [TherapyEmailType.AFTER_COUPLE_2]: afterCouple2Email,
 };
 
 export default emailTemplates;
