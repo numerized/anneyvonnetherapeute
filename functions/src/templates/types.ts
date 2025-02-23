@@ -24,3 +24,16 @@ export interface EmailTemplate {
   delayDays?: number;
   getHtml: (data: EmailTemplateData) => string;
 }
+
+export type TherapyEventType = 'email' | 'session';
+
+export interface TherapyTimelineEvent {
+  type: TherapyEventType;
+  title: string;
+  description: string;
+  date?: string;
+  delayDays?: number;
+  triggerType?: 'immediate' | 'beforeSession' | 'afterSession';
+  sessionType?: 'couple' | 'individual';
+  partner?: 'male' | 'female';
+}
