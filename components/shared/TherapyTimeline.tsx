@@ -19,12 +19,16 @@ interface CoupleInfo {
   femme: PartnerInfo;
 }
 
+interface EmailModalState extends TherapyTimelineEvent {
+  content: string;
+}
+
 const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState<TherapyTimelineEvent | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<EmailModalState | null>(null);
   const [coupleInfo, setCoupleInfo] = useState<CoupleInfo>({
     homme: { firstName: 'Kevin', lastName: 'Perrée' },
-    femme: { firstName: 'Justine', lastName: 'Huyghebaert' }
+    femme: { firstName: 'Justine', lastName: 'Huyghaebert' }
   });
 
   // Function to generate dates for the therapy process
@@ -131,7 +135,7 @@ const TherapyTimeline: FC<TherapyTimelineProps> = ({ events }) => {
       date: new Date().toLocaleDateString('fr-FR'),
     });
     
-    setSelectedEmail({ ...event, content: emailContent });
+    setSelectedEmail({ ...event, content: emailContent } as EmailModalState);
     setIsEmailModalOpen(true);
   };
 
