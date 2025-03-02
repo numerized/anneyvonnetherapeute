@@ -48,3 +48,5 @@ studio/.env.development
 firebase-debug.log
 .env.development
 .env.production
+
+clickup/node_modules/
