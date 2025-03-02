@@ -55,7 +55,7 @@ export function ProchainementPage({ data, settings }: any) {
       }
     }
     window.addEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
-    
+
     return () => {
       window.removeEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
     }
@@ -125,21 +125,21 @@ export function ProchainementPage({ data, settings }: any) {
       ) : (
         <>
           <ProchainementHero hero={data.hero} data={settings} onShowPurchase={() => setShowPurchaseModal(true)} />
-          
+
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
-            <div className="text-center mb-12">
-                <br/><br/>
+              {/* <div className="text-center mb-12">
+                <br /><br />
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
-                PROCHAIN LIVE
+                  PROCHAIN LIVE
                 </h2>
-              </div>
-              
+              </div> */}
+
               {/* Live Event Announcement */}
-              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
+              {/* <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-                  {/* Left Column - Date and Time */}
+
                   <div className="w-full md:w-1/3 flex justify-center">
                     <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
                       <div className="text-primary-coral font-medium mb-2">LIVE: « Février, mon Cœur 🤍 »</div>
@@ -148,7 +148,6 @@ export function ProchainementPage({ data, settings }: any) {
                     </div>
                   </div>
 
-                  {/* Right Column - Event Details */}
                   <div className="w-full md:w-2/3">
                     <h2 className="text-2xl font-medium text-primary-coral mb-4">
                       LE LIVE D'ANNE YVONNE SUR LE DIVAN
@@ -157,8 +156,8 @@ export function ProchainementPage({ data, settings }: any) {
                       Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».
                     </p>
                     <div className="flex justify-end">
-                      <Link 
-                        href="/live" 
+                      <Link
+                        href="/live"
                         className="inline-flex items-center bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
                       >
                         Accéder au live
@@ -166,11 +165,11 @@ export function ProchainementPage({ data, settings }: any) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Header */}
               <div className="text-center mb-12">
-                <br/><br/>
+                <br /><br />
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   COACHING RELATIONNEL 7/7
                 </h2>
