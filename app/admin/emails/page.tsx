@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TherapyEmailType } from '@/functions/src/types/emails';
 import TherapyTimeline from '@/components/shared/TherapyTimeline';
 import { therapyJourneyEvents } from '@/lib/therapyJourney';
+import { Modal } from '@/components/shared/Modal';
+import { emailTemplates } from '@/functions/src/templates/emails';
 
 const TEST_PASSWORD = 'TEST180YYY';
 
@@ -12,6 +14,9 @@ export default function AdminEmailsPage() {
   const [password, setPassword] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('numerized@gmail.com');
   const [status, setStatus] = useState<string>('');
+  const [previewType, setPreviewType] = useState<TherapyEmailType | null>(null);
+  const [previewContent, setPreviewContent] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +52,56 @@ export default function AdminEmailsPage() {
       setStatus(`Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
     }
   };
+
+  const handlePreview = (emailType: TherapyEmailType) => {
+    setPreviewType(emailType);
+  };
+
+  const getPreviewContent = () => {
+    if (!previewType) return null;
+
+    const template = emailTemplates[previewType];
+    if (!template) return null;
+
+    // Create test data
+    const testData = {
+      name: 'Test User',
+      partnerName: 'Test Partner',
+      sessionDate: new Date().toISOString(),
+      appointmentDate: new Date().toISOString(),
+      unsubscribeUrl: 'http://example.com/unsubscribe',
+      firstName1: 'Anne',
+      firstName2: 'Yves',
+      testUrl: 'http://example.com/test',
+      cycle2Url: 'http://example.com/cycle2',
+      promoCode: 'PROMO20',
+      audioCapsuleUrl: 'http://example.com/audio',
+      paymentAmount: '150 CHF',
+      sessionType: 'Première séance de couple',
+      individualSessionDate: new Date().toISOString(),
+      coupleSessionDate: new Date().toISOString(),
+      sessionNumber: '1'
+    };
+
+    return template.getHtml(testData);
+  };
+
+  useEffect(() => {
+    if (previewType) {
+      setIsLoading(true);
+      setPreviewContent(null);
+      
+      // Use setTimeout to ensure the modal is rendered before loading content
+      setTimeout(() => {
+        const content = getPreviewContent();
+        setPreviewContent(content);
+        setIsLoading(false);
+      }, 100);
+    } else {
+      setPreviewContent(null);
+      setIsLoading(false);
+    }
+  }, [previewType]);
 
   const emailButtons = [
     { type: TherapyEmailType.RESERVATION, label: 'Confirmation de Réservation' },
@@ -123,14 +178,21 @@ export default function AdminEmailsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {emailButtons.map(({ type, label }) => (
-              <button
-                key={type}
-                onClick={() => handleSendEmail(type)}
-                disabled={!recipientEmail}
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-300"
-              >
-                {label}
-              </button>
+              <div key={type} className="flex flex-col space-y-2">
+                <button
+                  onClick={() => handleSendEmail(type)}
+                  disabled={!recipientEmail}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-300"
+                >
+                  {label}
+                </button>
+                <button
+                  onClick={() => handlePreview(type)}
+                  className="bg-gray-500 text-white py-1 px-4 rounded-md hover:bg-gray-600 text-sm"
+                >
+                  Aperçu
+                </button>
+              </div>
             ))}
           </div>
 
@@ -141,6 +203,26 @@ export default function AdminEmailsPage() {
           )}
         </div>
       </div>
+
+      {/* Preview Modal */}
+      <Modal
+        isOpen={previewType !== null}
+        onClose={() => setPreviewType(null)}
+        title={`Aperçu: ${emailButtons.find(b => b.type === previewType)?.label || ''}`}
+      >
+        <div className="h-full">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-cream"></div>
+            </div>
+          ) : (
+            <div 
+              className="prose prose-sm max-w-none overflow-y-auto h-full prose-headings:text-primary-cream prose-p:text-primary-cream/90 prose-strong:text-primary-cream prose-li:text-primary-cream/90"
+              dangerouslySetInnerHTML={{ __html: previewContent || '' }}
+            />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }
