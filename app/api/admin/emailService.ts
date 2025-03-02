@@ -1,6 +1,6 @@
 import * as sgMail from '@sendgrid/mail';
 import { TherapyEmailType } from '@/functions/src/types/emails';
-import { emailTemplates } from '@functions/templates/emails';
+import { emailTemplates } from '@/functions/src/templates/emails';
 
 // Initialize SendGrid with your API key
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
