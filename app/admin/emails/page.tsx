@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { TherapyEmailType } from '@/functions/src/types/emails';
-import TherapyTimeline from '@/components/shared/TherapyTimeline';
-import { therapyJourneyEvents } from '@/lib/therapyJourney';
+import { useEffect, useState } from 'react';
 import { Modal } from '@/components/shared/Modal';
+import TherapyTimeline from '@/components/shared/TherapyTimeline';
+import { TherapyEmailType } from '@/functions/src/types/emails';
 import { emailTemplates } from '@/functions/src/templates/emails';
+import { therapyJourneyEvents } from '@/lib/therapyJourney';
 
 const TEST_PASSWORD = 'TEST180YYY';
 
@@ -101,7 +101,7 @@ export default function AdminEmailsPage() {
       setPreviewContent(null);
       setIsLoading(false);
     }
-  }, [previewType]);
+  }, [previewType, getPreviewContent]);
 
   const emailButtons = [
     { type: TherapyEmailType.RESERVATION, label: 'Confirmation de Réservation' },
