@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Modal } from '@/components/shared/Modal';
 import TherapyTimeline from '@/components/shared/TherapyTimeline';
 import { TherapyEmailType } from '@/functions/src/types/emails';
@@ -57,10 +57,10 @@ export default function AdminEmailsPage() {
     setPreviewType(emailType);
   };
 
-  const getPreviewContent = () => {
-    if (!previewType) return null;
+  const getPreviewContent = useCallback((emailType: TherapyEmailType | null) => {
+    if (!emailType) return null;
 
-    const template = emailTemplates[previewType];
+    const template = emailTemplates[emailType];
     if (!template) return null;
 
     // Create test data
@@ -84,7 +84,7 @@ export default function AdminEmailsPage() {
     };
 
     return template.getHtml(testData);
-  };
+  }, []);
 
   useEffect(() => {
     if (previewType) {
@@ -93,7 +93,7 @@ export default function AdminEmailsPage() {
       
       // Use setTimeout to ensure the modal is rendered before loading content
       setTimeout(() => {
-        const content = getPreviewContent();
+        const content = getPreviewContent(previewType);
         setPreviewContent(content);
         setIsLoading(false);
       }, 100);
