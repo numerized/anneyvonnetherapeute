@@ -32,7 +32,6 @@
     "@sanity/visual-editing": "^2.10.10",
     "@sendgrid/mail": "^8.1.4",
     "@stripe/stripe-js": "^5.5.0",
-    "@tailwindcss/typography": "0.5.15",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "class-variance-authority": "^0.7.1",
@@ -65,6 +64,7 @@
   "devDependencies": {
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.10.0",
     "@types/react": "19.0.2",
     "autoprefixer": "10.4.20",
