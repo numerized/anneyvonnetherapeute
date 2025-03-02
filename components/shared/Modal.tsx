@@ -24,11 +24,11 @@ export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen }
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/25 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center text-center">
+          <div className="flex min-h-full items-center justify-center p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -39,33 +39,48 @@ export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen }
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel 
-                className={`w-full transform overflow-hidden bg-primary-forest/90 backdrop-blur-lg text-left align-middle shadow-xl transition-all relative
-                  ${fullscreen ? 'h-screen' : 'max-w-2xl rounded-[24px] p-6 pl-12'}`}
+                className={`w-full transform bg-primary-forest/90 backdrop-blur-lg text-left align-middle shadow-xl transition-all
+                  ${fullscreen ? 'h-screen' : 'max-w-2xl rounded-[24px] max-h-[90vh]'}`}
               >
-                {/* Close button */}
-                <button
-                  onClick={onClose}
-                  className="absolute top-6 right-[20px] mr-5 w-12 h-12 rounded-full bg-primary-coral hover:bg-primary-coral/90 flex items-center justify-center transition-colors z-50 shadow-lg"
-                  aria-label="Fermer"
-                >
-                  <X className="w-6 h-6 text-primary-cream" />
-                </button>
-
-                {/* Title */}
-                {title && (
-                  <div className="mb-4 mt-8">
-                    <Dialog.Title as="h3" className="text-3xl text-primary-coral font-light mb-2">
-                      {title}
-                    </Dialog.Title>
-                    {subtitle && (
-                      <p className="text-primary-cream/90 text-lg italic">{subtitle}</p>
-                    )}
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="flex-none px-12 pt-6 pb-4 border-b border-primary-cream/10">
+                    <div className="relative">
+                      {title && (
+                        <Dialog.Title className="text-2xl font-semibold leading-6 text-primary-cream pr-16">
+                          {title}
+                        </Dialog.Title>
+                      )}
+                      {subtitle && (
+                        <Dialog.Description className="mt-2 text-sm text-primary-cream/80">
+                          {subtitle}
+                        </Dialog.Description>
+                      )}
+                      {/* Close button */}
+                      <button
+                        onClick={onClose}
+                        className="absolute top-0 right-0 w-12 h-12 rounded-full bg-primary-coral hover:bg-primary-coral/90 flex items-center justify-center transition-colors shadow-lg"
+                        aria-label="Fermer"
+                      >
+                        <X className="w-6 h-6 text-primary-cream" />
+                      </button>
+                    </div>
                   </div>
-                )}
 
-                {/* Content */}
-                <div className={`${!title ? 'mt-0' : 'mt-4'}`}>
-                  {children}
+                  {/* Content */}
+                  <div className="flex-1 min-h-0 px-12 py-6 overflow-hidden">
+                    {children}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex-none px-12 py-4 border-t border-primary-cream/10">
+                    <button
+                      onClick={onClose}
+                      className="w-full rounded-full bg-primary-coral hover:bg-primary-coral/90 py-3 text-primary-cream font-semibold transition-colors"
+                    >
+                      Fermer
+                    </button>
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

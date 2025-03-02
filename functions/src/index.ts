@@ -434,3 +434,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
     }
   }
 );
+
+// Export therapy email functions
+export { onReservation, onSessionScheduled } from './triggers/sessionTriggers';
+export { processScheduledEmails } from './scheduled/processEmails';
