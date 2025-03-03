@@ -1,6 +1,5 @@
-import { TherapyEmailType } from '../../types/emails';
 import { EmailTemplate } from '../types';
-import { baseTemplate, createButton } from '../base';
+import { baseTemplate } from '../base';
 
 export const beforeCouple2Email: EmailTemplate = {
   subject: 'Préparation pour votre prochaine séance de couple',
