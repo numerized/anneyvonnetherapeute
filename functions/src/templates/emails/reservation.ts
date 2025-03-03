@@ -1,4 +1,3 @@
-import { TherapyEmailType } from '../../types/emails';
 import { EmailTemplate } from '../types';
 import { baseTemplate } from '../base';
 

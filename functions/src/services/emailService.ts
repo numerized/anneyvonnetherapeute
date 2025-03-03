@@ -1,9 +1,6 @@
 import * as sgMail from '@sendgrid/mail';
-import { defineSecret } from 'firebase-functions/params';
 import { TherapyEmailType } from '../types/emails';
 import { emailTemplates } from '../templates/emails';
-
-const sendgridApiKey = defineSecret('SENDGRID_API_KEY');
 
 export async function sendTherapyEmail(
   emailType: TherapyEmailType,

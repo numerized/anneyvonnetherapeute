@@ -5,12 +5,13 @@ import { createLiveReminderEmailTemplate } from '../lib/emailTemplates';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB8WQ1eUGDCBzkP7uDoUclcZFWEfskoYMQ",
-  authDomain: "coeurs-a-corps.firebaseapp.com",
-  projectId: "coeurs-a-corps",
-  storageBucket: "coeurs-a-corps.appspot.com",
-  messagingSenderId: "1015340739679",
-  appId: "1:1015340739679:web:e1c0b4d2f9ae4c0d4c8e1a"
+  apiKey: "AIzaSyAFx_IzaLpF8hb9TEYdg-alaClzrN_6mNU",
+  authDomain: "coeur-a-corps.firebaseapp.com",
+  projectId: "coeur-a-corps",
+  storageBucket: "coeur-a-corps.firebasestorage.app",
+  messagingSenderId: "369869488276",
+  appId: "1:369869488276:web:6929b032a484a17c917481",
+  measurementId: "G-9YWCTPB6V1"
 };
 
 // Initialize Firebase
