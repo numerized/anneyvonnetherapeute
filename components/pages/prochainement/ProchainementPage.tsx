@@ -129,22 +129,21 @@ export function ProchainementPage({ data, settings }: any) {
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
-              {/* <div className="text-center mb-12">
+              <div className="text-center mb-12">
                 <br /><br />
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   PROCHAIN LIVE
                 </h2>
-              </div> */}
+              </div>
 
-              {/* Live Event Announcement */}
-              {/* <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
+              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
 
                   <div className="w-full md:w-1/3 flex justify-center">
                     <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
-                      <div className="text-primary-coral font-medium mb-2">LIVE: « Février, mon Cœur 🤍 »</div>
-                      <div className="text-2xl font-bold text-primary-cream mb-1">18 Février</div>
-                      <div className="text-xl text-primary-cream">19h00</div>
+                      <div className="text-primary-coral font-medium mb-2">LIVE: « Oser nos désirs »</div>
+                      <div className="text-2xl font-bold text-primary-cream mb-1">18 Mars</div>
+                      <div className="text-xl text-primary-cream">20h00</div>
                     </div>
                   </div>
 
@@ -153,7 +152,7 @@ export function ProchainementPage({ data, settings }: any) {
                       LE LIVE D'ANNE YVONNE SUR LE DIVAN
                     </h2>
                     <p className="text-primary-cream/80 mb-6">
-                      Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».
+                      Le live mensuel sur le thème : « Oser nos désirs : amour, libido et renaissance du printemps ».
                     </p>
                     <div className="flex justify-end">
                       <Link
@@ -165,7 +164,7 @@ export function ProchainementPage({ data, settings }: any) {
                     </div>
                   </div>
                 </div>
-              </div> */}
+              </div>
 
               {/* Header */}
               <div className="text-center mb-12">
