@@ -37,9 +37,8 @@ export default function VerifyPage() {
         // Clear email from storage
         window.localStorage.removeItem('emailForSignIn');
         
-        // Success! Redirect to dashboard
-        toast.success('Connexion réussie !');
-        router.push('/dashboard');
+        // Redirect to complete profile page
+        router.push('/auth/complete-profile');
       } catch (error: any) {
         console.error('Verification error:', error);
         
