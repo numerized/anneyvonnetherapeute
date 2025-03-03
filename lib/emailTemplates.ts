@@ -203,14 +203,14 @@ export const createLiveReminderEmailTemplate = () => `
 
       <div style="background-color: #3B6B5E; color: white; padding: 30px; border-radius: 8px; text-align: center; margin-bottom: 30px;">
         <h2 style="color: #E97451; margin-top: 0; font-size: 24px;">LE LIVE D'ANNE YVONNE SUR LE DIVAN</h2>
-        <p style="color: #fff; margin: 15px 0;">Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».</p>
-        <p style="color: #fff; font-size: 20px; margin: 20px 0;">Le 18 février à 19h</p>
+        <p style="color: #fff; margin: 15px 0;">Le live mensuel sur le thème « Oser nos désirs : amour, libido et renaissance du printemps ».</p>
+        <p style="color: #fff; font-size: 20px; margin: 20px 0;">Le 18 mars à 20h</p>
         <div style="margin-top: 25px;">
           <a href="https://coeur-a-corps.org/live" 
              style="display: inline-block; background-color: #E97451; color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; margin-right: 10px;">
             Accéder au live
           </a>
-          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Live%20d%27Anne%20Yvonne%20sur%20le%20Divan&details=Le%20live%20mensuel%20sur%20le%20th%C3%A8me%20du%20mois%3B%20%C2%AB%20F%C3%A9vrier%2C%20mon%20C%C5%93ur%20%F0%9F%A4%8D%20%C2%BB.&dates=20250218T180000Z%2F20250218T190000Z" 
+          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Live%20d%27Anne%20Yvonne%20sur%20le%20Divan&details=Le%20live%20mensuel%20sur%20le%20th%C3%A8me%20%C2%AB%20Oser%20nos%20d%C3%A9sirs%20%3A%20amour%2C%20libido%20et%20renaissance%20du%20printemps%20%C2%BB.&dates=20250318T190000Z%2F20250318T200000Z" 
              style="display: inline-block; background-color: #FDF5E6; color: #3B6B5E; padding: 12px 25px; border-radius: 25px; text-decoration: none;">
             📅 Ajouter au calendrier
           </a>
