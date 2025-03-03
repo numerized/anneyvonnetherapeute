@@ -6,7 +6,7 @@ import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { CheckSquare, Square, Loader2 } from 'lucide-react';
+import { CheckSquare, Square, Loader2, PlusCircle, Camera } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { getUserById, createOrUpdateUser, User as UserProfile } from '@/lib/userService';
@@ -18,16 +18,17 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
     evaluation: false,
     questionnaire: false,
     appointment: false
   });
   const router = useRouter();
-  
+
   useEffect(() => {
     const auth = getAuth(app);
-    
+
     // Check if user is authenticated
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -57,12 +58,14 @@ export default function DashboardPage() {
     
     return () => unsubscribe();
   }, [router]);
-  
+
   // Handle profile update
   const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
     if (!user) return;
     
     try {
+      setIsUpdatingProfile(true);
+      
       // Ensure email is set from the authenticated user
       const userData = {
         ...formData,
@@ -76,6 +79,8 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Error updating user profile:', error);
       toast.error('Erreur lors de la mise à jour du profil');
+    } finally {
+      setIsUpdatingProfile(false);
     }
   };
 
@@ -85,11 +90,18 @@ export default function DashboardPage() {
       [id]: !prev[id]
     }));
   };
-  
+
+  // Handle photo upload directly from dashboard
+  const handlePhotoClick = () => {
+    setIsEditingProfile(true);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary-cream" />
+        <div className="text-center">
+          <Loader2 className="w-6 h-6 animate-spin text-primary-cream/80" />
+        </div>
       </div>
     );
   }
@@ -109,13 +121,28 @@ export default function DashboardPage() {
           {/* Profile Box 1 */}
           <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                {/* Placeholder for avatar - replace with actual image if available */}
-                <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+              <div 
+                className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
+                onClick={handlePhotoClick}
+              >
+                {isUpdatingProfile ? (
+                  <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  </div>
+                ) : userProfile?.photo ? (
+                  <img 
+                    src={userProfile.photo} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60">
+                    <PlusCircle className="w-6 h-6 mb-1" />
+                    <span className="text-xs">Photo</span>
+                  </div>
+                )}
+                <div className="absolute bottom-0 right-0 bg-primary-coral rounded-full p-1">
+                  <Camera className="w-3 h-3 text-primary-cream" />
                 </div>
               </div>
               <div className="flex-1">
@@ -127,8 +154,14 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
+                    disabled={isUpdatingProfile}
                   >
-                    MODIFIER
+                    {isUpdatingProfile ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        MISE À JOUR...
+                      </>
+                    ) : 'MODIFIER'}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
@@ -152,11 +185,12 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
                 {/* Placeholder for avatar - replace with actual image if available */}
-                <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60">
+                  <PlusCircle className="w-6 h-6 mb-1" />
+                  <span className="text-xs">Photo</span>
+                </div>
+                <div className="absolute bottom-0 right-0 bg-primary-coral rounded-full p-1">
+                  <Camera className="w-3 h-3 text-primary-cream" />
                 </div>
               </div>
               <div className="flex-1">

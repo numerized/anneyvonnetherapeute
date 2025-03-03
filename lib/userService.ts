@@ -9,6 +9,7 @@ export interface User {
   nom: string;
   telephone: string;
   dateNaissance: string | null;
+  photo: string | null; // Base64 encoded photo
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +46,7 @@ export async function createOrUpdateUser(
       nom: userData.nom || '',
       telephone: userData.telephone || '',
       dateNaissance: userData.dateNaissance || null,
+      photo: userData.photo || null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
