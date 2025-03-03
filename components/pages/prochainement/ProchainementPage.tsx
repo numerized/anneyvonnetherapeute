@@ -130,7 +130,6 @@ export function ProchainementPage({ data, settings }: any) {
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
               <div className="text-center mb-12">
-                <br /><br />
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   PROCHAIN LIVE
                 </h2>
