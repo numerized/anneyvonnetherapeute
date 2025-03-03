@@ -50,3 +50,5 @@ firebase-debug.log
 .env.production
 
 clickup/node_modules/
+
+*.cache

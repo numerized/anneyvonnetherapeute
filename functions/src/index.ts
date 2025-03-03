@@ -12,8 +12,10 @@ admin.initializeApp()
 // Define secrets
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY')
 const senderEmail = defineSecret('SENDER_EMAIL')
-const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET')
 const recipientEmail = defineSecret('RECIPIENT_EMAIL')
+
+// Hardcoded secret for unsubscribe functionality
+const UNSUBSCRIBE_SECRET_VALUE = 'your-hardcoded-secret-key-here'
 
 // Helper function to generate unsubscribe token
 function generateUnsubscribeToken(email: string, secret: string): string {
@@ -150,8 +152,7 @@ export const handleNewsletterUnsubscribe = onRequest(
       'http://localhost:3000',
       'https://www.coeur-a-corps.org',
       'https://www.coeur-a-corps.org'
-    ],
-    secrets: [UNSUBSCRIBE_SECRET]
+    ]
   }, 
   async (request, response) => {
     try {
@@ -177,7 +178,7 @@ export const handleNewsletterUnsubscribe = onRequest(
       }
 
       // Verify token
-      if (!verifyUnsubscribeToken(email, token, UNSUBSCRIBE_SECRET.value())) {
+      if (!verifyUnsubscribeToken(email, token, UNSUBSCRIBE_SECRET_VALUE)) {
         response.status(400).send(`
           <html>
             <head>
@@ -255,7 +256,7 @@ export const handleNewsletterUnsubscribe = onRequest(
 export const sendNewsletterWelcomeEmail = onDocumentCreated(
   {
     document: 'newsletter/{documentId}',
-    secrets: [sendgridApiKey, senderEmail, UNSUBSCRIBE_SECRET]
+    secrets: [sendgridApiKey, senderEmail]
   },
   async (event: { data: admin.firestore.DocumentSnapshot | undefined }) => {
     try {
@@ -275,7 +276,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
       console.log('Preparing welcome email for:', subscriberEmail);
 
       // Generate unsubscribe token
-      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET.value());
+      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET_VALUE);
       const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
 
       // Initialize SendGrid
@@ -312,7 +313,7 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           </h2>
           
           <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; opacity: 0.8; text-align: center;">
-            Le live mensuel sur le thème du mois; « Février, mon Cœur 🤍 ».
+            Le live mensuel sur le thème du mois; «  Février, mon Cœur ».
           </p>
 
           <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">

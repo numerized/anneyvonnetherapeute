@@ -1,5 +1,3 @@
-import { TherapyEmailType } from '../types/emails';
-
 export interface EmailTemplateData {
   name?: string;
   paymentAmount?: string;
