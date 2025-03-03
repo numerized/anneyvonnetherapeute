@@ -52,3 +52,6 @@ firebase-debug.log
 clickup/node_modules/
 
 *.cache
+
+# Firestore migration scripts and sensitive data
+/firestore-migration/

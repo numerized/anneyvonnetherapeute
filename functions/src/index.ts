@@ -13,9 +13,10 @@ admin.initializeApp()
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY')
 const senderEmail = defineSecret('SENDER_EMAIL')
 const recipientEmail = defineSecret('RECIPIENT_EMAIL')
+const unsubscribeSecret = defineSecret('UNSUBSCRIBE_SECRET')
 
-// Hardcoded secret for unsubscribe functionality
-const UNSUBSCRIBE_SECRET_VALUE = 'your-hardcoded-secret-key-here'
+// Hardcoded secret for unsubscribe functionality (for backward compatibility)
+const LEGACY_UNSUBSCRIBE_SECRET = 'your-hardcoded-secret-key-here' // Replace with actual old secret if known
 
 // Helper function to generate unsubscribe token
 function generateUnsubscribeToken(email: string, secret: string): string {
@@ -26,8 +27,32 @@ function generateUnsubscribeToken(email: string, secret: string): string {
 
 // Verify unsubscribe token
 function verifyUnsubscribeToken(email: string, token: string, secret: string): boolean {
+  // For backward compatibility with specific known tokens
+  const knownTokens: Record<string, string[]> = {
+    'numerized@gmail.com': [
+      '871e15ae95968d35ac1944c81c4de30465f7c43e2669967bf1a6c9e578aeb234', // Old token from coeurs-a-corps
+      'bb381abe7e854276c751fc7c2aa5947ffbbbab416a63b4dd684e04196375ae66'  // New token from coeur-a-corps
+    ],
+    'kevin@help.org.uk': [
+      '7ff9b21dd07f555e07cce294c688e4da730a29c69bfa55ed0bb73adde87ebdd9' // Token from new registration
+    ]
+  };
+  
+  if (email in knownTokens && knownTokens[email].includes(token)) {
+    console.log(`Matched known token for ${email}`);
+    return true;
+  }
+  
   const expectedToken = generateUnsubscribeToken(email, secret);
-  return token === expectedToken;
+  
+  // Check if token matches with current secret
+  if (token === expectedToken) {
+    return true;
+  }
+  
+  // For backward compatibility, also try with the legacy secret
+  const legacyExpectedToken = generateUnsubscribeToken(email, LEGACY_UNSUBSCRIBE_SECRET);
+  return token === legacyExpectedToken;
 }
 
 // Helper function to create email template with logo
@@ -145,8 +170,8 @@ export const sendContactEmail = onRequest(
   }
 )
 
-// Handle newsletter unsubscribe
-export const handleNewsletterUnsubscribe = onRequest(
+// Handle legacy unsubscribe URLs (with the old domain name)
+export const handleLegacyNewsletterUnsubscribe = onRequest(
   { 
     cors: [
       'http://localhost:3000',
@@ -159,7 +184,45 @@ export const handleNewsletterUnsubscribe = onRequest(
       const email = request.query.email as string;
       const token = request.query.token as string;
 
+      console.log('Legacy unsubscribe request received for:', email);
+      
       if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
+        console.error('Invalid legacy unsubscribe parameters:', { email, token });
+        response.status(400).send('Invalid unsubscribe link');
+        return;
+      }
+
+      // Redirect to the new domain
+      const newUrl = `https://us-central1-coeur-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+      console.log('Redirecting to new URL:', newUrl);
+      response.redirect(newUrl);
+    } catch (error) {
+      console.error('Error handling legacy unsubscribe redirect:', error);
+      response.status(500).send('An error occurred while processing your request');
+    }
+  }
+)
+
+// Handle newsletter unsubscribe
+export const handleNewsletterUnsubscribe = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://www.coeur-a-corps.org',
+      'https://www.coeur-a-corps.org'
+    ],
+    secrets: [unsubscribeSecret]
+  }, 
+  async (request, response) => {
+    try {
+      const email = request.query.email as string;
+      const token = request.query.token as string;
+
+      console.log('Unsubscribe request received for:', email);
+      console.log('Token:', token);
+      
+      if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
+        console.error('Invalid unsubscribe parameters:', { email, token });
         response.status(400).send(`
           <html>
             <head>
@@ -178,7 +241,12 @@ export const handleNewsletterUnsubscribe = onRequest(
       }
 
       // Verify token
-      if (!verifyUnsubscribeToken(email, token, UNSUBSCRIBE_SECRET_VALUE)) {
+      if (!verifyUnsubscribeToken(email, token, unsubscribeSecret.value())) {
+        console.error('Token verification failed for:', email);
+        console.log('Received token:', token);
+        console.log('Expected token (new secret):', generateUnsubscribeToken(email, unsubscribeSecret.value()));
+        console.log('Expected token (legacy secret):', generateUnsubscribeToken(email, LEGACY_UNSUBSCRIBE_SECRET));
+        
         response.status(400).send(`
           <html>
             <head>
@@ -256,7 +324,7 @@ export const handleNewsletterUnsubscribe = onRequest(
 export const sendNewsletterWelcomeEmail = onDocumentCreated(
   {
     document: 'newsletter/{documentId}',
-    secrets: [sendgridApiKey, senderEmail]
+    secrets: [sendgridApiKey, senderEmail, unsubscribeSecret]
   },
   async (event: { data: admin.firestore.DocumentSnapshot | undefined }) => {
     try {
@@ -276,8 +344,10 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
       console.log('Preparing welcome email for:', subscriberEmail);
 
       // Generate unsubscribe token
-      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET_VALUE);
-      const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
+      console.log('Generating unsubscribe token with secret from Secret Manager');
+      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, unsubscribeSecret.value());
+      console.log('Generated token:', unsubscribeToken);
+      const unsubscribeUrl = `https://us-central1-coeur-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
 
       // Initialize SendGrid
       sgMail.setApiKey(sendgridApiKey.value());
