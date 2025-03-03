@@ -33,6 +33,7 @@ export default function CompleteProfilePage() {
               nom: '',
               telephone: '',
               dateNaissance: null,
+              photo: null,
               createdAt: new Date(),
               updatedAt: new Date()
             });
