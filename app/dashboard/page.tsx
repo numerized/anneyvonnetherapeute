@@ -83,7 +83,7 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Conversion 180° d'Amour</h1>
+            <h1 className="text-4xl font-black text-primary-cream tracking-tight">Votre Espace</h1>
             <p className="mt-2 text-primary-cream/80">
               Bienvenue, {user.email} dans votre espace personnel.
             </p>
@@ -97,6 +97,59 @@ export default function DashboardPage() {
             >
               Se déconnecter
             </Button>
+          </div>
+        </div>
+
+        {/* Couple Profile Boxes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Profile Box 1 */}
+          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
+                {/* Placeholder for avatar - replace with actual image if available */}
+                <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-medium text-primary-cream">Partenaire 1</h3>
+                <p className="text-sm text-primary-cream/60">{user.email}</p>
+              </div>
+              <Button 
+                variant="outline" 
+                className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
+              >
+                MODIFIER
+              </Button>
+            </div>
+          </div>
+
+          {/* Profile Box 2 */}
+          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
+                {/* Placeholder for avatar - replace with actual image if available */}
+                <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-medium text-primary-cream">Partenaire 2</h3>
+                <p className="text-sm text-primary-cream/60">partenaire@exemple.com</p>
+              </div>
+              <Button 
+                variant="outline" 
+                className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
+              >
+                MODIFIER
+              </Button>
+            </div>
           </div>
         </div>
 
