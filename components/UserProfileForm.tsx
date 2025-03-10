@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { User } from '@/lib/userService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, Camera } from 'lucide-react';
+import { PlusCircle, X } from 'lucide-react';
 
 interface UserProfileFormProps {
   user: User | null;
@@ -48,6 +48,14 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
+  };
+
+  const handleDeletePhoto = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the parent click handler
+    setFormData(prev => ({
+      ...prev,
+      photo: null
+    }));
   };
 
   // Function to resize image
@@ -163,33 +171,44 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Photo Upload */}
       <div className="flex justify-center mb-4">
-        <div 
-          className="relative w-24 h-24 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
-          onClick={handlePhotoClick}
-        >
-          {formData.photo ? (
-            <img 
-              src={formData.photo} 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60">
-              {isResizing ? (
-                <div className="text-xs text-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-cream mx-auto mb-1"></div>
-                  Redimensionnement...
-                </div>
-              ) : (
-                <>
-                  <PlusCircle className="w-8 h-8 mb-1" />
-                  <span className="text-xs">Ajouter photo</span>
-                </>
-              )}
-            </div>
+        <div className="relative">
+          {formData.photo && (
+            <button
+              type="button"
+              onClick={handleDeletePhoto}
+              className="absolute -top-2 -right-2 z-10 bg-black/70 rounded-full p-1 hover:bg-black/90 transition-colors"
+              aria-label="Delete photo"
+            >
+              <X className="w-3.5 h-3.5 text-white" />
+            </button>
           )}
-          <div className="absolute bottom-0 right-0 bg-primary-coral rounded-full p-1">
-            <Camera className="w-4 h-4 text-primary-cream" />
+          <div 
+            className="relative w-24 h-24 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
+            onClick={handlePhotoClick}
+          >
+            {formData.photo ? (
+              <img 
+                src={formData.photo} 
+                alt="Profile" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
+                {isResizing ? (
+                  <div className="text-xs">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-cream mx-auto mb-1"></div>
+                    Redimensionnement...
+                  </div>
+                ) : (
+                  <>
+                    <PlusCircle className="w-8 h-8 mb-1" />
+                    <span className="text-xs">
+                      Ajouter<br/>une photo
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <input
