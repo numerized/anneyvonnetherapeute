@@ -6,7 +6,7 @@ import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { CheckSquare, Square, Loader2, PlusCircle, Camera } from 'lucide-react';
+import { CheckSquare, Square, Loader2, PlusCircle, X } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { getUserById, createOrUpdateUser, User as UserProfile } from '@/lib/userService';
@@ -96,6 +96,32 @@ export default function DashboardPage() {
     setIsEditingProfile(true);
   };
 
+  // Handle photo deletion directly from dashboard
+  const handleDeletePhoto = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the parent click handler
+    
+    if (!user) return;
+    
+    try {
+      setIsUpdatingProfile(true);
+      
+      // Update user profile with null photo
+      const userData = {
+        ...userProfile,
+        photo: null
+      };
+      
+      const updatedProfile = await createOrUpdateUser(user.uid, userData);
+      setUserProfile(updatedProfile);
+      toast.success('Photo supprimée avec succès');
+    } catch (error) {
+      console.error('Error deleting user photo:', error);
+      toast.error('Erreur lors de la suppression de la photo');
+    } finally {
+      setIsUpdatingProfile(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
@@ -110,7 +136,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-primary-forest text-primary-cream">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-coral">Tableau de bord</h1>
+          <h1 className="text-3xl font-bold text-primary-coral text-center">Tableau de bord</h1>
           <div>
             <ZenClickButton />
           </div>
@@ -121,28 +147,39 @@ export default function DashboardPage() {
           {/* Profile Box 1 */}
           <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
             <div className="flex items-center gap-4">
-              <div 
-                className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
-                onClick={handlePhotoClick}
-              >
-                {isUpdatingProfile ? (
-                  <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  </div>
-                ) : userProfile?.photo ? (
-                  <img 
-                    src={userProfile.photo} 
-                    alt="Profile" 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60">
-                    <PlusCircle className="w-6 h-6 mb-1" />
-                    <span className="text-xs">Photo</span>
-                  </div>
+              <div className="relative">
+                {userProfile?.photo && !isUpdatingProfile && (
+                  <button
+                    type="button"
+                    onClick={handleDeletePhoto}
+                    className="absolute -top-2 -right-2 z-10 bg-black/70 rounded-full p-1 hover:bg-black/90 transition-colors"
+                    aria-label="Delete photo"
+                  >
+                    <X className="w-3.5 h-3.5 text-white" />
+                  </button>
                 )}
-                <div className="absolute bottom-0 right-0 bg-primary-coral rounded-full p-1">
-                  <Camera className="w-3 h-3 text-primary-cream" />
+                <div 
+                  className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
+                  onClick={handlePhotoClick}
+                >
+                  {isUpdatingProfile ? (
+                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                    </div>
+                  ) : userProfile?.photo ? (
+                    <img 
+                      src={userProfile.photo} 
+                      alt="Profile" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
+                      <PlusCircle className="w-6 h-6 mb-1" />
+                      <span className="text-xs">
+                        Ajouter<br/>une photo
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex-1">
@@ -185,12 +222,11 @@ export default function DashboardPage() {
             <div className="flex items-center gap-4">
               <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
                 {/* Placeholder for avatar - replace with actual image if available */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
                   <PlusCircle className="w-6 h-6 mb-1" />
-                  <span className="text-xs">Photo</span>
-                </div>
-                <div className="absolute bottom-0 right-0 bg-primary-coral rounded-full p-1">
-                  <Camera className="w-3 h-3 text-primary-cream" />
+                  <span className="text-xs">
+                    Ajouter<br/>une photo
+                  </span>
                 </div>
               </div>
               <div className="flex-1">
@@ -201,129 +237,75 @@ export default function DashboardPage() {
                 variant="outline" 
                 className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
               >
-                MODIFIER
+                INVITER
               </Button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            {/* TODO Section */}
-            <div className="mb-8">
-              <h2 className="text-4xl font-black tracking-tight mb-4" style={{ color: '#D9B70D' }}>À faire</h2>
-              <div className="space-y-4">
-                {/* Evaluation Item */}
-                <div className="flex items-start gap-3">
-                  <button
-                    onClick={() => toggleCheckbox('evaluation')}
-                    className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
-                  >
-                    {checkedItems.evaluation ? (
-                      <CheckSquare className="w-5 h-5" />
-                    ) : (
-                      <Square className="w-5 h-5" />
-                    )}
-                  </button>
-                  <div className="grid gap-1.5 leading-none">
-                    <Link
-                      href="/evaluation-handicap-relationnel"
-                      className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
-                    >
-                      Formulaire d'Évaluation du Handicap Relationnel
-                    </Link>
-                    <p className="text-sm text-primary-cream/60">
-                      Évaluez votre niveau d'autonomie dans vos relations sociales et intimes
-                    </p>
-                  </div>
-                </div>
-
-                {/* Questionnaire Item */}
-                <div className="flex items-start gap-3">
-                  <button
-                    onClick={() => toggleCheckbox('questionnaire')}
-                    className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
-                  >
-                    {checkedItems.questionnaire ? (
-                      <CheckSquare className="w-5 h-5" />
-                    ) : (
-                      <Square className="w-5 h-5" />
-                    )}
-                  </button>
-                  <div className="grid gap-1.5 leading-none">
-                    <Link
-                      href="/questionnaire"
-                      className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
-                    >
-                      Remplir le questionnaire d'estime de soi
-                    </Link>
-                    <p className="text-sm text-primary-cream/60">
-                      Un questionnaire pour mieux comprendre votre relation avec vous-même
-                    </p>
-                  </div>
-                </div>
-
-                {/* Appointment Item */}
-                <div className="flex items-start gap-3">
-                  <button
-                    onClick={() => toggleCheckbox('appointment')}
-                    className="mt-1 text-primary-cream hover:text-primary-coral transition-colors"
-                  >
-                    {checkedItems.appointment ? (
-                      <CheckSquare className="w-5 h-5" />
-                    ) : (
-                      <Square className="w-5 h-5" />
-                    )}
-                  </button>
-                  <div className="grid gap-1.5 leading-none">
-                    <Link
-                      href="/appointment"
-                      className="text-sm font-medium leading-none text-primary-cream hover:text-primary-coral transition-colors"
-                    >
-                      Prendre rendez-vous avec votre coach
-                    </Link>
-                    <p className="text-sm text-primary-cream/60">
-                      Planifiez votre prochaine séance de coaching
-                    </p>
-                  </div>
-                </div>
+        {/* Checklist Section */}
+        <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">
+          <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">Votre parcours</h2>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div onClick={() => toggleCheckbox('evaluation')} className="cursor-pointer">
+                {checkedItems.evaluation ? (
+                  <CheckSquare className="w-5 h-5 text-primary-coral" />
+                ) : (
+                  <Square className="w-5 h-5 text-primary-cream/60" />
+                )}
               </div>
+              <span className={`${checkedItems.evaluation ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                Compléter l'évaluation initiale
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div onClick={() => toggleCheckbox('questionnaire')} className="cursor-pointer">
+                {checkedItems.questionnaire ? (
+                  <CheckSquare className="w-5 h-5 text-primary-coral" />
+                ) : (
+                  <Square className="w-5 h-5 text-primary-cream/60" />
+                )}
+              </div>
+              <span className={`${checkedItems.questionnaire ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                Remplir le questionnaire de couple
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div onClick={() => toggleCheckbox('appointment')} className="cursor-pointer">
+                {checkedItems.appointment ? (
+                  <CheckSquare className="w-5 h-5 text-primary-coral" />
+                ) : (
+                  <Square className="w-5 h-5 text-primary-cream/60" />
+                )}
+              </div>
+              <span className={`${checkedItems.appointment ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                Prendre rendez-vous pour la première session
+              </span>
             </div>
           </div>
+        </div>
 
-          {/* Capsules Section */}
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 flex flex-col">
-            <div>
-              <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Capsules</h2>
-              <p className="text-sm text-primary-cream/80 mb-4">
-                Accédez à nos capsules vidéo pour votre développement personnel
-              </p>
-            </div>
-            <div className="mt-auto flex justify-end">
-              <Link
-                href="/capsules"
-                className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
-              >
-                Voir mes capsules
-              </Link>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 flex flex-col">
-            <div>
-              <h2 className="text-4xl font-black text-primary-coral tracking-tight mb-4">Votre prochain rendez-vous</h2>
-              <p className="text-sm text-primary-cream/80 mb-4">
-                Planifiez votre prochaine séance de coaching
-              </p>
-            </div>
-            <div className="mt-auto flex justify-end">
-              <Link
-                href="/appointment"
-                className="inline-flex items-center px-4 py-2 rounded-full border-2 border-primary-cream text-primary-cream hover:bg-primary-cream/10 transition-all duration-200"
-              >
-                Prendre rendez-vous
-              </Link>
-            </div>
+        {/* Resources Section */}
+        <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
+          <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">Ressources</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href="/resources/communication" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
+              <h3 className="text-lg font-medium text-primary-coral mb-1">Communication</h3>
+              <p className="text-sm text-primary-cream/60">Techniques pour améliorer votre communication de couple</p>
+            </Link>
+            <Link href="/resources/exercises" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
+              <h3 className="text-lg font-medium text-primary-coral mb-1">Exercices</h3>
+              <p className="text-sm text-primary-cream/60">Exercices pratiques à faire ensemble</p>
+            </Link>
+            <Link href="/resources/articles" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
+              <h3 className="text-lg font-medium text-primary-coral mb-1">Articles</h3>
+              <p className="text-sm text-primary-cream/60">Articles sur la thérapie de couple</p>
+            </Link>
+            <Link href="/resources/faq" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
+              <h3 className="text-lg font-medium text-primary-coral mb-1">FAQ</h3>
+              <p className="text-sm text-primary-cream/60">Questions fréquemment posées</p>
+            </Link>
           </div>
         </div>
       </div>
