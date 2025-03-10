@@ -6,7 +6,7 @@ import { User as FirebaseUser, getAuth } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { CheckSquare, Square, Loader2, PlusCircle, X } from 'lucide-react';
+import { CheckSquare, Square, Loader2, PlusCircle, X, User } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { getUserById, createOrUpdateUser, User as UserProfile } from '@/lib/userService';
@@ -86,6 +86,7 @@ export default function DashboardPage() {
 
   const toggleCheckbox = (id: string) => {
     setCheckedItems(prev => ({
+
       ...prev,
       [id]: !prev[id]
     }));
@@ -174,10 +175,7 @@ export default function DashboardPage() {
                     />
                   ) : (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
-                      <PlusCircle className="w-6 h-6 mb-1" />
-                      <span className="text-xs">
-                        Ajouter<br/>une photo
-                      </span>
+                      <User className="w-8 h-8" />
                     </div>
                   )}
                 </div>
@@ -195,9 +193,11 @@ export default function DashboardPage() {
                   >
                     {isUpdatingProfile ? (
                       <>
+
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         MISE À JOUR...
                       </>
+
                     ) : 'MODIFIER'}
                   </Button>
                 </DialogTrigger>
@@ -221,17 +221,13 @@ export default function DashboardPage() {
           <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
             <div className="flex items-center gap-4">
               <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                {/* Placeholder for avatar - replace with actual image if available */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
-                  <PlusCircle className="w-6 h-6 mb-1" />
-                  <span className="text-xs">
-                    Ajouter<br/>une photo
-                  </span>
+                <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
+                  <User className="w-8 h-8" />
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-medium text-primary-cream">Partenaire 2</h3>
-                <p className="text-sm text-primary-cream/60">partenaire@exemple.com</p>
+                <h3 className="text-lg font-medium text-primary-cream">Votre Partenaire</h3>
+                <p className="text-sm text-primary-cream/60">Ajoutez votre partenaire ici et commencez votre parcours</p>
               </div>
               <Button 
                 variant="outline" 
