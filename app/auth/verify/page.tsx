@@ -7,13 +7,13 @@ import { app } from '@/lib/firebase';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export default function VerifyPage() {
   const [isVerifying, setIsVerifying] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [manualEmail, setManualEmail] = useState('');
-  const [debugInfo, setDebugInfo] = useState<any>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -21,49 +21,30 @@ export default function VerifyPage() {
       const auth = getAuth(app);
       
       try {
-        // Collect debug info
-        const debug = {
-          url: window.location.href,
-          storedEmail: window.localStorage.getItem('emailForSignIn'),
-          isEmailLink: isSignInWithEmailLink(auth, window.location.href),
-          timestamp: new Date().toISOString()
-        };
-        setDebugInfo(debug);
-        console.log('Debug info:', debug);
-
-        // Check if this is a sign-in link
         if (!isSignInWithEmailLink(auth, window.location.href)) {
           setError('invalid-link');
           return;
         }
 
-        // Get the email from localStorage
         const email = window.localStorage.getItem('emailForSignIn');
         if (!email) {
           setError('no-email');
           return;
         }
 
-        // Sign in with email link
         const result = await signInWithEmailLink(auth, email, window.location.href);
-        console.log('Sign in successful:', result);
-        
-        // Clear email from storage
         window.localStorage.removeItem('emailForSignIn');
 
-        // Check if this is an invitation verification
         const invitationToken = window.localStorage.getItem('invitationToken');
         const invitationId = window.localStorage.getItem('invitationId');
         const inviterId = window.localStorage.getItem('inviterId');
 
         if (invitationToken && invitationId && inviterId) {
-          // Clear invitation data from storage
           window.localStorage.removeItem('invitationToken');
           window.localStorage.removeItem('invitationId');
           window.localStorage.removeItem('inviterId');
 
           try {
-            // Call the Cloud Function to connect partners
             const functions = getFunctions(app, 'us-central1');
             const connectPartnersFunction = httpsCallable(functions, 'connectPartners');
             await connectPartnersFunction({ invitationId, inviterId });
@@ -100,89 +81,82 @@ export default function VerifyPage() {
     verifyEmail();
   }, [router]);
 
-  const handleManualSignIn = async () => {
-    if (!manualEmail) {
-      toast.error('Veuillez entrer votre email');
-      return;
-    }
+  const handleManualVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
 
-    const auth = getAuth(app);
     try {
-      const result = await signInWithEmailLink(auth, manualEmail, window.location.href);
-      console.log('Manual sign in successful:', result);
+      const auth = getAuth(app);
+      await signInWithEmailLink(auth, manualEmail, window.location.href);
+      window.localStorage.removeItem('emailForSignIn');
       router.push('/auth/complete-profile');
     } catch (error: any) {
-      console.error('Manual sign in error:', error);
-      toast.error(error.message || "Une erreur s'est produite");
+      console.error('Manual verification error:', error);
+      toast.error("Une erreur s'est produite. Veuillez réessayer.");
+    } finally {
+      setIsVerifying(false);
     }
   };
-
-  const getErrorMessage = () => {
-    switch (error) {
-      case 'invalid-link':
-        return "Ce lien n'est plus valide. Veuillez demander un nouveau lien de connexion.";
-      case 'no-email':
-        return "Nous n'avons pas pu retrouver votre email. Veuillez l'entrer ci-dessous :";
-      default:
-        return "Une erreur s'est produite lors de la vérification. Veuillez réessayer.";
-    }
-  };
-
-  if (isVerifying) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-md w-full space-y-4 text-center">
-          <h1 className="text-2xl font-semibold">Vérification en cours...</h1>
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-6">
+    <div className="relative min-h-screen grid place-items-center bg-primary-forest">
+      <div className="w-full max-w-md px-4 space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-red-600 mb-4">
-            {error === 'no-email' ? 'Email requis' : 'Erreur de vérification'}
-          </h1>
-          <p className="mb-4">{getErrorMessage()}</p>
+          <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
+            Vérification
+          </h2>
+          {isVerifying ? (
+            <p className="mt-2 text-primary-cream/80">
+              Vérification de votre email en cours...
+            </p>
+          ) : error === 'no-email' ? (
+            <>
+              <p className="mt-2 text-primary-cream/80">
+                Nous n'avons pas trouvé votre email. Veuillez le saisir à nouveau ci-dessous.
+              </p>
+              <form onSubmit={handleManualVerification} className="mt-8 space-y-6">
+                <Input
+                  type="email"
+                  required
+                  placeholder="Entrez votre email"
+                  value={manualEmail}
+                  onChange={(e) => setManualEmail(e.target.value)}
+                  className="block w-full bg-primary-cream/10 border-primary-cream/20 text-primary-cream placeholder:text-primary-cream/50 focus:border-primary-coral focus:ring-primary-coral"
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]"
+                >
+                  Vérifier
+                </Button>
+              </form>
+            </>
+          ) : error === 'invalid-link' ? (
+            <div className="space-y-6">
+              <p className="mt-2 text-primary-cream/80">
+                Ce lien n'est plus valide. Veuillez demander un nouveau lien de connexion.
+              </p>
+              <Button
+                onClick={() => router.push('/login')}
+                className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]"
+              >
+                Retour à la connexion
+              </Button>
+            </div>
+          ) : error === 'unknown' ? (
+            <div className="space-y-6">
+              <p className="mt-2 text-primary-cream/80">
+                Une erreur s'est produite. Veuillez réessayer.
+              </p>
+              <Button
+                onClick={() => router.push('/login')}
+                className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]"
+              >
+                Retour à la connexion
+              </Button>
+            </div>
+          ) : null}
         </div>
-
-        {error === 'no-email' && (
-          <div className="space-y-4">
-            <input
-              type="email"
-              value={manualEmail}
-              onChange={(e) => setManualEmail(e.target.value)}
-              placeholder="Entrez votre email"
-              className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-primary"
-            />
-            <Button
-              onClick={handleManualSignIn}
-              className="w-full"
-            >
-              Continuer
-            </Button>
-          </div>
-        )}
-
-        <div className="space-y-4">
-          <Link href="/auth" passHref>
-            <Button variant="outline" className="w-full">
-              Retour à la connexion
-            </Button>
-          </Link>
-        </div>
-
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg text-sm">
-            <h3 className="font-semibold mb-2">Debug Info:</h3>
-            <pre className="whitespace-pre-wrap overflow-auto">
-              {JSON.stringify(debugInfo, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   );
