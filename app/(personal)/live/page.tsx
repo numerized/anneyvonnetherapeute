@@ -253,7 +253,7 @@ export default function LivePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral">♦</span>
-                    <span>Special diversités</span>
+                    <span>Neuro diversités</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral">♦</span>

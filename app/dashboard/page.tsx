@@ -9,15 +9,18 @@ import { toast } from 'sonner';
 import { CheckSquare, Square, Loader2, PlusCircle, X, User } from 'lucide-react';
 import Link from 'next/link';
 import { ZenClickButton } from '@/components/ZenClickButton';
-import { getUserById, createOrUpdateUser, User as UserProfile } from '@/lib/userService';
+import { getUserById, createOrUpdateUser, getPartnerProfile, User as UserProfile } from '@/lib/userService';
 import { UserProfileForm } from '@/components/UserProfileForm';
+import { InvitePartnerForm } from '@/components/InvitePartnerForm';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [partnerProfile, setPartnerProfile] = useState<UserProfile | null>(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isInviting, setIsInviting] = useState(false);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
     evaluation: false,
@@ -41,6 +44,12 @@ export default function DashboardPage() {
           try {
             const profileData = await getUserById(user.uid);
             setUserProfile(profileData);
+
+            // If user has a partner, fetch partner's profile
+            if (profileData?.partnerId) {
+              const partnerData = await getPartnerProfile(profileData.partnerId);
+              setPartnerProfile(partnerData);
+            }
           } catch (error) {
             console.error('Error fetching user profile:', error);
             toast.error('Failed to load user profile');
@@ -51,11 +60,10 @@ export default function DashboardPage() {
         
         fetchUserProfile();
       } else {
-        // If not authenticated, redirect to login
         router.push('/login');
       }
     });
-    
+
     return () => unsubscribe();
   }, [router]);
 
@@ -220,24 +228,59 @@ export default function DashboardPage() {
           {/* Profile Box 2 */}
           <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                  <User className="w-8 h-8" />
+              <div className="relative">
+                <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
+                  {partnerProfile?.photo ? (
+                    <img 
+                      src={partnerProfile.photo} 
+                      alt="Partner Profile" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
+                      <User className="w-8 h-8" />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-medium text-primary-cream">Votre Partenaire</h3>
-                <p className="text-sm text-primary-cream/60">Ajoutez votre partenaire ici et commencez votre parcours</p>
+                {userProfile?.partnerId ? (
+                  <>
+                    <h3 className="text-lg font-medium text-primary-cream">
+                      {partnerProfile?.prenom} {partnerProfile?.nom}
+                    </h3>
+                    <p className="text-sm text-primary-cream/60">{partnerProfile?.email}</p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-lg font-medium text-primary-cream">Votre Partenaire</h3>
+                    <p className="text-sm text-primary-cream/60">Ajoutez votre partenaire ici et commencez votre parcours</p>
+                  </>
+                )}
               </div>
-              <Button 
-                variant="outline" 
-                className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
-              >
-                INVITER
-              </Button>
+              {!userProfile?.partnerId && (
+                <Button 
+                  variant="outline" 
+                  className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
+                  onClick={() => setIsInviting(true)}
+                >
+                  INVITER
+                </Button>
+              )}
             </div>
           </div>
         </div>
+        <Dialog open={isInviting} onOpenChange={setIsInviting}>
+          <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
+            <DialogHeader>
+              <DialogTitle className="text-primary-coral">Inviter votre partenaire</DialogTitle>
+              <DialogDescription className="text-primary-cream/60">
+                Envoyez une invitation à votre partenaire pour commencer votre parcours ensemble
+              </DialogDescription>
+            </DialogHeader>
+            <InvitePartnerForm onClose={() => setIsInviting(false)} />
+          </DialogContent>
+        </Dialog>
 
         {/* Checklist Section */}
         <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">

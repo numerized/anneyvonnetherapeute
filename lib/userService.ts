@@ -3,15 +3,16 @@ import { app } from '@/lib/firebase';
 
 // User interface
 export interface User {
-  id: string;
   email: string;
-  prenom: string;
-  nom: string;
-  telephone: string;
-  dateNaissance: string | null;
-  photo: string | null; // Base64 encoded photo
-  createdAt: Date;
-  updatedAt: Date;
+  prenom?: string;
+  nom?: string;
+  photo?: string;
+  role?: 'admin' | 'user' | 'partner';
+  partnerId?: string;
+  partnerEmail?: string;
+  isPartnerConnected?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // Create a new user or update if exists
@@ -71,4 +72,10 @@ export async function getUserById(userId: string): Promise<User | null> {
   }
   
   return null;
+}
+
+// Get partner profile
+export async function getPartnerProfile(partnerId: string): Promise<User | null> {
+  if (!partnerId) return null;
+  return getUserById(partnerId);
 }

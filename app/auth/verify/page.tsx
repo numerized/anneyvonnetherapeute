@@ -7,6 +7,7 @@ import { app } from '@/lib/firebase';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export default function VerifyPage() {
   const [isVerifying, setIsVerifying] = useState(true);
@@ -32,12 +33,39 @@ export default function VerifyPage() {
         }
 
         // Sign in with email link
-        await signInWithEmailLink(auth, email, window.location.href);
+        const result = await signInWithEmailLink(auth, email, window.location.href);
         
         // Clear email from storage
         window.localStorage.removeItem('emailForSignIn');
+
+        // Check if this is an invitation verification
+        const invitationToken = window.localStorage.getItem('invitationToken');
+        const invitationId = window.localStorage.getItem('invitationId');
+        const inviterId = window.localStorage.getItem('inviterId');
+
+        if (invitationToken && invitationId && inviterId) {
+          // Clear invitation data from storage
+          window.localStorage.removeItem('invitationToken');
+          window.localStorage.removeItem('invitationId');
+          window.localStorage.removeItem('inviterId');
+
+          try {
+            // Call the Cloud Function to connect partners
+            const functions = getFunctions(app, 'us-central1');
+            const connectPartnersFunction = httpsCallable(functions, 'connectPartners');
+            await connectPartnersFunction({ invitationId, inviterId });
+
+            toast.success('Connexion partenaire réussie !');
+            router.push('/dashboard');
+            return;
+          } catch (error: any) {
+            console.error('Error connecting partner accounts:', error);
+            toast.error(error.message || 'Erreur lors de la connexion des comptes partenaires');
+            // If partner connection fails, continue to complete profile
+          }
+        }
         
-        // Redirect to complete profile page
+        // If not an invitation or if partner connection failed, redirect to complete profile
         router.push('/auth/complete-profile');
       } catch (error: any) {
         console.error('Verification error:', error);
@@ -93,24 +121,15 @@ export default function VerifyPage() {
               <p className="mt-2 text-primary-cream/80">
                 {getErrorMessage()}
               </p>
-              <div className="mt-4">
+              <div className="mt-6">
                 <Link href="/login">
-                  <Button variant="outline" className="text-primary-cream hover:text-primary-coral">
+                  <Button className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]">
                     Retour à la connexion
                   </Button>
                 </Link>
               </div>
             </>
-          ) : (
-            <>
-              <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
-                Vérification réussie
-              </h2>
-              <p className="mt-2 text-primary-cream/80">
-                Vous allez être redirigé vers votre espace personnel...
-              </p>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
