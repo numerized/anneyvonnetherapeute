@@ -25,6 +25,8 @@ export default function DashboardPage() {
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
     evaluation: false,
     questionnaire: false,
+    amoureux: false,
+    handicap: false,
     appointment: false
   });
   const router = useRouter();
@@ -32,12 +34,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const auth = getAuth(app);
 
-    // Check if user is authenticated
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
         
-        // Fetch user profile data
         async function fetchUserProfile() {
           if (!user) return;
           
@@ -45,7 +45,6 @@ export default function DashboardPage() {
             const profileData = await getUserById(user.uid);
             setUserProfile(profileData);
 
-            // If user has a partner, fetch partner's profile
             if (profileData?.partnerId) {
               const partnerData = await getPartnerProfile(profileData.partnerId);
               setPartnerProfile(partnerData);
@@ -67,14 +66,12 @@ export default function DashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  // Handle profile update
   const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
     if (!user) return;
     
     try {
       setIsUpdatingProfile(true);
       
-      // Ensure email is set from the authenticated user
       const userData = {
         ...formData,
         email: user.email || formData.email || ''
@@ -92,29 +89,18 @@ export default function DashboardPage() {
     }
   };
 
-  const toggleCheckbox = (id: string) => {
-    setCheckedItems(prev => ({
-
-      ...prev,
-      [id]: !prev[id]
-    }));
-  };
-
-  // Handle photo upload directly from dashboard
   const handlePhotoClick = () => {
     setIsEditingProfile(true);
   };
 
-  // Handle photo deletion directly from dashboard
   const handleDeletePhoto = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering the parent click handler
+    e.stopPropagation();
     
     if (!user) return;
     
     try {
       setIsUpdatingProfile(true);
       
-      // Update user profile with null photo
       const userData = {
         ...userProfile,
         photo: null
@@ -129,6 +115,13 @@ export default function DashboardPage() {
     } finally {
       setIsUpdatingProfile(false);
     }
+  };
+
+  const toggleCheckbox = (id: string) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   if (loading) {
@@ -201,11 +194,9 @@ export default function DashboardPage() {
                   >
                     {isUpdatingProfile ? (
                       <>
-
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         MISE À JOUR...
                       </>
-
                     ) : 'MODIFIER'}
                   </Button>
                 </DialogTrigger>
@@ -270,6 +261,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
         <Dialog open={isInviting} onOpenChange={setIsInviting}>
           <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
             <DialogHeader>
@@ -285,32 +277,53 @@ export default function DashboardPage() {
         {/* Checklist Section */}
         <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">
           <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">Votre parcours</h2>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div onClick={() => toggleCheckbox('evaluation')} className="cursor-pointer">
-                {checkedItems.evaluation ? (
-                  <CheckSquare className="w-5 h-5 text-primary-coral" />
-                ) : (
-                  <Square className="w-5 h-5 text-primary-cream/60" />
-                )}
+          <div className="space-y-4">
+            <Link href="/evaluation-handicap-relationnel" className="block">
+              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('handicap'); }} className="cursor-pointer">
+                  {checkedItems.handicap ? (
+                    <CheckSquare className="w-5 h-5 text-primary-coral" />
+                  ) : (
+                    <Square className="w-5 h-5 text-primary-cream/60" />
+                  )}
+                </div>
+                <span className={`${checkedItems.handicap ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                  Évaluation du handicap relationnel
+                </span>
               </div>
-              <span className={`${checkedItems.evaluation ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                Compléter l'évaluation initiale
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div onClick={() => toggleCheckbox('questionnaire')} className="cursor-pointer">
-                {checkedItems.questionnaire ? (
-                  <CheckSquare className="w-5 h-5 text-primary-coral" />
-                ) : (
-                  <Square className="w-5 h-5 text-primary-cream/60" />
-                )}
+            </Link>
+
+            <Link href="/quel-amoureuse-ou-quel-amoureux-es-tu" className="block">
+              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('amoureux'); }} className="cursor-pointer">
+                  {checkedItems.amoureux ? (
+                    <CheckSquare className="w-5 h-5 text-primary-coral" />
+                  ) : (
+                    <Square className="w-5 h-5 text-primary-cream/60" />
+                  )}
+                </div>
+                <span className={`${checkedItems.amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                  Quel amoureuse ou amoureux êtes-vous ?
+                </span>
               </div>
-              <span className={`${checkedItems.questionnaire ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                Remplir le questionnaire de couple
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
+            </Link>
+
+            <Link href="/questionnaire" className="block">
+              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('questionnaire'); }} className="cursor-pointer">
+                  {checkedItems.questionnaire ? (
+                    <CheckSquare className="w-5 h-5 text-primary-coral" />
+                  ) : (
+                    <Square className="w-5 h-5 text-primary-cream/60" />
+                  )}
+                </div>
+                <span className={`${checkedItems.questionnaire ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                  Questionnaire de couple
+                </span>
+              </div>
+            </Link>
+
+            <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
               <div onClick={() => toggleCheckbox('appointment')} className="cursor-pointer">
                 {checkedItems.appointment ? (
                   <CheckSquare className="w-5 h-5 text-primary-coral" />
