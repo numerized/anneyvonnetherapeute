@@ -11,48 +11,43 @@ import { toast } from 'sonner';
 export default function CompleteProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [shouldShowForm, setShouldShowForm] = useState(false);
   const router = useRouter();
   const auth = getAuth(app);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        
-        try {
-          // Check if user profile exists
-          const userProfile = await getUserById(firebaseUser.uid);
-          
-          // If no profile exists yet, create initial data with email
-          if (!userProfile) {
-            setUserData({
-              id: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              prenom: '',
-              nom: '',
-              telephone: '',
-              dateNaissance: null,
-              photo: null,
-              createdAt: new Date(),
-              updatedAt: new Date()
-            });
-          } else {
-            setUserData(userProfile);
-            
-            // If user profile already exists and is complete, redirect to dashboard
-            if (userProfile.prenom && userProfile.nom) {
-              router.push('/dashboard');
-            }
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        // Not authenticated, redirect to login
+      if (!firebaseUser) {
         router.push('/auth/login');
+        return;
+      }
+
+      try {
+        const userProfile = await getUserById(firebaseUser.uid);
+        
+        // If profile exists, redirect to dashboard
+        if (userProfile) {
+          router.push('/dashboard');
+          return;
+        }
+
+        // Only show form if profile doesn't exist
+        setUser(firebaseUser);
+        setUserData({
+          id: firebaseUser.uid,
+          email: firebaseUser.email || '',
+          prenom: '',
+          nom: '',
+          telephone: '',
+          dateNaissance: null,
+          photo: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+        setShouldShowForm(true);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        router.push('/dashboard');
       }
     });
 
@@ -63,7 +58,6 @@ export default function CompleteProfilePage() {
     if (!user) return;
     
     try {
-      // Ensure email is set from the authenticated user
       const userData = {
         ...formData,
         email: user.email || formData.email || ''
@@ -71,8 +65,6 @@ export default function CompleteProfilePage() {
       
       await createOrUpdateUser(user.uid, userData);
       toast.success('Profil créé avec succès');
-      
-      // Redirect to dashboard
       router.push('/dashboard');
     } catch (error) {
       console.error('Error creating user profile:', error);
@@ -80,16 +72,9 @@ export default function CompleteProfilePage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-primary-forest flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md p-6 rounded-lg bg-primary-forest border border-primary-cream/20">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-primary-coral">Chargement...</h1>
-          </div>
-        </div>
-      </div>
-    );
+  // Don't render anything unless we explicitly need to show the form
+  if (!shouldShowForm || !userData) {
+    return null;
   }
 
   return (
@@ -105,7 +90,7 @@ export default function CompleteProfilePage() {
         <UserProfileForm 
           user={userData} 
           onSubmit={handleSubmitProfile} 
-          isFirstTime={!userData?.prenom || !userData?.nom}
+          isFirstTime={true}
         />
       </div>
     </div>
