@@ -39,8 +39,8 @@ export default function CompleteProfilePage() {
           prenom: '',
           nom: '',
           telephone: '',
-          dateNaissance: null,
-          photo: null,
+          dateNaissance: undefined,
+          photo: undefined,
           createdAt: new Date(),
           updatedAt: new Date()
         });
@@ -54,44 +54,32 @@ export default function CompleteProfilePage() {
     return () => unsubscribe();
   }, [auth, router]);
 
-  const handleSubmitProfile = async (formData: Partial<User>) => {
+  const handleSubmit = async (formData: Partial<User>) => {
     if (!user) return;
-    
+
     try {
-      const userData = {
-        ...formData,
-        email: user.email || formData.email || ''
-      };
-      
-      await createOrUpdateUser(user.uid, userData);
-      toast.success('Profil créé avec succès');
+      await createOrUpdateUser(user.uid, formData);
+      toast.success('Profil mis à jour avec succès !');
       router.push('/dashboard');
     } catch (error) {
-      console.error('Error creating user profile:', error);
-      toast.error('Erreur lors de la création du profil');
+      console.error('Error updating profile:', error);
+      toast.error('Erreur lors de la mise à jour du profil');
     }
   };
 
-  // Don't render anything unless we explicitly need to show the form
-  if (!shouldShowForm || !userData) {
-    return null;
+  if (!shouldShowForm) {
+    return (
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-primary-forest flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md p-6 rounded-lg bg-primary-forest border border-primary-cream/20">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-primary-coral">Complétez votre profil</h1>
-          <p className="text-primary-cream/60 mt-2">
-            Veuillez fournir quelques informations pour compléter votre profil
-          </p>
-        </div>
-        
-        <UserProfileForm 
-          user={userData} 
-          onSubmit={handleSubmitProfile} 
-          isFirstTime={true}
-        />
+    <div className="min-h-screen bg-primary-forest p-4">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold text-primary-coral mb-8">Compléter votre profil</h1>
+        {userData && <UserProfileForm initialData={userData} onSubmit={handleSubmit} />}
       </div>
     </div>
   );
