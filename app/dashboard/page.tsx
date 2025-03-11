@@ -26,7 +26,7 @@ export default function DashboardPage() {
     evaluation: false,
     questionnaire: false,
     amoureux: false,
-    handicap: false,
+    eros: false,
     appointment: false
   });
   const router = useRouter();
@@ -304,6 +304,21 @@ export default function DashboardPage() {
                 </div>
                 <span className={`${checkedItems.amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
                   Quel amoureuse ou amoureux êtes-vous ?
+                </span>
+              </div>
+            </Link>
+
+            <Link href="/test-relation-desir-eros" className="block">
+              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('eros'); }} className="cursor-pointer">
+                  {checkedItems.eros ? (
+                    <CheckSquare className="w-5 h-5 text-primary-coral" />
+                  ) : (
+                    <Square className="w-5 h-5 text-primary-cream/60" />
+                  )}
+                </div>
+                <span className={`${checkedItems.eros ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                  Test d'Évaluation de votre Relation au Désir et à l'Éros
                 </span>
               </div>
             </Link>
