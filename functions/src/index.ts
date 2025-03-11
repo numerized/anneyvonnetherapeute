@@ -507,5 +507,15 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
 );
 
 // Export therapy email functions
-export { onReservation, onSessionScheduled } from './triggers/sessionTriggers';
-export { processScheduledEmails } from './scheduled/processEmails';
+import { onReservation, onSessionScheduled } from './triggers/sessionTriggers';
+import { processScheduledEmails } from './scheduled/processEmails';
+import { sendPartnerInvite } from './sendPartnerInvite';
+import { connectPartners } from './connectPartners';
+
+export {
+  onReservation,
+  onSessionScheduled,
+  processScheduledEmails,
+  sendPartnerInvite,
+  connectPartners
+};
