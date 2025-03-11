@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { RadioGroup } from '@headlessui/react'
+import Link from 'next/link'
 
 interface Question {
   id: string
@@ -118,7 +119,7 @@ const results: Result[] = [
   }
 ]
 
-function TestDesirErosPage() {
+export default function TestDesirErosPage() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
 
@@ -208,6 +209,40 @@ function TestDesirErosPage() {
               </p>
             </div>
           )}
+
+          <div className="bg-primary-cream/10 rounded-lg p-6">
+            <div className="text-center space-y-4">
+              <p className="text-5xl">🎁</p>
+              <h3 className="text-xl font-semibold text-primary-coral">
+                Cadeau de bienvenue
+              </h3>
+              <p className="text-primary-cream/80">
+                Pour vous remercier de votre inscription, bénéficiez de 10% de réduction sur notre offre de lancement avec le code :
+              </p>
+              <p className="text-2xl font-bold text-primary-coral">
+                COEUR180
+              </p>
+              <div className="flex justify-center gap-4 mt-4">
+                <Link href="/prochainement?coupon=COEUR180" className="px-6 py-2 bg-primary-coral text-primary-cream rounded-full hover:bg-primary-rust transition-colors">
+                  Découvrir l'offre
+                </Link>
+                <button 
+                  onClick={() => {
+                    setShowResults(false)
+                    setCurrentQuestionIndex(0)
+                    setAnswers(questions.reduce((acc, question) => {
+                      acc[question.id] = ''
+                      return acc
+                    }, {} as { [key: string]: string }))
+                    setFantasme('')
+                  }}
+                  className="px-6 py-2 border border-primary-cream/20 text-primary-cream rounded-full hover:bg-primary-cream/5 transition-colors"
+                >
+                  Refaire le test
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -295,13 +330,3 @@ function TestDesirErosPage() {
     </div>
   )
 }
-
-function TestDesirErosPageWrapper() {
-  return (
-    <Suspense fallback={null}>
-      <TestDesirErosPage />
-    </Suspense>
-  )
-}
-
-export default TestDesirErosPageWrapper
