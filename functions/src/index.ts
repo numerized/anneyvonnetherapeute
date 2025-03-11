@@ -506,6 +506,94 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
   }
 );
 
+// Generate link and send custom French email
+export const generateSignInWithEmailLink = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://www.coeur-a-corps.org',
+      'https://coeur-a-corps.org'
+    ],
+    secrets: [sendgridApiKey, senderEmail]
+  },
+  async (req, res) => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const email = req.body.email;
+      
+      // Create action code settings
+      const actionCodeSettings = {
+        url: `${baseUrl}/auth/verify`,
+        handleCodeInApp: true
+      };
+
+      // Get auth instance
+      const auth = admin.auth();
+      
+      // Generate the sign-in link
+      const link = await auth.generateSignInWithEmailLink(
+        email,
+        actionCodeSettings
+      );
+
+      // Configure SendGrid
+      sgMail.setApiKey(sendgridApiKey.value());
+
+      // Create email content in French with script to store email
+      const emailContent = `
+        <h2>Bonjour,</h2>
+        
+        <p>Nous avons reçu une demande de connexion à votre compte Cœur à Corps.</p>
+        
+        <p>Cliquez sur le bouton ci-dessous pour vous connecter :</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="javascript:void(0);" 
+             onclick="localStorage.setItem('emailForSignIn', '${email}'); window.location.href='${link}';"
+             style="background-color: #E8927C; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Se connecter
+          </a>
+        </div>
+        
+        <p>Si le bouton ne fonctionne pas, vous pouvez copier et coller ce lien dans votre navigateur :</p>
+        <p style="word-break: break-all; margin: 20px 0;">
+          <a href="${link}" style="color: #E8927C;">${link}</a>
+        </p>
+        
+        <p style="margin-top: 20px;">⚠️ Important : Avant de cliquer sur le lien, copiez votre email dans le presse-papiers : <strong>${email}</strong></p>
+        <p>Si le système vous demande votre email, collez-le depuis le presse-papiers.</p>
+        
+        <p>Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+        
+        <p>Ce lien de connexion expirera dans 1 heure.</p>
+        
+        <p style="color: #666; font-size: 14px; margin-top: 30px;">
+          Cordialement,<br>
+          L'équipe Cœur à Corps
+        </p>
+      `;
+
+      // Send the email
+      const msg = {
+        to: email,
+        from: senderEmail.value(),
+        subject: 'Lien de connexion à votre compte Cœur à Corps',
+        html: emailContent,
+      };
+
+      await sgMail.send(msg);
+
+      res.status(200).send({ message: 'Email de connexion envoyé avec succès' });
+    } catch (error: any) {
+      console.error('Error sending sign-in link:', error);
+      res.status(500).send({ 
+        error: 'Failed to send sign-in link',
+        details: error.message || 'Unknown error'
+      });
+    }
+  }
+);
+
 // Export therapy email functions
 import { onReservation, onSessionScheduled } from './triggers/sessionTriggers';
 import { processScheduledEmails } from './scheduled/processEmails';

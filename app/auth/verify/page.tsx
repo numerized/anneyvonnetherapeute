@@ -12,6 +12,8 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 export default function VerifyPage() {
   const [isVerifying, setIsVerifying] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [manualEmail, setManualEmail] = useState('');
+  const [debugInfo, setDebugInfo] = useState<any>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -19,6 +21,16 @@ export default function VerifyPage() {
       const auth = getAuth(app);
       
       try {
+        // Collect debug info
+        const debug = {
+          url: window.location.href,
+          storedEmail: window.localStorage.getItem('emailForSignIn'),
+          isEmailLink: isSignInWithEmailLink(auth, window.location.href),
+          timestamp: new Date().toISOString()
+        };
+        setDebugInfo(debug);
+        console.log('Debug info:', debug);
+
         // Check if this is a sign-in link
         if (!isSignInWithEmailLink(auth, window.location.href)) {
           setError('invalid-link');
@@ -34,6 +46,7 @@ export default function VerifyPage() {
 
         // Sign in with email link
         const result = await signInWithEmailLink(auth, email, window.location.href);
+        console.log('Sign in successful:', result);
         
         // Clear email from storage
         window.localStorage.removeItem('emailForSignIn');
@@ -61,11 +74,9 @@ export default function VerifyPage() {
           } catch (error: any) {
             console.error('Error connecting partner accounts:', error);
             toast.error(error.message || 'Erreur lors de la connexion des comptes partenaires');
-            // If partner connection fails, continue to complete profile
           }
         }
         
-        // If not an invitation or if partner connection failed, redirect to complete profile
         router.push('/auth/complete-profile');
       } catch (error: any) {
         console.error('Verification error:', error);
@@ -89,48 +100,89 @@ export default function VerifyPage() {
     verifyEmail();
   }, [router]);
 
+  const handleManualSignIn = async () => {
+    if (!manualEmail) {
+      toast.error('Veuillez entrer votre email');
+      return;
+    }
+
+    const auth = getAuth(app);
+    try {
+      const result = await signInWithEmailLink(auth, manualEmail, window.location.href);
+      console.log('Manual sign in successful:', result);
+      router.push('/auth/complete-profile');
+    } catch (error: any) {
+      console.error('Manual sign in error:', error);
+      toast.error(error.message || "Une erreur s'est produite");
+    }
+  };
+
   const getErrorMessage = () => {
     switch (error) {
       case 'invalid-link':
         return "Ce lien n'est plus valide. Veuillez demander un nouveau lien de connexion.";
       case 'no-email':
-        return "Nous n'avons pas pu retrouver votre email. Veuillez réessayer de vous connecter.";
+        return "Nous n'avons pas pu retrouver votre email. Veuillez l'entrer ci-dessous :";
       default:
         return "Une erreur s'est produite lors de la vérification. Veuillez réessayer.";
     }
   };
 
-  return (
-    <div className="relative min-h-screen grid place-items-center bg-primary-forest">
-      <div className="w-full max-w-md px-4 space-y-8">
-        <div className="text-center">
-          {isVerifying ? (
-            <>
-              <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
-                Vérification en cours...
-              </h2>
-              <p className="mt-2 text-primary-cream/80">
-                Veuillez patienter pendant que nous vérifions votre email.
-              </p>
-            </>
-          ) : error ? (
-            <>
-              <h2 className="mt-6 text-4xl font-black text-primary-cream tracking-tight">
-                Erreur de vérification
-              </h2>
-              <p className="mt-2 text-primary-cream/80">
-                {getErrorMessage()}
-              </p>
-              <div className="mt-6">
-                <Link href="/login">
-                  <Button className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream font-bold rounded-[24px]">
-                    Retour à la connexion
-                  </Button>
-                </Link>
-              </div>
-            </>
-          ) : null}
+  if (isVerifying) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-md w-full space-y-4 text-center">
+          <h1 className="text-2xl font-semibold">Vérification en cours...</h1>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mx-auto"></div>
         </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="max-w-md w-full space-y-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold text-red-600 mb-4">
+            {error === 'no-email' ? 'Email requis' : 'Erreur de vérification'}
+          </h1>
+          <p className="mb-4">{getErrorMessage()}</p>
+        </div>
+
+        {error === 'no-email' && (
+          <div className="space-y-4">
+            <input
+              type="email"
+              value={manualEmail}
+              onChange={(e) => setManualEmail(e.target.value)}
+              placeholder="Entrez votre email"
+              className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-primary"
+            />
+            <Button
+              onClick={handleManualSignIn}
+              className="w-full"
+            >
+              Continuer
+            </Button>
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <Link href="/auth" passHref>
+            <Button variant="outline" className="w-full">
+              Retour à la connexion
+            </Button>
+          </Link>
+        </div>
+
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mt-8 p-4 bg-gray-100 rounded-lg text-sm">
+            <h3 className="font-semibold mb-2">Debug Info:</h3>
+            <pre className="whitespace-pre-wrap overflow-auto">
+              {JSON.stringify(debugInfo, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   );
