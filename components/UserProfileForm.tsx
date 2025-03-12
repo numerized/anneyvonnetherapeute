@@ -15,9 +15,9 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     prenom: '',
     nom: '',
     telephone: '',
-    dateNaissance: '',
+    dateNaissance: undefined,
     email: '',
-    photo: null
+    photo: undefined
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -29,9 +29,9 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
         prenom: user.prenom || '',
         nom: user.nom || '',
         telephone: user.telephone || '',
-        dateNaissance: user.dateNaissance || '',
+        dateNaissance: user.dateNaissance || undefined,
         email: user.email || '',
-        photo: user.photo || null
+        photo: user.photo || undefined
       });
     }
   }, [user]);
@@ -40,7 +40,7 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: name === 'dateNaissance' ? (value ? new Date(value) : undefined) : value
     }));
   };
 
@@ -54,7 +54,7 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     e.stopPropagation(); // Prevent triggering the parent click handler
     setFormData(prev => ({
       ...prev,
-      photo: null
+      photo: undefined
     }));
   };
 
@@ -167,8 +167,14 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     }
   };
 
+  // Format date to YYYY-MM-DD for input
+  const formatDateForInput = (date: Date | undefined): string => {
+    if (!date) return '';
+    return date.toISOString().split('T')[0];
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Photo Upload */}
       <div className="flex justify-center mb-4">
         <div className="relative">
@@ -200,12 +206,12 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
                     Redimensionnement...
                   </div>
                 ) : (
-                  <>
+                  < >
                     <PlusCircle className="w-8 h-8 mb-1" />
                     <span className="text-xs">
                       Ajouter<br/>une photo
                     </span>
-                  </>
+                  </ >
                 )}
               </div>
             )}
@@ -275,7 +281,7 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
           id="dateNaissance"
           name="dateNaissance"
           type="date"
-          value={formData.dateNaissance || ''}
+          value={formatDateForInput(formData.dateNaissance)}
           onChange={handleChange}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream"
         />

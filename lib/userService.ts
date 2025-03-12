@@ -22,25 +22,33 @@ export interface User {
 export async function createOrUpdateUser(
   userId: string, 
   userData: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>
-) {
+): Promise<User> {
   const db = getFirestore(app);
   const userRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userRef);
 
+  const updatedData = {
+    ...userData,
+    updatedAt: new Date()
+  };
+
   if (!userDoc.exists()) {
     // Create new user
     await setDoc(userRef, {
-      ...userData,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      ...updatedData,
+      createdAt: new Date()
     });
   } else {
     // Update existing user
-    await updateDoc(userRef, {
-      ...userData,
-      updatedAt: new Date()
-    });
+    await updateDoc(userRef, updatedData);
   }
+
+  // Get and return the updated user data
+  const updatedDoc = await getDoc(userRef);
+  return {
+    id: updatedDoc.id,
+    ...updatedDoc.data()
+  } as User;
 }
 
 // Get user by ID

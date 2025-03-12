@@ -7,7 +7,7 @@ export default function PaymentSuccess() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [retrying, setRetrying] = useState(false)
-  const sessionId = searchParams.get('session_id')
+  const sessionId = searchParams?.get('session_id') ?? ''
 
   const checkSession = useCallback(async () => {
     try {

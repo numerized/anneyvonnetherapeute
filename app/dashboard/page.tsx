@@ -103,7 +103,7 @@ export default function DashboardPage() {
       
       const userData = {
         ...userProfile,
-        photo: null
+        photo: undefined
       };
       
       const updatedProfile = await createOrUpdateUser(user.uid, userData);
@@ -197,8 +197,7 @@ export default function DashboardPage() {
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         MISE À JOUR...
                       </>
-                    ) : 'MODIFIER'}
-                  </Button>
+                    ) : 'MODIFIER'}</Button>
                 </DialogTrigger>
                 <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
                   <DialogHeader>
