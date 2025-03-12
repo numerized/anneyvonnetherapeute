@@ -3,10 +3,13 @@ import { app } from '@/lib/firebase';
 
 // User interface
 export interface User {
+  id?: string;
   email: string;
   prenom?: string;
   nom?: string;
   photo?: string;
+  telephone?: string;
+  dateNaissance?: Date;
   role?: 'admin' | 'user' | 'partner';
   partnerId?: string;
   partnerEmail?: string;
@@ -19,42 +22,24 @@ export interface User {
 export async function createOrUpdateUser(
   userId: string, 
   userData: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>
-): Promise<User> {
+) {
   const db = getFirestore(app);
   const userRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userRef);
-  
-  if (userDoc.exists()) {
-    // Update existing user
-    const updatedData = {
-      ...userData,
-      updatedAt: new Date()
-    };
-    
-    await updateDoc(userRef, updatedData);
-    
-    return {
-      id: userId,
-      ...userDoc.data(),
-      ...updatedData
-    } as User;
-  } else {
+
+  if (!userDoc.exists()) {
     // Create new user
-    const newUser = {
-      id: userId,
-      email: userData.email || '',
-      prenom: userData.prenom || '',
-      nom: userData.nom || '',
-      telephone: userData.telephone || '',
-      dateNaissance: userData.dateNaissance || null,
-      photo: userData.photo || null,
+    await setDoc(userRef, {
+      ...userData,
       createdAt: new Date(),
       updatedAt: new Date()
-    };
-    
-    await setDoc(userRef, newUser);
-    
-    return newUser;
+    });
+  } else {
+    // Update existing user
+    await updateDoc(userRef, {
+      ...userData,
+      updatedAt: new Date()
+    });
   }
 }
 
@@ -63,19 +48,18 @@ export async function getUserById(userId: string): Promise<User | null> {
   const db = getFirestore(app);
   const userRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userRef);
-  
-  if (userDoc.exists()) {
-    return {
-      id: userId,
-      ...userDoc.data()
-    } as User;
+
+  if (!userDoc.exists()) {
+    return null;
   }
-  
-  return null;
+
+  return {
+    id: userDoc.id,
+    ...userDoc.data()
+  } as User;
 }
 
 // Get partner profile
 export async function getPartnerProfile(partnerId: string): Promise<User | null> {
-  if (!partnerId) return null;
   return getUserById(partnerId);
 }
