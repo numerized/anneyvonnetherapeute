@@ -34,10 +34,12 @@ export default function CompleteProfilePage() {
         // Only show form if profile doesn't exist
         setUser(firebaseUser);
         setUserData({
+          id: firebaseUser.uid,
           email: firebaseUser.email || '',
           prenom: '',
           nom: '',
           telephone: '',
+          dateNaissance: undefined,
           photo: undefined,
           role: 'user',
           createdAt: new Date(),
