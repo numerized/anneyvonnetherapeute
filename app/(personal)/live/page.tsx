@@ -1,5 +1,6 @@
 'use client'
 
+<<<<<<< Updated upstream
 import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
 import { useState } from 'react'
 
@@ -136,5 +137,71 @@ export default function LivePage() {
         </div>
       </div>
     </main>
+=======
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
+import { motion } from 'framer-motion'
+import { LiveCountdown } from '@/components/LiveCountdown'
+import { LiveChat } from '@/components/LiveChat'
+import { LiveVideo } from '@/components/LiveVideo'
+
+const LIVE_DATE = new Date('2024-03-18T19:00:00')
+
+export default function LivePage() {
+  const [timeUntilLive, setTimeUntilLive] = useState('')
+  const [isLiveActive, setIsLiveActive] = useState(false)
+  const searchParams = useSearchParams()
+  const email = searchParams?.get('email') ?? ''
+
+  useEffect(() => {
+    const updateTimeUntilLive = () => {
+      const now = new Date()
+      const days = differenceInDays(LIVE_DATE, now)
+      const hours = differenceInHours(LIVE_DATE, now) % 24
+      const minutes = differenceInMinutes(LIVE_DATE, now) % 60
+      const seconds = differenceInSeconds(LIVE_DATE, now) % 60
+
+      setTimeUntilLive(`${days}j ${hours}h ${minutes}m ${seconds}s`)
+
+      // Check if live is active (within 2 hours after start time)
+      const isActive = now >= LIVE_DATE && now <= new Date(LIVE_DATE.getTime() + 2 * 60 * 60 * 1000)
+      setIsLiveActive(isActive)
+    }
+
+    updateTimeUntilLive()
+    const interval = setInterval(updateTimeUntilLive, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-primary-forest text-primary-cream p-4">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-coral mb-4 leading-normal">
+            Live : Découvrir l'Amour Conscient
+          </h1>
+          <p className="text-primary-cream/80 mb-2">
+            Un moment unique pour explorer ensemble les dimensions profondes de l'amour et de la conscience dans nos relations.
+          </p>
+        </div>
+
+        {!isLiveActive ? (
+          <LiveCountdown timeUntilLive={timeUntilLive} />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-8"
+          >
+            <LiveVideo />
+            <LiveChat userEmail={email} />
+          </motion.div>
+        )}
+      </div>
+    </div>
+>>>>>>> Stashed changes
   )
 }
