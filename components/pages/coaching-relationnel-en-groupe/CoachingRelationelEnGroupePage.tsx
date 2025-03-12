@@ -4,14 +4,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { toast } from 'sonner'
+import { Suspense } from 'react'
 
 import { Stats } from '@/components/shared/Stats'
 import PaymentSuccess from './PaymentSuccess'
 import { PurchaseTicket } from './PurchaseTicket'
 
-export function CoachingRelationelEnGroupePage({ data, settings }: any) {
+function CoachingRelationelEnGroupeContent({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip'>('standard')
   const [isClient, setIsClient] = useState(false)
@@ -235,5 +236,17 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
           </div>
       </div>
     </main>
+  )
+}
+
+export function CoachingRelationelEnGroupePage(props: any) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+      </div>
+    }>
+      <CoachingRelationelEnGroupeContent {...props} />
+    </Suspense>
   )
 }

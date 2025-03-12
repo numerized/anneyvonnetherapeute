@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { Suspense } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { RadioGroup } from '@headlessui/react'
@@ -119,7 +120,7 @@ const results: Result[] = [
   }
 ]
 
-export default function TestDesirErosPage() {
+function TestContent() {
   const searchParams = useSearchParams()
   const email = searchParams?.get('email') ?? ''
 
@@ -328,5 +329,17 @@ export default function TestDesirErosPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function TestDesirErosPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+      </div>
+    }>
+      <TestContent />
+    </Suspense>
   )
 }
