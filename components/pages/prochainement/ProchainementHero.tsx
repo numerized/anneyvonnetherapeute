@@ -20,8 +20,8 @@ export function ProchainementHero({ hero, data, onShowPurchase }: HeroProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
-  const isCanceled = searchParams.get('canceled') === 'true'
-  const couponCode = searchParams.get('coupon')
+  const isCanceled = searchParams?.get('canceled') === 'true'
+  const couponCode = searchParams?.get('coupon') ?? undefined
   const hasDiscount = isCanceled || couponCode === 'COEUR180'
 
   useEffect(() => {

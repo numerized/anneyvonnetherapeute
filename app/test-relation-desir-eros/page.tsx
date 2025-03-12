@@ -121,7 +121,7 @@ const results: Result[] = [
 
 export default function TestDesirErosPage() {
   const searchParams = useSearchParams()
-  const email = searchParams.get('email')
+  const email = searchParams?.get('email') ?? ''
 
   const [date] = useState(() => {
     return new Date().toISOString()

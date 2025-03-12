@@ -20,9 +20,9 @@ export function CoachingRelationelEnGroupePage({ data, settings }: any) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
-  const success = searchParams.get('success')
-  const isCanceled = searchParams.get('canceled') === 'true'
-  const couponCode = searchParams.get('coupon') || undefined
+  const success = searchParams?.get('success') ?? null
+  const isCanceled = searchParams?.get('canceled') === 'true'
+  const couponCode = searchParams?.get('coupon') ?? undefined
   const currency = settings?.currency || 'EUR'
   const hasDiscount = isCanceled || couponCode === 'COEUR180'
   const capsulesSectionRef = useRef<HTMLDivElement>(null)
