@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
-export default function InvitationPage() {
+function InvitationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams?.get('token') ?? '';
@@ -182,5 +182,17 @@ export default function InvitationPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function InvitationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+      </div>
+    }>
+      <InvitationContent />
+    </Suspense>
   );
 }
