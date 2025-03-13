@@ -180,9 +180,9 @@ function TestContent() {
       <div className="bg-primary-forest text-primary-cream p-8">
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="text-center">
-            <div className="text-[16px] sm:text-[18px] md:text-[20px] font-bold text-primary-coral mb-4" role="heading" aria-level="1">
+            <h2 className="text-[24px] font-bold text-primary-coral mb-4">
               Résultats de votre test
-            </div>
+            </h2>
             <p className="text-sm sm:text-base text-primary-cream/80 mb-2">
               Ce test vous aide à mieux comprendre votre relation au désir et à l'intimité, pour un épanouissement plus conscient et authentique.
             </p>
@@ -202,9 +202,9 @@ function TestContent() {
 
           {fantasme && (
             <div className="bg-primary-cream/10 rounded-lg p-6">
-              <h3 className="text-lg sm:text-xl font-semibold text-primary-coral mb-2">
+              <h2 className="text-lg sm:text-xl font-semibold text-primary-coral mb-2">
                 Votre fantasme exprimé
-              </h3>
+              </h2>
               <p className="text-sm sm:text-base italic text-primary-cream/80">
                 "{fantasme}"
               </p>
@@ -214,9 +214,9 @@ function TestContent() {
           <div className="bg-primary-cream/10 rounded-lg p-6">
             <div className="text-center space-y-4">
               <p className="text-5xl">🎁</p>
-              <h3 className="text-lg sm:text-xl font-semibold text-primary-coral">
+              <h2 className="text-lg sm:text-xl font-semibold text-primary-coral">
                 Cadeau de bienvenue
-              </h3>
+              </h2>
               <p className="text-sm sm:text-base text-primary-cream/80">
                 Pour vous remercier de votre inscription, bénéficiez de 10% de réduction sur notre offre de lancement avec le code :
               </p>
@@ -253,9 +253,9 @@ function TestContent() {
     <div className="bg-primary-forest text-primary-cream p-8">
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center">
-          <div className="font-bold text-[24px] text-primary-coral mb-4">
+          <h2 className="text-[24px] font-bold text-primary-coral mb-4">
             Test d'Évaluation de votre Relation au Désir et à l'Éros
-          </div>
+          </h2>
           <p className="text-sm sm:text-base text-primary-cream/80 mb-2">
             Ce test est conçu pour explorer vos facilités, difficultés, désirs et rejets en matière de sexualité et d'intimité, en toute introspection et sans jugement.
           </p>
@@ -300,7 +300,7 @@ function TestContent() {
 
           {currentQuestionIndex === questions.length - 1 && (
             <div className="mt-6 space-y-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-primary-coral">Fantasme (facultatif)</h3>
+              <h2 className="text-lg sm:text-xl font-semibold text-primary-coral">Fantasme (facultatif)</h2>
               <textarea
                 value={fantasme}
                 onChange={(e) => setFantasme(e.target.value)}
