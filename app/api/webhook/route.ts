@@ -89,80 +89,7 @@ export async function POST(req: Request) {
       const hasDiscount = metadata.hasDiscount === 'true';
       const isTestCoupon = metadata.testCoupon === 'true';
 
-      // Find or create user by email
-      let userId: string | null = null;
-      try {
-        console.log('Looking for user with email:', customerEmail);
-        const usersRef = collection(db, 'users');
-        const q = query(usersRef, where('email', '==', customerEmail));
-        const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-          userId = querySnapshot.docs[0].id;
-          console.log('Found existing user with ID:', userId);
-        } else {
-          console.log('No user found with email:', customerEmail, '. Creating new user...');
-          // Create a new user document
-          const newUserDoc = await addDoc(collection(db, 'users'), {
-            email: customerEmail,
-            name: session.customer_details?.name || '',
-            phone: session.customer_details?.phone || '',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          });
-          userId = newUserDoc.id;
-          console.log('Created new user with ID:', userId);
-        }
-      } catch (error) {
-        console.error('Error finding/creating user:', error);
-        throw error; // Rethrow the error to be handled by the outer try-catch
-      }
-
-      // Store purchase data in Firestore
-      try {
-        console.log('Attempting to store purchase data in Firestore');
-        const purchaseData = {
-          // Payment Information
-          paymentId: session.id,
-          paymentIntentId: session.payment_intent,
-          amount: session.amount_total,
-          amountFormatted: finalPrice,
-          currency: session.currency?.toUpperCase(),
-          paymentStatus: session.payment_status,
-          paymentMethod: session.payment_method_types?.[0],
-          createdAt: new Date(session.created * 1000),
-          
-          // Customer Information
-          customerEmail: customerEmail,
-          customerName: session.customer_details?.name,
-          customerPhone: session.customer_details?.phone,
-          billingAddress: session.customer_details?.address,
-          userId: userId, // Add userId if found
-          
-          // Product Information
-          productType: metadata.productType,
-          ticketType: metadata.ticketType,
-          
-          // Discount Information
-          hasDiscount: hasDiscount,
-          discountAmount: hasDiscount ? 10 : 0,
-          isTestCoupon: isTestCoupon,
-          
-          // Additional Metadata
-          metadata: metadata,
-          
-          // System Information
-          environment: process.env.NODE_ENV,
-          timestamp: new Date()
-        };
-
-        const docRef = await addDoc(collection(db, 'purchases'), purchaseData);
-        console.log('Purchase data stored successfully in Firestore, document ID:', docRef.id);
-      } catch (error) {
-        console.error('Error storing purchase data:', error);
-      }
-
-      // Create calendar links for webinar
+      // Create calendar links for webinar first (needed for email)
       const eventDates = [
         { date: '2025-02-02', startTime: '19:00', endTime: '21:30' },
         { date: '2025-02-09', startTime: '19:00', endTime: '21:30' },
@@ -188,9 +115,9 @@ export async function POST(req: Request) {
         googleLink: createGoogleCalendarLink(date, startTime, endTime)
       }));
 
-      // Send email
+      // Send confirmation email first, before any Firebase operations
       try {
-        console.log('Preparing to send email for product type:', metadata.productType);
+        console.log('Preparing to send confirmation email...');
         const emailTemplate = metadata.productType === 'prochainement'
           ? createCoachingEmailTemplate(customerEmail, finalPrice, currency, isTestCoupon ? -1 : (hasDiscount ? 10 : 0))
           : metadata.productType === 'coaching-relationnel-en-groupe'
@@ -224,7 +151,88 @@ export async function POST(req: Request) {
         console.log('Confirmation email sent successfully to:', customerEmail);
       } catch (error) {
         console.error('Error sending confirmation email:', error);
+        throw error; // Important to notify if email fails
       }
+
+      // After email is sent, try Firebase operations
+      try {
+        // Find or create user by email
+        let userId: string | null = null;
+        try {
+          console.log('Looking for user with email:', customerEmail);
+          const usersRef = collection(db, 'users');
+          const q = query(usersRef, where('email', '==', customerEmail));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty) {
+            userId = querySnapshot.docs[0].id;
+            console.log('Found existing user with ID:', userId);
+          } else {
+            console.log('No user found with email:', customerEmail, '. Creating new user...');
+            // Create a new user document
+            const newUserDoc = await addDoc(collection(db, 'users'), {
+              email: customerEmail,
+              name: session.customer_details?.name || '',
+              phone: session.customer_details?.phone || '',
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            });
+            userId = newUserDoc.id;
+            console.log('Created new user with ID:', userId);
+          }
+        } catch (error) {
+          console.error('Error finding/creating user:', error);
+          throw error; // Rethrow the error to be handled by the outer try-catch
+        }
+
+        // Store purchase data in Firestore
+        try {
+          console.log('Attempting to store purchase data in Firestore');
+          const purchaseData = {
+            // Payment Information
+            paymentId: session.id,
+            paymentIntentId: session.payment_intent,
+            amount: session.amount_total,
+            amountFormatted: finalPrice,
+            currency: session.currency?.toUpperCase(),
+            paymentStatus: session.payment_status,
+            paymentMethod: session.payment_method_types?.[0],
+            createdAt: new Date(session.created * 1000),
+            
+            // Customer Information
+            customerEmail: customerEmail,
+            customerName: session.customer_details?.name,
+            customerPhone: session.customer_details?.phone,
+            billingAddress: session.customer_details?.address,
+            userId: userId, // Add userId if found
+            
+            // Product Information
+            productType: metadata.productType,
+            ticketType: metadata.ticketType,
+            
+            // Discount Information
+            hasDiscount: hasDiscount,
+            discountAmount: hasDiscount ? 10 : 0,
+            isTestCoupon: isTestCoupon,
+            
+            // Additional Metadata
+            metadata: metadata,
+            
+            // System Information
+            environment: process.env.NODE_ENV,
+            timestamp: new Date()
+          };
+
+          const docRef = await addDoc(collection(db, 'purchases'), purchaseData);
+          console.log('Purchase data stored successfully in Firestore, document ID:', docRef.id);
+        } catch (error) {
+          console.error('Error storing purchase data:', error);
+        }
+      } catch (error) {
+        console.error('Error with Firebase operations:', error);
+      }
+
+      return NextResponse.json({ received: true });
     }
 
     return NextResponse.json({ received: true });
