@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import sgMail from '@sendgrid/mail';
 import { createWebinarEmailTemplate, createCoachingEmailTemplate, createGroupCoachingEmailTemplate } from '@/lib/emailTemplates';
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { app } from '@/lib/firebase';
 
 // Initialize Firestore
@@ -35,11 +35,6 @@ export async function POST(req: Request) {
     const headersList = await headers();
     const signature = headersList.get('stripe-signature');
 
-    console.log('Webhook Headers:', {
-      signature,
-      contentType: headersList.get('content-type'),
-    });
-
     if (!signature) {
       console.error('No signature found in request');
       return NextResponse.json(
@@ -51,13 +46,6 @@ export async function POST(req: Request) {
     let event: Stripe.Event;
 
     try {
-      // Log the raw data being used for verification
-      console.log('Verifying webhook with:', {
-        signatureHeader: signature,
-        secretLength: webhookSecret.length,
-        bodyLength: text.length,
-      });
-
       event = stripe.webhooks.constructEvent(
         text,
         signature,
@@ -77,7 +65,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Handle the event
     if (event.type === 'checkout.session.completed') {
       console.log('Processing completed checkout session');
       const session = event.data.object as Stripe.Checkout.Session;
@@ -102,10 +89,40 @@ export async function POST(req: Request) {
       const hasDiscount = metadata.hasDiscount === 'true';
       const isTestCoupon = metadata.testCoupon === 'true';
 
+      // Find or create user by email
+      let userId: string | null = null;
+      try {
+        console.log('Looking for user with email:', customerEmail);
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, where('email', '==', customerEmail));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          userId = querySnapshot.docs[0].id;
+          console.log('Found existing user with ID:', userId);
+        } else {
+          console.log('No user found with email:', customerEmail, '. Creating new user...');
+          // Create a new user document
+          const newUserDoc = await addDoc(collection(db, 'users'), {
+            email: customerEmail,
+            name: session.customer_details?.name || '',
+            phone: session.customer_details?.phone || '',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+          userId = newUserDoc.id;
+          console.log('Created new user with ID:', userId);
+        }
+      } catch (error) {
+        console.error('Error finding/creating user:', error);
+        throw error; // Rethrow the error to be handled by the outer try-catch
+      }
+
       // Store purchase data in Firestore
       try {
         console.log('Attempting to store purchase data in Firestore');
         const purchaseData = {
+          // Payment Information
           paymentId: session.id,
           paymentIntentId: session.payment_intent,
           amount: session.amount_total,
@@ -114,16 +131,27 @@ export async function POST(req: Request) {
           paymentStatus: session.payment_status,
           paymentMethod: session.payment_method_types?.[0],
           createdAt: new Date(session.created * 1000),
+          
+          // Customer Information
           customerEmail: customerEmail,
           customerName: session.customer_details?.name,
           customerPhone: session.customer_details?.phone,
           billingAddress: session.customer_details?.address,
+          userId: userId, // Add userId if found
+          
+          // Product Information
           productType: metadata.productType,
           ticketType: metadata.ticketType,
+          
+          // Discount Information
           hasDiscount: hasDiscount,
           discountAmount: hasDiscount ? 10 : 0,
           isTestCoupon: isTestCoupon,
+          
+          // Additional Metadata
           metadata: metadata,
+          
+          // System Information
           environment: process.env.NODE_ENV,
           timestamp: new Date()
         };
