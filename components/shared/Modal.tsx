@@ -9,9 +9,10 @@ interface ModalProps {
   subtitle?: string
   children: React.ReactNode
   fullscreen?: boolean
+  hideFooter?: boolean
 }
 
-export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen }: ModalProps) {
+export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen, hideFooter }: ModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -39,8 +40,8 @@ export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen }
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel 
-                className={`w-full transform bg-primary-forest/90 backdrop-blur-lg text-left align-middle shadow-xl transition-all
-                  ${fullscreen ? 'h-screen' : 'max-w-2xl rounded-[24px] max-h-[90vh]'}`}
+                className={`w-full transform bg-primary-forest/90 backdrop-blur-lg text-left align-middle shadow-xl transition-all overflow-hidden
+                  ${fullscreen ? 'h-screen' : 'max-w-2xl rounded-[24px] h-[90vh]'}`}
               >
                 <div className="flex flex-col h-full">
                   {/* Header */}
@@ -68,19 +69,21 @@ export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen }
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-h-0 px-12 py-6 overflow-hidden">
+                  <div className="flex-1 overflow-y-auto">
                     {children}
                   </div>
 
                   {/* Footer */}
-                  <div className="flex-none px-12 py-4 border-t border-primary-cream/10">
-                    <button
-                      onClick={onClose}
-                      className="w-full rounded-full bg-primary-coral hover:bg-primary-coral/90 py-3 text-primary-cream font-semibold transition-colors"
-                    >
-                      Fermer
-                    </button>
-                  </div>
+                  {!hideFooter && (
+                    <div className="flex-none px-12 py-4 border-t border-primary-cream/10">
+                      <button
+                        onClick={onClose}
+                        className="w-full rounded-full bg-primary-coral hover:bg-primary-coral/90 py-3 text-primary-cream font-semibold transition-colors"
+                      >
+                        Fermer
+                      </button>
+                    </div>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

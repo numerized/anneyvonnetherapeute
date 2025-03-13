@@ -1,13 +1,14 @@
-import Link from 'next/link'
+import { Suspense } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [retrying, setRetrying] = useState(false)
-  const sessionId = searchParams.get('session_id')
+  const sessionId = searchParams?.get('session_id') ?? ''
 
   const checkSession = useCallback(async () => {
     try {
@@ -124,5 +125,18 @@ export default function PaymentSuccess() {
         Retour
       </Link>
     </div>
+  )
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[50vh] flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-coral mb-4"></div>
+        <p className="text-primary-cream/80">Chargement...</p>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   )
 }
