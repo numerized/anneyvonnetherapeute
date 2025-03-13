@@ -96,7 +96,7 @@ const options = [
 
 function QuelAmoureuxPage() {
   const searchParams = useSearchParams()
-  const email = searchParams.get('email')
+  const email = searchParams?.get('email') ?? ''
 
   const [date] = useState(() => {
     const today = new Date()

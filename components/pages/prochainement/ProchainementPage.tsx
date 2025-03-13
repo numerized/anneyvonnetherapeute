@@ -20,9 +20,9 @@ export function ProchainementPage({ data, settings }: any) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
-  const success = searchParams.get('success')
-  const isCanceled = searchParams.get('canceled') === 'true'
-  const couponCode = searchParams.get('coupon')
+  const success = searchParams?.get('success') ?? null
+  const isCanceled = searchParams?.get('canceled') === 'true'
+  const couponCode = searchParams?.get('coupon') ?? undefined
   const currency = settings?.currency || 'EUR'
   const hasDiscount = isCanceled || couponCode === 'COEUR180'
   const capsulesSectionRef = useRef<HTMLDivElement>(null)
@@ -130,7 +130,6 @@ export function ProchainementPage({ data, settings }: any) {
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
               <div className="text-center mb-12">
-                <br /><br />
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   PROCHAIN LIVE
                 </h2>

@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { Modal } from '@/components/shared/Modal'
 import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
 import { Stats } from '@/components/shared/Stats'
+import TestDesirErosPage from '@/app/test-relation-desir-eros/page'
 
 export default function LivePage() {
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -14,7 +15,7 @@ export default function LivePage() {
   const [timeUntilLive, setTimeUntilLive] = useState('')
   const [isLiveActive, setIsLiveActive] = useState(false)
   const searchParams = useSearchParams()
-  const email = searchParams.get('email')
+  const email = searchParams?.get('email') ?? ''
 
   useEffect(() => {
     const updateTimeUntilLive = () => {
@@ -143,7 +144,7 @@ export default function LivePage() {
                         </div>
                         <button
                           type="submit"
-                          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
+                          className="w-full bg-primary-coral hover:bg-primary-coral/90 text-primary-cream py-3 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
                         >
                           S'inscrire au live
                         </button>
@@ -175,16 +176,16 @@ export default function LivePage() {
               )}
             </div>
 
-            {/* Test de l'amoureux Column */}
+            {/* Test de l'Eros Column */}
             <div className="bg-primary-forest rounded-[32px] p-4 md:p-8 shadow-xl h-full flex flex-col">
               <div className="mb-6">
                 <h2 className="text-xl font-medium text-primary-coral mb-2">
-                  Test de l'amoureux
+                  Test de l'Eros
                 </h2>
               </div>
               <div className="prose prose-invert max-w-none text-primary-cream/80 flex-1">
                 <p>
-                  Découvrez votre profil relationnel à travers notre test unique. Ce questionnaire vous aidera à mieux comprendre vos schémas amoureux et à identifier les domaines de croissance potentielle dans vos relations.
+                  Explorez votre relation au désir et à la sensualité à travers notre test unique. Ce questionnaire vous permettra de mieux comprendre votre rapport à l'érotisme et d'identifier les chemins vers une vie intime plus épanouie.
                 </p>
               </div>
               <div className="flex justify-end mt-auto pt-4">
@@ -347,26 +348,14 @@ export default function LivePage() {
         </div>
       )}
 
-      {/* Test Modal */}
+      {/* Modal for Test de l'Eros */}
       <Modal
         isOpen={isTestModalOpen}
         onClose={() => setIsTestModalOpen(false)}
-        fullscreen
+        hideFooter
       >
-        <div className="w-full h-screen p-0">
-          <iframe
-            src="/quel-amoureuse-ou-quel-amoureux-es-tu"
-            className="w-full h-full"
-            style={{ border: 'none' }}
-          />
-          <div className="fixed bottom-0 left-0 right-0 bg-primary-forest/95 backdrop-blur-sm p-4 flex justify-center">
-            <button
-              onClick={() => setIsTestModalOpen(false)}
-              className="bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors shadow-lg"
-            >
-              Fermer le test
-            </button>
-          </div>
+        <div className="h-[calc(90vh-8rem)]">
+          <TestDesirErosPage />
         </div>
       </Modal>
     </main>

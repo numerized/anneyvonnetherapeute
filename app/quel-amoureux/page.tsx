@@ -1,101 +1,16 @@
 'use client'
 
-import { useState, Suspense } from 'react'
-import { motion } from 'framer-motion'
+import { Suspense } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { RadioGroup } from '@headlessui/react'
-
-interface Question {
-  id: string
-  text: string
-  required?: boolean
-}
-
-const questions: Question[] = [
-  {
-    id: 'communication',
-    text: `Dans tes relations amoureuses, tu es capable de converser avec assurance, de partager ses pensées, ses silence, ses émotions et ses blagues sans problème.`,
-    required: true
-  },
-  {
-    id: 'empathy',
-    text: `Dans une relation amoureuse, tu sais exprimer ton amour et ton soutien d'une manière qui résonne avec les émotions et les besoins de l'autre, même sans que ceux-ci soient explicitement exprimés.`
-  },
-  {
-    id: 'respect',
-    text: `Tu respectes l'opinion de l'autre, même quand il pense que la pizza ananas est un crime, et tu sais propager des énergies positives comme si c'était ton job à plein temps.`
-  },
-  {
-    id: 'confidence',
-    text: `Tu as autant confiance en ton/ta partenaire qu'en tes compétences pour commander au restaurant, fixer un ciné, offrir un livre ou organiser un week-end en amoureux.`
-  },
-  {
-    id: 'intuition',
-    text: `Dans une relation amoureuse, tu as ce sixième sens qui permet de comprendre exactement ce que ton/ta partenaire ressent, même sans mots.`
-  },
-  {
-    id: 'acceptance',
-    text: `Tu sais respecter et accepter ton/ta partenaire dans ses différences, même lorsque cela te gène ou te limite.`
-  },
-  {
-    id: 'balance',
-    text: `Tu sais trouver un terrain d'entente entre une série, un chill et une soirée avec les amis, sans perdre de vue ce qui compte vraiment pour l'autre.`
-  },
-  {
-    id: 'support',
-    text: `Tu es le plus grand fan de ton partenaire, tu sais le soutenir dans ses rêves et ses objectifs, même s'il veut devenir chanteur de karaoké professionnel`
-  },
-  {
-    id: 'stability',
-    text: `Tu sais gérer les hauts et les bas de la relation sans exploser comme un smartphone avec une batterie en fin de vie.`
-  },
-  {
-    id: 'quality_time',
-    text: `Tu fais en sorte de passer du temps de qualité ensemble, même si c'est juste pour se faire des câlins ou entrer dans de grandes discussions.`
-  },
-  {
-    id: 'connection',
-    text: `Tu peux créer une connexion profonde qui rendrait jaloux les super-héros avec des pouvoirs télépathiques.`
-  },
-  {
-    id: 'listening',
-    text: `Tu là pour offrir un soutien inconditionnel et une écoute attentive lorsque ton/ta partenaire en a besoin.`
-  },
-  {
-    id: 'adaptability',
-    text: `Tu es aussi flexible qu'un acrobate, prêt à t'adapter aux changements et à traverser les coups durs sans te plaindre.`
-  },
-  {
-    id: 'trust_intuition',
-    text: `Tu t'es toujours fié.e à ton intuition et à tes ressentis pour choisir tes partenaires et tes histoires d'amour.`
-  },
-  {
-    id: 'sexuality',
-    text: `Tu te permets de vivre ta sexualité librement et tu acceptes facilement les demandes sexuelles/érotique de ton/ta partenaire.`
-  },
-  {
-    id: 'forgiveness',
-    text: `Tu sais pardonner et laisser aller les erreurs passées, ce qui permet à la relation de progresser et de se développer au fil du temps.`
-  },
-  {
-    id: 'encouragement',
-    text: `Tu es un partenaire solidaire et encourageant, qui soutient les rêves et les aspirations de l'autre.`
-  },
-  {
-    id: 'initiative',
-    text: `Tu es prêt à prendre des initiatives pour résoudre les problèmes et surmonter les obstacles qui se présentent dans la relation.`
-  }
-]
-
-const options = [
-  { id: 'often', label: 'Le plus souvent' },
-  { id: 'partially', label: 'Partiellement' },
-  { id: 'rarely', label: 'Très peu' }
-]
+import { CheckIcon } from '@heroicons/react/20/solid'
+import Link from 'next/link'
+import { questions, options, Question, Option } from '@/lib/questionnaire'
 
 function QuelAmoureuxContent() {
   const searchParams = useSearchParams()
-  const email = searchParams.get('email')
+  const email = searchParams?.get('email') ?? ''
 
   const [date] = useState(() => {
     const today = new Date()
@@ -209,26 +124,11 @@ function QuelAmoureuxContent() {
   )
 }
 
-function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" {...props}>
-      <circle cx={12} cy={12} r={12} fill="currentColor" opacity="0.2" />
-      <path
-        d="M7 13l3 3 7-7"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-export default function Page() {
+export default function QuelAmoureuxPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-primary-forest p-4 md:p-8 flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
       </div>
     }>
       <QuelAmoureuxContent />
