@@ -62,7 +62,9 @@ export function OffersPanel({ userId, partnerId, onOffersLoaded }: OffersPanelPr
         >
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="text-xl font-medium text-primary-coral mb-1">{offer.offerName}</h3>
+              <h3 className="text-xl font-medium text-primary-coral mb-1">
+                {offer.status === 'active' ? (offer.offerName || offer.title || 'COACHING RELATIONNEL 7/7') : offer.offerName || offer.title ||  'COACHING RELATIONNEL 7/7'}
+              </h3>
               <p className="text-sm text-primary-cream/80">{offer.description}</p>
             </div>
             <span className={`

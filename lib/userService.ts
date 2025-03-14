@@ -27,8 +27,16 @@ export async function createOrUpdateUser(
   const userRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userRef);
 
+  // Remove undefined values from userData
+  const cleanedData = Object.entries(userData).reduce((acc, [key, value]) => {
+    if (value !== undefined) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
   const updatedData = {
-    ...userData,
+    ...cleanedData,
     updatedAt: new Date()
   };
 

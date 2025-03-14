@@ -28,7 +28,11 @@ export default function DashboardPage() {
     questionnaire: false,
     amoureux: false,
     eros: false,
-    appointment: false
+    appointment: false,
+    partner_evaluation: false,
+    partner_questionnaire: false,
+    partner_amoureux: false,
+    partner_eros: false
   });
   const [offersCount, setOffersCount] = useState(0);
   const router = useRouter();
@@ -44,12 +48,31 @@ export default function DashboardPage() {
           if (!user) return;
           
           try {
+            console.log('Fetching user profile for ID:', user.uid);
             const profileData = await getUserById(user.uid);
+            console.log('User profile data:', profileData);
             setUserProfile(profileData);
 
             if (profileData?.partnerId) {
+              console.log('Fetching partner profile for ID:', profileData.partnerId);
               const partnerData = await getPartnerProfile(profileData.partnerId);
-              setPartnerProfile(partnerData);
+              console.log('Partner data:', partnerData);
+              if (partnerData) {
+                setPartnerProfile(partnerData);
+              } else {
+                console.log('No partner data found');
+                // If no partner data found but we have partner email, create a minimal partner profile
+                if (profileData.partnerEmail) {
+                  setPartnerProfile({
+                    id: profileData.partnerId,
+                    email: profileData.partnerEmail,
+                    role: 'partner'
+                  });
+                }
+              }
+            } else {
+              // Clear partner profile if no partner ID
+              setPartnerProfile(null);
             }
           } catch (error) {
             console.error('Error fetching user profile:', error);
@@ -74,13 +97,30 @@ export default function DashboardPage() {
     try {
       setIsUpdatingProfile(true);
       
+      // Clean up the form data to remove undefined values
+      const cleanedFormData = Object.entries(formData).reduce((acc, [key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>);
+      
       const userData = {
-        ...formData,
-        email: user.email || formData.email || ''
+        ...cleanedFormData,
+        email: user.email || cleanedFormData.email || ''
       };
       
       const updatedProfile = await createOrUpdateUser(user.uid, userData);
       setUserProfile(updatedProfile);
+
+      // If partner email changed, refetch partner profile
+      if (updatedProfile.partnerId && (!partnerProfile || partnerProfile.id !== updatedProfile.partnerId)) {
+        const partnerData = await getPartnerProfile(updatedProfile.partnerId);
+        if (partnerData) {
+          setPartnerProfile(partnerData);
+        }
+      }
+
       setIsEditingProfile(false);
       toast.success('Profil mis à jour avec succès');
     } catch (error) {
@@ -119,11 +159,31 @@ export default function DashboardPage() {
     }
   };
 
-  const toggleCheckbox = (id: string) => {
+  const toggleCheckbox = (key: string) => {
     setCheckedItems(prev => ({
       ...prev,
-      [id]: !prev[id]
+      [key]: !prev[key]
     }));
+
+    // If this is a partner step, check if all partner steps are completed
+    if (key.startsWith('partner_') && !checkedItems[key]) {
+      const allPartnerStepsCompleted = ['evaluation', 'amoureux', 'eros']
+        .every(step => checkedItems[`partner_${step}`] || step === key.replace('partner_', ''));
+      
+      if (allPartnerStepsCompleted) {
+        toast.success('Votre partenaire a complété toutes les étapes !');
+      }
+    }
+    
+    // If this is a user step, check if all user steps are completed
+    if (!key.startsWith('partner_') && !checkedItems[key]) {
+      const allUserStepsCompleted = ['evaluation', 'amoureux', 'eros']
+        .every(step => checkedItems[step] || step === key);
+      
+      if (allUserStepsCompleted) {
+        toast.success('Vous avez complété toutes vos étapes !');
+      }
+    }
   };
 
   if (loading) {
@@ -236,12 +296,19 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex-1">
-                {userProfile?.partnerId ? (
+                {loading ? (
+                  <div className="animate-pulse">
+                    <div className="h-5 w-32 bg-primary-cream/10 rounded mb-2"></div>
+                    <div className="h-4 w-24 bg-primary-cream/10 rounded"></div>
+                  </div>
+                ) : userProfile?.partnerId ? (
                   <>
                     <h3 className="text-lg font-medium text-primary-cream">
-                      {partnerProfile?.prenom} {partnerProfile?.nom}
+                      {partnerProfile?.prenom ? `${partnerProfile.prenom} ${partnerProfile.nom || ''}` : 'Partenaire connecté'}
                     </h3>
-                    <p className="text-sm text-primary-cream/60">{partnerProfile?.email}</p>
+                    <p className="text-sm text-primary-cream/60">
+                      {partnerProfile?.email || userProfile.partnerEmail || 'Email non disponible'}
+                    </p>
                   </>
                 ) : (
                   <>
@@ -277,68 +344,123 @@ export default function DashboardPage() {
 
         {/* Checklist Section */}
         <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">Votre parcours</h2>
-          <div className="space-y-4">
-            <Link href="/evaluation-handicap-relationnel" className="block">
-              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('handicap'); }} className="cursor-pointer">
-                  {checkedItems.handicap ? (
-                    <CheckSquare className="w-5 h-5 text-primary-coral" />
-                  ) : (
-                    <Square className="w-5 h-5 text-primary-cream/60" />
-                  )}
+          <h2 className="text-xl font-semibold text-primary-coral mb-6 text-center">Votre parcours</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left Column - Your Steps */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-primary-cream mb-3">Vos étapes</h3>
+              <Link href="/evaluation-handicap-relationnel" className="block">
+                <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                  <div onClick={(e) => { e.preventDefault(); toggleCheckbox('evaluation'); }} className="cursor-pointer">
+                    {checkedItems.evaluation ? (
+                      <CheckSquare className="w-5 h-5 text-primary-coral" />
+                    ) : (
+                      <Square className="w-5 h-5 text-primary-cream/60" />
+                    )}
+                  </div>
+                  <span className={`${checkedItems.evaluation ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                    Évaluation du handicap relationnel
+                  </span>
                 </div>
-                <span className={`${checkedItems.handicap ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                  Évaluation du handicap relationnel
-                </span>
-              </div>
-            </Link>
+              </Link>
 
-            <Link href="/quel-amoureuse-ou-quel-amoureux-es-tu" className="block">
-              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('amoureux'); }} className="cursor-pointer">
-                  {checkedItems.amoureux ? (
-                    <CheckSquare className="w-5 h-5 text-primary-coral" />
-                  ) : (
-                    <Square className="w-5 h-5 text-primary-cream/60" />
-                  )}
+              <Link href="/quel-amoureuse-ou-quel-amoureux-es-tu" className="block">
+                <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                  <div onClick={(e) => { e.preventDefault(); toggleCheckbox('amoureux'); }} className="cursor-pointer">
+                    {checkedItems.amoureux ? (
+                      <CheckSquare className="w-5 h-5 text-primary-coral" />
+                    ) : (
+                      <Square className="w-5 h-5 text-primary-cream/60" />
+                    )}
+                  </div>
+                  <span className={`${checkedItems.amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                    Quel(le) amoureux(se) êtes-vous ?
+                  </span>
                 </div>
-                <span className={`${checkedItems.amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                  Quel amoureuse ou amoureux êtes-vous ?
-                </span>
-              </div>
-            </Link>
+              </Link>
 
-            <Link href="/test-relation-desir-eros" className="block">
-              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('eros'); }} className="cursor-pointer">
-                  {checkedItems.eros ? (
-                    <CheckSquare className="w-5 h-5 text-primary-coral" />
-                  ) : (
-                    <Square className="w-5 h-5 text-primary-cream/60" />
-                  )}
+              <Link href="/eros-test" className="block">
+                <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                  <div onClick={(e) => { e.preventDefault(); toggleCheckbox('eros'); }} className="cursor-pointer">
+                    {checkedItems.eros ? (
+                      <CheckSquare className="w-5 h-5 text-primary-coral" />
+                    ) : (
+                      <Square className="w-5 h-5 text-primary-cream/60" />
+                    )}
+                  </div>
+                  <span className={`${checkedItems.eros ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                    Test Eros
+                  </span>
                 </div>
-                <span className={`${checkedItems.eros ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                  Test d'Évaluation de votre Relation au Désir et à l'Éros
-                </span>
-              </div>
-            </Link>
+              </Link>
+            </div>
 
-            <Link href="/questionnaire" className="block">
-              <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                <div onClick={(e) => { e.preventDefault(); toggleCheckbox('questionnaire'); }} className="cursor-pointer">
-                  {checkedItems.questionnaire ? (
-                    <CheckSquare className="w-5 h-5 text-primary-coral" />
-                  ) : (
-                    <Square className="w-5 h-5 text-primary-cream/60" />
-                  )}
+            {/* Right Column - Partner Steps */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-primary-cream mb-3">
+                {userProfile?.partnerId ? 'Les étapes de votre partenaire' : (
+                  <span className="text-primary-cream/60">En attente de votre partenaire</span>
+                )}
+              </h3>
+              {userProfile?.partnerId ? (
+                <>
+                  <Link href="/evaluation-handicap-relationnel" className="block">
+                    <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                      <div onClick={(e) => { e.preventDefault(); toggleCheckbox('partner_evaluation'); }} className="cursor-pointer">
+                        {checkedItems.partner_evaluation ? (
+                          <CheckSquare className="w-5 h-5 text-primary-coral" />
+                        ) : (
+                          <Square className="w-5 h-5 text-primary-cream/60" />
+                        )}
+                      </div>
+                      <span className={`${checkedItems.partner_evaluation ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                        Évaluation du handicap relationnel
+                      </span>
+                    </div>
+                  </Link>
+
+                  <Link href="/quel-amoureuse-ou-quel-amoureux-es-tu" className="block">
+                    <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                      <div onClick={(e) => { e.preventDefault(); toggleCheckbox('partner_amoureux'); }} className="cursor-pointer">
+                        {checkedItems.partner_amoureux ? (
+                          <CheckSquare className="w-5 h-5 text-primary-coral" />
+                        ) : (
+                          <Square className="w-5 h-5 text-primary-cream/60" />
+                        )}
+                      </div>
+                      <span className={`${checkedItems.partner_amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                        Quel(le) amoureux(se) êtes-vous ?
+                      </span>
+                    </div>
+                  </Link>
+
+                  <Link href="/eros-test" className="block">
+                    <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
+                      <div onClick={(e) => { e.preventDefault(); toggleCheckbox('partner_eros'); }} className="cursor-pointer">
+                        {checkedItems.partner_eros ? (
+                          <CheckSquare className="w-5 h-5 text-primary-coral" />
+                        ) : (
+                          <Square className="w-5 h-5 text-primary-cream/60" />
+                        )}
+                      </div>
+                      <span className={`${checkedItems.partner_eros ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
+                        Test Eros
+                      </span>
+                    </div>
+                  </Link>
+                </>
+              ) : (
+                <div className="text-center py-8 text-primary-cream/40 italic">
+                  Invitez votre partenaire pour commencer votre parcours ensemble
                 </div>
-                <span className={`${checkedItems.questionnaire ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                  Questionnaire de couple
-                </span>
-              </div>
-            </Link>
+              )}
+            </div>
+          </div>
 
+          {/* Common Steps - Below both columns */}
+          <div className="mt-8 pt-6 border-t border-primary-cream/10">
+            <h3 className="text-lg font-medium text-primary-cream mb-3">Étapes communes</h3>
             <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
               <div onClick={() => toggleCheckbox('appointment')} className="cursor-pointer">
                 {checkedItems.appointment ? (
@@ -348,7 +470,7 @@ export default function DashboardPage() {
                 )}
               </div>
               <span className={`${checkedItems.appointment ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                Prendre rendez-vous pour la première session
+                Prendre rendez-vous pour votre premier entretien
               </span>
             </div>
           </div>
