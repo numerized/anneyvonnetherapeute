@@ -13,6 +13,7 @@ import { getUserById, createOrUpdateUser, getPartnerProfile, User as UserProfile
 import { UserProfileForm } from '@/components/UserProfileForm';
 import { InvitePartnerForm } from '@/components/InvitePartnerForm';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { OffersPanel } from '@/components/OffersPanel';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -29,6 +30,7 @@ export default function DashboardPage() {
     eros: false,
     appointment: false
   });
+  const [offersCount, setOffersCount] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -351,6 +353,20 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Offers Panel */}
+        {user && (
+          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">
+            <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">
+              {offersCount === 1 ? 'Votre Offre' : 'Vos Offres'}
+            </h2>
+            <OffersPanel 
+              userId={user.uid} 
+              partnerId={userProfile?.partnerId} 
+              onOffersLoaded={(offers) => setOffersCount(offers.length)}
+            />
+          </div>
+        )}
 
         {/* Resources Section */}
         <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
