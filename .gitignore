@@ -55,3 +55,4 @@ clickup/node_modules/
 
 # Firestore migration scripts and sensitive data
 /firestore-migration/
+firebaseServiceAccount/
