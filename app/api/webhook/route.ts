@@ -3,11 +3,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import sgMail from '@sendgrid/mail';
 import { createWebinarEmailTemplate, createCoachingEmailTemplate, createGroupCoachingEmailTemplate } from '@/lib/emailTemplates';
-import { getFirestore, collection, addDoc, query, where, getDocs } from "firebase/firestore";
-import { app } from '@/lib/firebase';
-
-// Initialize Firestore
-const db = getFirestore(app);
+import { adminDb } from '@/lib/firebase-admin';
 
 // Initialize Stripe
 const stripe = process.env.STRIPE_SECRET_KEY 
@@ -156,13 +152,15 @@ export async function POST(req: Request) {
 
       // After email is sent, try Firebase operations
       try {
+        console.log('Starting Firebase operations...');
+        
         // Find or create user by email
         let userId: string | null = null;
         try {
           console.log('Looking for user with email:', customerEmail);
-          const usersRef = collection(db, 'users');
-          const q = query(usersRef, where('email', '==', customerEmail));
-          const querySnapshot = await getDocs(q);
+          const usersRef = adminDb.collection('users');
+          const q = usersRef.where('email', '==', customerEmail);
+          const querySnapshot = await q.get();
           
           if (!querySnapshot.empty) {
             userId = querySnapshot.docs[0].id;
@@ -170,7 +168,7 @@ export async function POST(req: Request) {
           } else {
             console.log('No user found with email:', customerEmail, '. Creating new user...');
             // Create a new user document
-            const newUserDoc = await addDoc(collection(db, 'users'), {
+            const newUserDoc = await adminDb.collection('users').add({
               email: customerEmail,
               name: session.customer_details?.name || '',
               phone: session.customer_details?.phone || '',
@@ -182,7 +180,7 @@ export async function POST(req: Request) {
           }
         } catch (error) {
           console.error('Error finding/creating user:', error);
-          throw error; // Rethrow the error to be handled by the outer try-catch
+          // Continue with purchase data, even if user operations fail
         }
 
         // Store purchase data in Firestore
@@ -223,13 +221,15 @@ export async function POST(req: Request) {
             timestamp: new Date()
           };
 
-          const docRef = await addDoc(collection(db, 'purchases'), purchaseData);
+          const docRef = await adminDb.collection('purchases').add(purchaseData);
           console.log('Purchase data stored successfully in Firestore, document ID:', docRef.id);
         } catch (error) {
           console.error('Error storing purchase data:', error);
+          // Don't throw here, as we've already sent the email
         }
       } catch (error) {
         console.error('Error with Firebase operations:', error);
+        // Don't throw here, as we've already sent the email
       }
 
       return NextResponse.json({ received: true });
