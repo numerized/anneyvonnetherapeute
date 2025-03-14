@@ -40,10 +40,6 @@ export const afterCouple1Email: EmailTemplate = {
       Je vous invite également à vous inscrire aux Capsules disponibles sur www.coeur-a-corps.org pour approfondir cette réflexion.
     </p>
 
-    <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-      Si vous souhaitez approfondir votre démarche et explorer de nouvelles pistes pour épanouir votre couple, le Cycle 2 de la "Parenthèse Thérapeutique" est fait pour vous !
-    </p>
-
     ${data.cycle2Url ? createButton(data.cycle2Url, 'En savoir plus') : ''}
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
