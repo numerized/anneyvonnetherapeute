@@ -385,7 +385,9 @@ export default function DashboardPage() {
   };
 
   // Therapy Journey Logic
-  const isSessionAvailable = (event: TherapyJourneyEvent) => {
+  const isSessionAvailable = (event: TherapyJourneyEvent): boolean => {
+    if (event.type !== 'session') return false;
+    
     // First check if there are any invalid dates in previous sessions
     if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
       return false;
@@ -509,24 +511,24 @@ export default function DashboardPage() {
     if (sessionDates[event.id]) {
       // If we're rescheduling an invalid date, let it proceed
       if (invalidDates.has(event.id)) {
-        console.log(`Manually rescheduling invalid session: ${event.id}`);
-        
-        // If the session has a reschedule URL, use it
-        if (userProfile?.sessionDetails?.[event.id]?.rescheduleUrl) {
-          window.open(userProfile.sessionDetails[event.id].rescheduleUrl, '_blank');
-          return;
-        }
-        
-        // Otherwise, proceed with normal scheduling to create a new appointment
-        // We'll handle the old one later (should be cancelled or replaced)
+        console.log(`Rescheduling invalid session: ${event.id}`);
       } else {
-        // If the date is valid, show the normal error
-        toast.error("Cette séance est déjà programmée. Veuillez l'annuler avant d'en réserver une nouvelle.");
-        return;
+        console.log(`Rescheduling valid session: ${event.id} with reschedule URL`);
+        // For valid dates, verify that we have a reschedule URL
+        if (!userProfile?.sessionDetails?.[event.id]?.rescheduleUrl) {
+          console.warn(`No reschedule URL found for session ${event.id}, using test URL`);
+          // We're using a fixed test URL for demonstration purposes
+          // In production, you would want to get this from Firestore
+        }
       }
+      
+      // For all rescheduling, always use the modal with the existing session data
+      setSelectedSession(event);
+      setIsCalendlyModalOpen(true);
+      return;
     }
     
-    // Normal availability check
+    // Normal availability check for new bookings
     if (!isSessionAvailable(event)) {
       const reason = getSessionUnavailableReason(event);
       toast.error(reason || "Veuillez d'abord compléter les étapes précédentes");
@@ -801,27 +803,13 @@ export default function DashboardPage() {
                       
                       {/* Add edit icon for valid dates */}
                       {!invalidDates.has(event.id) && (
-                        <>
-                          {userProfile?.sessionDetails?.[event.id]?.rescheduleUrl ? (
-                            <a
-                              href={userProfile.sessionDetails[event.id].rescheduleUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
-                              title="Reprogrammer cette séance"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </a>
-                          ) : (
-                            <button
-                              onClick={() => handleSessionClick(event)}
-                              className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
-                              title="Reprogrammer cette séance"
-                            >
-                              <Edit className="w-3 h-3" />
-                            </button>
-                          )}
-                        </>
+                        <button
+                          onClick={() => handleSessionClick(event)}
+                          className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
+                          title="Reprogrammer cette séance"
+                        >
+                          <Edit className="w-3 h-3" />
+                        </button>
                       )}
                     </div>
                   )}
@@ -845,29 +833,15 @@ export default function DashboardPage() {
               {/* Show reschedule button only for invalid dates */}
               {invalidDates.has(event.id) && (
                 <div className="ml-8 mt-2">
-                  {userProfile?.sessionDetails?.[event.id]?.rescheduleUrl ? (
-                    <a
-                      href={userProfile.sessionDetails[event.id].rescheduleUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-xs h-8 px-4 py-2 rounded-md
-                        border border-red-400/40 text-red-300 bg-transparent
-                        hover:bg-red-400/10 hover:text-red-200 transition-colors"
-                    >
-                      <Edit className="w-3 h-3 mr-2" />
-                      Reprogrammer cette séance
-                    </a>
-                  ) : (
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="text-xs h-8 border-red-400/40 text-red-300 hover:bg-red-400/10 hover:text-red-200"
-                      onClick={() => handleSessionClick(event)}
-                    >
-                      <Edit className="w-3 h-3 mr-2" />
-                      Reprogrammer cette séance
-                    </Button>
-                  )}
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="text-xs h-8 border-red-400/40 text-red-300 hover:bg-red-400/10 hover:text-red-200"
+                    onClick={() => handleSessionClick(event)}
+                  >
+                    <Edit className="w-3 h-3 mr-2" />
+                    Reprogrammer cette séance
+                  </Button>
                 </div>
               )}
             </div>
@@ -1035,6 +1009,42 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Dialogs and Modals */}
+        <Dialog open={isInviting} onOpenChange={setIsInviting}>
+          <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
+            <DialogHeader>
+              <DialogTitle className="text-primary-coral">Inviter votre partenaire</DialogTitle>
+              <DialogDescription className="text-primary-cream/60">
+                Envoyez une invitation à votre partenaire pour commencer votre parcours ensemble
+              </DialogDescription>
+            </DialogHeader>
+            <InvitePartnerForm onSubmit={handleInvitePartner} onClose={() => setIsInviting(false)} />
+          </DialogContent>
+        </Dialog>
+
+        {selectedSession && (
+          <CalendlyModal
+            isOpen={isCalendlyModalOpen}
+            onClose={() => {
+              setIsCalendlyModalOpen(false);
+              setSelectedSession(null);
+            }}
+            sessionType={selectedSession?.sessionType || 'initial'}
+            onAppointmentScheduled={handleAppointmentScheduled}
+            minDate={getSessionDateConstraints(selectedSession).minDate}
+            maxDate={getSessionDateConstraints(selectedSession).maxDate}
+            userEmail={userProfile?.email}
+            rescheduleUrl={
+              // If this is a rescheduling of an existing session
+              sessionDates[selectedSession.id] 
+                ? userProfile?.sessionDetails?.[selectedSession.id]?.rescheduleUrl || 
+                  // For testing, use a fixed URL if no URL exists in Firestore
+                  "https://calendly.com/reschedulings/b30042ac-e4bf-4cd7-89f3-c8115cb00039"
+                : undefined
+            }
+          />
+        )}
+
         {/* Therapy Journey Section */}
         <div className="bg-[rgb(247_237_226_/0.1)] rounded-lg shadow-lg p-6 mt-6">
           <h2 className="text-2xl font-semibold mb-1 text-primary-coral">Votre parcours thérapeutique</h2>
@@ -1070,43 +1080,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        {/* Dialogs and Modals */}
-        <Dialog open={isInviting} onOpenChange={setIsInviting}>
-          <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
-            <DialogHeader>
-              <DialogTitle className="text-primary-coral">Inviter votre partenaire</DialogTitle>
-              <DialogDescription className="text-primary-cream/60">
-                Envoyez une invitation à votre partenaire pour commencer votre parcours ensemble
-              </DialogDescription>
-            </DialogHeader>
-            <InvitePartnerForm onSubmit={handleInvitePartner} onClose={() => setIsInviting(false)} />
-          </DialogContent>
-        </Dialog>
-
-        {/* Calendly Modal */}
-        {selectedSession && (
-          <>
-            {/* Debug log for minDate */}
-            {(() => {
-              const { minDate } = getSessionDateConstraints(selectedSession);
-              console.log(`Passing minDate to CalendlyModal for ${selectedSession.id}:`, minDate.toISOString());
-              return null;
-            })()}
-            <CalendlyModal
-              isOpen={isCalendlyModalOpen}
-              onClose={() => {
-                setIsCalendlyModalOpen(false);
-                setSelectedSession(null);
-              }}
-              sessionType={selectedSession?.sessionType || 'initial'}
-              onAppointmentScheduled={handleAppointmentScheduled}
-              minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}
-              maxDate={selectedSession ? getSessionDateConstraints(selectedSession).maxDate : undefined}
-              userEmail={userProfile?.email}
-            />
-          </>
-        )}
       </div>
     </div>
   );

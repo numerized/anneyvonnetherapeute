@@ -25,6 +25,7 @@ export interface CalendlyModalProps {
   maxDate?: Date;
   userEmail?: string;
   onAppointmentScheduled?: (eventData: any) => void;
+  rescheduleUrl?: string; // Add reschedule URL for rescheduling sessions
 }
 
 // Define session titles for different session types
@@ -52,7 +53,8 @@ export function CalendlyModal({
   minDate,
   maxDate,
   userEmail,
-  onAppointmentScheduled
+  onAppointmentScheduled,
+  rescheduleUrl
 }: CalendlyModalProps) {
   const [isCalendlyScriptLoaded, setIsCalendlyScriptLoaded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -117,7 +119,37 @@ export function CalendlyModal({
     // Clear any previous widgets
     container.innerHTML = '';
 
-    // Build URL parameters for date constraints
+    // If we have a reschedule URL, use that directly
+    if (rescheduleUrl) {
+      console.log(`Using reschedule URL in modal: ${rescheduleUrl}`);
+      
+      // Handle reschedule URL by redirecting the iframe to it
+      const iframe = document.createElement('iframe');
+      iframe.src = rescheduleUrl;
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      iframe.style.minHeight = isMobile ? '100vh' : '700px';
+      
+      // Add event listener for iframe messages for reschedule completion
+      window.addEventListener('message', (e) => {
+        if (e.data.event === 'calendly.event_rescheduled') {
+          console.log('Calendly event rescheduled:', e.data);
+          if (onAppointmentScheduled) {
+            onAppointmentScheduled({
+              ...e.data,
+              eventUri: e.data.payload?.event?.uri || e.data.payload?.invitee?.scheduled_event?.uri
+            });
+          }
+          onClose();
+        }
+      });
+      
+      container.appendChild(iframe);
+      return;
+    }
+    
+    // Otherwise, build URL parameters for date constraints for a new booking
     let dateParams = '';
     if (minDate) {
       console.log(`Modal received minDate: ${minDate.toISOString()}`);
@@ -165,7 +197,7 @@ export function CalendlyModal({
 
     // Add event listener for scheduling using the window.message event
     window.addEventListener('message', handleCalendlyMessage);
-  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage, sessionType, isMobile]);
+  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage, sessionType, isMobile, rescheduleUrl, onAppointmentScheduled, onClose]);
 
   // Initialize Calendly when modal is opened
   useEffect(() => {
