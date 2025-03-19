@@ -20,7 +20,7 @@ import { coupleTherapyJourney, getPhasePartnerEvents, TherapyJourneyEvent } from
 import { createOrUpdateUser, createOrUpdateUserWithFields, getPartnerProfile, getUserById, User as UserProfile, SessionDetails } from '@/lib/userService';
 import { getCalendlyEventDetails, extractEventIdFromUri } from '@/lib/calendly';
 import { RecentlyScheduledEvent } from '@/components/dashboard/RecentlyScheduledEvent';
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, query, Timestamp, updateDoc, where, increment, deleteDoc, orderBy, limit } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getFirestore, onSnapshot, query, Timestamp, updateDoc, where, increment, deleteDoc, orderBy, limit } from 'firebase/firestore';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -282,24 +282,37 @@ export default function DashboardPage() {
 
   // Therapy Journey Logic
   const isSessionAvailable = (event: TherapyJourneyEvent) => {
+    // Special case for first individual session for partner 1
+    // Make it available immediately after initial session is completed OR has a date set
+    if (event.id === 'partner1_session_1') {
+      return isSessionCompleted('initial_session') || !!sessionDates['initial_session'];
+    }
+    
     if (!event.dependsOn) return true;
     
     if (Array.isArray(event.dependsOn)) {
-      return event.dependsOn.every(dep => isSessionCompleted(dep));
+      return event.dependsOn.every(dep => isSessionCompleted(dep) || !!sessionDates[dep]);
     }
     
-    return isSessionCompleted(event.dependsOn);
+    return isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn];
   };
 
   const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
     const minDate = new Date();
     
-    if (event.dependsOn && event.daysOffset) {
+    // For the first individual session for partner 1, set minimum date to 4 weeks after initial session
+    if (event.id === 'partner1_session_1' && sessionDates['initial_session']) {
+      const initialSessionDate = new Date(sessionDates['initial_session']);
+      minDate.setTime(initialSessionDate.getTime());
+      minDate.setDate(minDate.getDate() + 28); // 4 weeks = 28 days
+      console.log(`Setting min date for partner1_session_1 to 4 weeks after initial session: ${minDate.toISOString()}`);
+    } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
       
       if (sessionDates[dependentId]) {
         const dependentDate = new Date(sessionDates[dependentId]);
-        minDate.setDate(dependentDate.getDate() + event.daysOffset);
+        minDate.setTime(dependentDate.getTime());
+        minDate.setDate(minDate.getDate() + event.daysOffset);
       }
     }
 
@@ -334,6 +347,8 @@ export default function DashboardPage() {
     console.log('Full event data from Calendly:', JSON.stringify(eventData, null, 2));
     
     if (selectedSession) {
+      console.log(`Handling appointment scheduled for session: ${selectedSession.id} (${selectedSession.title})`);
+      
       // Set session date from Calendly event
       let scheduledDate: Date | null = null;
       let eventUri: string | null = null;
@@ -382,6 +397,7 @@ export default function DashboardPage() {
         // Extract and format date information
         scheduledDate = new Date(eventDetails.startTime);
         const dateString = scheduledDate.toISOString();
+        console.log(`Scheduled date: ${dateString}`);
         
         // Create session details object with all available information
         const sessionDetails: SessionDetails = {
@@ -487,11 +503,31 @@ export default function DashboardPage() {
   const renderJourneyPhase = (phase: 'initial' | 'individual' | 'final', partner?: 'partner1' | 'partner2') => {
     const events = getPhasePartnerEvents(phase, partner);
 
+    // Debug info
+    if (phase === 'initial') {
+      console.log('Initial session date:', sessionDates['initial_session']);
+      console.log('Initial session completed:', isSessionCompleted('initial_session'));
+      console.log('Partner1 session 1 date:', sessionDates['partner1_session_1']);
+      console.log('Partner1 session 1 available:', isSessionAvailable(
+        events.find(e => e.id === 'partner1_session_1') || events[0]
+      ));
+    }
+
     return (
       <div className="space-y-3">
         {events.map((event) => {
           const isComplete = isSessionCompleted(event.id);
           const isAvailable = isSessionAvailable(event);
+          
+          // Log availability for debugging
+          if (['initial_session', 'partner1_session_1'].includes(event.id)) {
+            console.log(`Event ${event.id} availability:`, { 
+              isComplete, 
+              isAvailable, 
+              hasDate: !!sessionDates[event.id],
+              dateValue: sessionDates[event.id]
+            });
+          }
           
           // Format date if exists
           let dateStr = '';
@@ -515,7 +551,20 @@ export default function DashboardPage() {
           if (event.type !== 'session') return null;
           
           // Determine if this event should have a booking button (all events except partner2 sessions)
-          const showBookingButton = phase === 'initial' || phase === 'final' || (phase === 'individual' && partner === 'partner1');
+          const showBookingButton = (phase === 'initial' || phase === 'final' || 
+                                    (phase === 'individual' && partner === 'partner1'));
+          
+          // Debug the information for partner1_session_1
+          if (event.id === 'partner1_session_1') {
+            console.log('partner1_session_1 details:', {
+              phase,
+              partner,
+              showBookingButton,
+              isComplete,
+              isAvailable,
+              hasDate: !!sessionDates[event.id]
+            });
+          }
           
           return (
             <div key={event.id} className="flex flex-col gap-2">
@@ -553,7 +602,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               
-              {showBookingButton && !isComplete && isAvailable && (
+              {showBookingButton && !isComplete && isAvailable && !sessionDates[event.id] && (
                 <div className="ml-8">
                   <Button 
                     variant="outline" 
@@ -799,13 +848,33 @@ export default function DashboardPage() {
               setIsCalendlyModalOpen(false);
               setSelectedSession(null);
             }}
-            sessionType={selectedSession.sessionType!}
+            sessionType={selectedSession?.sessionType || 'individual_male_1'}
             onEventScheduled={handleAppointmentScheduled}
+            minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}
+            maxDate={selectedSession ? getSessionDateConstraints(selectedSession).maxDate : undefined}
             userEmail={userProfile?.email}
-            {...getSessionDateConstraints(selectedSession)}
           />
         )}
       </div>
     </div>
   );
 }
+
+// Get events for a specific phase, optionally filtered by partner
+const getPhasePartnerEvents = (phase: 'initial' | 'individual' | 'final', partner?: 'partner1' | 'partner2') => {
+  const events = coupleTherapyJourney.filter(event => {
+    const matchesPhase = event.phase === phase;
+    const matchesPartner = !partner || event.partner === partner;
+    return matchesPhase && matchesPartner;
+  });
+  
+  // Log events when debugging individual phase for partner1
+  if (phase === 'individual' && partner === 'partner1') {
+    console.log('Individual partner1 events:', events.map(e => ({ id: e.id, title: e.title })));
+  }
+  
+  // Add debug logging here
+  console.log(`Filtered events for phase ${phase} and partner ${partner}:`, events);
+  
+  return events;
+};

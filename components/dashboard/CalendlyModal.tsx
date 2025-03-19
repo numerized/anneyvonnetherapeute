@@ -50,7 +50,7 @@ const SESSION_TYPE_MAPPING: Record<SessionType, string> = {
 };
 
 // Calendly username (direct integration approach)
-const CALENDLY_USERNAME = process.env.NEXT_PUBLIC_CALENDLY_USERNAME || 'numerized'; // Update this with your Calendly username
+const CALENDLY_USERNAME = process.env.NEXT_PUBLIC_CALENDLY_USERNAME || 'numerized-ara'; // Update this with your Calendly username
 
 export function CalendlyModal({ 
   isOpen,
@@ -156,21 +156,42 @@ export function CalendlyModal({
     // Build URL parameters for date constraints
     let dateParams = '';
     if (minDate) {
-      dateParams += `&min_start_time=${encodeURIComponent(minDate.toISOString())}`;
+      console.log(`Original minDate: ${minDate.toISOString()}`);
+      
+      // Make sure the date is at least today
+      const today = new Date();
+      const effectiveMinDate = minDate < today ? today : minDate;
+      
+      // Format date as YYYY-MM-DD
+      const minDateFormatted = format(effectiveMinDate, 'yyyy-MM-dd');
+      dateParams += `&min_start_time=${encodeURIComponent(minDateFormatted)}`;
+      console.log(`Setting min date: ${minDateFormatted}`);
     }
+    
     if (maxDate) {
-      dateParams += `&max_start_time=${encodeURIComponent(maxDate.toISOString())}`;
+      console.log(`Original maxDate: ${maxDate.toISOString()}`);
+      
+      // Format date as YYYY-MM-DD
+      const maxDateFormatted = format(maxDate, 'yyyy-MM-dd');
+      dateParams += `&max_start_time=${encodeURIComponent(maxDateFormatted)}`;
+      console.log(`Setting max date: ${maxDateFormatted}`);
     }
+    
     if (userEmail) {
       dateParams += `&email=${encodeURIComponent(userEmail)}`;
     }
 
     // Configure Calendly for this session type
-    const eventTypeSlug = "1h"; // Always use 1h event type
+    const eventTypeSlug = "1h";
+    console.log(`Using Calendly event type: ${eventTypeSlug} for session type: ${sessionType}`);
+
+    // Full Calendly URL with parameters
+    const calendlyUrl = `https://calendly.com/${CALENDLY_USERNAME}/${eventTypeSlug}?hide_landing_page_details=1&hide_gdpr_banner=1${dateParams}`;
+    console.log(`Initializing Calendly with URL: ${calendlyUrl}`);
 
     // Initialize Calendly inline widget
     window.Calendly.initInlineWidget({
-      url: `https://calendly.com/${CALENDLY_USERNAME}/${eventTypeSlug}?hide_landing_page_details=1&hide_gdpr_banner=1${dateParams}`,
+      url: calendlyUrl,
       parentElement: container,
       prefill: userEmail ? { email: userEmail } : undefined,
       utm: {
@@ -183,7 +204,7 @@ export function CalendlyModal({
 
     // Add event listener for scheduling using the window.message event
     window.addEventListener('message', handleCalendlyMessage);
-  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage]);
+  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage, sessionType]);
 
   // Load Calendly script
   useEffect(() => {
