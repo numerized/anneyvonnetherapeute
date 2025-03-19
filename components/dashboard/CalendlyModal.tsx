@@ -132,21 +132,72 @@ export function CalendlyModal({
       iframe.style.minHeight = isMobile ? '100vh' : '700px';
       
       // Add event listener for iframe messages for reschedule completion
-      window.addEventListener('message', (e) => {
-        if (e.data.event === 'calendly.event_rescheduled') {
-          console.log('Calendly event rescheduled:', e.data);
+      const handleRescheduleMessage = (e: MessageEvent) => {
+        // Check for both event types - rescheduled and scheduled
+        // Some Calendly integrations return different event types
+        if (e.data.event === 'calendly.event_rescheduled' || 
+            e.data.event === 'calendly.event_scheduled') {
+          
+          console.log('Calendly event triggered:', e.data.event, e.data);
+          
+          // Extract the event URI from the payload
+          let eventUri = '';
+          
+          if (e.data.payload?.event?.uri) {
+            eventUri = e.data.payload.event.uri;
+          } else if (e.data.payload?.invitee?.scheduled_event?.uri) {
+            eventUri = e.data.payload.invitee.scheduled_event.uri;
+          } else if (e.data.payload?.invitee?.uri) {
+            // Try to extract from invitee URI
+            const inviteeUriParts = e.data.payload.invitee.uri.split('/');
+            const inviteeId = inviteeUriParts[inviteeUriParts.length - 1];
+            eventUri = inviteeId; // We'll format this later
+          }
+          
+          if (!eventUri) {
+            console.error('Could not extract event URI from Calendly response:', e.data);
+          } else {
+            console.log('Extracted event URI:', eventUri);
+          }
+          
           if (onAppointmentScheduled) {
+            // Make sure we're passing all the necessary information for Firestore update
             onAppointmentScheduled({
               ...e.data,
-              eventUri: e.data.payload?.event?.uri || e.data.payload?.invitee?.scheduled_event?.uri
+              eventUri: eventUri,
+              isReschedule: e.data.event === 'calendly.event_rescheduled',
+              newTime: new Date().toISOString()
             });
           }
-          onClose();
+          
+          // Close the modal with slight delay to allow for visual feedback
+          setTimeout(() => {
+            onClose();
+          }, 500);
         }
-      });
+      };
+      
+      window.addEventListener('message', handleRescheduleMessage);
+      
+      // Save a reference to the event listener for cleanup
+      const cleanupRef = { handleRescheduleMessage };
+      
+      // Add cleanup when component unmounts or when iframe changes
+      const originalAppendChild = container.appendChild;
+      container.appendChild = function(child) {
+        const result = originalAppendChild.call(this, child);
+        child.addEventListener('load', () => {
+          console.log('Iframe loaded, adding event listener for reschedule messages');
+        });
+        return result;
+      };
       
       container.appendChild(iframe);
-      return;
+      
+      // Return cleanup function
+      return () => {
+        window.removeEventListener('message', cleanupRef.handleRescheduleMessage);
+      };
     }
     
     // Otherwise, build URL parameters for date constraints for a new booking

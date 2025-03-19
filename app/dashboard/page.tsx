@@ -544,117 +544,132 @@ export default function DashboardPage() {
     setIsCalendlyModalOpen(true);
   };
 
-  const handleAppointmentScheduled = async (eventData?: any) => {
-    // If no event data or no session selected, do nothing
-    if (!eventData || !selectedSession) {
-      console.error('No event data or session selected');
+  const handleAppointmentScheduled = async (eventData: any) => {
+    if (!selectedSession || !user) {
+      console.error("No session selected or user not authenticated");
       return;
     }
-    
+
     try {
-      // Extract event URI from event data
-      const eventUri = eventData.eventUri;
+      console.log('Appointment scheduled/rescheduled. Event data:', eventData);
+      
+      // Extract the Calendly event URI
+      const eventUri = eventData.eventUri || eventData.payload?.event?.uri || "";
       
       if (!eventUri) {
-        console.error('No event URI found in event data');
+        console.error("No event URI found in Calendly response");
+        toast.error("Une erreur s'est produite lors de la programmation");
+        setIsCalendlyModalOpen(false);
         return;
       }
       
-      console.log('Appointment scheduled:', eventData);
-      console.log('Event URI:', eventUri);
+      // Check if this is a rescheduling
+      const isRescheduling = !!eventData.isReschedule || eventData.event === 'calendly.event_rescheduled';
+      console.log(`This is ${isRescheduling ? 'a rescheduling' : 'a new appointment'}`);
       
-      // Get event details from Calendly API
-      const eventDetails = await getCalendlyEventDetails(eventUri);
-      if (!eventDetails) {
-        console.error('Failed to fetch event details from Calendly API');
-        return;
-      }
-      console.log('Event details:', eventDetails);
+      // Parse the event URI to ensure it's properly formatted
+      let formattedUri = eventUri;
       
-      if (eventDetails.startTime) {
-        // Convert ISO date to Date object
-        const dateString = eventDetails.startTime;
-        
-        // Check if the date is valid (at least 4 weeks after the previous session)
-        const isValid = isDateValid(selectedSession.id, dateString);
-        
-        // If not valid, add to invalid dates set
-        if (!isValid) {
-          setInvalidDates(prev => new Set([...prev, selectedSession.id]));
-          console.warn(`Warning: The session date for ${selectedSession.id} is less than 4 weeks after its previous session`);
-        } else {
-          // If valid and previously invalid, remove from invalid dates
-          if (invalidDates.has(selectedSession.id)) {
-            const newInvalidDates = new Set(invalidDates);
-            newInvalidDates.delete(selectedSession.id);
-            setInvalidDates(newInvalidDates);
-          }
-        }
-
-        // Create session details object
-        const sessionDetails: SessionDetails = {
-          date: dateString,
-          formattedDateTime: eventDetails.formattedDateTime,
-          location: eventDetails.location,
-          calendarEvent: eventUri,
-          sessionType: selectedSession.sessionType || 'unknown',
-          status: 'scheduled',
-        };
-        
-        // Add invitee information if available
-        if (eventDetails.invitee) {
-          sessionDetails.inviteeEmail = eventDetails.invitee.email;
-          sessionDetails.inviteeName = eventDetails.invitee.name;
-          
-          // Add cancellation and reschedule URLs if available
-          if (eventDetails.invitee.cancel_url) {
-            sessionDetails.cancellationUrl = eventDetails.invitee.cancel_url;
-          }
-          
-          if (eventDetails.invitee.reschedule_url) {
-            sessionDetails.rescheduleUrl = eventDetails.invitee.reschedule_url;
-            console.log(`Saved reschedule URL for ${selectedSession.id}:`, eventDetails.invitee.reschedule_url);
-          } else {
-            console.warn(`No reschedule URL found for ${selectedSession.id} in event details:`, eventDetails);
-          }
-        }
-        
-        // Update session dates in state
-        setSessionDates(prev => ({ 
-          ...prev, 
-          [selectedSession.id]: dateString
-        }));
-        
-        // Show a success message with the scheduled date
-        toast.success(`Séance programmée pour le ${eventDetails.formattedDateTime}`);
-        
-        // Store the session details
-        console.log('Storing session details:', sessionDetails);
-        
-        // Update Firestore with session details
-        if (user) {
-          const db = getFirestore(app);
-          const userRef = doc(db, 'users', user.uid);
-          
-          // Update the user document with session details
-          await updateDoc(userRef, {
-            [`sessionDetails.${selectedSession.id}`]: sessionDetails,
-            [`sessionDates.${selectedSession.id}`]: dateString,
-            updatedAt: Timestamp.now()
-          });
-          
-          console.log(`Updated Firestore with session details for ${selectedSession.id}`);
-          
-          // Check if this is the initial session and emit a notification event
-          if (selectedSession.id === 'initial_session') {
-            // Additional processing for initial session
-            console.log('Initial session booked - emitting notification');
-          }
-        }
+      // If we only have the ID and not the full URI, construct it
+      if (!eventUri.includes('https://')) {
+        formattedUri = `https://api.calendly.com/scheduled_events/${eventUri}`;
       }
+      
+      console.log(`Using event URI: ${formattedUri}`);
+      
+      // Get the event details from our API
+      const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("API error:", errorData);
+        throw new Error(`Failed to fetch event details: ${response.status} - ${errorData.error || 'Unknown error'}`);
+      }
+      
+      const eventDetails = await response.json();
+      console.log('Fetched event details:', eventDetails);
+      
+      if (!eventDetails.data) {
+        throw new Error("No event data returned from API");
+      }
+      
+      // Format date for display
+      const dateObj = new Date(eventDetails.data.start_time);
+      const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      }).format(dateObj);
+      
+      // Format to capitalize first letter of day name
+      const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+      
+      // Get a reference to the user's document
+      const db = getFirestore(app);
+      const userDocRef = doc(db, 'users', user.uid);
+      
+      // Create the session details object with the new data
+      const sessionDetails = {
+        date: formattedDate,
+        eventUri: formattedUri,
+        formattedDate: formattedDateCapitalized,
+        startTime: eventDetails.data.start_time,
+        endTime: eventDetails.data.end_time,
+        location: eventDetails.data.location,
+        cancelUrl: eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url,
+        rescheduleUrl: eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url,
+        lastUpdated: new Date().toISOString(),
+        isRescheduled: isRescheduling,
+      };
+      
+      // Update Firestore with the new session details
+      await updateDoc(userDocRef, {
+        [`sessionDetails.${selectedSession.id}`]: sessionDetails,
+        [`sessionDates.${selectedSession.id}`]: eventDetails.data.start_time,
+        updatedAt: Timestamp.now()
+      });
+      
+      // Alert the user
+      if (isRescheduling) {
+        toast.success(`Votre séance a été reprogrammée pour le ${formattedDateCapitalized}`);
+      } else {
+        toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
+      }
+      
+      console.log(`Updated session ${selectedSession.id} in Firestore with new date: ${formattedDate}`);
+      
+      // Close the modal
+      setIsCalendlyModalOpen(false);
+      
+      // Update session dates in state to reflect the new date
+      setSessionDates(prev => ({
+        ...prev,
+        [selectedSession.id]: eventDetails.data.start_time
+      }));
+      
+      // Check if the date is valid, and update invalidDates set if needed
+      const isValid = isDateValid(selectedSession.id, eventDetails.data.start_time);
+      if (!isValid) {
+        setInvalidDates(prev => new Set([...prev, selectedSession.id]));
+      } else if (invalidDates.has(selectedSession.id)) {
+        const newInvalidDates = new Set(invalidDates);
+        newInvalidDates.delete(selectedSession.id);
+        setInvalidDates(newInvalidDates);
+      }
+      
+      // Reload the page to refresh all data after a delay
+      if (typeof window !== 'undefined') {
+        toast.info("Actualisation de la page...");
+        setTimeout(() => window.location.reload(), 1500);
+      }
+      
     } catch (error) {
-      console.error('Error handling appointment scheduling:', error);
-      toast.error('Une erreur est survenue lors de la programmation du rendez-vous.');
+      console.error("Error handling appointment scheduling:", error);
+      toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+      setIsCalendlyModalOpen(false);
     }
   };
 
