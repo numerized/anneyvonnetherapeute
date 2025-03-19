@@ -36,9 +36,9 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
   {
     id: 'initial_session',
     title: 'Première Séance de Couple',
-    description: 'Séance initiale pour comprendre votre situation et vos objectifs',
+    description: 'Séance initiale pour le couple',
     type: 'session',
-    sessionType: 'initial_couple',
+    sessionType: 'initial',
     partner: 'both',
     phase: 'initial'
   },
@@ -285,12 +285,12 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
   {
     id: 'final_session',
     title: 'Séance Finale de Couple',
-    description: 'Dernière séance de couple pour intégrer les apprentissages et planifier l\'avenir',
+    description: 'Séance finale pour le couple',
     type: 'session',
-    sessionType: 'final_couple',
+    sessionType: 'final',
     partner: 'both',
     dependsOn: ['partner1_session_3', 'partner2_session_3'],
-    daysOffset: 7,
+    daysOffset: 14,
     phase: 'final'
   },
   {
