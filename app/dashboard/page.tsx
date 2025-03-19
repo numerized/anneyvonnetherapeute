@@ -100,7 +100,7 @@ export default function DashboardPage() {
       if (userProfile.completedSessions && userProfile.completedSessions.length > 0) {
         setCompletedSessions(new Set(userProfile.completedSessions));
       }
-      
+
       // Initialize session dates
       if (userProfile.sessionDates) {
         setSessionDates(userProfile.sessionDates);
@@ -111,40 +111,40 @@ export default function DashboardPage() {
   // Periodically check if any scheduled sessions should now be marked as completed
   useEffect(() => {
     if (!userProfile || !sessionDates) return;
-    
+
     // Function to update completed sessions in the database
     const updateCompletedSessionsInDatabase = async (newlyCompletedSessions: string[]) => {
       if (newlyCompletedSessions.length === 0) return;
-      
+
       // Current completed sessions from the database
       const currentCompletedSessions = userProfile.completedSessions || [];
-      
+
       // Combine existing and new completed sessions, removing duplicates
       const allCompletedSessions = [...new Set([...currentCompletedSessions, ...newlyCompletedSessions])];
-      
+
       // Update the user profile in the database
       try {
         const updatedProfile = {
           ...userProfile,
           completedSessions: allCompletedSessions
         };
-        
+
         await createOrUpdateUser(updatedProfile);
-        
+
         // Update local state
         setCompletedSessions(new Set(allCompletedSessions));
-        
+
         console.log('Updated completed sessions in database:', allCompletedSessions);
       } catch (error) {
         console.error('Error updating completed sessions in database:', error);
       }
     };
-    
+
     // Check all scheduled sessions to see if any should be marked as completed
     const checkCompletedSessions = () => {
       const currentTime = new Date();
       const newlyCompletedSessions: string[] = [];
-      
+
       // Get all therapy journey events
       const allEvents = [
         ...getPhasePartnerEvents('initial'),
@@ -152,22 +152,22 @@ export default function DashboardPage() {
         ...getPhasePartnerEvents('individual', 'partner2'),
         ...getPhasePartnerEvents('final')
       ];
-      
+
       // Check each event with a scheduled date
       allEvents.forEach(event => {
         const sessionId = event.id;
         const sessionDate = sessionDates[sessionId];
-        
+
         // Skip if session is already marked as completed or doesn't have a date
         if (completedSessions.has(sessionId) || !sessionDate) return;
-        
+
         try {
           const sessionDateTime = new Date(sessionDate);
-          
+
           // Add 1 hour to the session date
           const sessionEndTime = new Date(sessionDateTime);
           sessionEndTime.setHours(sessionEndTime.getHours() + 1);
-          
+
           // If the session end time has passed, mark as completed
           if (sessionEndTime <= currentTime) {
             newlyCompletedSessions.push(sessionId);
@@ -176,20 +176,20 @@ export default function DashboardPage() {
           console.error(`Error checking completion for session ${sessionId}:`, error);
         }
       });
-      
+
       // Update database if there are newly completed sessions
       if (newlyCompletedSessions.length > 0) {
         console.log('Found sessions to mark as completed:', newlyCompletedSessions);
         updateCompletedSessionsInDatabase(newlyCompletedSessions);
       }
     };
-    
+
     // Initial check
     checkCompletedSessions();
-    
+
     // Set interval to check every minute (adjust as needed)
     const intervalId = setInterval(checkCompletedSessions, 60000);
-    
+
     // Clean up interval on unmount
     return () => clearInterval(intervalId);
   }, [userProfile, sessionDates, completedSessions]);
@@ -231,8 +231,8 @@ export default function DashboardPage() {
 
       // Debug log with detailed info
       console.log(`[DATE CHECK] ${sessionId}: ${new Date(dateStr).toLocaleDateString('fr-FR')} ` +
-                  `vs previous ${previousSessionId}: ${new Date(previousSessionDateStr).toLocaleDateString('fr-FR')} ` + 
-                  `= ${diffDays} days apart`);
+        `vs previous ${previousSessionId}: ${new Date(previousSessionDateStr).toLocaleDateString('fr-FR')} ` +
+        `= ${diffDays} days apart`);
 
       // Check if the difference is at least 28 days (4 weeks)
       return diffDays >= 28;
@@ -247,7 +247,7 @@ export default function DashboardPage() {
     console.log('------- DEBUG SESSION DATES -------');
     console.log('All session dates:', sessionDates);
     console.log('Invalid dates set:', Array.from(invalidDates));
-    
+
     // Check if any dates need validity checks but aren't being validated
     Object.entries(sessionDates).forEach(([eventId, dateStr]) => {
       // Skip initial session
@@ -256,49 +256,49 @@ export default function DashboardPage() {
         console.log(`* Date validity check for ${eventId}: ${dateStr} => ${isValid ? 'VALID' : 'INVALID'}`);
       }
     });
-    
+
     console.log('------- END DEBUG -------');
   }, [sessionDates, invalidDates, isDateValid]);
 
   // Validate all existing dates when session dates change
   useEffect(() => {
     const newInvalidDates = new Set<string>();
-    
+
     // Log all session dates for debugging
     console.log('All session dates to validate:', sessionDates);
-    
+
     // Force checking each individual date, even if not in sessionDates yet
     const allSessionIds = [
-      'partner1_session_1', 
-      'partner1_session_2', 
+      'partner1_session_1',
+      'partner1_session_2',
       'partner1_session_3',
-      'partner2_session_1', 
-      'partner2_session_2', 
+      'partner2_session_1',
+      'partner2_session_2',
       'partner2_session_3',
       'final_session'
     ];
-    
+
     // Check all session dates
     allSessionIds.forEach(sessionId => {
       // Skip if this session doesn't have a date
       if (!sessionDates[sessionId]) return;
-      
+
       // Skip the initial session as it has no "previous" session
       if (sessionId === 'initial_session') return;
-      
+
       const dateStr = sessionDates[sessionId];
       const isValid = isDateValid(sessionId, dateStr);
-      
+
       console.log(`Validating ${sessionId}: ${dateStr} => ${isValid ? 'VALID' : 'INVALID'}`);
-      
+
       if (!isValid) {
         newInvalidDates.add(sessionId);
       }
     });
-    
+
     // Log the final set of invalid dates
     console.log('Final invalid dates:', Array.from(newInvalidDates));
-    
+
     // Update invalid dates state
     setInvalidDates(newInvalidDates);
   }, [sessionDates, isDateValid]);
@@ -331,17 +331,17 @@ export default function DashboardPage() {
 
     try {
       setIsUpdatingProfile(true);
-      
+
       // Update the userProfile with the partner email
       const updatedUser = await createOrUpdateUserWithFields(user.uid, {
         ...userProfile,
         partnerEmail: email
       });
-      
+
       setUserProfile(updatedUser);
       toast.success(`Invitation envoyée à ${email}`);
       setIsInviting(false);
-      
+
       // In a real scenario, this would trigger a cloud function to send an email
       // and create a partner account, then link the two accounts
     } catch (error) {
@@ -365,7 +365,7 @@ export default function DashboardPage() {
       setIsUpdatingProfile(true);
 
       const { photo, ...userData } = userProfile || {};
-      
+
       const updatedProfile = await createOrUpdateUserWithFields(user.uid, userData);
       setUserProfile(updatedProfile);
       toast.success('Photo supprimée avec succès');
@@ -387,29 +387,29 @@ export default function DashboardPage() {
   // Therapy Journey Logic
   const isSessionAvailable = (event: TherapyJourneyEvent): boolean => {
     if (event.type !== 'session') return false;
-    
+
     // First check if there are any invalid dates in previous sessions
     if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
       return false;
     }
-    
+
     // Special case for first individual session for partner 1
     // Make it available immediately after initial session is completed OR has a date set
     if (event.id === 'partner1_session_1') {
-      return (isSessionCompleted('initial_session') || !!sessionDates['initial_session']) && 
-             !invalidDates.has('initial_session');
+      return (isSessionCompleted('initial_session') || !!sessionDates['initial_session']) &&
+        !invalidDates.has('initial_session');
     }
-    
+
     if (!event.dependsOn) return true;
-    
+
     if (Array.isArray(event.dependsOn)) {
-      return event.dependsOn.every(dep => 
+      return event.dependsOn.every(dep =>
         (isSessionCompleted(dep) || !!sessionDates[dep]) && !invalidDates.has(dep)
       );
     }
-    
+
     return (
-      (isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn]) && 
+      (isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn]) &&
       !invalidDates.has(event.dependsOn)
     );
   };
@@ -431,7 +431,7 @@ export default function DashboardPage() {
     // Find current event index
     const currentIndex = sessionOrder.indexOf(eventId);
     if (currentIndex <= 0) return false; // No previous sessions or it's the initial session
-    
+
     // Check all previous sessions in the dependency chain
     for (let i = 0; i < currentIndex; i++) {
       const prevSessionId = sessionOrder[i];
@@ -441,13 +441,13 @@ export default function DashboardPage() {
         return true;
       }
     }
-    
+
     return false;
   };
 
   const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
     const minDate = new Date();
-    
+
     // For the first individual session for partner 1, set minimum date to 4 weeks after initial session
     if (event.id === 'partner1_session_1' && sessionDates['initial_session']) {
       const initialSessionDate = new Date(sessionDates['initial_session']);
@@ -456,7 +456,7 @@ export default function DashboardPage() {
       console.log(`Setting min date for partner1_session_1 to 4 weeks after initial session: ${minDate.toISOString()}`);
     } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
-      
+
       if (sessionDates[dependentId]) {
         const dependentDate = new Date(sessionDates[dependentId]);
         minDate.setTime(dependentDate.getTime());
@@ -475,7 +475,7 @@ export default function DashboardPage() {
     if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
       return "Impossible de réserver cette séance car une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
     }
-    
+
     // Check if dependencies are completed
     if (event.dependsOn) {
       // Handle array of dependencies
@@ -484,25 +484,25 @@ export default function DashboardPage() {
         if (missingDeps.length > 0) {
           return "Veuillez d'abord compléter les étapes précédentes.";
         }
-        
+
         // Check if any dependency has an invalid date
         const invalidDeps = event.dependsOn.filter(dep => invalidDates.has(dep));
         if (invalidDeps.length > 0) {
           return "Une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
         }
-      } 
+      }
       // Handle single dependency
       else {
         if (!isSessionCompleted(event.dependsOn) && !sessionDates[event.dependsOn]) {
           return "Veuillez d'abord compléter les étapes précédentes.";
         }
-        
+
         if (invalidDates.has(event.dependsOn)) {
           return "La séance précédente ne respecte pas l'écart de 4 semaines requis.";
         }
       }
     }
-    
+
     return "";
   };
 
@@ -521,20 +521,20 @@ export default function DashboardPage() {
           // In production, you would want to get this from Firestore
         }
       }
-      
+
       // For all rescheduling, always use the modal with the existing session data
       setSelectedSession(event);
       setIsCalendlyModalOpen(true);
       return;
     }
-    
+
     // Normal availability check for new bookings
     if (!isSessionAvailable(event)) {
       const reason = getSessionUnavailableReason(event);
       toast.error(reason || "Veuillez d'abord compléter les étapes précédentes");
       return;
     }
-    
+
     if (event.type !== 'session' || !event.sessionType) {
       toast.error("Ce type d'événement ne peut pas être programmé");
       return;
@@ -552,47 +552,47 @@ export default function DashboardPage() {
 
     try {
       console.log('Appointment scheduled/rescheduled. Event data:', eventData);
-      
+
       // Extract the Calendly event URI
       const eventUri = eventData.eventUri || eventData.payload?.event?.uri || "";
-      
+
       if (!eventUri) {
         console.error("No event URI found in Calendly response");
         toast.error("Une erreur s'est produite lors de la programmation");
         setIsCalendlyModalOpen(false);
         return;
       }
-      
+
       // Check if this is a rescheduling
       const isRescheduling = !!eventData.isReschedule || eventData.event === 'calendly.event_rescheduled';
       console.log(`This is ${isRescheduling ? 'a rescheduling' : 'a new appointment'}`);
-      
+
       // Parse the event URI to ensure it's properly formatted
       let formattedUri = eventUri;
-      
+
       // If we only have the ID and not the full URI, construct it
       if (!eventUri.includes('https://')) {
         formattedUri = `https://api.calendly.com/scheduled_events/${eventUri}`;
       }
-      
+
       console.log(`Using event URI: ${formattedUri}`);
-      
+
       // Get the event details from our API
       const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("API error:", errorData);
         throw new Error(`Failed to fetch event details: ${response.status} - ${errorData.error || 'Unknown error'}`);
       }
-      
+
       const eventDetails = await response.json();
       console.log('Fetched event details:', eventDetails);
-      
+
       if (!eventDetails.data) {
         throw new Error("No event data returned from API");
       }
-      
+
       // Format date for display
       const dateObj = new Date(eventDetails.data.start_time);
       const formattedDate = new Intl.DateTimeFormat('fr-FR', {
@@ -603,14 +603,14 @@ export default function DashboardPage() {
         hour: 'numeric',
         minute: 'numeric'
       }).format(dateObj);
-      
+
       // Format to capitalize first letter of day name
       const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-      
+
       // Get a reference to the user's document
       const db = getFirestore(app);
       const userDocRef = doc(db, 'users', user.uid);
-      
+
       // Create the session details object with the new data
       const sessionDetails = {
         date: formattedDate,
@@ -624,32 +624,32 @@ export default function DashboardPage() {
         lastUpdated: new Date().toISOString(),
         isRescheduled: isRescheduling,
       };
-      
+
       // Update Firestore with the new session details
       await updateDoc(userDocRef, {
         [`sessionDetails.${selectedSession.id}`]: sessionDetails,
         [`sessionDates.${selectedSession.id}`]: eventDetails.data.start_time,
         updatedAt: Timestamp.now()
       });
-      
+
       // Alert the user
       if (isRescheduling) {
         toast.success(`Votre séance a été reprogrammée pour le ${formattedDateCapitalized}`);
       } else {
         toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
       }
-      
+
       console.log(`Updated session ${selectedSession.id} in Firestore with new date: ${formattedDate}`);
-      
+
       // Close the modal
       setIsCalendlyModalOpen(false);
-      
+
       // Update session dates in state to reflect the new date
       setSessionDates(prev => ({
         ...prev,
         [selectedSession.id]: eventDetails.data.start_time
       }));
-      
+
       // Check if the date is valid, and update invalidDates set if needed
       const isValid = isDateValid(selectedSession.id, eventDetails.data.start_time);
       if (!isValid) {
@@ -659,13 +659,13 @@ export default function DashboardPage() {
         newInvalidDates.delete(selectedSession.id);
         setInvalidDates(newInvalidDates);
       }
-      
+
       // Reload the page to refresh all data after a delay
       if (typeof window !== 'undefined') {
         toast.info("Actualisation de la page...");
         setTimeout(() => window.location.reload(), 1500);
       }
-      
+
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
       toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
@@ -679,20 +679,20 @@ export default function DashboardPage() {
     if (completedSessions.has(sessionId)) {
       return true;
     }
-    
+
     // If the session has a scheduled date, check if that time + 1 hour has passed
     const sessionDate = sessionDates[sessionId];
     if (sessionDate) {
       try {
         const sessionDateTime = new Date(sessionDate);
-        
+
         // Add 1 hour to the session date
         const sessionEndTime = new Date(sessionDateTime);
         sessionEndTime.setHours(sessionEndTime.getHours() + 1);
-        
+
         // Compare with current time
         const currentTime = new Date();
-        
+
         // If the session end time has passed, mark as completed
         if (sessionEndTime <= currentTime) {
           // Don't update state here to avoid re-renders during render
@@ -702,7 +702,7 @@ export default function DashboardPage() {
         console.error('Error checking session completion status:', error);
       }
     }
-    
+
     return false;
   };
 
@@ -725,17 +725,17 @@ export default function DashboardPage() {
         {events.map((event) => {
           const isComplete = isSessionCompleted(event.id);
           const isAvailable = isSessionAvailable(event);
-          
+
           // Log availability for debugging
           if (['initial_session', 'partner1_session_1'].includes(event.id)) {
-            console.log(`Event ${event.id} availability:`, { 
-              isComplete, 
-              isAvailable, 
+            console.log(`Event ${event.id} availability:`, {
+              isComplete,
+              isAvailable,
               hasDate: !!sessionDates[event.id],
               dateValue: sessionDates[event.id]
             });
           }
-          
+
           // Format date if exists
           let dateStr = '';
           if (sessionDates[event.id]) {
@@ -754,13 +754,13 @@ export default function DashboardPage() {
               dateStr = 'Erreur de date';
             }
           }
-          
+
           if (event.type !== 'session') return null;
-          
+
           // Determine if this event should have a booking button (all events except partner2 sessions)
-          const showBookingButton = (phase === 'initial' || phase === 'final' || 
-                                    (phase === 'individual' && partner === 'partner1'));
-          
+          const showBookingButton = (phase === 'initial' || phase === 'final' ||
+            (phase === 'individual' && partner === 'partner1'));
+
           // Debug the information for partner1_session_1
           if (event.id === 'partner1_session_1') {
             console.log('partner1_session_1 details:', {
@@ -772,18 +772,17 @@ export default function DashboardPage() {
               hasDate: !!sessionDates[event.id]
             });
           }
-          
+
           return (
             <div key={event.id} className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                <div 
-                  className={`p-1 rounded ${
-                    isComplete 
-                      ? 'text-emerald-500' 
-                      : isAvailable 
-                        ? 'text-primary-cream' 
+                <div
+                  className={`p-1 rounded ${isComplete
+                      ? 'text-emerald-500'
+                      : isAvailable
+                        ? 'text-primary-cream'
                         : 'text-primary-cream/30'
-                  }`}
+                    }`}
                 >
                   {isComplete ? (
                     <CheckSquare className="w-5 h-5" />
@@ -800,24 +799,24 @@ export default function DashboardPage() {
                       </span>
                     )}
                   </div>
-                  
+
                   {/* Render the date with appropriate styling */}
                   {sessionDates[event.id] && (
-                    <div 
+                    <div
                       className={`text-sm mt-1 flex items-center gap-1.5 px-2 py-1 rounded-md w-fit
-                        ${invalidDates.has(event.id) 
-                          ? 'text-red-400 font-medium bg-red-900/30' 
+                        ${invalidDates.has(event.id)
+                          ? 'text-red-400 font-medium bg-red-900/30'
                           : 'text-green-400 font-medium bg-green-900/30'
                         }`}
                     >
                       <Calendar className="w-4 h-4" />
                       {dateStr}
-                     
-                      
+
+
                       {/* Add edit icon for valid dates */}
                       {!invalidDates.has(event.id) && (
 
-                       <button
+                        <button
                           onClick={() => handleSessionClick(event)}
                           className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
                           title="Reprogrammer cette séance"
@@ -829,11 +828,11 @@ export default function DashboardPage() {
                   )}
                 </div>
               </div>
-              
+
               {showBookingButton && !isComplete && isAvailable && !sessionDates[event.id] && (
                 <div className="ml-8">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     className="text-xs h-8 border-[rgb(247_237_226_)]/30 text-[rgb(247_237_226_)] hover:bg-[rgb(247_237_226_)]/10 hover:text-[rgb(247_237_226_)]"
                     onClick={() => handleSessionClick(event)}
@@ -847,11 +846,11 @@ export default function DashboardPage() {
               {/* Show reschedule button only for invalid dates */}
               {invalidDates.has(event.id) && (
                 <div className="ml-8">
-                         <span className="text-xs ml-1">
-                         Allouez au moins 4 semaines avec la session précédente.
-                       </span>
-                  <Button 
-                    variant="outline" 
+                  <span className="text-xs ml-1">
+                    Allouez au moins 4 semaines avec la session précédente.
+                  </span>
+                  <Button
+                    variant="outline"
                     size="sm"
                     className="text-xs h-8 border-red-400/40 text-red-300 hover:bg-red-400/10 hover:text-red-200"
                     onClick={() => handleSessionClick(event)}
@@ -1053,10 +1052,10 @@ export default function DashboardPage() {
             userEmail={userProfile?.email}
             rescheduleUrl={
               // If this is a rescheduling of an existing session
-              sessionDates[selectedSession.id] 
-                ? userProfile?.sessionDetails?.[selectedSession.id]?.rescheduleUrl || 
-                  // For testing, use a fixed URL if no URL exists in Firestore
-                  "https://calendly.com/reschedulings/b30042ac-e4bf-4cd7-89f3-c8115cb00039"
+              sessionDates[selectedSession.id]
+                ? userProfile?.sessionDetails?.[selectedSession.id]?.rescheduleUrl ||
+                // For testing, use a fixed URL if no URL exists in Firestore
+                "https://calendly.com/reschedulings/b30042ac-e4bf-4cd7-89f3-c8115cb00039"
                 : undefined
             }
           />
@@ -1066,7 +1065,7 @@ export default function DashboardPage() {
         <div className="bg-[rgb(247_237_226_/0.1)] rounded-lg shadow-lg p-6 mt-6">
           <h2 className="text-2xl font-semibold mb-1 text-primary-coral">Votre parcours thérapeutique</h2>
           <p className="text-[rgb(247_237_226_)]/70 mb-6">Suivez l'avancement de votre parcours thérapeutique en couple.</p>
-          
+
           {/* Display therapy journey phases */}
           <div className="mt-8 space-y-8">
             {/* Initial Phase */}
@@ -1082,7 +1081,7 @@ export default function DashboardPage() {
                 <h3 className="text-xl font-semibold text-primary-coral mb-4">Parcours Individuel - Partenaire 1</h3>
                 {renderJourneyPhase('individual', 'partner1')}
               </div>
-              
+
               {/* Partner 2 Journey */}
               <div>
                 <h3 className="text-xl font-semibold text-primary-coral mb-4">Parcours Individuel - Partenaire 2</h3>
