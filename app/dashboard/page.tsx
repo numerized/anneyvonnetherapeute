@@ -40,9 +40,11 @@ export default function DashboardPage() {
   const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
   const [hasAppointment, setHasAppointment] = useState(false);
   const [selectedSession, setSelectedSession] = useState<TherapyJourneyEvent | null>(null);
+  const [isRescheduling, setIsRescheduling] = useState(false);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
   const [sessionDates, setSessionDates] = useState<Record<string, string>>({});
   const [invalidDates, setInvalidDates] = useState<Set<string>>(new Set());
+  const [uiRefreshKey, setUiRefreshKey] = useState<number>(0);
   const router = useRouter();
 
   // Function to handle sign out
@@ -66,7 +68,7 @@ export default function DashboardPage() {
         setUser(user);
 
         async function fetchUserProfile() {
-          if (!user) return;
+          if (!user || !user.uid) return;
 
           try {
             const profileData = await getUserById(user.uid);
@@ -92,6 +94,33 @@ export default function DashboardPage() {
 
     return () => unsubscribe();
   }, [router]);
+
+  // Fetch user data when component mounts or when UI needs refresh
+  useEffect(() => {
+    if (user) {
+      // Fetch user profile data
+      async function fetchUserProfile() {
+        if (!user || !user.uid) return;
+
+        try {
+          const profileData = await getUserById(user.uid);
+          setUserProfile(profileData);
+
+          if (profileData?.partnerId) {
+            const partnerData = await getPartnerProfile(profileData.partnerId);
+            setPartnerProfile(partnerData);
+          }
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+          toast.error('Failed to load user profile');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      fetchUserProfile();
+    }
+  }, [user, uiRefreshKey]);
 
   // Initialize session state from user profile
   useEffect(() => {
@@ -509,6 +538,9 @@ export default function DashboardPage() {
   const handleSessionClick = (event: TherapyJourneyEvent) => {
     // If this is a session that already has a date and we're trying to reschedule
     if (sessionDates[event.id]) {
+      // Set isRescheduling flag to true for existing sessions
+      setIsRescheduling(true);
+      
       // If we're rescheduling an invalid date, let it proceed
       if (invalidDates.has(event.id)) {
         console.log(`Rescheduling invalid session: ${event.id}`);
@@ -526,6 +558,9 @@ export default function DashboardPage() {
       setSelectedSession(event);
       setIsCalendlyModalOpen(true);
       return;
+    } else {
+      // For new bookings, make sure isRescheduling is false
+      setIsRescheduling(false);
     }
 
     // Normal availability check for new bookings
@@ -545,56 +580,76 @@ export default function DashboardPage() {
   };
 
   const handleAppointmentScheduled = async (eventData: any) => {
-    if (!selectedSession || !user) {
-      console.error("No session selected or user not authenticated");
-      return;
-    }
-
     try {
-      console.log('Appointment scheduled/rescheduled. Event data:', eventData);
+      if (!user || !selectedSession) return;
 
-      // Extract the Calendly event URI
-      const eventUri = eventData.eventUri || eventData.payload?.event?.uri || "";
+      console.log('Appointment scheduled data:', eventData);
+      
+      // Determine if this is a rescheduling event
+      const isReschedulingEvent = isRescheduling || 
+                                  eventData.isRescheduling || 
+                                  eventData.event === 'calendly.event_rescheduled';
+      
+      console.log(`Handling ${isReschedulingEvent ? 'rescheduled' : 'new'} appointment for session: ${selectedSession.id}`);
 
-      if (!eventUri) {
-        console.error("No event URI found in Calendly response");
-        toast.error("Une erreur s'est produite lors de la programmation");
-        setIsCalendlyModalOpen(false);
-        return;
-      }
-
-      // Check if this is a rescheduling
-      const isRescheduling = !!eventData.isReschedule || eventData.event === 'calendly.event_rescheduled';
-      console.log(`This is ${isRescheduling ? 'a rescheduling' : 'a new appointment'}`);
-
-      // Parse the event URI to ensure it's properly formatted
-      let formattedUri = eventUri;
-
-      // If we only have the ID and not the full URI, construct it
-      if (!eventUri.includes('https://')) {
-        formattedUri = `https://api.calendly.com/scheduled_events/${eventUri}`;
+      // Get the event URI from the data
+      let formattedUri = eventData.eventUri;
+      
+      // Format the URI if needed
+      if (!formattedUri.startsWith('http')) {
+        formattedUri = `https://api.calendly.com/scheduled_events/${formattedUri}`;
       }
 
       console.log(`Using event URI: ${formattedUri}`);
+      
+      // Check if we already have the start time directly from the event data
+      let startTime = eventData.startTime || eventData.payload?.event?.start_time || null;
+      let eventDetails: any = null;
+      
+      // If we don't have the start time directly, fetch it from the API
+      if (!startTime) {
+        // Get the event details from our API
+        console.log("No direct start time available, fetching from API");
+        const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
 
-      // Get the event details from our API
-      const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("API error:", errorData);
+          throw new Error(`Failed to fetch event details: ${response.status} - ${errorData.error || 'Unknown error'}`);
+        }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("API error:", errorData);
-        throw new Error(`Failed to fetch event details: ${response.status} - ${errorData.error || 'Unknown error'}`);
+        eventDetails = await response.json();
+        console.log('Fetched event details:', eventDetails);
+
+        if (!eventDetails.data) {
+          throw new Error("No event data returned from API");
+        }
+        
+        startTime = eventDetails.data.start_time;
+      } else {
+        console.log("Using direct start time from event data:", startTime);
       }
-
-      const eventDetails = await response.json();
-      console.log('Fetched event details:', eventDetails);
-
-      if (!eventDetails.data) {
-        throw new Error("No event data returned from API");
+      
+      if (!startTime) {
+        throw new Error("Could not determine the appointment start time");
+      }
+      
+      // If we didn't need to fetch event details earlier, do it now for other data
+      if (!eventDetails) {
+        try {
+          const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
+          if (response.ok) {
+            eventDetails = await response.json();
+            console.log('Fetched additional event details:', eventDetails);
+          }
+        } catch (error) {
+          console.warn("Could not fetch additional event details:", error);
+          // Continue anyway since we have the start time
+        }
       }
 
       // Format date for display
-      const dateObj = new Date(eventDetails.data.start_time);
+      const dateObj = new Date(startTime);
       const formattedDate = new Intl.DateTimeFormat('fr-FR', {
         weekday: 'long',
         year: 'numeric',
@@ -612,28 +667,34 @@ export default function DashboardPage() {
       const userDocRef = doc(db, 'users', user.uid);
 
       // Create the session details object with the new data
-      const sessionDetails = {
+      const sessionDetails: any = {
         date: formattedDate,
         eventUri: formattedUri,
         formattedDate: formattedDateCapitalized,
-        startTime: eventDetails.data.start_time,
-        endTime: eventDetails.data.end_time,
-        location: eventDetails.data.location,
-        cancelUrl: eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url,
-        rescheduleUrl: eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url,
+        startTime: startTime,
         lastUpdated: new Date().toISOString(),
-        isRescheduled: isRescheduling,
+        isRescheduled: isReschedulingEvent,
       };
+      
+      // Add additional fields if we have the full event details
+      if (eventDetails?.data) {
+        sessionDetails.endTime = eventDetails.data.end_time;
+        sessionDetails.location = eventDetails.data.location;
+        sessionDetails.cancelUrl = eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url;
+        sessionDetails.rescheduleUrl = eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url;
+      }
 
+      console.log("Updating Firestore with session details:", sessionDetails);
+      
       // Update Firestore with the new session details
       await updateDoc(userDocRef, {
         [`sessionDetails.${selectedSession.id}`]: sessionDetails,
-        [`sessionDates.${selectedSession.id}`]: eventDetails.data.start_time,
+        [`sessionDates.${selectedSession.id}`]: startTime,
         updatedAt: Timestamp.now()
       });
 
       // Alert the user
-      if (isRescheduling) {
+      if (isReschedulingEvent) {
         toast.success(`Votre séance a été reprogrammée pour le ${formattedDateCapitalized}`);
       } else {
         toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
@@ -647,11 +708,11 @@ export default function DashboardPage() {
       // Update session dates in state to reflect the new date
       setSessionDates(prev => ({
         ...prev,
-        [selectedSession.id]: eventDetails.data.start_time
+        [selectedSession.id]: startTime
       }));
 
       // Check if the date is valid, and update invalidDates set if needed
-      const isValid = isDateValid(selectedSession.id, eventDetails.data.start_time);
+      const isValid = isDateValid(selectedSession.id, startTime);
       if (!isValid) {
         setInvalidDates(prev => new Set([...prev, selectedSession.id]));
       } else if (invalidDates.has(selectedSession.id)) {
@@ -660,12 +721,13 @@ export default function DashboardPage() {
         setInvalidDates(newInvalidDates);
       }
 
-      // Reload the page to refresh all data after a delay
-      if (typeof window !== 'undefined') {
-        toast.info("Actualisation de la page...");
-        setTimeout(() => window.location.reload(), 1500);
-      }
-
+      // Clear the selected session
+      setSelectedSession(null);
+      
+      // Trigger a UI refresh
+      setUiRefreshKey(prev => prev + 1);
+      
+      // No need to reload the page - the state updates above will trigger a UI refresh
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
       toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
@@ -810,8 +872,12 @@ export default function DashboardPage() {
                         }`}
                     >
                       <Calendar className="w-4 h-4" />
-                      {dateStr}
-
+                      <span>{dateStr}</span>
+                      {invalidDates.has(event.id) && (
+                        <span className="text-xs ml-1">
+                          (moins de 4 semaines)
+                        </span>
+                      )}
 
                       {/* Add edit icon for valid dates */}
                       {!invalidDates.has(event.id) && (
@@ -846,9 +912,6 @@ export default function DashboardPage() {
               {/* Show reschedule button only for invalid dates */}
               {invalidDates.has(event.id) && (
                 <div className="ml-8">
-                  <span className="text-xs ml-1">
-                    Allouez au moins 4 semaines avec la session précédente.
-                  </span>
                   <Button
                     variant="outline"
                     size="sm"
@@ -858,6 +921,9 @@ export default function DashboardPage() {
                     <Edit className="w-3 h-3 mr-2" />
                     Reprogrammer cette séance
                   </Button>
+                  <div className="text-xs text-red-400 mt-1">
+                    Allouez au moins 4 semaines avec la session précédente.
+                  </div>
                 </div>
               )}
             </div>
@@ -878,7 +944,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary-forest text-primary-cream">
+    <div key={uiRefreshKey} className="min-h-screen bg-primary-forest text-primary-cream">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-primary-coral text-center">Tableau de bord</h1>
