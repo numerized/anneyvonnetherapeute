@@ -4,7 +4,7 @@ import { format, isAfter, isBefore } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
 import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, increment, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from 'firebase/firestore';
-import { Calendar, CheckSquare, Loader2, LogOut, PlusCircle, Square, User, X } from 'lucide-react';
+import { Calendar, CheckSquare, Edit, Loader2, LogOut, PlusCircle, Square, User, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -239,13 +239,30 @@ export default function DashboardPage() {
         if (!isValid) {
           newInvalidDates.add(sessionId);
           console.warn(`Warning: The session date for ${sessionId} is less than 4 weeks after its previous session`);
+          
+          // Debug: Log session details for this invalid date
+          console.log(`Session details for invalid date ${sessionId}:`, 
+            userProfile?.sessionDetails?.[sessionId] || 'No session details found');
         }
       }
     });
     
     // Update invalid dates state
     setInvalidDates(newInvalidDates);
-  }, [sessionDates, isDateValid]);
+    
+    // Debug: Log all invalid dates
+    console.log('All invalid dates:', Array.from(newInvalidDates));
+    
+    // Debug: Log session details for all invalid dates
+    if (newInvalidDates.size > 0 && userProfile) {
+      console.log('Session details for all invalid dates:', 
+        Array.from(newInvalidDates).map(id => ({
+          id,
+          details: userProfile.sessionDetails?.[id] || 'No details found'
+        }))
+      );
+    }
+  }, [sessionDates, isDateValid, userProfile]);
 
   const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
     if (!user) return;
@@ -330,19 +347,61 @@ export default function DashboardPage() {
 
   // Therapy Journey Logic
   const isSessionAvailable = (event: TherapyJourneyEvent) => {
+    // First check if there are any invalid dates in previous sessions
+    if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
+      return false;
+    }
+    
     // Special case for first individual session for partner 1
     // Make it available immediately after initial session is completed OR has a date set
     if (event.id === 'partner1_session_1') {
-      return isSessionCompleted('initial_session') || !!sessionDates['initial_session'];
+      return (isSessionCompleted('initial_session') || !!sessionDates['initial_session']) && 
+             !invalidDates.has('initial_session');
     }
     
     if (!event.dependsOn) return true;
     
     if (Array.isArray(event.dependsOn)) {
-      return event.dependsOn.every(dep => isSessionCompleted(dep) || !!sessionDates[dep]);
+      return event.dependsOn.every(dep => 
+        (isSessionCompleted(dep) || !!sessionDates[dep]) && !invalidDates.has(dep)
+      );
     }
     
-    return isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn];
+    return (
+      (isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn]) && 
+      !invalidDates.has(event.dependsOn)
+    );
+  };
+
+  // Function to check if any previous sessions have invalid dates
+  const hasPreviousInvalidDates = (eventId: string): boolean => {
+    // Session dependency order
+    const sessionOrder = [
+      'initial_session',
+      'partner1_session_1',
+      'partner1_session_2',
+      'partner1_session_3',
+      'partner2_session_1',
+      'partner2_session_2',
+      'partner2_session_3',
+      'final_session'
+    ];
+
+    // Find current event index
+    const currentIndex = sessionOrder.indexOf(eventId);
+    if (currentIndex <= 0) return false; // No previous sessions or it's the initial session
+    
+    // Check all previous sessions in the dependency chain
+    for (let i = 0; i < currentIndex; i++) {
+      const prevSessionId = sessionOrder[i];
+      // If previous session is in invalidDates list, return true
+      if (invalidDates.has(prevSessionId)) {
+        console.log(`Session ${eventId} cannot be scheduled because ${prevSessionId} has an invalid date`);
+        return true;
+      }
+    }
+    
+    return false;
   };
 
   const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
@@ -370,9 +429,68 @@ export default function DashboardPage() {
     return { minDate, maxDate };
   };
 
+  const getSessionUnavailableReason = (event: TherapyJourneyEvent): string => {
+    // Check if there are invalid dates in previous sessions
+    if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
+      return "Impossible de réserver cette séance car une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
+    }
+    
+    // Check if dependencies are completed
+    if (event.dependsOn) {
+      // Handle array of dependencies
+      if (Array.isArray(event.dependsOn)) {
+        const missingDeps = event.dependsOn.filter(dep => !isSessionCompleted(dep) && !sessionDates[dep]);
+        if (missingDeps.length > 0) {
+          return "Veuillez d'abord compléter les étapes précédentes.";
+        }
+        
+        // Check if any dependency has an invalid date
+        const invalidDeps = event.dependsOn.filter(dep => invalidDates.has(dep));
+        if (invalidDeps.length > 0) {
+          return "Une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
+        }
+      } 
+      // Handle single dependency
+      else {
+        if (!isSessionCompleted(event.dependsOn) && !sessionDates[event.dependsOn]) {
+          return "Veuillez d'abord compléter les étapes précédentes.";
+        }
+        
+        if (invalidDates.has(event.dependsOn)) {
+          return "La séance précédente ne respecte pas l'écart de 4 semaines requis.";
+        }
+      }
+    }
+    
+    return "";
+  };
+
   const handleSessionClick = (event: TherapyJourneyEvent) => {
+    // If this is a session that already has a date and we're trying to reschedule
+    if (sessionDates[event.id]) {
+      // If we're rescheduling an invalid date, let it proceed
+      if (invalidDates.has(event.id)) {
+        console.log(`Manually rescheduling invalid session: ${event.id}`);
+        
+        // If the session has a reschedule URL, use it
+        if (userProfile?.sessionDetails?.[event.id]?.rescheduleUrl) {
+          window.open(userProfile.sessionDetails[event.id].rescheduleUrl, '_blank');
+          return;
+        }
+        
+        // Otherwise, proceed with normal scheduling to create a new appointment
+        // We'll handle the old one later (should be cancelled or replaced)
+      } else {
+        // If the date is valid, show the normal error
+        toast.error("Cette séance est déjà programmée. Veuillez l'annuler avant d'en réserver une nouvelle.");
+        return;
+      }
+    }
+    
+    // Normal availability check
     if (!isSessionAvailable(event)) {
-      toast.error("Veuillez d'abord compléter les étapes précédentes");
+      const reason = getSessionUnavailableReason(event);
+      toast.error(reason || "Veuillez d'abord compléter les étapes précédentes");
       return;
     }
     
@@ -454,6 +572,9 @@ export default function DashboardPage() {
           
           if (eventDetails.invitee.reschedule_url) {
             sessionDetails.rescheduleUrl = eventDetails.invitee.reschedule_url;
+            console.log(`Saved reschedule URL for ${selectedSession.id}:`, eventDetails.invitee.reschedule_url);
+          } else {
+            console.warn(`No reschedule URL found for ${selectedSession.id} in event details:`, eventDetails);
           }
         }
         
@@ -650,6 +771,35 @@ export default function DashboardPage() {
                     <Calendar className="w-3 h-3 mr-2" />
                     Réserver cette séance
                   </Button>
+                </div>
+              )}
+
+              {/* Show reschedule button for invalid dates */}
+              {invalidDates.has(event.id) && (
+                <div className="ml-8 mt-2">
+                  {userProfile?.sessionDetails?.[event.id]?.rescheduleUrl ? (
+                    <a
+                      href={userProfile.sessionDetails[event.id].rescheduleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-xs h-8 px-4 py-2 rounded-md
+                        border border-red-400/40 text-red-300 bg-transparent
+                        hover:bg-red-400/10 hover:text-red-200 transition-colors"
+                    >
+                      <Edit className="w-3 h-3 mr-2" />
+                      Reprogrammer cette séance
+                    </a>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-xs h-8 border-red-400/40 text-red-300 hover:bg-red-400/10 hover:text-red-200"
+                      onClick={() => handleSessionClick(event)}
+                    >
+                      <Edit className="w-3 h-3 mr-2" />
+                      Reprogrammer cette séance
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
