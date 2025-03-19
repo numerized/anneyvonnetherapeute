@@ -612,17 +612,19 @@ export default function DashboardPage() {
       const userDocRef = doc(db, 'users', user.uid);
       
       // Create the session details object with the new data
-      const sessionDetails = {
+      const sessionDetails: SessionDetails = {
         date: formattedDate,
-        eventUri: formattedUri,
-        formattedDate: formattedDateCapitalized,
+        formattedDateTime: formattedDateCapitalized,
+        calendarEvent: formattedUri,
+        location: eventDetails.data.location,
+        sessionType: selectedSession.sessionType || 'unknown',
+        status: 'scheduled' as 'scheduled', // Explicitly cast to match the union type
+        inviteeEmail: eventDetails.data.invitee?.email,
+        inviteeName: eventDetails.data.invitee?.name,
+        cancellationUrl: eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url,
+        rescheduleUrl: eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url,
         startTime: eventDetails.data.start_time,
         endTime: eventDetails.data.end_time,
-        location: eventDetails.data.location,
-        cancelUrl: eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url,
-        rescheduleUrl: eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url,
-        lastUpdated: new Date().toISOString(),
-        isRescheduled: isRescheduling,
       };
       
       // Update Firestore with the new session details
@@ -631,15 +633,6 @@ export default function DashboardPage() {
         [`sessionDates.${selectedSession.id}`]: eventDetails.data.start_time,
         updatedAt: Timestamp.now()
       });
-      
-      // Alert the user
-      if (isRescheduling) {
-        toast.success(`Votre séance a été reprogrammée pour le ${formattedDateCapitalized}`);
-      } else {
-        toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
-      }
-      
-      console.log(`Updated session ${selectedSession.id} in Firestore with new date: ${formattedDate}`);
       
       // Close the modal
       setIsCalendlyModalOpen(false);
@@ -660,11 +653,27 @@ export default function DashboardPage() {
         setInvalidDates(newInvalidDates);
       }
       
-      // Reload the page to refresh all data after a delay
-      if (typeof window !== 'undefined') {
-        toast.info("Actualisation de la page...");
-        setTimeout(() => window.location.reload(), 1500);
+      // Update local user profile data to include the new session details
+      if (userProfile) {
+        setUserProfile({
+          ...userProfile,
+          sessionDetails: {
+            ...userProfile.sessionDetails,
+            [selectedSession.id]: sessionDetails
+          },
+          sessionDates: {
+            ...userProfile.sessionDates,
+            [selectedSession.id]: eventDetails.data.start_time
+          }
+        });
       }
+      
+      // Notify user of success without page reload
+      toast.success(
+        isRescheduling 
+          ? `Votre séance a été reprogrammée pour le ${formattedDateCapitalized}` 
+          : `Votre séance est programmée pour le ${formattedDateCapitalized}`
+      );
       
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
