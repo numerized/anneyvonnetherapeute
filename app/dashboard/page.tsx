@@ -612,19 +612,17 @@ export default function DashboardPage() {
       const userDocRef = doc(db, 'users', user.uid);
       
       // Create the session details object with the new data
-      const sessionDetails: SessionDetails = {
+      const sessionDetails = {
         date: formattedDate,
-        formattedDateTime: formattedDateCapitalized,
-        calendarEvent: formattedUri,
-        location: eventDetails.data.location,
-        sessionType: selectedSession.sessionType || 'unknown',
-        status: 'scheduled' as 'scheduled', // Explicitly cast to match the union type
-        inviteeEmail: eventDetails.data.invitee?.email,
-        inviteeName: eventDetails.data.invitee?.name,
-        cancellationUrl: eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url,
-        rescheduleUrl: eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url,
+        eventUri: formattedUri,
+        formattedDate: formattedDateCapitalized,
         startTime: eventDetails.data.start_time,
         endTime: eventDetails.data.end_time,
+        location: eventDetails.data.location,
+        cancelUrl: eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url,
+        rescheduleUrl: eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url,
+        lastUpdated: new Date().toISOString(),
+        isRescheduled: isRescheduling,
       };
       
       // Update Firestore with the new session details
@@ -633,6 +631,15 @@ export default function DashboardPage() {
         [`sessionDates.${selectedSession.id}`]: eventDetails.data.start_time,
         updatedAt: Timestamp.now()
       });
+      
+      // Alert the user
+      if (isRescheduling) {
+        toast.success(`Votre séance a été reprogrammée pour le ${formattedDateCapitalized}`);
+      } else {
+        toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
+      }
+      
+      console.log(`Updated session ${selectedSession.id} in Firestore with new date: ${formattedDate}`);
       
       // Close the modal
       setIsCalendlyModalOpen(false);
@@ -653,27 +660,11 @@ export default function DashboardPage() {
         setInvalidDates(newInvalidDates);
       }
       
-      // Update local user profile data to include the new session details
-      if (userProfile) {
-        setUserProfile({
-          ...userProfile,
-          sessionDetails: {
-            ...userProfile.sessionDetails,
-            [selectedSession.id]: sessionDetails
-          },
-          sessionDates: {
-            ...userProfile.sessionDates,
-            [selectedSession.id]: eventDetails.data.start_time
-          }
-        });
+      // Reload the page to refresh all data after a delay
+      if (typeof window !== 'undefined') {
+        toast.info("Actualisation de la page...");
+        setTimeout(() => window.location.reload(), 1500);
       }
-      
-      // Notify user of success without page reload
-      toast.success(
-        isRescheduling 
-          ? `Votre séance a été reprogrammée pour le ${formattedDateCapitalized}` 
-          : `Votre séance est programmée pour le ${formattedDateCapitalized}`
-      );
       
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
@@ -820,14 +811,13 @@ export default function DashboardPage() {
                         }`}
                     >
                       <Calendar className="w-4 h-4" />
-                      <span>{dateStr}</span>
-                      {invalidDates.has(event.id) && (
-                        <span className="text-xs ml-1">(moins de 4 semaines)</span>
-                      )}
+                      {dateStr}
+                     
                       
                       {/* Add edit icon for valid dates */}
                       {!invalidDates.has(event.id) && (
-                        <button
+
+                       <button
                           onClick={() => handleSessionClick(event)}
                           className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
                           title="Reprogrammer cette séance"
@@ -856,7 +846,10 @@ export default function DashboardPage() {
 
               {/* Show reschedule button only for invalid dates */}
               {invalidDates.has(event.id) && (
-                <div className="ml-8 mt-2">
+                <div className="ml-8">
+                         <span className="text-xs ml-1">
+                         Allouez au moins 4 semaines avec la session précédente.
+                       </span>
                   <Button 
                     variant="outline" 
                     size="sm"
