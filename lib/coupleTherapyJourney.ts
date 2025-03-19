@@ -76,7 +76,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual_male_1',
     partner: 'partner1',
     dependsOn: 'initial_session',
-    daysOffset: 7,
+    daysOffset: 28, // Changed from 7 to 28 (4 weeks)
     phase: 'individual'
   },
   {
