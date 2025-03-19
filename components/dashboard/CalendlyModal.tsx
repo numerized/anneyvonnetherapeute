@@ -63,34 +63,6 @@ export function CalendlyModal({
   // Detect if the current device is mobile
   const isMobile = useIsMobile();
 
-  // Handler for Calendly messages
-  const handleCalendlyMessage = useCallback((e: MessageEvent) => {
-    if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-      console.log('Calendly event scheduled:', e.data);
-      
-      // Extract the event URI
-      let uri = '';
-      if (e.data.payload?.event?.uri) {
-        uri = e.data.payload.event.uri;
-      } else if (e.data.payload?.invitee?.scheduled_event?.uri) {
-        uri = e.data.payload.invitee.scheduled_event.uri;
-      }
-      
-      setEventUri(uri);
-      
-      if (uri && onAppointmentScheduled) {
-        // Pass the enhanced data to the parent component
-        onAppointmentScheduled({
-          ...e.data,
-          eventUri: uri
-        });
-      }
-      
-      // Close the modal after scheduling
-      onClose();
-    }
-  }, [onAppointmentScheduled, onClose]);
-
   // Initialize Calendly script
   useEffect(() => {
     setIsMounted(true);
@@ -102,11 +74,61 @@ export function CalendlyModal({
     
     document.body.appendChild(script);
     
+    // Add global event listener for Calendly messages
+    window.addEventListener('message', (e) => {
+      // Listen for both scheduled and rescheduled events from anywhere
+      if (e.data.event === 'calendly.event_scheduled' || 
+          e.data.event === 'calendly.event_rescheduled') {
+        
+        console.log('Calendly event detected from global listener:', e.data.event, e.data);
+        
+        // Try to prevent any default behavior that might cause page refresh
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+        
+        // Extract the event URI and other details
+        let eventUri = '';
+        let startTime = '';
+        
+        if (e.data.payload?.event?.uri) {
+          eventUri = e.data.payload.event.uri;
+          startTime = e.data.payload.event.start_time || '';
+        } else if (e.data.payload?.invitee?.scheduled_event?.uri) {
+          eventUri = e.data.payload.invitee.scheduled_event.uri;
+          startTime = e.data.payload.invitee.scheduled_event.start_time || '';
+        } else if (e.data.payload?.invitee?.uri) {
+          const inviteeUriParts = e.data.payload.invitee.uri.split('/');
+          const inviteeId = inviteeUriParts[inviteeUriParts.length - 1];
+          eventUri = inviteeId;
+        }
+        
+        if (eventUri && onAppointmentScheduled) {
+          // Prevent default to avoid any form submission
+          e.data.preventDefault && e.data.preventDefault();
+          
+          // Call parent handler with event data
+          onAppointmentScheduled({
+            ...e.data,
+            eventUri,
+            startTime,
+            isReschedule: e.data.event === 'calendly.event_rescheduled',
+            newTime: new Date().toISOString()
+          });
+          
+          // Close the modal immediately
+          onClose();
+          
+          // Return false to prevent default behavior in older browsers
+          return false;
+        }
+      }
+    });
+    
     return () => {
-      window.removeEventListener('message', handleCalendlyMessage);
-      // Don't remove the script as it might be used elsewhere in the app
+      // We don't remove the global message listener to avoid potential issues
+      // with other event listeners during component unmount
     };
-  }, [handleCalendlyMessage]);
+  }, [onAppointmentScheduled, onClose]);
 
   // Initialize widget function
   const initializeCalendlyWidget = useCallback(() => {
@@ -131,73 +153,10 @@ export function CalendlyModal({
       iframe.style.border = 'none';
       iframe.style.minHeight = isMobile ? '100vh' : '700px';
       
-      // Add event listener for iframe messages for reschedule completion
-      const handleRescheduleMessage = (e: MessageEvent) => {
-        // Check for both event types - rescheduled and scheduled
-        // Some Calendly integrations return different event types
-        if (e.data.event === 'calendly.event_rescheduled' || 
-            e.data.event === 'calendly.event_scheduled') {
-          
-          console.log('Calendly event triggered:', e.data.event, e.data);
-          
-          // Extract the event URI from the payload
-          let eventUri = '';
-          
-          if (e.data.payload?.event?.uri) {
-            eventUri = e.data.payload.event.uri;
-          } else if (e.data.payload?.invitee?.scheduled_event?.uri) {
-            eventUri = e.data.payload.invitee.scheduled_event.uri;
-          } else if (e.data.payload?.invitee?.uri) {
-            // Try to extract from invitee URI
-            const inviteeUriParts = e.data.payload.invitee.uri.split('/');
-            const inviteeId = inviteeUriParts[inviteeUriParts.length - 1];
-            eventUri = inviteeId; // We'll format this later
-          }
-          
-          if (!eventUri) {
-            console.error('Could not extract event URI from Calendly response:', e.data);
-          } else {
-            console.log('Extracted event URI:', eventUri);
-          }
-          
-          if (onAppointmentScheduled) {
-            // Make sure we're passing all the necessary information for Firestore update
-            onAppointmentScheduled({
-              ...e.data,
-              eventUri: eventUri,
-              isReschedule: e.data.event === 'calendly.event_rescheduled',
-              newTime: new Date().toISOString()
-            });
-          }
-          
-          // Close the modal with slight delay to allow for visual feedback
-          setTimeout(() => {
-            onClose();
-          }, 500);
-        }
-      };
-      
-      window.addEventListener('message', handleRescheduleMessage);
-      
-      // Save a reference to the event listener for cleanup
-      const cleanupRef = { handleRescheduleMessage };
-      
-      // Add cleanup when component unmounts or when iframe changes
-      const originalAppendChild = container.appendChild;
-      container.appendChild = function(child) {
-        const result = originalAppendChild.call(this, child);
-        child.addEventListener('load', () => {
-          console.log('Iframe loaded, adding event listener for reschedule messages');
-        });
-        return result;
-      };
-      
+      // We don't need a separate event listener here as the global listener will catch all events
       container.appendChild(iframe);
       
-      // Return cleanup function
-      return () => {
-        window.removeEventListener('message', cleanupRef.handleRescheduleMessage);
-      };
+      return;
     }
     
     // Otherwise, build URL parameters for date constraints for a new booking
@@ -229,7 +188,7 @@ export function CalendlyModal({
     console.log(`Using Calendly event type: ${eventTypeSlug} for session type: ${sessionType}`);
 
     // Full Calendly URL with parameters
-    const calendlyUrl = `https://calendly.com/${CALENDLY_USERNAME}/${eventTypeSlug}?hide_landing_page_details=1&hide_gdpr_banner=1${dateParams}`;
+    const calendlyUrl = `https://calendly.com/${CALENDLY_USERNAME}/${eventTypeSlug}?hide_landing_page_details=1&hide_gdpr_banner=1&hide_event_type_details=1${dateParams}`;
     console.log(`Initializing Calendly with URL: ${calendlyUrl}`);
 
     // Initialize Calendly inline widget
@@ -247,8 +206,8 @@ export function CalendlyModal({
     });
 
     // Add event listener for scheduling using the window.message event
-    window.addEventListener('message', handleCalendlyMessage);
-  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage, sessionType, isMobile, rescheduleUrl, onAppointmentScheduled, onClose]);
+    // window.addEventListener('message', handleCalendlyMessage);
+  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, sessionType, isMobile, rescheduleUrl]);
 
   // Initialize Calendly when modal is opened
   useEffect(() => {
