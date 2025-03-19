@@ -1,8 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import { User } from '@/lib/userService';
+'use client';
+
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { PlusCircle, X } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, X } from 'lucide-react';
+import { User } from '@/lib/userService';
 
 interface UserProfileFormProps {
   user: User | null;
@@ -36,12 +40,22 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'dateNaissance' ? (value ? new Date(value) : undefined) : value
-    }));
+    
+    if (name === 'dateNaissance') {
+      // For date inputs, store as a proper Date object if value exists
+      setFormData(prev => ({
+        ...prev,
+        [name]: value ? new Date(value) : undefined
+      }));
+    } else {
+      // For other inputs, store the value as is
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handlePhotoClick = () => {
@@ -64,7 +78,8 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
       setIsResizing(true);
       
       // Create an image object
-      const img = new Image();
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
       img.onload = () => {
         // Calculate new dimensions while maintaining aspect ratio
         let width = img.width;
@@ -84,46 +99,36 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
           }
         }
         
-        // Create canvas and resize
+        // Create a canvas and draw the resized image
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        
         const ctx = canvas.getContext('2d');
+        
         if (!ctx) {
           setIsResizing(false);
-          reject(new Error('Could not get canvas context'));
+          reject(new Error('Unable to get canvas context'));
           return;
         }
         
-        // Draw image on canvas with new dimensions
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Get base64 data URL (JPEG format with 0.9 quality)
-        const resizedBase64 = canvas.toDataURL('image/jpeg', 0.9);
+        // Convert to data URL and resolve promise
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        URL.revokeObjectURL(img.src); // Clean up
         setIsResizing(false);
-        resolve(resizedBase64);
+        resolve(dataUrl);
       };
       
       img.onerror = () => {
+        URL.revokeObjectURL(img.src); // Clean up
         setIsResizing(false);
         reject(new Error('Error loading image'));
       };
-      
-      // Load the image from the file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        img.src = e.target?.result as string;
-      };
-      reader.onerror = () => {
-        setIsResizing(false);
-        reject(new Error('Error reading file'));
-      };
-      reader.readAsDataURL(file);
     });
   };
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -168,9 +173,34 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
   };
 
   // Format date to YYYY-MM-DD for input
-  const formatDateForInput = (date: Date | undefined): string => {
+  const formatDateForInput = (date: Date | string | any | undefined): string => {
     if (!date) return '';
-    return date.toISOString().split('T')[0];
+    
+    try {
+      // If it's already a Date object with toISOString method
+      if (date instanceof Date && typeof date.toISOString === 'function') {
+        return date.toISOString().split('T')[0];
+      }
+      
+      // Check if it's a Firestore Timestamp (has toDate method)
+      if (typeof date === 'object' && date !== null && 'toDate' in date && typeof date.toDate === 'function') {
+        const dateObj = date.toDate();
+        return dateObj.toISOString().split('T')[0];
+      }
+      
+      // If it's a string or other value, try to create a valid Date
+      const dateObj = new Date(date);
+      
+      // Check if the date is valid
+      if (isNaN(dateObj.getTime())) {
+        return '';
+      }
+      
+      return dateObj.toISOString().split('T')[0];
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '';
+    }
   };
 
   return (
@@ -193,9 +223,11 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
             onClick={handlePhotoClick}
           >
             {formData.photo ? (
-              <img 
+              <Image 
                 src={formData.photo} 
                 alt="Profile" 
+                width={96}
+                height={96}
                 className="w-full h-full object-cover"
               />
             ) : (
