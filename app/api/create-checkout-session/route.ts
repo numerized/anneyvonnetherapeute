@@ -24,6 +24,12 @@ interface TicketPrices {
         eur: number
       }
     }
+    'coaching-relationnel-en-groupe': PriceConfig & {
+      discountedAmount: {
+        chf: number
+        eur: number
+      }
+    }
     webinar: PriceConfig
   }
 }
@@ -40,14 +46,25 @@ const TICKET_PRICES: TicketPrices = {
         chf: 89900, // 899 CHF in centimes
         eur: 89900  // 899 EUR in cents
       },
-      name: 'Formation - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
+      name: 'Formation - Mieux vivre l\'autre | Anne Yvonne Racine (coeur-a-corps.org)'
+    },
+    'coaching-relationnel-en-groupe': {
+      amount: {
+        chf: 33300, // 333 CHF in centimes
+        eur: 33300  // 333 EUR in cents
+      },
+      discountedAmount: {
+        chf: 30000, // 300 CHF in centimes
+        eur: 30000  // 300 EUR in cents
+      },
+      name: 'Coaching Relationnel en Groupe | Anne Yvonne Racine (coeur-a-corps.org)'
     },
     webinar: {
       amount: {
         chf: 100, // 1 CHF in centimes
         eur: 100  // 1 EUR in cents
       },
-      name: 'Webinar - Mieux vivre l\'autre | Anne-Yvonne Racine (coeur-a-corps.org)'
+      name: 'Webinar - Mieux vivre l\'autre | Anne Yvonne Racine (coeur-a-corps.org)'
     }
   }
 }

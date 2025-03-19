@@ -16,6 +16,9 @@ export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: 
     scrollToSection(anchor);
   };
 
+  return null;
+  
+  /* Commented out navigation elements
   return (
     <>
       {menuItems?.map((menuItem, key) => {
@@ -63,4 +66,5 @@ export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: 
       </button>
     </>
   )
+  */
 }

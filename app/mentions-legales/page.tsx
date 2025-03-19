@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { ObfuscatedEmail } from '@/components/shared/ObfuscatedEmail'
 
 export const metadata: Metadata = {
-  title: 'Mentions Légales | Anne-Yvonne Racine',
-  description: 'Mentions légales et informations juridiques concernant le site web de Anne-Yvonne Racine, thérapeute relationnelle.',
+  title: 'Mentions Légales | Anne Yvonne Racine',
+  description: 'Mentions légales et informations juridiques concernant le site web de Anne Yvonne Racine, thérapeute relationnelle.',
   robots: 'noindex, nofollow'
 }
 
@@ -17,7 +17,7 @@ export default function MentionsLegales() {
           <section className="mb-12">
             <h2 className="text-2xl text-primary-cream mb-6">Éditeur du site</h2>
             <p className="text-primary-cream/80">
-              Ce site est édité par Anne-Yvonne Racine, thérapeute relationnelle.
+              Ce site est édité par Anne Yvonne Racine, thérapeute relationnelle.
               <br />
               Adresse : FAUBOURG DE L'HÔPITAL 14
               2000 Neuchâtel

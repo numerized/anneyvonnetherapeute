@@ -10,8 +10,8 @@ interface ClientNavbarProps {
 export function ClientNavbar({ data }: ClientNavbarProps) {
   const pathname = usePathname()
   
-  // Don't show navbar on style guide page
-  if (pathname === '/style-guide') {
+  // Don't show navbar on style guide and live pages
+  if (pathname === '/style-guide' || pathname === '/live') {
     return null
   }
 

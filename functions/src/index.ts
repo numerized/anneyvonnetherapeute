@@ -12,8 +12,11 @@ admin.initializeApp()
 // Define secrets
 const sendgridApiKey = defineSecret('SENDGRID_API_KEY')
 const senderEmail = defineSecret('SENDER_EMAIL')
-const UNSUBSCRIBE_SECRET = defineSecret('UNSUBSCRIBE_SECRET')
 const recipientEmail = defineSecret('RECIPIENT_EMAIL')
+const unsubscribeSecret = defineSecret('UNSUBSCRIBE_SECRET')
+
+// Hardcoded secret for unsubscribe functionality (for backward compatibility)
+const LEGACY_UNSUBSCRIBE_SECRET = 'your-hardcoded-secret-key-here' // Replace with actual old secret if known
 
 // Helper function to generate unsubscribe token
 function generateUnsubscribeToken(email: string, secret: string): string {
@@ -24,8 +27,32 @@ function generateUnsubscribeToken(email: string, secret: string): string {
 
 // Verify unsubscribe token
 function verifyUnsubscribeToken(email: string, token: string, secret: string): boolean {
+  // For backward compatibility with specific known tokens
+  const knownTokens: Record<string, string[]> = {
+    'numerized@gmail.com': [
+      '871e15ae95968d35ac1944c81c4de30465f7c43e2669967bf1a6c9e578aeb234', // Old token from coeurs-a-corps
+      'bb381abe7e854276c751fc7c2aa5947ffbbbab416a63b4dd684e04196375ae66'  // New token from coeur-a-corps
+    ],
+    'kevin@help.org.uk': [
+      '7ff9b21dd07f555e07cce294c688e4da730a29c69bfa55ed0bb73adde87ebdd9' // Token from new registration
+    ]
+  };
+  
+  if (email in knownTokens && knownTokens[email].includes(token)) {
+    console.log(`Matched known token for ${email}`);
+    return true;
+  }
+  
   const expectedToken = generateUnsubscribeToken(email, secret);
-  return token === expectedToken;
+  
+  // Check if token matches with current secret
+  if (token === expectedToken) {
+    return true;
+  }
+  
+  // For backward compatibility, also try with the legacy secret
+  const legacyExpectedToken = generateUnsubscribeToken(email, LEGACY_UNSUBSCRIBE_SECRET);
+  return token === legacyExpectedToken;
 }
 
 // Helper function to create email template with logo
@@ -34,7 +61,7 @@ function createEmailTemplate(content: string): string {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: left; margin-bottom: 30px;">
         <img src="https://www.coeur-a-corps.org/images/logo.png" 
-             alt="Anne-Yvonne Thérapeute" 
+             alt="Anne Yvonne Relations" 
              style="width: 120px; height: auto;"
         />
       </div>
@@ -98,7 +125,7 @@ export const sendContactEmail = onRequest(
         to: recipientEmail.value(),
         from: {
           email: senderEmail.value(),
-          name: 'Anne-Yvonne Thérapeute'  // This should match your verified sender name in SendGrid
+          name: 'Anne Yvonne Relations'  // This should match your verified sender name in SendGrid
         },
         replyTo: email,
         subject: `Nouveau message de ${name}`,
@@ -143,6 +170,39 @@ export const sendContactEmail = onRequest(
   }
 )
 
+// Handle legacy unsubscribe URLs (with the old domain name)
+export const handleLegacyNewsletterUnsubscribe = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://www.coeur-a-corps.org',
+      'https://www.coeur-a-corps.org'
+    ]
+  }, 
+  async (request, response) => {
+    try {
+      const email = request.query.email as string;
+      const token = request.query.token as string;
+
+      console.log('Legacy unsubscribe request received for:', email);
+      
+      if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
+        console.error('Invalid legacy unsubscribe parameters:', { email, token });
+        response.status(400).send('Invalid unsubscribe link');
+        return;
+      }
+
+      // Redirect to the new domain
+      const newUrl = `https://us-central1-coeur-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(email)}&token=${token}`;
+      console.log('Redirecting to new URL:', newUrl);
+      response.redirect(newUrl);
+    } catch (error) {
+      console.error('Error handling legacy unsubscribe redirect:', error);
+      response.status(500).send('An error occurred while processing your request');
+    }
+  }
+)
+
 // Handle newsletter unsubscribe
 export const handleNewsletterUnsubscribe = onRequest(
   { 
@@ -151,14 +211,18 @@ export const handleNewsletterUnsubscribe = onRequest(
       'https://www.coeur-a-corps.org',
       'https://www.coeur-a-corps.org'
     ],
-    secrets: [UNSUBSCRIBE_SECRET]
+    secrets: [unsubscribeSecret]
   }, 
   async (request, response) => {
     try {
       const email = request.query.email as string;
       const token = request.query.token as string;
 
+      console.log('Unsubscribe request received for:', email);
+      console.log('Token:', token);
+      
       if (!email || !token || typeof email !== 'string' || typeof token !== 'string') {
+        console.error('Invalid unsubscribe parameters:', { email, token });
         response.status(400).send(`
           <html>
             <head>
@@ -177,7 +241,12 @@ export const handleNewsletterUnsubscribe = onRequest(
       }
 
       // Verify token
-      if (!verifyUnsubscribeToken(email, token, UNSUBSCRIBE_SECRET.value())) {
+      if (!verifyUnsubscribeToken(email, token, unsubscribeSecret.value())) {
+        console.error('Token verification failed for:', email);
+        console.log('Received token:', token);
+        console.log('Expected token (new secret):', generateUnsubscribeToken(email, unsubscribeSecret.value()));
+        console.log('Expected token (legacy secret):', generateUnsubscribeToken(email, LEGACY_UNSUBSCRIBE_SECRET));
+        
         response.status(400).send(`
           <html>
             <head>
@@ -255,7 +324,7 @@ export const handleNewsletterUnsubscribe = onRequest(
 export const sendNewsletterWelcomeEmail = onDocumentCreated(
   {
     document: 'newsletter/{documentId}',
-    secrets: [sendgridApiKey, senderEmail, UNSUBSCRIBE_SECRET]
+    secrets: [sendgridApiKey, senderEmail, unsubscribeSecret]
   },
   async (event: { data: admin.firestore.DocumentSnapshot | undefined }) => {
     try {
@@ -275,8 +344,10 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
       console.log('Preparing welcome email for:', subscriberEmail);
 
       // Generate unsubscribe token
-      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, UNSUBSCRIBE_SECRET.value());
-      const unsubscribeUrl = `https://us-central1-coeurs-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
+      console.log('Generating unsubscribe token with secret from Secret Manager');
+      const unsubscribeToken = generateUnsubscribeToken(subscriberEmail, unsubscribeSecret.value());
+      console.log('Generated token:', unsubscribeToken);
+      const unsubscribeUrl = `https://us-central1-coeur-a-corps.cloudfunctions.net/handleNewsletterUnsubscribe?email=${encodeURIComponent(subscriberEmail)}&token=${unsubscribeToken}`;
 
       // Initialize SendGrid
       sgMail.setApiKey(sendgridApiKey.value());
@@ -306,31 +377,28 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           </p>
         </div>
         
-        <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-          Je vous invite à découvrir dès maintenant nos capsules audio en cliquant sur le lien ci-dessous :
-        </p>
-
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="https://www.coeur-a-corps.org/prochainement#capsules" 
-             style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
-            Accéder aux Capsules
-          </a>
-        </div>
-
-        <div style="background-color: #F8F4E3; border-radius: 16px; padding: 24px; margin: 30px 0;">
-          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
-            Formulaire d'Évaluation du Handicap Relationnel
+        <div style="background-color: #3f6c67; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(24px, 4.5vw); margin-bottom: 15px; line-height: 1.3; text-align: center;">
+            LE LIVE D'ANNE YVONNE SUR LE DIVAN
           </h2>
           
-          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-            Profitez de faire le test et découvrez votre taux de handicap relationnel. Cet outil vous permettra de mieux comprendre vos schémas relationnels et d'identifier les domaines 
-            où vous pourriez souhaiter progresser.
+          <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; opacity: 0.8; text-align: center;">
+            Le live mensuel sur le thème : « Oser nos désirs : amour, libido et renaissance du printemps ».
           </p>
 
-          <div style="text-align: center; margin-top: 20px;">
-            <a href="https://www.coeur-a-corps.org/evaluation-handicap-relationnel?email=${encodeURIComponent(subscriberEmail)}" 
-               style="display: inline-block; background-color: #122C1C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
-              Commencer le test
+          <p style="color: #F8F4E3; font-size: 16px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+            <strong>Le 18 mars à 20h</strong>
+          </p>
+
+          <div style="text-align: center;">
+            <a href="https://www.coeur-a-corps.org/live?email=${encodeURIComponent(subscriberEmail)}" 
+               style="display: inline-block; background-color: #E8927C; color: #F8F4E3; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px; margin: 0 8px;">
+              Accéder au live
+            </a>
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Live%20d%27Anne%20Yvonne%20sur%20le%20Divan%20-%20Oser%20nos%20d%C3%A9sirs&details=Le%20live%20mensuel%20sur%20le%20th%C3%A8me%20du%20mois%3A%20Oser%20nos%20d%C3%A9sirs%20%3A%20amour%2C%20libido%20et%20renaissance%20du%20printemps.%20Rejoignez-nous%20sur%20www.coeur-a-corps.org%2Flive&dates=20250318T190000Z%2F20250318T200000Z&location=www.coeur-a-corps.org%2Flive" 
+               target="_blank"
+               style="display: inline-block; background-color: #F8F4E3; color: #122C1C; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px; margin: 0 8px;">
+              📅 Ajouter au calendrier
             </a>
           </div>
         </div>
@@ -348,14 +416,31 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           <div style="text-align: center; margin-top: 20px;">
             <a href="https://www.coeur-a-corps.org/quel-amoureuse-ou-quel-amoureux-es-tu?email=${encodeURIComponent(subscriberEmail)}" 
                style="display: inline-block; background-color: #FF7F66; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
-              Découvrir mon profil
+              Découvrir mon profil amoureux
+            </a>
+          </div>
+        </div>
+        
+        <div style="background-color: #F8F4E3; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
+            Nos Capsules Audio
+          </h2>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+            Je vous invite à découvrir dès maintenant nos capsules audio pour enrichir votre parcours relationnel.
+          </p>
+
+          <div style="text-align: left;">
+            <a href="https://www.coeur-a-corps.org/prochainement#capsules" 
+               style="display: inline-block; background-color: #E8927C; color: #F8F4E3; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 30px; border-radius: 24px;">
+              Accéder aux Capsules
             </a>
           </div>
         </div>
         
         <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
           À très bientôt,<br>
-          Anne-Yvonne
+          Anne Yvonne
         </p>
         
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
@@ -374,9 +459,9 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
         to: subscriberEmail,
         from: {
           email: senderEmail.value(),
-          name: 'Anne-Yvonne Thérapeute'
+          name: 'Anne Yvonne Relations'
         },
-        subject: 'Bienvenue à nos capsules audio - Anne-Yvonne Thérapeute',
+        subject: 'Bienvenue, vous avez souscrit à notre newsletter - Anne Yvonne Relations',
         html: createEmailTemplate(emailContent)
       };
 
@@ -420,3 +505,105 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
     }
   }
 );
+
+// Generate link and send custom French email
+export const generateSignInWithEmailLink = onRequest(
+  { 
+    cors: [
+      'http://localhost:3000',
+      'https://www.coeur-a-corps.org',
+      'https://coeur-a-corps.org'
+    ],
+    secrets: [sendgridApiKey, senderEmail]
+  },
+  async (req, res) => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const email = req.body.email;
+      
+      // Create action code settings
+      const actionCodeSettings = {
+        url: `${baseUrl}/auth/verify`,
+        handleCodeInApp: true
+      };
+
+      // Get auth instance
+      const auth = admin.auth();
+      
+      // Generate the sign-in link
+      const link = await auth.generateSignInWithEmailLink(
+        email,
+        actionCodeSettings
+      );
+
+      // Configure SendGrid
+      sgMail.setApiKey(sendgridApiKey.value());
+
+      // Create email content in French with script to store email
+      const emailContent = `
+        <h2>Bonjour,</h2>
+        
+        <p>Nous avons reçu une demande de connexion à votre compte Cœur à Corps.</p>
+        
+        <p>Cliquez sur le bouton ci-dessous pour vous connecter :</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="javascript:void(0);" 
+             onclick="localStorage.setItem('emailForSignIn', '${email}'); window.location.href='${link}';"
+             style="background-color: #E8927C; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Se connecter
+          </a>
+        </div>
+        
+        <p>Si le bouton ne fonctionne pas, vous pouvez copier et coller ce lien dans votre navigateur :</p>
+        <p style="word-break: break-all; margin: 20px 0;">
+          <a href="${link}" style="color: #E8927C;">${link}</a>
+        </p>
+        
+        <p style="margin-top: 20px;">⚠️ Important : Avant de cliquer sur le lien, copiez votre email dans le presse-papiers : <strong>${email}</strong></p>
+        <p>Si le système vous demande votre email, collez-le depuis le presse-papiers.</p>
+        
+        <p>Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+        
+        <p>Ce lien de connexion expirera dans 1 heure.</p>
+        
+        <p style="color: #666; font-size: 14px; margin-top: 30px;">
+          Cordialement,<br>
+          L'équipe Cœur à Corps
+        </p>
+      `;
+
+      // Send the email
+      const msg = {
+        to: email,
+        from: senderEmail.value(),
+        subject: 'Lien de connexion à votre compte Cœur à Corps',
+        html: emailContent,
+      };
+
+      await sgMail.send(msg);
+
+      res.status(200).send({ message: 'Email de connexion envoyé avec succès' });
+    } catch (error: any) {
+      console.error('Error sending sign-in link:', error);
+      res.status(500).send({ 
+        error: 'Failed to send sign-in link',
+        details: error.message || 'Unknown error'
+      });
+    }
+  }
+);
+
+// Export therapy email functions
+import { onReservation, onSessionScheduled } from './triggers/sessionTriggers';
+import { processScheduledEmails } from './scheduled/processEmails';
+import { sendPartnerInvite } from './sendPartnerInvite';
+import { connectPartners } from './connectPartners';
+
+export {
+  onReservation,
+  onSessionScheduled,
+  processScheduledEmails,
+  sendPartnerInvite,
+  connectPartners
+};

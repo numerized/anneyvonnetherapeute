@@ -98,6 +98,21 @@
     font-size: 3em;
     font-family: 'Tan', sans-serif!important;
   }
+
+  .test-title {
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+  @media (min-width: 640px) {
+    .test-title {
+      font-size: 1.125rem !important;
+    }
+  }
+  @media (min-width: 768px) {
+    .test-title {
+      font-size: 1.25rem !important;
+    }
+  }
 }
 
 /* Remove default margin */
