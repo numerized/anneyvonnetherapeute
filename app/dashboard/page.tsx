@@ -197,72 +197,111 @@ export default function DashboardPage() {
   // Function to check if a date is valid (at least 4 weeks after the previous session)
   const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
     // Define session dependencies (which session must be at least 4 weeks after which)
-    const sessionDependencies: Record<string, string> = {
+    const sessionDependencyMap: Record<string, string> = {
       'partner1_session_1': 'initial_session',
       'partner1_session_2': 'partner1_session_1',
       'partner1_session_3': 'partner1_session_2',
       'partner2_session_1': 'initial_session',
       'partner2_session_2': 'partner2_session_1',
       'partner2_session_3': 'partner2_session_2',
-      'final_session': 'initial_session' // For final session we'll check against initial for now
+      'final_session': 'partner1_session_3' // Final depends on last partner1 session
     };
 
-    // Check if this session has a dependency
-    const dependsOn = sessionDependencies[sessionId];
-    if (dependsOn && sessionDates[dependsOn]) {
-      const newDate = new Date(dateStr);
-      const previousSessionDate = new Date(sessionDates[dependsOn]);
-      
-      // Calculate the difference in milliseconds
-      const diffTime = Math.abs(newDate.getTime() - previousSessionDate.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      console.log(`Checking date validity: ${diffDays} days between ${dependsOn} and ${sessionId}`);
-      
-      // Return true if at least 28 days (4 weeks) apart
-      return diffDays >= 28;
+    // If there's no dependency for this session, it's always valid
+    if (!sessionDependencyMap[sessionId]) {
+      return true;
     }
-    
-    // If no dependency or previous session date not available, consider it valid
-    return true;
+
+    // Get the previous session date
+    const previousSessionId = sessionDependencyMap[sessionId];
+    const previousSessionDateStr = sessionDates[previousSessionId];
+
+    // If previous session doesn't have a date yet, this date is invalid
+    if (!previousSessionDateStr) {
+      return false;
+    }
+
+    try {
+      const currentDate = new Date(dateStr);
+      const previousDate = new Date(previousSessionDateStr);
+
+      // Calculate the difference in days
+      const diffTime = currentDate.getTime() - previousDate.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      // Debug log with detailed info
+      console.log(`[DATE CHECK] ${sessionId}: ${new Date(dateStr).toLocaleDateString('fr-FR')} ` +
+                  `vs previous ${previousSessionId}: ${new Date(previousSessionDateStr).toLocaleDateString('fr-FR')} ` + 
+                  `= ${diffDays} days apart`);
+
+      // Check if the difference is at least 28 days (4 weeks)
+      return diffDays >= 28;
+    } catch (error) {
+      console.error(`Error validating date for session ${sessionId}:`, error);
+      return false;
+    }
   }, [sessionDates]);
+
+  // Debugging for session dates
+  useEffect(() => {
+    console.log('------- DEBUG SESSION DATES -------');
+    console.log('All session dates:', sessionDates);
+    console.log('Invalid dates set:', Array.from(invalidDates));
+    
+    // Check if any dates need validity checks but aren't being validated
+    Object.entries(sessionDates).forEach(([eventId, dateStr]) => {
+      // Skip initial session
+      if (eventId !== 'initial_session') {
+        const isValid = isDateValid(eventId, dateStr);
+        console.log(`* Date validity check for ${eventId}: ${dateStr} => ${isValid ? 'VALID' : 'INVALID'}`);
+      }
+    });
+    
+    console.log('------- END DEBUG -------');
+  }, [sessionDates, invalidDates, isDateValid]);
 
   // Validate all existing dates when session dates change
   useEffect(() => {
     const newInvalidDates = new Set<string>();
     
+    // Log all session dates for debugging
+    console.log('All session dates to validate:', sessionDates);
+    
+    // Force checking each individual date, even if not in sessionDates yet
+    const allSessionIds = [
+      'partner1_session_1', 
+      'partner1_session_2', 
+      'partner1_session_3',
+      'partner2_session_1', 
+      'partner2_session_2', 
+      'partner2_session_3',
+      'final_session'
+    ];
+    
     // Check all session dates
-    Object.entries(sessionDates).forEach(([sessionId, dateStr]) => {
+    allSessionIds.forEach(sessionId => {
+      // Skip if this session doesn't have a date
+      if (!sessionDates[sessionId]) return;
+      
       // Skip the initial session as it has no "previous" session
-      if (sessionId !== 'initial_session') {
-        const isValid = isDateValid(sessionId, dateStr);
-        if (!isValid) {
-          newInvalidDates.add(sessionId);
-          console.warn(`Warning: The session date for ${sessionId} is less than 4 weeks after its previous session`);
-          
-          // Debug: Log session details for this invalid date
-          console.log(`Session details for invalid date ${sessionId}:`, 
-            userProfile?.sessionDetails?.[sessionId] || 'No session details found');
-        }
+      if (sessionId === 'initial_session') return;
+      
+      const dateStr = sessionDates[sessionId];
+      const isValid = isDateValid(sessionId, dateStr);
+      
+      console.log(`Validating ${sessionId}: ${dateStr} => ${isValid ? 'VALID' : 'INVALID'}`);
+      
+      if (!isValid) {
+        newInvalidDates.add(sessionId);
       }
     });
     
+    // Log the final set of invalid dates
+    console.log('Final invalid dates:', Array.from(newInvalidDates));
+    
     // Update invalid dates state
     setInvalidDates(newInvalidDates);
-    
-    // Debug: Log all invalid dates
-    console.log('All invalid dates:', Array.from(newInvalidDates));
-    
-    // Debug: Log session details for all invalid dates
-    if (newInvalidDates.size > 0 && userProfile) {
-      console.log('Session details for all invalid dates:', 
-        Array.from(newInvalidDates).map(id => ({
-          id,
-          details: userProfile.sessionDetails?.[id] || 'No details found'
-        }))
-      );
-    }
-  }, [sessionDates, isDateValid, userProfile]);
+  }, [sessionDates, isDateValid]);
 
   const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
     if (!user) return;
@@ -744,14 +783,18 @@ export default function DashboardPage() {
                       </span>
                     )}
                   </div>
-                  {dateStr && (
-                    <div className={`text-sm mt-1 flex items-center gap-1.5 ${
-                      invalidDates.has(event.id) 
-                        ? 'text-red-400 font-medium bg-red-900/30' 
-                        : 'text-[rgb(247_237_226_)] font-medium bg-[rgb(247_237_226_)]/20'
-                    } px-2 py-1 rounded-md w-fit`}>
+                  
+                  {/* Render the date with appropriate styling */}
+                  {sessionDates[event.id] && (
+                    <div 
+                      className={`text-sm mt-1 flex items-center gap-1.5 px-2 py-1 rounded-md w-fit
+                        ${invalidDates.has(event.id) 
+                          ? 'text-red-400 font-medium bg-red-900/30' 
+                          : 'text-green-400 font-medium bg-green-900/30'
+                        }`}
+                    >
                       <Calendar className="w-4 h-4" />
-                      {dateStr}
+                      <span>{dateStr}</span>
                       {invalidDates.has(event.id) && (
                         <span className="text-xs ml-1">(moins de 4 semaines)</span>
                       )}
@@ -794,6 +837,35 @@ export default function DashboardPage() {
                       variant="outline" 
                       size="sm"
                       className="text-xs h-8 border-red-400/40 text-red-300 hover:bg-red-400/10 hover:text-red-200"
+                      onClick={() => handleSessionClick(event)}
+                    >
+                      <Edit className="w-3 h-3 mr-2" />
+                      Reprogrammer cette séance
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {/* Show reschedule button for valid dates */}
+              {sessionDates[event.id] && !invalidDates.has(event.id) && (
+                <div className="ml-8 mt-2">
+                  {userProfile?.sessionDetails?.[event.id]?.rescheduleUrl ? (
+                    <a
+                      href={userProfile.sessionDetails[event.id].rescheduleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-xs h-8 px-4 py-2 rounded-md
+                        border border-green-400/40 text-green-300 bg-transparent
+                        hover:bg-green-400/10 hover:text-green-200 transition-colors"
+                    >
+                      <Edit className="w-3 h-3 mr-2" />
+                      Reprogrammer cette séance
+                    </a>
+                  ) : (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-xs h-8 border-green-400/40 text-green-300 hover:bg-green-400/10 hover:text-green-200"
                       onClick={() => handleSessionClick(event)}
                     >
                       <Edit className="w-3 h-3 mr-2" />
