@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
 // User interface
@@ -14,21 +14,42 @@ export interface User {
   partnerId?: string;
   partnerEmail?: string;
   isPartnerConnected?: boolean;
+  completedSessions?: string[];
+  sessionDates?: Record<string, string>;
+  sessionDetails?: Record<string, SessionDetails>;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
+// Session details interface
+export interface SessionDetails {
+  date: string;          // ISO date string
+  startTime?: string;    // Start time
+  endTime?: string;      // End time
+  duration?: number;     // Duration in minutes
+  location?: string;     // Session location
+  calendarEvent?: string; // Calendar event link/ID
+  inviteeEmail?: string; // Email of the person who booked
+  textReminderNumber?: string; // Phone number for text reminders
+  cancellationUrl?: string; // URL to cancel the appointment
+  rescheduleUrl?: string; // URL to reschedule the appointment
+  notes?: string;        // Any additional notes
+  sessionType: string;   // Type of session
+  status: 'scheduled' | 'completed' | 'cancelled';
+}
+
 // Create a new user or update if exists
-export async function createOrUpdateUser(
-  userId: string, 
-  userData: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>
-): Promise<User> {
+export async function createOrUpdateUser(userData: User): Promise<User> {
   const db = getFirestore(app);
+  const userId = userData.id!;
   const userRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userRef);
 
+  // Remove id from the data to be saved
+  const { id, ...dataToSave } = userData;
+
   const updatedData = {
-    ...userData,
+    ...dataToSave,
     updatedAt: new Date()
   };
 
@@ -49,6 +70,14 @@ export async function createOrUpdateUser(
     id: updatedDoc.id,
     ...updatedDoc.data()
   } as User;
+}
+
+// Backward compatibility for older usage
+export async function createOrUpdateUserWithFields(
+  userId: string, 
+  userData: Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>
+): Promise<User> {
+  return createOrUpdateUser({ id: userId, ...userData } as User);
 }
 
 // Get user by ID

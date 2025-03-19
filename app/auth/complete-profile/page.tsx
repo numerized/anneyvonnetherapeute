@@ -52,7 +52,10 @@ export default function CompleteProfilePage() {
 
     try {
       if (userData?.id) {
-        await createOrUpdateUser(userData.id, formData);
+        await createOrUpdateUser({
+          ...userData,
+          ...formData
+        });
         toast.success('Profil mis à jour avec succès !');
         router.push('/dashboard');
       }

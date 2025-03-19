@@ -33,5 +33,5 @@ export interface TherapyTimelineEvent {
   delayDays?: number;
   triggerType?: 'immediate' | 'beforeSession' | 'afterSession';
   sessionType?: 'couple' | 'individual';
-  partner?: 'male' | 'female';
+  partner?: 'male' | 'female' | 'both' | 'partner1' | 'partner2';
 }
