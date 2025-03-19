@@ -30,8 +30,8 @@ const mono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Anne-Yvonne Thérapeute',
-  description: 'Anne-Yvonne Thérapeute - Psychothérapie & Hypnose',
+  title: 'Anne Yvonne Relations',
+  description: 'Anne Yvonne Relations - Psychothérapie & Hypnose',
   icons: {
     icon: '/images/logo.png'
   }

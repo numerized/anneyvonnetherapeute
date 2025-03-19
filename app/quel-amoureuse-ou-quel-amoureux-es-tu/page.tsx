@@ -96,7 +96,7 @@ const options = [
 
 function QuelAmoureuxPage() {
   const searchParams = useSearchParams()
-  const email = searchParams.get('email')
+  const email = searchParams?.get('email') ?? ''
 
   const [date] = useState(() => {
     const today = new Date()
@@ -115,8 +115,8 @@ function QuelAmoureuxPage() {
   }
 
   return (
-    <main className="min-h-screen bg-primary-forest p-4 md:p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg print:shadow-none">
+    <main className="min-h-screen bg-primary-forest p-4 md:p-8 pb-24">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg print:shadow-none mb-20">
         <div className="flex flex-col h-full print-container">
           <div className="flex-grow">
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-8">
@@ -230,7 +230,12 @@ function QuelAmoureuxPage() {
 
                 <div className="mt-8 flex justify-end">
                   <button
-                    onClick={() => setShowResults(true)}
+                    onClick={() => {
+                      setShowResults(true)
+                      setTimeout(() => {
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }, 400)
+                    }}
                     className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-all duration-200"
                   >
                     Voir mes résultats

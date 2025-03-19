@@ -63,13 +63,14 @@ export function Hero({ hero, data }: HeroProps) {
           aria-hidden="true"
         />
         {imageUrl && (
-          <img 
+          <Image 
             src={imageUrl}
             alt={hero?.image?.alt || 'Hero background'}
             className="w-full h-full object-cover"
             loading="eager"
             width={1920}
             height={1080}
+            priority
           />
         )}
       </div>
