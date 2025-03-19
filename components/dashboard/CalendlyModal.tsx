@@ -6,140 +6,104 @@ import { useCallback, useEffect, useState } from 'react';
 
 // Re-export the SessionType for backward compatibility
 export type SessionType = 
-  | 'initial_couple' 
+  | 'initial' 
   | 'individual_male_1' 
   | 'individual_male_2' 
   | 'individual_male_3'
   | 'individual_female_1'
   | 'individual_female_2'
   | 'individual_female_3'
-  | 'final_couple';
+  | 'final'
+  | '1h';
 
-type CalendlyModalProps = {
+// Props interface
+export interface CalendlyModalProps {
   isOpen: boolean;
   onClose: () => void;
   sessionType: SessionType;
-  onEventScheduled?: (eventDetails: any) => void;
   minDate?: Date;
   maxDate?: Date;
   userEmail?: string;
-};
+  onAppointmentScheduled?: (eventData: any) => void;
+}
 
 // Define session titles for different session types
 const SESSION_TITLES: Record<SessionType, string> = {
-  initial_couple: 'Séance Initiale de Couple',
+  initial: 'Séance Initiale de Couple',
   individual_male_1: 'Séance Individuelle Homme 1',
   individual_male_2: 'Séance Individuelle Homme 2',
   individual_male_3: 'Séance Individuelle Homme 3',
   individual_female_1: 'Séance Individuelle Femme 1',
   individual_female_2: 'Séance Individuelle Femme 2',
   individual_female_3: 'Séance Individuelle Femme 3',
-  final_couple: 'Séance Finale de Couple'
+  final: 'Séance Finale de Couple',
+  '1h': '1h'
 };
 
-// Map session types to Calendly event type slugs (you may need to update these)
-const SESSION_TYPE_MAPPING: Record<SessionType, string> = {
-  initial_couple: 'initial-couple',  // Update this to match your Calendly event type slug
-  individual_male_1: 'individual-session-male',
-  individual_male_2: 'individual-session-male',
-  individual_male_3: 'individual-session-male',
-  individual_female_1: 'individual-session-female',
-  individual_female_2: 'individual-session-female',
-  individual_female_3: 'individual-session-female',
-  final_couple: 'final-couple'
-};
+
 
 // Calendly username (direct integration approach)
 const CALENDLY_USERNAME = process.env.NEXT_PUBLIC_CALENDLY_USERNAME || 'numerized-ara'; // Update this with your Calendly username
 
 export function CalendlyModal({ 
-  isOpen,
-  onClose,
-  sessionType,
-  onEventScheduled,
+  isOpen, 
+  onClose, 
+  sessionType = '1h' as SessionType,
   minDate,
   maxDate,
-  userEmail
+  userEmail,
+  onAppointmentScheduled
 }: CalendlyModalProps) {
-  const [isCalendlyScriptLoaded, setIsCalendlyScriptLoaded] = useState<boolean>(false);
+  const [isCalendlyScriptLoaded, setIsCalendlyScriptLoaded] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [eventUri, setEventUri] = useState<string | null>(null);
+  
+  // Detect if the current device is mobile
+  const isMobile = useIsMobile();
 
-  // Define a custom type for Calendly events
-  type CalendlyEventData = {
-    event: string;
-    payload: any;
-  };
-
-  // Define event scheduled handler
-  const handleEventScheduled = useCallback((eventData: CalendlyEventData) => {
-    console.log('Calendly event scheduled!', eventData);
-    
-    // Call the callback with event details
-    if (onEventScheduled) {
-      onEventScheduled(eventData.payload);
-    }
-    
-    // Close the modal
-    onClose();
-  }, [onEventScheduled, onClose]);
-
-  // Handle Calendly messages
-  const handleCalendlyMessage = useCallback((event: MessageEvent) => {
-    if (event.origin !== 'https://calendly.com') return;
-    
-    // Log all message events from Calendly for debugging
-    console.log('Received message from Calendly:', event.data);
-    
-    if (event.data.event && event.data.event === 'calendly.event_scheduled') {
-      console.log('Event scheduled event details:', JSON.stringify(event.data, null, 2));
+  // Handler for Calendly messages
+  const handleCalendlyMessage = useCallback((e: MessageEvent) => {
+    if (e.data.event && e.data.event === 'calendly.event_scheduled') {
+      console.log('Calendly event scheduled:', e.data);
       
-      // Extract and log the event URI from various possible locations in the data structure
-      let eventUri = null;
-      
-      // Try to extract from payload
-      if (event.data.payload?.event?.uri) {
-        eventUri = event.data.payload.event.uri;
-        console.log('Found event URI in payload.event.uri:', eventUri);
-      } 
-      // Also check invitee.scheduled_event if present
-      else if (event.data.payload?.invitee?.scheduled_event?.uri) {
-        eventUri = event.data.payload.invitee.scheduled_event.uri;
-        console.log('Found event URI in payload.invitee.scheduled_event.uri:', eventUri);
+      // Extract the event URI
+      let uri = '';
+      if (e.data.payload?.event?.uri) {
+        uri = e.data.payload.event.uri;
+      } else if (e.data.payload?.invitee?.scheduled_event?.uri) {
+        uri = e.data.payload.invitee.scheduled_event.uri;
       }
       
-      if (eventUri) {
-        // Ensure the full event data being passed has the URI accessible at the top level 
-        // for easier processing in the parent component
-        const enhancedData = {
-          ...event.data,
-          eventUri: eventUri,
-          payload: {
-            ...event.data.payload,
-            event: {
-              ...(event.data.payload?.event || {}),
-              uri: eventUri
-            }
-          }
-        };
-        
-        console.log('Enhanced event data with extracted URI:', enhancedData);
-        handleEventScheduled(enhancedData);
-      } else {
-        console.warn('Could not find event URI in Calendly event data');
-        handleEventScheduled(event.data);
+      setEventUri(uri);
+      
+      if (uri && onAppointmentScheduled) {
+        // Pass the enhanced data to the parent component
+        onAppointmentScheduled({
+          ...e.data,
+          eventUri: uri
+        });
       }
+      
+      // Close the modal after scheduling
+      onClose();
     }
-  }, [handleEventScheduled]);
+  }, [onAppointmentScheduled, onClose]);
 
-  // Cleanup function
-  const cleanupCalendlyWidget = useCallback(() => {
-    // Remove event listener
-    window.removeEventListener('message', handleCalendlyMessage);
+  // Initialize Calendly script
+  useEffect(() => {
+    setIsMounted(true);
     
-    // Clear widget container
-    const container = document.getElementById('calendly-container');
-    if (container) {
-      container.innerHTML = '';
-    }
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    script.onload = () => setIsCalendlyScriptLoaded(true);
+    
+    document.body.appendChild(script);
+    
+    return () => {
+      window.removeEventListener('message', handleCalendlyMessage);
+      // Don't remove the script as it might be used elsewhere in the app
+    };
   }, [handleCalendlyMessage]);
 
   // Initialize widget function
@@ -156,16 +120,12 @@ export function CalendlyModal({
     // Build URL parameters for date constraints
     let dateParams = '';
     if (minDate) {
-      console.log(`Original minDate: ${minDate.toISOString()}`);
+      console.log(`Modal received minDate: ${minDate.toISOString()}`);
       
-      // Make sure the date is at least today
-      const today = new Date();
-      const effectiveMinDate = minDate < today ? today : minDate;
-      
-      // Format date as YYYY-MM-DD
-      const minDateFormatted = format(effectiveMinDate, 'yyyy-MM-dd');
+      // Format date as YYYY-MM-DD without overriding with today's date
+      const minDateFormatted = format(minDate, 'yyyy-MM-dd');
       dateParams += `&min_start_time=${encodeURIComponent(minDateFormatted)}`;
-      console.log(`Setting min date: ${minDateFormatted}`);
+      console.log(`Setting min date for Calendly: ${minDateFormatted}`);
     }
     
     if (maxDate) {
@@ -198,64 +158,91 @@ export function CalendlyModal({
         utmSource: 'therapy_journey_dashboard'
       },
       styles: {
-        height: '100%'
+        height: '100%',
+        minHeight: isMobile ? '100vh' : '700px',
       }
     });
 
     // Add event listener for scheduling using the window.message event
     window.addEventListener('message', handleCalendlyMessage);
-  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage, sessionType]);
+  }, [isCalendlyScriptLoaded, minDate, maxDate, userEmail, handleCalendlyMessage, sessionType, isMobile]);
 
-  // Load Calendly script
+  // Initialize Calendly when modal is opened
   useEffect(() => {
-    if (!isOpen) return;
-
-    // Only load script if it's not already loaded
-    if (!document.getElementById('calendly-script') && !isCalendlyScriptLoaded) {
-      const script = document.createElement('script');
-      script.id = 'calendly-script';
-      script.src = 'https://assets.calendly.com/assets/external/widget.js';
-      script.async = true;
-      script.onload = () => setIsCalendlyScriptLoaded(true);
-      document.body.appendChild(script);
-    } else if (isCalendlyScriptLoaded) {
-      // Initialize Calendly inline widget when script is loaded
-      initializeCalendlyWidget();
+    if (isOpen && isMounted) {
+      // Delay initialization to ensure the modal is fully rendered
+      const timer = setTimeout(() => {
+        initializeCalendlyWidget();
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
+  }, [isOpen, isMounted, initializeCalendlyWidget]);
 
-    // Clean up
-    return () => {
-      cleanupCalendlyWidget();
-    };
-  }, [isOpen, isCalendlyScriptLoaded, initializeCalendlyWidget, cleanupCalendlyWidget]);
+  // Cleanup widget when modal is closed
+  useEffect(() => {
+    if (!isOpen) {
+      setEventUri(null);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   return (
-    <div
-      className={`fixed inset-0 flex items-center justify-center z-50 ${
-        isOpen ? '' : 'hidden'
-      }`}
-    >
-      <div className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="bg-primary-cream/10 rounded-lg shadow-lg z-10 w-full h-full max-h-screen overflow-hidden flex flex-col">
-        <div className="flex justify-between items-center px-6 py-4 border-b">
-          <h2 className="text-xl font-semibold text-[rgb(247_237_226)]">
-            {SESSION_TITLES[sessionType] || 'Prendre un rendez-vous'}
-          </h2>
+    <div className="fixed inset-0 z-50 overflow-hidden bg-black bg-opacity-50 flex items-center justify-center">
+      <div 
+        className={`relative bg-white rounded-lg shadow-xl flex flex-col overflow-hidden ${
+          isMobile 
+            ? 'w-full h-full max-w-full max-h-full rounded-none' 
+            : 'w-[95%] max-w-5xl mx-auto h-[90vh] max-h-[900px]'
+        }`}
+      >
+        <div className="flex items-center justify-between p-4 md:p-6 border-b">
+          <h3 className="text-xl md:text-2xl font-semibold text-gray-800">
+            {sessionType?.includes('individual_male') && 'Séance Individuelle Homme'}
+            {sessionType?.includes('individual_female') && 'Séance Individuelle Femme'}
+            {sessionType?.includes('initial') && 'Première Séance de Couple'}
+            {sessionType?.includes('final') && 'Séance Finale de Couple'}
+            {!sessionType?.includes('individual_male') && !sessionType?.includes('individual_female') && 
+             !sessionType?.includes('initial') && !sessionType?.includes('final') && 'Prendre Rendez-vous'}
+          </h3>
           <button
-            className="text-[rgb(247_237_226)] hover:text-[rgb(247_237_226)]"
             onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-coral"
           >
-            <X size={24} />
+            <X className="w-6 h-6" />
+            <span className="sr-only">Fermer</span>
           </button>
         </div>
         
-        {/* Calendly inline widget will be loaded here */}
-        <div id="calendly-container" className="flex-grow w-full"></div>
+        <div id="calendly-container" className="flex-grow w-full overflow-hidden" />
       </div>
     </div>
   );
+}
+
+// Custom hook to detect mobile devices
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check initially
+    checkIfMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+  
+  return isMobile;
 }
 
 // Add type definition for Calendly widget

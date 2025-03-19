@@ -1,26 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Calendar, CheckSquare, Loader2, PlusCircle, Square, User, X, LogOut } from 'lucide-react';
-import { getAuth, User as FirebaseUser, signOut } from 'firebase/auth';
-import { toast } from 'sonner';
 import { format, isAfter, isBefore } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Button } from '@/components/ui/button';
+import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, increment, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from 'firebase/firestore';
+import { Calendar, CheckSquare, Loader2, LogOut, PlusCircle, Square, User, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
 import { CalendlyModal, SessionType } from '@/components/dashboard/CalendlyModal';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { InvitePartnerForm } from '@/components/InvitePartnerForm';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { UserProfileForm } from '@/components/UserProfileForm';
 import { ZenClickButton } from '@/components/ZenClickButton';
-import { app } from '@/lib/firebase';
+import { extractEventIdFromUri, getCalendlyEventDetails } from '@/lib/calendly';
 import { coupleTherapyJourney, getPhasePartnerEvents, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
-import { createOrUpdateUser, createOrUpdateUserWithFields, getPartnerProfile, getUserById, User as UserProfile, SessionDetails } from '@/lib/userService';
-import { getCalendlyEventDetails, extractEventIdFromUri } from '@/lib/calendly';
-import { RecentlyScheduledEvent } from '@/components/dashboard/RecentlyScheduledEvent';
-import { addDoc, collection, doc, getDoc, getFirestore, onSnapshot, query, Timestamp, updateDoc, where, increment, deleteDoc, orderBy, limit } from 'firebase/firestore';
+import { app } from '@/lib/firebase';
+import { createOrUpdateUser, createOrUpdateUserWithFields, getPartnerProfile, getUserById, SessionDetails, User as UserProfile } from '@/lib/userService';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -42,12 +42,7 @@ export default function DashboardPage() {
   const [selectedSession, setSelectedSession] = useState<TherapyJourneyEvent | null>(null);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
   const [sessionDates, setSessionDates] = useState<Record<string, string>>({});
-  const [lastScheduledEvent, setLastScheduledEvent] = useState<{ 
-    sessionId: string;
-    eventUri: string; 
-    scheduledDate: string;
-    formattedDate?: string;
-  } | null>(null);
+  const [invalidDates, setInvalidDates] = useState<Set<string>>(new Set());
   const router = useRouter();
 
   // Function to handle sign out
@@ -199,6 +194,59 @@ export default function DashboardPage() {
     return () => clearInterval(intervalId);
   }, [userProfile, sessionDates, completedSessions]);
 
+  // Function to check if a date is valid (at least 4 weeks after the previous session)
+  const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
+    // Define session dependencies (which session must be at least 4 weeks after which)
+    const sessionDependencies: Record<string, string> = {
+      'partner1_session_1': 'initial_session',
+      'partner1_session_2': 'partner1_session_1',
+      'partner1_session_3': 'partner1_session_2',
+      'partner2_session_1': 'initial_session',
+      'partner2_session_2': 'partner2_session_1',
+      'partner2_session_3': 'partner2_session_2',
+      'final_session': 'initial_session' // For final session we'll check against initial for now
+    };
+
+    // Check if this session has a dependency
+    const dependsOn = sessionDependencies[sessionId];
+    if (dependsOn && sessionDates[dependsOn]) {
+      const newDate = new Date(dateStr);
+      const previousSessionDate = new Date(sessionDates[dependsOn]);
+      
+      // Calculate the difference in milliseconds
+      const diffTime = Math.abs(newDate.getTime() - previousSessionDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      console.log(`Checking date validity: ${diffDays} days between ${dependsOn} and ${sessionId}`);
+      
+      // Return true if at least 28 days (4 weeks) apart
+      return diffDays >= 28;
+    }
+    
+    // If no dependency or previous session date not available, consider it valid
+    return true;
+  }, [sessionDates]);
+
+  // Validate all existing dates when session dates change
+  useEffect(() => {
+    const newInvalidDates = new Set<string>();
+    
+    // Check all session dates
+    Object.entries(sessionDates).forEach(([sessionId, dateStr]) => {
+      // Skip the initial session as it has no "previous" session
+      if (sessionId !== 'initial_session') {
+        const isValid = isDateValid(sessionId, dateStr);
+        if (!isValid) {
+          newInvalidDates.add(sessionId);
+          console.warn(`Warning: The session date for ${sessionId} is less than 4 weeks after its previous session`);
+        }
+      }
+    });
+    
+    // Update invalid dates state
+    setInvalidDates(newInvalidDates);
+  }, [sessionDates, isDateValid]);
+
   const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
     if (!user) return;
 
@@ -338,75 +386,58 @@ export default function DashboardPage() {
   };
 
   const handleAppointmentScheduled = async (eventData?: any) => {
-    if (!eventData) {
-      console.error('No event data received from Calendly');
+    // If no event data or no session selected, do nothing
+    if (!eventData || !selectedSession) {
+      console.error('No event data or session selected');
       return;
     }
     
-    // Log the entire event data for debugging
-    console.log('Full event data from Calendly:', JSON.stringify(eventData, null, 2));
-    
-    if (selectedSession) {
-      console.log(`Handling appointment scheduled for session: ${selectedSession.id} (${selectedSession.title})`);
-      
-      // Set session date from Calendly event
-      let scheduledDate: Date | null = null;
-      let eventUri: string | null = null;
-      
-      // Check for event URI from enhanced data structure in the CalendlyModal
-      if (eventData.eventUri) {
-        eventUri = eventData.eventUri;
-        console.log('Found eventUri at top level:', eventUri);
-      }
-      // Check different possible data structures from Calendly
-      else if (eventData.payload?.event?.uri) {
-        eventUri = eventData.payload.event.uri;
-        console.log('Found event URI in payload.event.uri:', eventUri);
-      } 
-      else if (eventData.payload?.invitee?.scheduled_event?.uri) {
-        eventUri = eventData.payload.invitee.scheduled_event.uri;
-        console.log('Found event URI in payload.invitee.scheduled_event.uri:', eventUri);
-      }
-      // Original API format check
-      else if (eventData.event?.uri) {
-        eventUri = eventData.event.uri;
-        console.log('Found event URI in event.uri:', eventUri);
-      }
-      
-      console.log('Final extracted event URI:', eventUri);
+    try {
+      // Extract event URI from event data
+      const eventUri = eventData.eventUri;
       
       if (!eventUri) {
-        console.error('Could not extract event URI from Calendly data');
-        toast.error('Erreur lors de la récupération des détails du rendez-vous. Veuillez contacter le support.');
+        console.error('No event URI found in event data');
         return;
       }
       
-      try {
-        // Fetch detailed event information from Calendly API using the URI
-        console.log('Fetching detailed event information from URI:', eventUri);
-        const eventDetails = await getCalendlyEventDetails(eventUri);
+      console.log('Appointment scheduled:', eventData);
+      console.log('Event URI:', eventUri);
+      
+      // Get event details from Calendly API
+      const eventDetails = await getCalendlyEventDetails(eventUri);
+      if (!eventDetails) {
+        console.error('Failed to fetch event details from Calendly API');
+        return;
+      }
+      console.log('Event details:', eventDetails);
+      
+      if (eventDetails.startTime) {
+        // Convert ISO date to Date object
+        const dateString = eventDetails.startTime;
         
-        if (!eventDetails) {
-          console.error('Failed to fetch event details');
-          toast.error('Erreur lors de la récupération des détails du rendez-vous.');
-          return;
+        // Check if the date is valid (at least 4 weeks after the previous session)
+        const isValid = isDateValid(selectedSession.id, dateString);
+        
+        // If not valid, add to invalid dates set
+        if (!isValid) {
+          setInvalidDates(prev => new Set([...prev, selectedSession.id]));
+          console.warn(`Warning: The session date for ${selectedSession.id} is less than 4 weeks after its previous session`);
+        } else {
+          // If valid and previously invalid, remove from invalid dates
+          if (invalidDates.has(selectedSession.id)) {
+            const newInvalidDates = new Set(invalidDates);
+            newInvalidDates.delete(selectedSession.id);
+            setInvalidDates(newInvalidDates);
+          }
         }
-        
-        console.log('Successfully retrieved event details:', eventDetails);
-        
-        // Extract and format date information
-        scheduledDate = new Date(eventDetails.startTime);
-        const dateString = scheduledDate.toISOString();
-        console.log(`Scheduled date: ${dateString}`);
-        
-        // Create session details object with all available information
+
+        // Create session details object
         const sessionDetails: SessionDetails = {
           date: dateString,
-          startTime: eventDetails.startTime,
-          endTime: eventDetails.endTime,
           formattedDateTime: eventDetails.formattedDateTime,
-          calendarEvent: eventUri,
           location: eventDetails.location,
+          calendarEvent: eventUri,
           sessionType: selectedSession.sessionType || 'unknown',
           status: 'scheduled',
         };
@@ -415,6 +446,15 @@ export default function DashboardPage() {
         if (eventDetails.invitee) {
           sessionDetails.inviteeEmail = eventDetails.invitee.email;
           sessionDetails.inviteeName = eventDetails.invitee.name;
+          
+          // Add cancellation and reschedule URLs if available
+          if (eventDetails.invitee.cancel_url) {
+            sessionDetails.cancellationUrl = eventDetails.invitee.cancel_url;
+          }
+          
+          if (eventDetails.invitee.reschedule_url) {
+            sessionDetails.rescheduleUrl = eventDetails.invitee.reschedule_url;
+          }
         }
         
         // Update session dates in state
@@ -422,14 +462,6 @@ export default function DashboardPage() {
           ...prev, 
           [selectedSession.id]: dateString
         }));
-        
-        // Set the last scheduled event details for display
-        setLastScheduledEvent({
-          sessionId: selectedSession.id,
-          eventUri: eventUri,
-          scheduledDate: dateString,
-          formattedDate: eventDetails.formattedDateTime
-        });
         
         // Show a success message with the scheduled date
         toast.success(`Séance programmée pour le ${eventDetails.formattedDateTime}`);
@@ -439,30 +471,28 @@ export default function DashboardPage() {
         
         // Update Firestore with session details
         if (user) {
-          try {
-            const db = getFirestore(app);
-            const userRef = doc(db, 'users', user.uid);
-            
-            // Update the user document with session details
-            await updateDoc(userRef, {
-              [`sessionDetails.${selectedSession.id}`]: sessionDetails,
-              [`sessionDates.${selectedSession.id}`]: dateString,
-              updatedAt: Timestamp.now()
-            });
-            
-            console.log('Session details saved to Firestore');
-          } catch (error) {
-            console.error('Error updating user document with session details:', error);
-            toast.error('Erreur lors de l\'enregistrement des détails de la séance.');
+          const db = getFirestore(app);
+          const userRef = doc(db, 'users', user.uid);
+          
+          // Update the user document with session details
+          await updateDoc(userRef, {
+            [`sessionDetails.${selectedSession.id}`]: sessionDetails,
+            [`sessionDates.${selectedSession.id}`]: dateString,
+            updatedAt: Timestamp.now()
+          });
+          
+          console.log(`Updated Firestore with session details for ${selectedSession.id}`);
+          
+          // Check if this is the initial session and emit a notification event
+          if (selectedSession.id === 'initial_session') {
+            // Additional processing for initial session
+            console.log('Initial session booked - emitting notification');
           }
         }
-        
-      } catch (error) {
-        console.error('Error processing Calendly event:', error);
-        toast.error('Erreur lors du traitement des données du rendez-vous.');
       }
-    } else {
-      console.error('No selected session when appointment was scheduled');
+    } catch (error) {
+      console.error('Error handling appointment scheduling:', error);
+      toast.error('Une erreur est survenue lors de la programmation du rendez-vous.');
     }
   };
 
@@ -587,16 +617,23 @@ export default function DashboardPage() {
                 <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
                   <div className="font-medium">
                     {event.title}
-                    {partner === 'partner1' && !isComplete && isAvailable && (
+                    {partner === 'partner1' && !isComplete && isAvailable && !sessionDates[event.id] && (
                       <span className="block text-xs text-[rgb(247_237_226_)] mt-1">
                         Prendre rendez-vous {event.title.split(' - ')[0]}
                       </span>
                     )}
                   </div>
                   {dateStr && (
-                    <div className="text-sm mt-1 flex items-center gap-1.5 text-[rgb(247_237_226_)] font-medium bg-[rgb(247_237_226_)]/20 px-2 py-1 rounded-md w-fit">
+                    <div className={`text-sm mt-1 flex items-center gap-1.5 ${
+                      invalidDates.has(event.id) 
+                        ? 'text-red-400 font-medium bg-red-900/30' 
+                        : 'text-[rgb(247_237_226_)] font-medium bg-[rgb(247_237_226_)]/20'
+                    } px-2 py-1 rounded-md w-fit`}>
                       <Calendar className="w-4 h-4" />
                       {dateStr}
+                      {invalidDates.has(event.id) && (
+                        <span className="text-xs ml-1">(moins de 4 semaines)</span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -785,17 +822,6 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-semibold mb-1 text-primary-coral">Votre parcours thérapeutique</h2>
           <p className="text-[rgb(247_237_226_)]/70 mb-6">Suivez l'avancement de votre parcours thérapeutique en couple.</p>
           
-          {/* Show recently scheduled event if available */}
-          {lastScheduledEvent && (
-            <RecentlyScheduledEvent 
-              eventUri={lastScheduledEvent.eventUri}
-              sessionTitle={
-                coupleTherapyJourney.find(event => event.id === lastScheduledEvent.sessionId)?.title || 'Séance'
-              }
-              onDismiss={() => setLastScheduledEvent(null)}
-            />
-          )}
-          
           {/* Display therapy journey phases */}
           <div className="mt-8 space-y-8">
             {/* Initial Phase */}
@@ -842,39 +868,28 @@ export default function DashboardPage() {
 
         {/* Calendly Modal */}
         {selectedSession && (
-          <CalendlyModal
-            isOpen={isCalendlyModalOpen}
-            onClose={() => {
-              setIsCalendlyModalOpen(false);
-              setSelectedSession(null);
-            }}
-            sessionType={selectedSession?.sessionType || 'individual_male_1'}
-            onEventScheduled={handleAppointmentScheduled}
-            minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}
-            maxDate={selectedSession ? getSessionDateConstraints(selectedSession).maxDate : undefined}
-            userEmail={userProfile?.email}
-          />
+          <>
+            {/* Debug log for minDate */}
+            {(() => {
+              const { minDate } = getSessionDateConstraints(selectedSession);
+              console.log(`Passing minDate to CalendlyModal for ${selectedSession.id}:`, minDate.toISOString());
+              return null;
+            })()}
+            <CalendlyModal
+              isOpen={isCalendlyModalOpen}
+              onClose={() => {
+                setIsCalendlyModalOpen(false);
+                setSelectedSession(null);
+              }}
+              sessionType={selectedSession?.sessionType || 'initial'}
+              onAppointmentScheduled={handleAppointmentScheduled}
+              minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}
+              maxDate={selectedSession ? getSessionDateConstraints(selectedSession).maxDate : undefined}
+              userEmail={userProfile?.email}
+            />
+          </>
         )}
       </div>
     </div>
   );
 }
-
-// Get events for a specific phase, optionally filtered by partner
-const getPhasePartnerEvents = (phase: 'initial' | 'individual' | 'final', partner?: 'partner1' | 'partner2') => {
-  const events = coupleTherapyJourney.filter(event => {
-    const matchesPhase = event.phase === phase;
-    const matchesPartner = !partner || event.partner === partner;
-    return matchesPhase && matchesPartner;
-  });
-  
-  // Log events when debugging individual phase for partner1
-  if (phase === 'individual' && partner === 'partner1') {
-    console.log('Individual partner1 events:', events.map(e => ({ id: e.id, title: e.title })));
-  }
-  
-  // Add debug logging here
-  console.log(`Filtered events for phase ${phase} and partner ${partner}:`, events);
-  
-  return events;
-};
