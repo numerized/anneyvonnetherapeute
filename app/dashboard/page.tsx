@@ -3,41 +3,56 @@
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
-import { addDoc, collection, doc, getDoc, getFirestore, onSnapshot, query, Timestamp, updateDoc, where } from 'firebase/firestore';
-import { Calendar, Edit, Loader2, LogOut, PlusCircle, User } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  onSnapshot,
+  query,
+  runTransaction,
+  Timestamp,
+  updateDoc,
+  where
+} from 'firebase/firestore';
+import { Calendar, Check, Clock, LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
-import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
-import { InvitePartnerForm } from '@/components/InvitePartnerForm';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { UserProfileForm } from '@/components/UserProfileForm';
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
+import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
+import { coupleTherapyJourney, SessionType, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { extractEventIdFromUri } from '@/lib/calendly';
-import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { app } from '@/lib/firebase';
-import { createOrUpdateUser, getPartnerProfile, getUserById, User as UserProfile } from '@/lib/userService';
+import { createOrUpdateUser, getUserById, getPartnerProfile, UserProfile } from '@/lib/userService';
 
 export default function DashboardPage() {
+  const router = useRouter();
+
+  // Authentication state
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [partnerProfile, setPartnerProfile] = useState<UserProfile | null>(null);
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [isInviting, setIsInviting] = useState(false);
-  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-  const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
-  const [hasAppointment, setHasAppointment] = useState(false);
-  const [selectedSession, setSelectedSession] = useState<TherapyJourneyEvent | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Session state
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
   const [sessionDates, setSessionDates] = useState<Record<string, string>>({});
   const [invalidDates, setInvalidDates] = useState<Record<string, boolean>>({});
-  const [uiRefreshKey, setUiRefreshKey] = useState<number>(0);
-  const router = useRouter();
+  const [selectedEvent, setSelectedEvent] = useState<TherapyJourneyEvent | null>(null);
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
+
+  // UI refresh counter
+  const [uiRefreshKey, setUiRefreshKey] = useState(0);
+
+  // Helper function to get session date - defined after sessionDates declaration
+  const getSessionDate = useCallback((sessionId: string): string | undefined => {
+    return sessionDates[sessionId];
+  }, [sessionDates]);
 
   // Function to handle sign out
   const handleSignOut = async () => {
@@ -177,7 +192,7 @@ export default function DashboardPage() {
       // Check each event with a scheduled date
       allEvents.forEach(event => {
         const sessionId = event.id;
-        const sessionDate = sessionDates[sessionId];
+        const sessionDate = getSessionDate(sessionId);
 
         // Skip if session is already marked as completed or doesn't have a date
         if (completedSessions.has(sessionId) || !sessionDate) return;
@@ -213,40 +228,88 @@ export default function DashboardPage() {
 
     // Clean up interval on unmount
     return () => clearInterval(intervalId);
-  }, [userProfile, sessionDates, completedSessions]);
+  }, [userProfile, sessionDates, completedSessions, getSessionDate]);
 
   // Function to check if a date is valid (at least 4 weeks after the previous session)
   const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
     // Define session dependencies (which session must be at least 4 weeks after which)
-    const sessionDependencyMap: Record<string, string> = {
-      'partner1_session_1': 'initial_session',
-      'partner2_session_1': 'initial_session',
-      'partner1_session_2': 'partner1_session_1',
-      'partner2_session_2': 'partner2_session_1',
-      'final_session': 'partner2_session_2'
+    const sessionDependencyMap: Record<string, string | string[]> = {
+      'individual1_partner1': 'initial',
+      'individual2_partner1': 'individual1_partner1',
+      'individual3_partner1': 'individual2_partner1',
+      'individual1_partner2': 'initial',
+      'individual2_partner2': 'individual1_partner2',
+      'individual3_partner2': 'individual2_partner2',
+      'final': ['individual3_partner1', 'individual3_partner2']
     };
 
     try {
+      // Check if the session has a dependency
       const dependentSessionId = sessionDependencyMap[sessionId];
       if (!dependentSessionId) return true; // No dependency, date is valid
 
-      const dependentSessionDate = sessionDates[dependentSessionId];
+      // If dependentSessionId is an array, check each dependency
+      if (Array.isArray(dependentSessionId)) {
+        // Make sure all dependent sessions have dates
+        const missingDates = dependentSessionId.filter(depId => !getSessionDate(depId));
+        if (missingDates.length > 0) {
+          console.log(`Date ${dateStr} is invalid: missing dates for dependencies: ${missingDates.join(', ')}`);
+          return false;
+        }
+
+        // Find the most recent dependent session date
+        let latestDate: Date | null = null;
+
+        for (const depId of dependentSessionId) {
+          const depDate = getSessionDate(depId);
+          if (depDate) {
+            const date = new Date(depDate);
+            if (!latestDate || date > latestDate) {
+              latestDate = date;
+            }
+          }
+        }
+
+        if (!latestDate) return true; // No dependent session dates, date is valid
+
+        const proposedDate = new Date(dateStr);
+
+        // Calculate the minimum allowed date (latestDate + 4 weeks)
+        const minimumDate = new Date(latestDate);
+        minimumDate.setDate(minimumDate.getDate() + 28); // 4 weeks minimum gap
+
+        // Check if the proposed date is at least 4 weeks after the latest dependent session
+        if (proposedDate < minimumDate) {
+          console.log(`Date ${dateStr} is invalid: must be at least 4 weeks after the latest dependent session (${latestDate.toISOString()})`);
+          return false;
+        }
+
+        return true;
+      }
+
+      // Single dependency case
+      const dependentSessionDate = getSessionDate(dependentSessionId);
       if (!dependentSessionDate) return true; // No dependent session date, date is valid
 
       const proposedDate = new Date(dateStr);
-      const previousDate = new Date(dependentSessionDate);
+      const dependentDate = new Date(dependentSessionDate);
 
-      // Add 4 weeks to the previous session date
-      const minDate = new Date(previousDate);
-      minDate.setDate(minDate.getDate() + 28); // 4 weeks = 28 days
+      // Calculate the minimum allowed date (dependentDate + 4 weeks)
+      const minimumDate = new Date(dependentDate);
+      minimumDate.setDate(minimumDate.getDate() + 28); // 4 weeks minimum gap
 
-      // Date is valid if it's at least 4 weeks after the previous session
-      return proposedDate >= minDate;
+      // Check if the proposed date is at least 4 weeks after the dependent session
+      if (proposedDate < minimumDate) {
+        console.log(`Date ${dateStr} is invalid: must be at least 4 weeks after ${dependentSessionDate}`);
+        return false;
+      }
+
+      return true;
     } catch (error) {
       console.error(`Error validating date for session ${sessionId}:`, error);
       return false;
     }
-  }, [sessionDates]);
+  }, [getSessionDate]);
 
   // Debugging for session dates
   useEffect(() => {
@@ -278,133 +341,47 @@ export default function DashboardPage() {
     setInvalidDates(newInvalidDates);
   }, [sessionDates, isDateValid]);
 
-  // Function to handle update profile
-  const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
-    if (!user) return;
-
-    try {
-      const userData: UserProfile = {
-        ...userProfile,
-        ...formData,
-        email: user.email || formData.email || '',
-        updatedAt: Timestamp.now()
-      };
-
-      const updatedProfile = await createOrUpdateUser(userData);
-      setUserProfile(updatedProfile);
-      setIsEditingProfile(false);
-      toast.success('Profil mis à jour avec succès');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast.error('Erreur lors de la mise à jour du profil');
-    }
-  };
-
-  // Function to handle invite partner
-  const handleInvitePartner = async (email: string) => {
-    if (!userProfile || !user) return;
-
-    try {
-      // Update the userProfile with the partner email
-      const updatedUser = await createOrUpdateUser({
-        ...userProfile,
-        partnerEmail: email,
-        updatedAt: Timestamp.now()
-      });
-
-      setUserProfile(updatedUser);
-      setIsInviting(false);
-      toast.success('Invitation envoyée avec succès');
-
-      // Force UI refresh
-      setUiRefreshKey(prev => prev + 1);
-    } catch (error) {
-      console.error('Error inviting partner:', error);
-      toast.error('Erreur lors de l\'envoi de l\'invitation');
-    }
-  };
-
-  // Function to handle photo click
-  const handlePhotoClick = () => {
-    setIsEditingProfile(true);
-  };
-
   // Therapy Journey Logic
   const isSessionAvailable = (event: TherapyJourneyEvent): boolean => {
     if (event.type !== 'session') return false;
 
-    // First check if there are any invalid dates in previous sessions
-    if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
-      return false;
-    }
-
-    // Special case for first individual session for partner 1
-    // Make it available immediately after initial session is completed OR has a date set
-    if (event.id === 'partner1_session_1') {
-      return (isSessionCompleted('initial_session') || !!sessionDates['initial_session']) &&
-        !invalidDates['initial_session'];
-    }
+    // First make sure all the dependencies are completed or at least scheduled
+    // AND that they don't have invalid dates
+    if (event.id === 'initial') return true;
 
     if (!event.dependsOn) return true;
 
     if (Array.isArray(event.dependsOn)) {
       return event.dependsOn.every(dep =>
-        (isSessionCompleted(dep) || !!sessionDates[dep]) && !invalidDates[dep]
+        (isSessionCompleted(dep) || !!getSessionDate(dep)) && !invalidDates[dep]
       );
     }
 
     return (
-      (isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn]) &&
+      (isSessionCompleted(event.dependsOn) || !!getSessionDate(event.dependsOn)) &&
       !invalidDates[event.dependsOn]
     );
-  };
-
-  // Function to check if any previous sessions have invalid dates
-  const hasPreviousInvalidDates = (eventId: string): boolean => {
-    // Session dependency order
-    const sessionOrder = [
-      'initial_session',
-      'partner1_session_1',
-      'partner1_session_2',
-      'partner1_session_3',
-      'partner2_session_1',
-      'partner2_session_2',
-      'partner2_session_3',
-      'final_session'
-    ];
-
-    // Find current event index
-    const currentIndex = sessionOrder.indexOf(eventId);
-    if (currentIndex <= 0) return false; // No previous sessions or it's the initial session
-
-    // Check all previous sessions in the dependency chain
-    for (let i = 0; i < currentIndex; i++) {
-      const prevSessionId = sessionOrder[i];
-      // If previous session is in invalidDates list, return true
-      if (invalidDates[prevSessionId]) {
-        console.log(`Session ${eventId} cannot be scheduled because ${prevSessionId} has an invalid date`);
-        return true;
-      }
-    }
-
-    return false;
   };
 
   const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
     const minDate = new Date();
 
     // For the first individual session for partner 1, set minimum date to 4 weeks after initial session
-    if (event.id === 'partner1_session_1' && sessionDates['initial_session']) {
-      const initialSessionDate = new Date(sessionDates['initial_session']);
-      minDate.setTime(initialSessionDate.getTime());
-      minDate.setDate(minDate.getDate() + 28); // 4 weeks = 28 days
-      console.log(`Setting min date for partner1_session_1 to 4 weeks after initial session: ${minDate.toISOString()}`);
+    if (event.id === 'individual1_partner1') {
+      const initialDate = getSessionDate('initial');
+      if (initialDate) {
+        const initialSessionDate = new Date(initialDate);
+        minDate.setTime(initialSessionDate.getTime());
+        minDate.setDate(minDate.getDate() + 28); // 4 weeks minimum gap
+        console.log(`Setting min date for individual1_partner1 to 4 weeks after initial session: ${minDate.toISOString()}`);
+      }
     } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
-
-      if (sessionDates[dependentId]) {
-        const dependentDate = new Date(sessionDates[dependentId]);
-        minDate.setTime(dependentDate.getTime());
+      
+      const dependentDate = getSessionDate(dependentId);
+      if (dependentDate) {
+        const depDate = new Date(dependentDate);
+        minDate.setTime(depDate.getTime());
         minDate.setDate(minDate.getDate() + event.daysOffset);
       }
     }
@@ -417,7 +394,7 @@ export default function DashboardPage() {
 
   const getSessionUnavailableReason = (event: TherapyJourneyEvent): string => {
     // Check if there are invalid dates in previous sessions
-    if (event.id !== 'initial_session' && hasPreviousInvalidDates(event.id)) {
+    if (event.id !== 'initial' && hasPreviousInvalidDates(event.id)) {
       return "Impossible de réserver cette séance car une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
     }
 
@@ -425,7 +402,9 @@ export default function DashboardPage() {
     if (event.dependsOn) {
       // Handle array of dependencies
       if (Array.isArray(event.dependsOn)) {
-        const missingDeps = event.dependsOn.filter(dep => !isSessionCompleted(dep) && !sessionDates[dep]);
+        const missingDeps = event.dependsOn.filter(dep =>
+          !isSessionCompleted(dep) && !getSessionDate(dep)
+        );
         if (missingDeps.length > 0) {
           return "Veuillez d'abord compléter les étapes précédentes.";
         }
@@ -438,7 +417,7 @@ export default function DashboardPage() {
       }
       // Handle single dependency
       else {
-        if (!isSessionCompleted(event.dependsOn) && !sessionDates[event.dependsOn]) {
+        if (!isSessionCompleted(event.dependsOn) && !getSessionDate(event.dependsOn)) {
           return "Veuillez d'abord compléter les étapes précédentes.";
         }
 
@@ -453,7 +432,7 @@ export default function DashboardPage() {
 
   const handleSessionClick = (event: TherapyJourneyEvent) => {
     // If this is a session that already has a date, don't allow rebooking
-    if (sessionDates[event.id]) {
+    if (getSessionDate(event.id)) {
       toast.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
       return;
     }
@@ -470,18 +449,21 @@ export default function DashboardPage() {
       return;
     }
 
-    setSelectedSession(event);
-    setIsCalendlyModalOpen(true);
+    setSelectedEvent(event);
+    setShowCalendlyModal(true);
   };
 
   const handleAppointmentScheduled = async (eventData: any) => {
     try {
-      if (!user || !selectedSession) return;
+      if (!user || !selectedEvent) return;
 
       console.log('Appointment scheduled data:', eventData);
       
+      // Extract the event data - handle both direct payload and nested formats
+      let startTime, endTime, formattedUri;
+      
       // Get the event URI from the data
-      let formattedUri = eventData.eventUri;
+      formattedUri = eventData.eventUri || '';
       
       // Format the URI if needed
       if (!formattedUri.startsWith('http')) {
@@ -490,52 +472,20 @@ export default function DashboardPage() {
 
       console.log(`Using event URI: ${formattedUri}`);
       
-      // Check if we already have the start time directly from the event data
-      let startTime = eventData.startTime || eventData.payload?.event?.start_time || null;
-      let eventDetails: any = null;
-      
-      // If we don't have the start time directly, fetch it from the API
-      if (!startTime) {
-        // Get the event details from our API
-        console.log("No direct start time available, fetching from API");
-        const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("API error:", errorData);
-          throw new Error(`Failed to fetch event details: ${response.status} - ${errorData.error || 'Unknown error'}`);
-        }
-
-        eventDetails = await response.json();
-        console.log('Fetched event details:', eventDetails);
-
-        if (!eventDetails.data) {
-          throw new Error("No event data returned from API");
-        }
-        
-        startTime = eventDetails.data.start_time;
+      // Extract start time from various possible paths in the data structure
+      if (eventData.payload?.event?.start_time) {
+        startTime = eventData.payload.event.start_time;
+        endTime = eventData.payload.event.end_time;
+      } else if (eventData.event?.start_time) {
+        startTime = eventData.event.start_time;
+        endTime = eventData.event.end_time;
       } else {
-        console.log("Using direct start time from event data:", startTime);
+        // Fallback to current time if no valid start time found
+        console.warn('No valid start time found in event data, using current time');
+        startTime = new Date().toISOString();
+        endTime = null;
       }
       
-      if (!startTime) {
-        throw new Error("Could not determine the appointment start time");
-      }
-      
-      // If we didn't need to fetch event details earlier, do it now for other data
-      if (!eventDetails) {
-        try {
-          const response = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(formattedUri)}`);
-          if (response.ok) {
-            eventDetails = await response.json();
-            console.log('Fetched additional event details:', eventDetails);
-          }
-        } catch (error) {
-          console.warn("Could not fetch additional event details:", error);
-          // Continue anyway since we have the start time
-        }
-      }
-
       // Format date for display
       const dateObj = new Date(startTime);
       const formattedDate = new Intl.DateTimeFormat('fr-FR', {
@@ -550,80 +500,109 @@ export default function DashboardPage() {
       // Format to capitalize first letter of day name
       const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 
-      // Get a reference to the user's document
+      // Get Firestore reference
       const db = getFirestore(app);
       const userDocRef = doc(db, 'users', user.uid);
-
-      // Create the session details object with the new data
-      const sessionDetails: any = {
-        date: formattedDate,
-        eventUri: formattedUri,
-        formattedDate: formattedDateCapitalized,
-        startTime: startTime,
-        lastUpdated: Timestamp.now()
-      };
       
-      // Add additional fields if we have the full event details
-      if (eventDetails?.data) {
-        sessionDetails.endTime = eventDetails.data.end_time;
-        sessionDetails.location = eventDetails.data.location;
-        sessionDetails.cancelUrl = eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url;
+      try {
+        // Get current data first
+        const userDocSnap = await getDoc(userDocRef);
+        
+        if (!userDocSnap.exists()) {
+          throw new Error("User document does not exist!");
+        }
+        
+        // Get current data
+        const userData = userDocSnap.data();
+        
+        // Get existing session details and dates or initialize if not present
+        const existingSessionDetails = userData.sessionDetails || {};
+        const existingSessionDates = userData.sessionDates || {};
+        
+        console.log('Current session details:', existingSessionDetails);
+        console.log('Current session dates:', existingSessionDates);
+        console.log('Selected session ID:', selectedEvent.id);
+        
+        // Create the new session detail
+        const newSessionDetail = {
+          date: formattedDate,
+          eventUri: formattedUri,
+          formattedDate: formattedDateCapitalized,
+          startTime: startTime,
+          lastUpdated: Timestamp.now()
+        };
+        
+        // Add additional fields if we have the full event details
+        if (eventData.payload?.event) {
+          if (eventData.payload.event.end_time) newSessionDetail.endTime = eventData.payload.event.end_time;
+          if (eventData.payload.event.location) newSessionDetail.location = eventData.payload.event.location;
+          if (eventData.payload.event.invitee?.cancel_url || eventData.payload.event.cancel_url) {
+            newSessionDetail.cancelUrl = eventData.payload.event.invitee?.cancel_url || eventData.payload.event.cancel_url;
+          }
+        } else if (eventData.event) {
+          if (eventData.event.end_time) newSessionDetail.endTime = eventData.event.end_time;
+          if (eventData.event.location) newSessionDetail.location = eventData.event.location;
+          if (eventData.event.invitee?.cancel_url || eventData.event.cancel_url) {
+            newSessionDetail.cancelUrl = eventData.event.invitee?.cancel_url || eventData.event.cancel_url;
+          }
+        }
+        
+        // Create new objects with the updated data
+        const updatedSessionDetails = { ...existingSessionDetails };
+        updatedSessionDetails[selectedEvent.id] = newSessionDetail;
+        
+        const updatedSessionDates = { ...existingSessionDates };
+        updatedSessionDates[selectedEvent.id] = startTime;
+        
+        console.log('Updated session details to write:', updatedSessionDetails);
+        console.log('Updated session dates to write:', updatedSessionDates);
+        
+        // Update the document with direct update (no transaction)
+        await updateDoc(userDocRef, {
+          sessionDetails: updatedSessionDetails,
+          sessionDates: updatedSessionDates,
+          updatedAt: Timestamp.now()
+        });
+        
+        console.log("Document successfully updated!");
+        
+        // Verify data after update
+        const verifyDocSnap = await getDoc(userDocRef);
+        const verifyData = verifyDocSnap.data();
+        
+        console.log('VERIFICATION - Final saved session details:', verifyData?.sessionDetails);
+        console.log('VERIFICATION - Final saved session dates:', verifyData?.sessionDates);
+      } catch (error) {
+        console.error("Error updating document:", error);
+        toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+        return;
       }
-
-      console.log("Updating Firestore with session details:", sessionDetails);
-      
-      // Update Firestore with the new session details
-      await updateDoc(userDocRef, {
-        [`sessionDetails.${selectedSession.id}`]: sessionDetails,
-        [`sessionDates.${selectedSession.id}`]: startTime,
-        updatedAt: Timestamp.now()
-      });
 
       // Alert the user with a unique ID to prevent duplicates
       toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
-        id: `appointment-${selectedSession.id}-${Date.now()}`,
-        onDismiss: () => {
-          // Clean up any duplicate toasts
-          document.querySelectorAll('[data-sonner-toast]').forEach(el => {
-            if (el.textContent?.includes('séance') && el.textContent?.includes(formattedDateCapitalized)) {
-              el.remove();
-            }
-          });
-        }
+        id: `appointment-${selectedEvent.id}-${Date.now()}`
       });
 
-      console.log(`Updated session ${selectedSession.id} in Firestore with new date: ${formattedDate}`);
-
-      // Close the modal
-      setIsCalendlyModalOpen(false);
+      console.log(`Updated session ${selectedEvent.id} in Firestore with new date: ${formattedDate}`);
 
       // Update session dates in state to reflect the new date
-      setSessionDates(prev => ({
-        ...prev,
-        [selectedSession.id]: startTime
-      }));
+      setSessionDates(prev => {
+        const newDates = { ...prev };
+        newDates[selectedEvent.id] = startTime;
+        return newDates;
+      });
 
-      // Check if the date is valid, and update invalidDates set if needed
-      const isValid = isDateValid(selectedSession.id, startTime);
-      if (!isValid) {
-        setInvalidDates(prev => ({ ...prev, [selectedSession.id]: true }));
-      } else if (invalidDates[selectedSession.id]) {
-        const newInvalidDates = { ...invalidDates };
-        delete newInvalidDates[selectedSession.id];
-        setInvalidDates(newInvalidDates);
-      }
+      // Reset selected session
+      setSelectedEvent(null);
 
-      // Clear the selected session
-      setSelectedSession(null);
-      
-      // Trigger a UI refresh
+      // Force UI refresh
       setUiRefreshKey(prev => prev + 1);
       
       // No need to reload the page - the state updates above will trigger a UI refresh
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
       toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
-      setIsCalendlyModalOpen(false);
+      setShowCalendlyModal(false);
     }
   };
 
@@ -635,7 +614,7 @@ export default function DashboardPage() {
     }
 
     // If the session has a scheduled date, check if that time + 1 hour has passed
-    const sessionDate = sessionDates[sessionId];
+    const sessionDate = getSessionDate(sessionId);
     if (sessionDate) {
       try {
         const sessionDateTime = new Date(sessionDate);
@@ -666,11 +645,11 @@ export default function DashboardPage() {
 
     // Debug info
     if (phase === 'initial') {
-      console.log('Initial session date:', sessionDates['initial_session']);
-      console.log('Initial session completed:', isSessionCompleted('initial_session'));
-      console.log('Partner1 session 1 date:', sessionDates['partner1_session_1']);
+      console.log('Initial session date:', getSessionDate('initial'));
+      console.log('Initial session completed:', isSessionCompleted('initial'));
+      console.log('Partner1 session 1 date:', getSessionDate('individual1_partner1'));
       console.log('Partner1 session 1 available:', isSessionAvailable(
-        events.find(e => e.id === 'partner1_session_1') || events[0]
+        events.find(e => e.id === 'individual1_partner1') || events[0]
       ));
     }
 
@@ -681,26 +660,26 @@ export default function DashboardPage() {
           const isAvailable = isSessionAvailable(event);
 
           // Log availability for debugging
-          if (['initial_session', 'partner1_session_1'].includes(event.id)) {
+          if (['initial', 'individual1_partner1'].includes(event.id)) {
             console.log(`Event ${event.id} availability:`, {
               isComplete,
               isAvailable,
-              hasDate: !!sessionDates[event.id],
-              dateValue: sessionDates[event.id]
+              hasDate: !!getSessionDate(event.id),
+              dateValue: getSessionDate(event.id)
             });
           }
 
           // Format date if exists
           let dateStr = '';
-          if (sessionDates[event.id]) {
+          if (getSessionDate(event.id)) {
             try {
-              const sessionDate = new Date(sessionDates[event.id]);
+              const sessionDate = new Date(getSessionDate(event.id));
               if (!isNaN(sessionDate.getTime())) {
                 // Capitalize first letter of the day name
                 dateStr = format(sessionDate, 'EEEE d MMMM yyyy à HH:mm', { locale: fr });
                 dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
               } else {
-                console.error(`Invalid date for event ${event.id}:`, sessionDates[event.id]);
+                console.error(`Invalid date for event ${event.id}:`, getSessionDate(event.id));
                 dateStr = 'Date invalide';
               }
             } catch (error) {
@@ -716,14 +695,14 @@ export default function DashboardPage() {
             (phase === 'individual' && partner === 'partner1'));
 
           // Debug the information for partner1_session_1
-          if (event.id === 'partner1_session_1') {
-            console.log('partner1_session_1 details:', {
+          if (event.id === 'individual1_partner1') {
+            console.log('individual1_partner1 details:', {
               phase,
               partner,
               showBookingButton,
               isComplete,
               isAvailable,
-              hasDate: !!sessionDates[event.id]
+              hasDate: !!getSessionDate(event.id)
             });
           }
 
@@ -747,7 +726,7 @@ export default function DashboardPage() {
                 <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
                   <div className="font-medium">
                     {event.title}
-                    {partner === 'partner1' && !isComplete && isAvailable && !sessionDates[event.id] && (
+                    {partner === 'partner1' && !isComplete && isAvailable && !getSessionDate(event.id) && (
                       <span className="block text-xs text-[rgb(247_237_226_)] mt-1">
                         Prendre rendez-vous {event.title.split(' - ')[0]}
                       </span>
@@ -755,7 +734,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Render the date with appropriate styling */}
-                  {sessionDates[event.id] && (
+                  {getSessionDate(event.id) && (
                     <div
                       className={`text-sm mt-1 flex items-center gap-1.5 px-2 py-1 rounded-md w-fit
                         ${invalidDates[event.id]
@@ -775,18 +754,35 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {showBookingButton && !isComplete && isAvailable && !sessionDates[event.id] && (
-                <div className="ml-8">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs h-8 border-[rgb(247_237_226_)]/30 text-[rgb(247_237_226_)] hover:bg-[rgb(247_237_226_)]/10 hover:text-[rgb(247_237_226_)]"
-                    onClick={() => handleSessionClick(event)}
-                  >
-                    <Calendar className="w-3 h-3 mr-2" />
-                    Réserver cette séance
-                  </Button>
-                </div>
+              {showBookingButton && !isComplete && (
+                // Show date under "Séance de Couple Initiale" when booked
+                event.id === 'initial' && getSessionDate(event.id) ? (
+                  <div className="ml-8">
+                    <div 
+                      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs ${
+                        invalidDates[event.id] ? 'bg-yellow-500/20 text-yellow-200' : 'bg-blue-500/20 text-blue-200'
+                      }`}
+                    >
+                      <Calendar className="w-3 h-3" />
+                      <span>{new Date(getSessionDate(event.id) as string).toLocaleDateString('fr-FR')}</span>
+                    </div>
+                  </div>
+                ) : (
+                  // For "Séance Individuelle 1" or other sessions show the booking button
+                  !getSessionDate(event.id) && isAvailable && (
+                    <div className="ml-8">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs h-8 border-[rgb(247_237_226_)]/30 text-[rgb(247_237_226_)] hover:bg-[rgb(247_237_226_)]/10 hover:text-[rgb(247_237_226_)]"
+                        onClick={() => handleSessionClick(event)}
+                      >
+                        <Calendar className="w-3 h-3 mr-2" />
+                        Réserver cette séance
+                      </Button>
+                    </div>
+                  )
+                )
               )}
             </div>
           );
@@ -799,7 +795,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-6 h-6 animate-spin text-primary-cream/80" />
+          <Clock className="w-6 h-6 animate-spin text-primary-cream/80" />
         </div>
       </div>
     );
@@ -823,133 +819,28 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <div className="flex items-center gap-4">
-              <div
-                onClick={handlePhotoClick}
-                className="relative w-16 h-16 rounded-full overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-              >
-                {userProfile?.photo ? (
-                  <Image
-                    src={userProfile.photo}
-                    alt="Photo de profil"
-                    className="object-cover"
-                    fill
-                    sizes="64px"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-primary-cream/10 flex items-center justify-center">
-                    <User className="w-8 h-8 text-primary-cream/60" />
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <h2 className="text-lg font-medium text-primary-cream">
-                  {userProfile?.firstName} {userProfile?.lastName}
-                </h2>
-                <p className="text-sm text-primary-cream/60">{user?.email}</p>
-              </div>
-              <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
-                <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
-                  <DialogHeader>
-                    <DialogTitle className="text-primary-coral">Modifier votre profil</DialogTitle>
-                    <DialogDescription className="text-primary-cream/60">
-                      Mettez à jour vos informations personnelles
-                    </DialogDescription>
-                  </DialogHeader>
-                  <UserProfileForm
-                    user={userProfile}
-                    onSubmit={handleUpdateProfile}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
+        <UserProfileSection 
+          user={{
+            uid: user?.uid || "",
+            email: user?.email || null
+          }}
+          userProfile={userProfile}
+          partnerProfile={partnerProfile}
+          onProfileUpdate={() => setUiRefreshKey(prev => prev + 1)}
+        />
 
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                {userProfile?.partnerEmail ? (
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                      <User className="w-8 h-8" />
-                    </div>
-                  </div>
-                ) : partnerProfile?.photo ? (
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                    <Image
-                      src={partnerProfile.photo}
-                      alt="Partner Profile"
-                      width={64}
-                      height={64}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                      <User className="w-8 h-8" />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                {userProfile?.partnerEmail ? (
-                  <h3 className="text-lg font-medium text-primary-cream">Votre Partenaire</h3>
-                ) : partnerProfile ? (
-                  <>
-                    <h3 className="text-lg font-medium text-primary-cream">
-                      {partnerProfile.firstName} {partnerProfile.lastName}
-                    </h3>
-                    <p className="text-sm text-primary-cream/60">{partnerProfile.email}</p>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-lg font-medium text-primary-cream">Votre Partenaire</h3>
-                    <p className="text-sm text-primary-cream/60">Ajoutez votre partenaire ici et commencez votre parcours</p>
-                  </>
-                )}
-              </div>
-              {userProfile?.partnerEmail ? (
-                <p className="text-sm text-primary-cream/60">Invitation envoyée à {userProfile.partnerEmail}</p>
-              ) : !partnerProfile && (
-                <Button
-                  variant="outline"
-                  className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
-                  onClick={() => setIsInviting(true)}
-                >
-                  INVITER
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Dialogs and Modals */}
-        <Dialog open={isInviting} onOpenChange={setIsInviting}>
-          <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
-            <DialogHeader>
-              <DialogTitle className="text-primary-coral">Inviter votre partenaire</DialogTitle>
-              <DialogDescription className="text-primary-cream/60">
-                Envoyez une invitation à votre partenaire pour commencer votre parcours ensemble
-              </DialogDescription>
-            </DialogHeader>
-            <InvitePartnerForm onSubmit={handleInvitePartner} onClose={() => setIsInviting(false)} />
-          </DialogContent>
-        </Dialog>
-
-        {selectedSession && (
+        {/* Calendly Modal */}
+        {selectedEvent && (
           <CalendlyModal
-            isOpen={isCalendlyModalOpen}
+            isOpen={showCalendlyModal}
             onClose={() => {
-              setIsCalendlyModalOpen(false);
-              setSelectedSession(null);
+              setShowCalendlyModal(false);
+              setSelectedEvent(null);
             }}
-            sessionType={selectedSession.sessionType || 'initial'}
+            sessionType={selectedEvent.sessionType || 'initial'}
             onAppointmentScheduled={handleAppointmentScheduled}
             userEmail={userProfile?.email}
-            minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}
+            minDate={selectedEvent ? getSessionDateConstraints(selectedEvent).minDate : undefined}
           />
         )}
 
