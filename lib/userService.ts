@@ -1,15 +1,26 @@
-import { doc, getDoc, getFirestore, setDoc, updateDoc, Timestamp, serverTimestamp } from 'firebase/firestore';
+import { 
+  collection,
+  deleteField,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+  updateDoc
+} from 'firebase/firestore';
 import { app } from '@/lib/firebase';
 
 // User interface
 export interface User {
   id?: string;
-  email: string;
-  prenom?: string;
-  nom?: string;
-  photo?: string;
-  telephone?: string;
-  dateNaissance?: Date | Timestamp;  // Allow both Date and Timestamp
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  photo?: string | null; 
+  phone?: string;
+  birthDate?: Date | Timestamp;
   role?: 'admin' | 'user' | 'partner';
   partnerId?: string;
   partnerEmail?: string;
@@ -17,8 +28,8 @@ export interface User {
   completedSessions?: string[];
   sessionDates?: Record<string, string>;
   sessionDetails?: Record<string, SessionDetails>;
-  createdAt?: Date | Timestamp;  // Allow both Date and Timestamp
-  updatedAt?: Date | Timestamp;  // Allow both Date and Timestamp
+  createdAt?: Date | Timestamp;
+  updatedAt?: Date | Timestamp;
 }
 
 // Session details interface
@@ -54,13 +65,22 @@ export async function createOrUpdateUser(userData: User): Promise<User> {
   // Remove id from the data to be saved
   const { id, ...dataToSave } = userData;
 
-  // Process dates for Firestore
-  const processedData = { ...dataToSave };
+  // Process dates for Firestore and remove undefined values
+  const processedData: Record<string, any> = {};
   
-  // Convert Date objects to Firestore Timestamps
-  if (processedData.dateNaissance instanceof Date) {
-    processedData.dateNaissance = Timestamp.fromDate(processedData.dateNaissance);
-  }
+  // Only include defined values
+  Object.entries(dataToSave).forEach(([key, value]) => {
+    if (value !== undefined) {
+      if (key === 'birthDate' && value instanceof Date) {
+        processedData[key] = Timestamp.fromDate(value);
+      } else if (key === 'photo' && value === null) {
+        // Explicitly set photo to null to delete it
+        processedData[key] = null;
+      } else if (value !== null) {
+        processedData[key] = value;
+      }
+    }
+  });
 
   const updatedData = {
     ...processedData,
@@ -89,8 +109,8 @@ export async function createOrUpdateUser(userData: User): Promise<User> {
   };
   
   // Convert timestamp fields back to Date objects
-  if (data?.dateNaissance && 'toDate' in data.dateNaissance) {
-    processedUserData.dateNaissance = data.dateNaissance.toDate();
+  if (data?.birthDate && 'toDate' in data.birthDate) {
+    processedUserData.birthDate = data.birthDate.toDate();
   }
   
   if (data?.createdAt && 'toDate' in data.createdAt) {
@@ -129,8 +149,8 @@ export async function getUserById(userId: string): Promise<User | null> {
   };
   
   // Convert timestamp fields back to Date objects
-  if (data?.dateNaissance && 'toDate' in data.dateNaissance) {
-    processedUserData.dateNaissance = data.dateNaissance.toDate();
+  if (data?.birthDate && 'toDate' in data.birthDate) {
+    processedUserData.birthDate = data.birthDate.toDate();
   }
   
   if (data?.createdAt && 'toDate' in data.createdAt) {
@@ -147,4 +167,70 @@ export async function getUserById(userId: string): Promise<User | null> {
 // Get partner profile
 export async function getPartnerProfile(partnerId: string): Promise<User | null> {
   return getUserById(partnerId);
+}
+
+// Function to migrate user data to use English property names
+export async function migrateUserToEnglishProperties(userId: string): Promise<void> {
+  const db = getFirestore(app);
+  const userRef = doc(db, 'users', userId);
+  const userDoc = await getDoc(userRef);
+
+  if (!userDoc.exists()) {
+    return;
+  }
+
+  const data = userDoc.data();
+  const updates: Record<string, any> = {};
+  let needsUpdate = false;
+
+  // Check and migrate each French property to English
+  if ('prenom' in data) {
+    updates.firstName = data.prenom;
+    needsUpdate = true;
+  }
+
+  if ('nom' in data) {
+    updates.lastName = data.nom;
+    needsUpdate = true;
+  }
+
+  if ('telephone' in data) {
+    updates.phone = data.telephone;
+    needsUpdate = true;
+  }
+
+  if ('dateNaissance' in data) {
+    updates.birthDate = data.dateNaissance;
+    needsUpdate = true;
+  }
+
+  // Only update if there are properties to migrate
+  if (needsUpdate) {
+    // Remove old properties
+    const removeFields: Record<string, any> = {
+      prenom: deleteField(),
+      nom: deleteField(),
+      telephone: deleteField(),
+      dateNaissance: deleteField()
+    };
+
+    // First update with new properties
+    await updateDoc(userRef, {
+      ...updates,
+      updatedAt: Timestamp.fromDate(new Date())
+    });
+
+    // Then remove old properties
+    await updateDoc(userRef, removeFields);
+  }
+}
+
+// Function to migrate all users to English properties
+export async function migrateAllUsersToEnglish(): Promise<void> {
+  const db = getFirestore(app);
+  const usersCollection = collection(db, 'users');
+  const usersSnapshot = await getDocs(usersCollection);
+
+  const migrations = usersSnapshot.docs.map(doc => migrateUserToEnglishProperties(doc.id));
+  await Promise.all(migrations);
 }
