@@ -890,13 +890,17 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Partner 1 Journey */}
               <div>
-                <h3 className="text-xl font-semibold text-primary-coral mb-4">Parcours Individuel - Partenaire 1</h3>
+                <h3 className="text-xl font-semibold text-primary-coral mb-4">
+                  Parcours Individuel de {userProfile?.firstName ? `${userProfile.firstName}` : '- Partenaire 1'} 
+                </h3>
                 {renderJourneyPhase('individual', 'partner1')}
               </div>
 
               {/* Partner 2 Journey */}
               <div>
-                <h3 className="text-xl font-semibold text-primary-coral mb-4">Parcours Individuel - Partenaire 2</h3>
+                <h3 className="text-xl font-semibold text-primary-coral mb-4">
+                  Parcours Individuel de {partnerProfile?.firstName ? `${partnerProfile.firstName}` : '- Partenaire 2'} 
+                </h3>
                 {renderJourneyPhase('individual', 'partner2')}
               </div>
             </div>
