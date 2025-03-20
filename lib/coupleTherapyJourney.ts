@@ -1,5 +1,8 @@
 import { SessionType } from '@/components/dashboard/CalendlyModal';
 
+// Re-export SessionType so it can be imported from this module
+export type { SessionType };
+
 export type TherapyEventType = 'session' | 'email' | 'preparation';
 export type PartnerType = 'both' | 'partner1' | 'partner2';
 export type EmailTrigger = 'immediate' | 'before' | 'after';

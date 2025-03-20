@@ -8,24 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { InvitePartnerForm } from '@/components/InvitePartnerForm';
 import { UserProfileForm } from '@/components/UserProfileForm';
-import { createOrUpdateUser } from '@/lib/userService';
-
-// Define UserProfile interface locally if not exported from userService
-interface UserProfile {
-  id?: string;
-  uid?: string;
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  photo?: string;
-  partnerId?: string;
-  partnerEmail?: string;
-  sessionDates?: Record<string, string>;
-  sessionDetails?: Record<string, any>;
-  completedSessions?: string[];
-  createdAt?: any;
-  updatedAt?: any;
-}
+import { createOrUpdateUser, UserProfile } from '@/lib/userService';
 
 // Simplified user type to avoid FirebaseUser dependency
 interface UserInfo {
