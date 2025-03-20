@@ -47,6 +47,9 @@ export default function DashboardPage() {
   // UI refresh counter
   const [uiRefreshKey, setUiRefreshKey] = useState(0);
 
+  // Add state to track which partner is booking
+  const [activePartner, setActivePartner] = useState<'partner1' | 'partner2' | 'both'>('both');
+
   // Helper function to get session date - defined after sessionDates declaration
   const getSessionDate = useCallback((sessionId: string): string | undefined => {
     return sessionDates[sessionId];
@@ -376,6 +379,8 @@ export default function DashboardPage() {
     }
 
     setSelectedEvent(event);
+    // Store which partner this session is for to determine which email to use
+    setActivePartner(event.partner || 'both');
     setShowCalendlyModal(true);
   };
 
@@ -857,10 +862,11 @@ export default function DashboardPage() {
             onClose={() => {
               setShowCalendlyModal(false);
               setSelectedEvent(null);
+              setActivePartner('both');
             }}
             sessionType={selectedEvent.sessionType || 'initial'}
             onAppointmentScheduled={handleAppointmentScheduled}
-            userEmail={userProfile?.email}
+            userEmail={activePartner === 'partner2' ? partnerProfile?.email : userProfile?.email}
             minDate={selectedEvent ? getSessionDateConstraints(selectedEvent).minDate : undefined}
           />
         )}
