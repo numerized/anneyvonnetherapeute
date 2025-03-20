@@ -1,16 +1,16 @@
 import { app } from '@/lib/firebase';
 import { 
-  collection,
-  deleteField,
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  query,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-  updateDoc,
+  collection, 
+  deleteField, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  getFirestore, 
+  query, 
+  serverTimestamp, 
+  setDoc, 
+  Timestamp, 
+  updateDoc, 
   where
 } from 'firebase/firestore';
 
@@ -21,6 +21,27 @@ export interface User {
   firstName?: string;
   lastName?: string;
   photo?: string | null; 
+  phone?: string;
+  birthDate?: Date | Timestamp;
+  role?: 'admin' | 'user' | 'partner';
+  partnerId?: string;
+  partnerEmail?: string;
+  isPartnerConnected?: boolean;
+  completedSessions?: string[];
+  sessionDates?: Record<string, string>;
+  sessionDetails?: Record<string, SessionDetails>;
+  createdAt?: Date | Timestamp;
+  updatedAt?: Date | Timestamp;
+}
+
+// UserProfile interface (compatible with UserProfileSection component)
+export interface UserProfile {
+  id?: string;
+  uid?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  photo?: string | null;
   phone?: string;
   birthDate?: Date | Timestamp;
   role?: 'admin' | 'user' | 'partner';

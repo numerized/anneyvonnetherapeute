@@ -25,10 +25,9 @@ import { Button } from '@/components/ui/button';
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
 import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
-import { coupleTherapyJourney, SessionType, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
-import { extractEventIdFromUri } from '@/lib/calendly';
+import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { app } from '@/lib/firebase';
-import { createOrUpdateUser, getUserById, getPartnerProfile, UserProfile } from '@/lib/userService';
+import { createOrUpdateUser, getUserById, getPartnerProfile, UserProfile, SessionDetails } from '@/lib/userService';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -311,23 +310,6 @@ export default function DashboardPage() {
     }
   }, [getSessionDate]);
 
-  // Debugging for session dates
-  useEffect(() => {
-    console.log('------- DEBUG SESSION DATES -------');
-    console.log('Session Dates:', sessionDates);
-
-    // Check each session date
-    Object.entries(sessionDates).forEach(([sessionId, dateStr]) => {
-      const isValid = isDateValid(sessionId, dateStr);
-      console.log(`Session ${sessionId}:`, {
-        date: dateStr,
-        isValid
-      });
-    });
-
-    console.log('------- END DEBUG -------');
-  }, [sessionDates, isDateValid]);
-
   // Validate all existing dates when session dates change
   useEffect(() => {
     const newInvalidDates: Record<string, boolean> = {};
@@ -390,6 +372,33 @@ export default function DashboardPage() {
     maxDate.setDate(maxDate.getDate() + 30); // Allow booking up to 30 days after min date
 
     return { minDate, maxDate };
+  };
+
+  const hasPreviousInvalidDates = (sessionId: string): boolean => {
+    // Define session dependencies based on the therapy journey
+    const sessionDependencyMap: Record<string, string | string[]> = {
+      'individual1_partner1': 'initial',
+      'individual2_partner1': 'individual1_partner1',
+      'individual3_partner1': 'individual2_partner1',
+      'individual1_partner2': 'initial',
+      'individual2_partner2': 'individual1_partner2',
+      'individual3_partner2': 'individual2_partner2',
+      'final': ['individual3_partner1', 'individual3_partner2']
+    };
+
+    // Check if any direct dependencies have invalid dates
+    const directDependencies = sessionDependencyMap[sessionId];
+    if (!directDependencies) return false;
+
+    // Check each dependency (array or single value)
+    if (Array.isArray(directDependencies)) {
+      return directDependencies.some(depId => 
+        invalidDates[depId] || hasPreviousInvalidDates(depId)
+      );
+    }
+
+    // Single dependency case
+    return invalidDates[directDependencies] || hasPreviousInvalidDates(directDependencies);
   };
 
   const getSessionUnavailableReason = (event: TherapyJourneyEvent): string => {
@@ -524,12 +533,14 @@ export default function DashboardPage() {
         console.log('Selected session ID:', selectedEvent.id);
         
         // Create the new session detail
-        const newSessionDetail = {
+        const newSessionDetail: SessionDetails = {
           date: formattedDate,
           eventUri: formattedUri,
           formattedDate: formattedDateCapitalized,
           startTime: startTime,
-          lastUpdated: Timestamp.now()
+          lastUpdated: Timestamp.now(),
+          sessionType: selectedEvent.id, // Using selected event ID as the session type
+          status: 'scheduled'  // Default status for new appointments
         };
         
         // Add additional fields if we have the full event details
@@ -643,37 +654,18 @@ export default function DashboardPage() {
   const renderJourneyPhase = (phase: 'initial' | 'individual' | 'final', partner?: 'partner1' | 'partner2') => {
     const events = coupleTherapyJourney.filter(e => e.phase === phase && (!partner || e.partner === partner));
 
-    // Debug info
-    if (phase === 'initial') {
-      console.log('Initial session date:', getSessionDate('initial'));
-      console.log('Initial session completed:', isSessionCompleted('initial'));
-      console.log('Partner1 session 1 date:', getSessionDate('individual1_partner1'));
-      console.log('Partner1 session 1 available:', isSessionAvailable(
-        events.find(e => e.id === 'individual1_partner1') || events[0]
-      ));
-    }
-
     return (
       <div className="space-y-3">
         {events.map((event) => {
           const isComplete = isSessionCompleted(event.id);
           const isAvailable = isSessionAvailable(event);
 
-          // Log availability for debugging
-          if (['initial', 'individual1_partner1'].includes(event.id)) {
-            console.log(`Event ${event.id} availability:`, {
-              isComplete,
-              isAvailable,
-              hasDate: !!getSessionDate(event.id),
-              dateValue: getSessionDate(event.id)
-            });
-          }
-
           // Format date if exists
           let dateStr = '';
           if (getSessionDate(event.id)) {
             try {
-              const sessionDate = new Date(getSessionDate(event.id));
+              const sessionDateStr = getSessionDate(event.id) || '';
+              const sessionDate = new Date(sessionDateStr);
               if (!isNaN(sessionDate.getTime())) {
                 // Capitalize first letter of the day name
                 dateStr = format(sessionDate, 'EEEE d MMMM yyyy à HH:mm', { locale: fr });
