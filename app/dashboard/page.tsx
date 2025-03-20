@@ -134,14 +134,7 @@ export default function DashboardPage() {
       });
     }
   }, [user?.uid]);
-
-  // Effect to update completed sessions
-  useEffect(() => {
-    if (userProfile?.completedSessions !== undefined) {
-      setCompletedSessions(userProfile.completedSessions || []);
-    }
-  }, [userProfile?.completedSessions]);
-
+  
   // Effect to update session dates
   useEffect(() => {
     if (userProfile?.sessionDates !== undefined) {
@@ -876,7 +869,7 @@ export default function DashboardPage() {
         {/* Therapy Journey Section */}
         <div className="bg-[rgb(247_237_226_/0.1)] rounded-lg shadow-lg p-6 mt-6">
           <h2 className="text-2xl font-semibold mb-1 text-primary-coral">Votre parcours thérapeutique</h2>
-          <p className="text-[rgb(247_237_226_)]/70 mb-6">Suivez l'avancement de votre parcours thérapeutique en couple.</p>
+          <p className="text-[rgb(247_237_226_)]/70 mb-6">Tous les rendez-vous, ici, les liens vers les appels vidéo s'afficheront ici 30min avant le rendez-vous.</p>
 
           {/* Display therapy journey phases */}
           <div className="mt-8 space-y-8">
