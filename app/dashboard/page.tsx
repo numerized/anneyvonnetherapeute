@@ -33,7 +33,6 @@ export default function DashboardPage() {
   const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
   const [hasAppointment, setHasAppointment] = useState(false);
   const [selectedSession, setSelectedSession] = useState<TherapyJourneyEvent | null>(null);
-  const [isRescheduling, setIsRescheduling] = useState(false);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
   const [sessionDates, setSessionDates] = useState<Record<string, string>>({});
   const [invalidDates, setInvalidDates] = useState<Record<string, boolean>>({});
@@ -453,31 +452,10 @@ export default function DashboardPage() {
   };
 
   const handleSessionClick = (event: TherapyJourneyEvent) => {
-    // If this is a session that already has a date and we're trying to reschedule
+    // If this is a session that already has a date, don't allow rebooking
     if (sessionDates[event.id]) {
-      // Set isRescheduling flag to true for existing sessions
-      setIsRescheduling(true);
-      
-      // If we're rescheduling an invalid date, let it proceed
-      if (invalidDates[event.id]) {
-        console.log(`Rescheduling invalid session: ${event.id}`);
-      } else {
-        console.log(`Rescheduling valid session: ${event.id} with reschedule URL`);
-        // For valid dates, verify that we have a reschedule URL
-        if (!userProfile?.sessionDetails?.[event.id]?.rescheduleUrl) {
-          console.warn(`No reschedule URL found for session ${event.id}, using test URL`);
-          // We're using a fixed test URL for demonstration purposes
-          // In production, you would want to get this from Firestore
-        }
-      }
-
-      // For all rescheduling, always use the modal with the existing session data
-      setSelectedSession(event);
-      setIsCalendlyModalOpen(true);
+      toast.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
       return;
-    } else {
-      // For new bookings, make sure isRescheduling is false
-      setIsRescheduling(false);
     }
 
     // Normal availability check for new bookings
@@ -502,13 +480,6 @@ export default function DashboardPage() {
 
       console.log('Appointment scheduled data:', eventData);
       
-      // Determine if this is a rescheduling event
-      const isReschedulingEvent = isRescheduling || 
-                                  eventData.isRescheduling || 
-                                  eventData.event === 'calendly.event_rescheduled';
-      
-      console.log(`Handling ${isReschedulingEvent ? 'rescheduled' : 'new'} appointment for session: ${selectedSession.id}`);
-
       // Get the event URI from the data
       let formattedUri = eventData.eventUri;
       
@@ -589,8 +560,7 @@ export default function DashboardPage() {
         eventUri: formattedUri,
         formattedDate: formattedDateCapitalized,
         startTime: startTime,
-        lastUpdated: Timestamp.now(),
-        isRescheduled: isReschedulingEvent,
+        lastUpdated: Timestamp.now()
       };
       
       // Add additional fields if we have the full event details
@@ -598,7 +568,6 @@ export default function DashboardPage() {
         sessionDetails.endTime = eventDetails.data.end_time;
         sessionDetails.location = eventDetails.data.location;
         sessionDetails.cancelUrl = eventDetails.data.invitee?.cancel_url || eventDetails.data.cancel_url;
-        sessionDetails.rescheduleUrl = eventDetails.data.invitee?.reschedule_url || eventDetails.data.reschedule_url;
       }
 
       console.log("Updating Firestore with session details:", sessionDetails);
@@ -610,12 +579,18 @@ export default function DashboardPage() {
         updatedAt: Timestamp.now()
       });
 
-      // Alert the user
-      if (isReschedulingEvent) {
-        toast.success(`Votre séance a été reprogrammée pour le ${formattedDateCapitalized}`);
-      } else {
-        toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
-      }
+      // Alert the user with a unique ID to prevent duplicates
+      toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
+        id: `appointment-${selectedSession.id}-${Date.now()}`,
+        onDismiss: () => {
+          // Clean up any duplicate toasts
+          document.querySelectorAll('[data-sonner-toast]').forEach(el => {
+            if (el.textContent?.includes('séance') && el.textContent?.includes(formattedDateCapitalized)) {
+              el.remove();
+            }
+          });
+        }
+      });
 
       console.log(`Updated session ${selectedSession.id} in Firestore with new date: ${formattedDate}`);
 
@@ -796,16 +771,17 @@ export default function DashboardPage() {
                         </span>
                       )}
 
-                      {/* Add edit icon for valid dates */}
-                      {!invalidDates[event.id] && (
-
-                        <button
-                          onClick={() => handleSessionClick(event)}
-                          className="ml-2 opacity-70 hover:opacity-100 transition-opacity"
-                          title="Reprogrammer cette séance"
+                      {/* Add cancel button for valid dates */}
+                      {!invalidDates[event.id] && userProfile?.sessionDetails?.[event.id]?.cancelUrl && (
+                        <a
+                          href={userProfile.sessionDetails[event.id].cancelUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-cream hover:text-primary-cream/80 transition-colors"
+                          title="Annuler le rendez-vous"
                         >
-                          <Edit className="w-3 h-3" />
-                        </button>
+                          <Edit className="w-4 h-4" />
+                        </a>
                       )}
                     </div>
                   )}
@@ -823,24 +799,6 @@ export default function DashboardPage() {
                     <Calendar className="w-3 h-3 mr-2" />
                     Réserver cette séance
                   </Button>
-                </div>
-              )}
-
-              {/* Show reschedule button only for invalid dates */}
-              {invalidDates[event.id] && (
-                <div className="ml-8">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs h-8 border-red-400/40 text-red-300 hover:bg-red-400/10 hover:text-red-200"
-                    onClick={() => handleSessionClick(event)}
-                  >
-                    <Edit className="w-3 h-3 mr-2" />
-                    Reprogrammer cette séance
-                  </Button>
-                  <div className="text-xs text-red-400 mt-1">
-                    Allouez au moins 4 semaines avec la session précédente.
-                  </div>
                 </div>
               )}
             </div>

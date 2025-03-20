@@ -1,3 +1,4 @@
+import { app } from '@/lib/firebase';
 import { 
   collection,
   deleteField,
@@ -5,12 +6,13 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  query,
   serverTimestamp,
   setDoc,
   Timestamp,
-  updateDoc
+  updateDoc,
+  where
 } from 'firebase/firestore';
-import { app } from '@/lib/firebase';
 
 // User interface
 export interface User {
@@ -47,12 +49,14 @@ export interface SessionDetails {
   inviteeEmail?: string; // Email of the person who booked
   inviteeName?: string;  // Name of the person who booked
   textReminderNumber?: string; // Phone number for text reminders
-  cancellationUrl?: string; // URL to cancel the appointment
-  rescheduleUrl?: string; // URL to reschedule the appointment
-  notes?: string;        // Any additional notes
+  eventUri?: string;     // Calendly event URI
+  formattedDate?: string; // Formatted date string for display
+  lastUpdated?: Date | Timestamp; // Last update timestamp
+  cancelUrl?: string;    // URL to cancel the appointment
   sessionType: string;   // Type of session
   status: 'scheduled' | 'completed' | 'cancelled';
   formattedDateTime?: string; // Formatted date and time for display
+  notes?: string;        // Any additional notes
 }
 
 // Create a new user or update if exists
