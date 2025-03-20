@@ -711,7 +711,7 @@ export default function DashboardPage() {
 
           // Determine if this event should have a booking button (all events except partner2 sessions)
           const showBookingButton = (phase === 'initial' || phase === 'final' ||
-            (phase === 'individual' && partner === 'partner1'));
+            phase === 'individual');
 
           // Debug the information for partner1_session_1
           if (event.id === 'individual1_partner1') {
@@ -745,7 +745,7 @@ export default function DashboardPage() {
                 <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
                   <div className="font-medium">
                     {event.title}
-                    {partner === 'partner1' && !isComplete && isAvailable && !getSessionDate(event.id) && (
+                    {!isComplete && isAvailable && !getSessionDate(event.id) && (
                       <span className="block text-xs text-[rgb(247_237_226_)] mt-1">
                         Prendre rendez-vous {event.title.split(' - ')[0]}
                       </span>
