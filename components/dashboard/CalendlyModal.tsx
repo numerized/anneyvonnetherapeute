@@ -20,6 +20,7 @@ export interface CalendlyModalProps {
   onClose: () => void;
   sessionType: SessionType;
   userEmail?: string;
+  guestEmail?: string;
   onAppointmentScheduled?: (eventData: any) => void;
   minDate?: Date;
 }
@@ -52,6 +53,7 @@ export function CalendlyModal({
   onClose, 
   sessionType = '1h' as SessionType,
   userEmail,
+  guestEmail,
   onAppointmentScheduled,
   minDate
 }: CalendlyModalProps) {
@@ -134,6 +136,11 @@ export function CalendlyModal({
     if (userEmail) {
       urlParams += `&email=${encodeURIComponent(userEmail)}`;
     }
+    
+    // Add guest parameter if available
+    if (guestEmail) {
+      urlParams += `&guests=${encodeURIComponent(guestEmail)}`;
+    }
 
     // Use the single Calendly URL from environment variable
     const calendlyUrl = `${CALENDLY_URL}?hide_landing_page_details=1&hide_gdpr_banner=1&hide_event_type_details=1${urlParams}`;
@@ -154,7 +161,7 @@ export function CalendlyModal({
         height: isMobile ? '100vh' : '700px'
       }
     });
-  }, [isCalendlyScriptLoaded, userEmail, isMobile, sessionType]);
+  }, [isCalendlyScriptLoaded, userEmail, guestEmail, isMobile, sessionType]);
 
   // Initialize Calendly when modal is opened
   useEffect(() => {

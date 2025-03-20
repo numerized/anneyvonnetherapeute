@@ -867,6 +867,8 @@ export default function DashboardPage() {
             sessionType={selectedEvent.sessionType || 'initial'}
             onAppointmentScheduled={handleAppointmentScheduled}
             userEmail={activePartner === 'partner2' ? partnerProfile?.email : userProfile?.email}
+            guestEmail={(selectedEvent.phase === 'initial' || selectedEvent.phase === 'final') ? 
+              (activePartner === 'partner2' ? userProfile?.email : partnerProfile?.email) : undefined}
             minDate={selectedEvent ? getSessionDateConstraints(selectedEvent).minDate : undefined}
           />
         )}
