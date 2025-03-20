@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -20,6 +22,7 @@ export interface CalendlyModalProps {
   sessionType: SessionType;
   userEmail?: string;
   onAppointmentScheduled?: (eventData: any) => void;
+  minDate?: Date;
 }
 
 // Define session titles for different session types
@@ -43,7 +46,8 @@ export function CalendlyModal({
   onClose, 
   sessionType = '1h' as SessionType,
   userEmail,
-  onAppointmentScheduled
+  onAppointmentScheduled,
+  minDate
 }: CalendlyModalProps) {
   const [isCalendlyScriptLoaded, setIsCalendlyScriptLoaded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -152,7 +156,7 @@ export function CalendlyModal({
             : 'w-[95%] max-w-5xl mx-auto h-[90vh] max-h-[900px]'
         }`}
       >
-        <div className="flex items-center justify-between p-4 md:p-6 border-b">
+        <div className="flex flex-col items-start justify-between p-4 md:p-6 border-b">
           <h3 className="text-xl md:text-2xl font-semibold text-gray-800">
             {sessionType?.includes('individual_male') && 'Séance Individuelle Homme'}
             {sessionType?.includes('individual_female') && 'Séance Individuelle Femme'}
@@ -161,9 +165,14 @@ export function CalendlyModal({
             {!sessionType?.includes('individual_male') && !sessionType?.includes('individual_female') && 
              !sessionType?.includes('initial') && !sessionType?.includes('final') && 'Prendre Rendez-vous'}
           </h3>
+          {minDate && (
+            <p className="text-red-500 text-sm mt-2"><b>
+              !!! ATTENTION: CHOISISSEZ UNE DATE APRES LE {format(minDate, 'EEEE d MMMM yyyy', { locale: fr })}
+            </b></p>
+          )}
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-coral"
+            className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-coral"
           >
             <X className="w-6 h-6" />
             <span className="sr-only">Fermer</span>

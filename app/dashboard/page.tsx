@@ -770,19 +770,6 @@ export default function DashboardPage() {
                           (moins de 4 semaines)
                         </span>
                       )}
-
-                      {/* Add cancel button for valid dates */}
-                      {!invalidDates[event.id] && userProfile?.sessionDetails?.[event.id]?.cancelUrl && (
-                        <a
-                          href={userProfile.sessionDetails[event.id].cancelUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary-cream hover:text-primary-cream/80 transition-colors"
-                          title="Annuler le rendez-vous"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </a>
-                      )}
                     </div>
                   )}
                 </div>
@@ -962,6 +949,7 @@ export default function DashboardPage() {
             sessionType="1h"
             onAppointmentScheduled={handleAppointmentScheduled}
             userEmail={userProfile?.email}
+            minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}
           />
         )}
 
