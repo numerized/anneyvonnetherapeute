@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { UserProfileForm } from '@/components/UserProfileForm';
 import { createOrUpdateUser, updatePartnerProfile, UserProfile } from '@/lib/userService';
 import { Timestamp } from 'firebase/firestore';
-import { User as UserIcon } from 'lucide-react';
+import { User as UserIcon, Pencil } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -117,7 +117,8 @@ export function UserProfileSection({
             className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
             onClick={handlePhotoClick}
           >
-            Modifier
+            <Pencil className="w-4 h-4 lg:hidden" />
+            <span className="hidden lg:inline">Modifier</span>
           </Button>
         </div>
       </div>
@@ -156,7 +157,8 @@ export function UserProfileSection({
             className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
             onClick={handlePartnerPhotoClick}
           >
-            {partnerProfile ? 'Modifier' : 'Ajouter'}
+            <Pencil className="w-4 h-4 lg:hidden" />
+            <span className="hidden lg:inline">{partnerProfile ? 'Modifier' : 'Ajouter'}</span>
           </Button>
         </div>
       </div>
