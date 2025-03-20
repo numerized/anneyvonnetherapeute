@@ -359,7 +359,7 @@ export default function DashboardPage() {
       }
     } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
-      
+
       const dependentDate = getSessionDate(dependentId);
       if (dependentDate) {
         const depDate = new Date(dependentDate);
@@ -392,7 +392,7 @@ export default function DashboardPage() {
 
     // Check each dependency (array or single value)
     if (Array.isArray(directDependencies)) {
-      return directDependencies.some(depId => 
+      return directDependencies.some(depId =>
         invalidDates[depId] || hasPreviousInvalidDates(depId)
       );
     }
@@ -467,74 +467,74 @@ export default function DashboardPage() {
       if (!user || !selectedEvent) return;
 
       console.log('Appointment scheduled data:', eventData);
-      
+
       // Create a local variable to track which session we'll actually use
       // This allows us to modify which session we're setting without waiting for React state to update
       let sessionToUse = selectedEvent;
-      
+
       // Validate that we have the expected event data structure
       if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
         console.error('Invalid event data format:', eventData);
         toast.error("Format de données invalide. Veuillez réessayer.");
         return;
       }
-      
+
       // Extract data from Calendly's standard event structure
       const eventUri = eventData.payload?.event?.uri || '';
       const inviteeUri = eventData.payload?.invitee?.uri || '';
-      
+
       if (!eventUri) {
         console.error('Missing event URI:', eventData);
         toast.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
         return;
       }
-      
+
       console.log(`Event URI: ${eventUri}`);
       console.log(`Invitee URI: ${inviteeUri}`);
-      
+
       // Extract event ID from the URI
       const eventId = eventUri.split('/').pop() || '';
       console.log(`Event ID: ${eventId}`);
-      
+
       // Show loading state
       toast.loading("Récupération des détails du rendez-vous...");
-      
+
       try {
         // Fetch event details from our API
         const eventDetailsResponse = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(eventUri)}`);
-        
+
         if (!eventDetailsResponse.ok) {
           throw new Error(`Failed to fetch event details: ${eventDetailsResponse.status}`);
         }
-        
+
         const eventDetailsResult = await eventDetailsResponse.json();
         console.log('Event details:', eventDetailsResult);
-        
+
         if (!eventDetailsResult.success || !eventDetailsResult.data) {
           throw new Error('Invalid response from event details API');
         }
-        
+
         const eventDetails = eventDetailsResult.data;
-        
+
         // Get event start time and end time
         let startTime = eventDetails.start_time;
         let endTime = eventDetails.end_time;
-        
+
         if (!startTime) {
           console.warn('Start time not available in API response, using fallback');
           // Fallback (should rarely happen)
           const scheduledTime = new Date();
           scheduledTime.setHours(scheduledTime.getHours() + 1);
           startTime = scheduledTime.toISOString();
-          
+
           const scheduledEndTime = new Date(scheduledTime);
           scheduledEndTime.setHours(scheduledEndTime.getHours() + 1);
           endTime = scheduledEndTime.toISOString();
         }
-        
+
         // Dismiss loading toast
         toast.dismiss();
-        
+
         // Format date for display
         const dateObj = new Date(startTime);
         const formattedDate = new Intl.DateTimeFormat('fr-FR', {
@@ -552,31 +552,31 @@ export default function DashboardPage() {
         // Get Firestore reference
         const db = getFirestore(app);
         const userDocRef = doc(db, 'users', user.uid);
-        
+
         try {
           // Get current data first
           const userDocSnap = await getDoc(userDocRef);
-          
+
           if (!userDocSnap.exists()) {
             throw new Error("User document does not exist!");
           }
-          
+
           // Get current data
           const userData = userDocSnap.data();
-          
+
           // Get existing session details and dates or initialize if not present
           const existingSessionDetails = userData.sessionDetails || {};
           const existingSessionDates = userData.sessionDates || {};
-          
+
           console.log('Current session details:', existingSessionDetails);
           console.log('Current session dates:', existingSessionDates);
           console.log('Selected session ID:', sessionToUse.id);
-          
+
           // SAFETY CHECK: See if the selected session already has a date set
           // This prevents accidentally overwriting existing session dates
           if (existingSessionDates[sessionToUse.id]) {
             console.warn(`Session ${sessionToUse.id} already has a date set. Looking for next available session...`);
-            
+
             // Find the next available session in the therapy journey
             const sessionOrder = [
               'initial',
@@ -584,16 +584,16 @@ export default function DashboardPage() {
               'individual1_partner2', 'individual2_partner2', 'individual3_partner2',
               'final'
             ];
-            
+
             // Start searching from the current session's position
             const currentIndex = sessionOrder.indexOf(sessionToUse.id);
             let nextSessionId: string | null = null;
-            
+
             if (currentIndex !== -1) {
               // Search forward from current position
               for (let i = currentIndex + 1; i < sessionOrder.length; i++) {
                 const sessionId = sessionOrder[i];
-                
+
                 // Check if this session is available (not already scheduled)
                 if (!existingSessionDates[sessionId] && isSessionAvailable(
                   coupleTherapyJourney.find(e => e.id === sessionId) as TherapyJourneyEvent
@@ -603,7 +603,7 @@ export default function DashboardPage() {
                 }
               }
             }
-            
+
             if (nextSessionId) {
               // Found an available session - update sessionToUse
               const nextEvent = coupleTherapyJourney.find(e => e.id === nextSessionId);
@@ -624,7 +624,7 @@ export default function DashboardPage() {
               return;
             }
           }
-          
+
           // Create the new session detail
           const newSessionDetail: SessionDetails = {
             date: formattedDate,
@@ -640,54 +640,54 @@ export default function DashboardPage() {
               inviteeUri: inviteeUri
             }
           };
-          
+
           // Add additional fields if available in the payload
           if (eventData.payload?.event) {
             // Add location if available
             if (eventData.payload.event.location) {
               newSessionDetail.location = eventData.payload.event.location;
             }
-            
+
             // Add cancel URL if available
-            const cancelUrl = eventData.payload.invitee?.cancel_url || 
-                            eventData.payload.event?.cancel_url;
-            
+            const cancelUrl = eventData.payload.invitee?.cancel_url ||
+              eventData.payload.event?.cancel_url;
+
             if (cancelUrl) {
               newSessionDetail.cancelUrl = cancelUrl;
             }
-            
+
             // Add reschedule URL if available
-            const rescheduleUrl = eventData.payload.invitee?.reschedule_url || 
-                                eventData.payload.event?.reschedule_url;
-            
+            const rescheduleUrl = eventData.payload.invitee?.reschedule_url ||
+              eventData.payload.event?.reschedule_url;
+
             if (rescheduleUrl) {
               newSessionDetail.rescheduleUrl = rescheduleUrl;
             }
           }
-          
+
           // Create new objects with the updated data
           const updatedSessionDetails = { ...existingSessionDetails };
           updatedSessionDetails[sessionToUse.id] = newSessionDetail;
-          
+
           const updatedSessionDates = { ...existingSessionDates };
           updatedSessionDates[sessionToUse.id] = startTime;
-          
+
           console.log('Updated session details to write:', updatedSessionDetails);
           console.log('Updated session dates to write:', updatedSessionDates);
-          
+
           // Update the document with direct update (no transaction)
           await updateDoc(userDocRef, {
             sessionDetails: updatedSessionDetails,
             sessionDates: updatedSessionDates,
             updatedAt: Timestamp.now()
           });
-          
+
           console.log("Document successfully updated!");
-          
+
           // Verify data after update
           const verifyDocSnap = await getDoc(userDocRef);
           const verifyData = verifyDocSnap.data();
-          
+
           console.log('VERIFICATION - Final saved session details:', verifyData?.sessionDetails);
           console.log('VERIFICATION - Final saved session dates:', verifyData?.sessionDates);
 
@@ -813,10 +813,10 @@ export default function DashboardPage() {
               <div className="flex items-center gap-3">
                 <div
                   className={`p-1 rounded ${isComplete
-                      ? 'text-emerald-500'
-                      : isAvailable
-                        ? 'text-primary-cream'
-                        : 'text-primary-cream/30'
+                    ? 'text-emerald-500'
+                    : isAvailable
+                      ? 'text-primary-cream'
+                      : 'text-primary-cream/30'
                     }`}
                 >
                   {isComplete ? (
@@ -860,10 +860,9 @@ export default function DashboardPage() {
                 // Show date under "Séance de Couple Initiale" when booked
                 event.id === 'initial' && getSessionDate(event.id) ? (
                   <div className="ml-8">
-                    <div 
-                      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs ${
-                        invalidDates[event.id] ? 'bg-yellow-500/20 text-yellow-200' : 'bg-blue-500/20 text-blue-200'
-                      }`}
+                    <div
+                      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs ${invalidDates[event.id] ? 'bg-yellow-500/20 text-yellow-200' : 'bg-blue-500/20 text-blue-200'
+                        }`}
                     >
                       <Calendar className="w-3 h-3" />
                       <span>{new Date(getSessionDate(event.id) as string).toLocaleDateString('fr-FR')}</span>
@@ -921,7 +920,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <UserProfileSection 
+        <UserProfileSection
           user={{
             uid: user?.uid || "",
             email: user?.email || null
