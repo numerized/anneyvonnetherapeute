@@ -127,7 +127,7 @@ export function ProchainementPage({ data, settings }: any) {
           <ProchainementHero hero={data.hero} data={settings} onShowPurchase={() => setShowPurchaseModal(true)} />
 
           {/* Main Content Section */}
-          <section className="py-24 bg-primary-forest/80 rounded-3xl">
+          {/* <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
@@ -163,7 +163,7 @@ export function ProchainementPage({ data, settings }: any) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Header */}
               <div className="text-center mb-12">
