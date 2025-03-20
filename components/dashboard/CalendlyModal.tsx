@@ -165,7 +165,7 @@ export function CalendlyModal({
             {!sessionType?.includes('individual_male') && !sessionType?.includes('individual_female') && 
              !sessionType?.includes('initial') && !sessionType?.includes('final') && 'Prendre Rendez-vous'}
           </h3>
-          {minDate && (
+          {minDate && !sessionType?.includes('initial') && (
             <p className="text-red-500 text-sm mt-2"><b>
               !!! ATTENTION: CHOISISSEZ UNE DATE APRES LE {format(minDate, 'EEEE d MMMM yyyy', { locale: fr })}
             </b></p>
