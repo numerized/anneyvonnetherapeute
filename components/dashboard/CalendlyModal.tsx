@@ -74,23 +74,33 @@ export function CalendlyModal({
     
     // Add global event listener for Calendly messages
     window.addEventListener('message', (e) => {
-      // Only listen for scheduled events
-      if (e.data.event === 'calendly.event_scheduled') {
-        console.log('Calendly event scheduled:', e.data);
+      // Check if it's a Calendly event
+      if (isCalendlyEvent(e)) {
+        console.log('Detected Calendly event:', e.data);
         
-        // Extract the event URI
-        const eventUri = e.data.payload?.event?.uri || '';
-        
-        if (eventUri && onAppointmentScheduled) {
-          // Call parent handler with event data
-          onAppointmentScheduled({
-            ...e.data,
-            eventUri,
-            newTime: new Date().toISOString()
-          });
+        // Only handle event_scheduled events
+        if (e.data.event === 'calendly.event_scheduled') {
+          console.log('Calendly event scheduled:', JSON.stringify(e.data, null, 2));
           
-          // Close the modal
-          onClose();
+          // Extract the event URI from the payload
+          const eventUri = e.data.payload?.event?.uri || '';
+          const inviteeUri = e.data.payload?.invitee?.uri || '';
+          
+          if (eventUri && onAppointmentScheduled) {
+            console.log(`Event URI: ${eventUri}`);
+            console.log(`Invitee URI: ${inviteeUri}`);
+            
+            // Call parent handler with full event data
+            onAppointmentScheduled(e.data);
+            
+            // Close the modal
+            onClose();
+          } else {
+            console.error('Missing event URI or onAppointmentScheduled handler', {
+              eventUri,
+              hasHandler: !!onAppointmentScheduled
+            });
+          }
         }
       }
     });
@@ -100,6 +110,13 @@ export function CalendlyModal({
       // with other event listeners during component unmount
     };
   }, [onAppointmentScheduled, onClose]);
+
+  // Helper function to check if an event is from Calendly
+  const isCalendlyEvent = (e: MessageEvent): boolean => {
+    return e.data.event &&
+           typeof e.data.event === 'string' &&
+           e.data.event.indexOf('calendly') === 0;
+  };
 
   // Initialize widget function
   const initializeCalendlyWidget = useCallback(() => {

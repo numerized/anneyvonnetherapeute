@@ -468,148 +468,258 @@ export default function DashboardPage() {
 
       console.log('Appointment scheduled data:', eventData);
       
-      // Extract the event data - handle both direct payload and nested formats
-      let startTime, endTime, formattedUri;
+      // Create a local variable to track which session we'll actually use
+      // This allows us to modify which session we're setting without waiting for React state to update
+      let sessionToUse = selectedEvent;
       
-      // Get the event URI from the data
-      formattedUri = eventData.eventUri || '';
-      
-      // Format the URI if needed
-      if (!formattedUri.startsWith('http')) {
-        formattedUri = `https://api.calendly.com/scheduled_events/${formattedUri}`;
-      }
-
-      console.log(`Using event URI: ${formattedUri}`);
-      
-      // Extract start time from various possible paths in the data structure
-      if (eventData.payload?.event?.start_time) {
-        startTime = eventData.payload.event.start_time;
-        endTime = eventData.payload.event.end_time;
-      } else if (eventData.event?.start_time) {
-        startTime = eventData.event.start_time;
-        endTime = eventData.event.end_time;
-      } else {
-        // Fallback to current time if no valid start time found
-        console.warn('No valid start time found in event data, using current time');
-        startTime = new Date().toISOString();
-        endTime = null;
-      }
-      
-      // Format date for display
-      const dateObj = new Date(startTime);
-      const formattedDate = new Intl.DateTimeFormat('fr-FR', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-      }).format(dateObj);
-
-      // Format to capitalize first letter of day name
-      const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-
-      // Get Firestore reference
-      const db = getFirestore(app);
-      const userDocRef = doc(db, 'users', user.uid);
-      
-      try {
-        // Get current data first
-        const userDocSnap = await getDoc(userDocRef);
-        
-        if (!userDocSnap.exists()) {
-          throw new Error("User document does not exist!");
-        }
-        
-        // Get current data
-        const userData = userDocSnap.data();
-        
-        // Get existing session details and dates or initialize if not present
-        const existingSessionDetails = userData.sessionDetails || {};
-        const existingSessionDates = userData.sessionDates || {};
-        
-        console.log('Current session details:', existingSessionDetails);
-        console.log('Current session dates:', existingSessionDates);
-        console.log('Selected session ID:', selectedEvent.id);
-        
-        // Create the new session detail
-        const newSessionDetail: SessionDetails = {
-          date: formattedDate,
-          eventUri: formattedUri,
-          formattedDate: formattedDateCapitalized,
-          startTime: startTime,
-          lastUpdated: Timestamp.now(),
-          sessionType: selectedEvent.id, // Using selected event ID as the session type
-          status: 'scheduled'  // Default status for new appointments
-        };
-        
-        // Add additional fields if we have the full event details
-        if (eventData.payload?.event) {
-          if (eventData.payload.event.end_time) newSessionDetail.endTime = eventData.payload.event.end_time;
-          if (eventData.payload.event.location) newSessionDetail.location = eventData.payload.event.location;
-          if (eventData.payload.event.invitee?.cancel_url || eventData.payload.event.cancel_url) {
-            newSessionDetail.cancelUrl = eventData.payload.event.invitee?.cancel_url || eventData.payload.event.cancel_url;
-          }
-        } else if (eventData.event) {
-          if (eventData.event.end_time) newSessionDetail.endTime = eventData.event.end_time;
-          if (eventData.event.location) newSessionDetail.location = eventData.event.location;
-          if (eventData.event.invitee?.cancel_url || eventData.event.cancel_url) {
-            newSessionDetail.cancelUrl = eventData.event.invitee?.cancel_url || eventData.event.cancel_url;
-          }
-        }
-        
-        // Create new objects with the updated data
-        const updatedSessionDetails = { ...existingSessionDetails };
-        updatedSessionDetails[selectedEvent.id] = newSessionDetail;
-        
-        const updatedSessionDates = { ...existingSessionDates };
-        updatedSessionDates[selectedEvent.id] = startTime;
-        
-        console.log('Updated session details to write:', updatedSessionDetails);
-        console.log('Updated session dates to write:', updatedSessionDates);
-        
-        // Update the document with direct update (no transaction)
-        await updateDoc(userDocRef, {
-          sessionDetails: updatedSessionDetails,
-          sessionDates: updatedSessionDates,
-          updatedAt: Timestamp.now()
-        });
-        
-        console.log("Document successfully updated!");
-        
-        // Verify data after update
-        const verifyDocSnap = await getDoc(userDocRef);
-        const verifyData = verifyDocSnap.data();
-        
-        console.log('VERIFICATION - Final saved session details:', verifyData?.sessionDetails);
-        console.log('VERIFICATION - Final saved session dates:', verifyData?.sessionDates);
-      } catch (error) {
-        console.error("Error updating document:", error);
-        toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+      // Validate that we have the expected event data structure
+      if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
+        console.error('Invalid event data format:', eventData);
+        toast.error("Format de données invalide. Veuillez réessayer.");
         return;
       }
-
-      // Alert the user with a unique ID to prevent duplicates
-      toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
-        id: `appointment-${selectedEvent.id}-${Date.now()}`
-      });
-
-      console.log(`Updated session ${selectedEvent.id} in Firestore with new date: ${formattedDate}`);
-
-      // Update session dates in state to reflect the new date
-      setSessionDates(prev => {
-        const newDates = { ...prev };
-        newDates[selectedEvent.id] = startTime;
-        return newDates;
-      });
-
-      // Reset selected session
-      setSelectedEvent(null);
-
-      // Force UI refresh
-      setUiRefreshKey(prev => prev + 1);
       
-      // No need to reload the page - the state updates above will trigger a UI refresh
+      // Extract data from Calendly's standard event structure
+      const eventUri = eventData.payload?.event?.uri || '';
+      const inviteeUri = eventData.payload?.invitee?.uri || '';
+      
+      if (!eventUri) {
+        console.error('Missing event URI:', eventData);
+        toast.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
+        return;
+      }
+      
+      console.log(`Event URI: ${eventUri}`);
+      console.log(`Invitee URI: ${inviteeUri}`);
+      
+      // Extract event ID from the URI
+      const eventId = eventUri.split('/').pop() || '';
+      console.log(`Event ID: ${eventId}`);
+      
+      // Show loading state
+      toast.loading("Récupération des détails du rendez-vous...");
+      
+      try {
+        // Fetch event details from our API
+        const eventDetailsResponse = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(eventUri)}`);
+        
+        if (!eventDetailsResponse.ok) {
+          throw new Error(`Failed to fetch event details: ${eventDetailsResponse.status}`);
+        }
+        
+        const eventDetailsResult = await eventDetailsResponse.json();
+        console.log('Event details:', eventDetailsResult);
+        
+        if (!eventDetailsResult.success || !eventDetailsResult.data) {
+          throw new Error('Invalid response from event details API');
+        }
+        
+        const eventDetails = eventDetailsResult.data;
+        
+        // Get event start time and end time
+        let startTime = eventDetails.start_time;
+        let endTime = eventDetails.end_time;
+        
+        if (!startTime) {
+          console.warn('Start time not available in API response, using fallback');
+          // Fallback (should rarely happen)
+          const scheduledTime = new Date();
+          scheduledTime.setHours(scheduledTime.getHours() + 1);
+          startTime = scheduledTime.toISOString();
+          
+          const scheduledEndTime = new Date(scheduledTime);
+          scheduledEndTime.setHours(scheduledEndTime.getHours() + 1);
+          endTime = scheduledEndTime.toISOString();
+        }
+        
+        // Dismiss loading toast
+        toast.dismiss();
+        
+        // Format date for display
+        const dateObj = new Date(startTime);
+        const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        }).format(dateObj);
+
+        // Format to capitalize first letter of day name
+        const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
+        // Get Firestore reference
+        const db = getFirestore(app);
+        const userDocRef = doc(db, 'users', user.uid);
+        
+        try {
+          // Get current data first
+          const userDocSnap = await getDoc(userDocRef);
+          
+          if (!userDocSnap.exists()) {
+            throw new Error("User document does not exist!");
+          }
+          
+          // Get current data
+          const userData = userDocSnap.data();
+          
+          // Get existing session details and dates or initialize if not present
+          const existingSessionDetails = userData.sessionDetails || {};
+          const existingSessionDates = userData.sessionDates || {};
+          
+          console.log('Current session details:', existingSessionDetails);
+          console.log('Current session dates:', existingSessionDates);
+          console.log('Selected session ID:', sessionToUse.id);
+          
+          // SAFETY CHECK: See if the selected session already has a date set
+          // This prevents accidentally overwriting existing session dates
+          if (existingSessionDates[sessionToUse.id]) {
+            console.warn(`Session ${sessionToUse.id} already has a date set. Looking for next available session...`);
+            
+            // Find the next available session in the therapy journey
+            const sessionOrder = [
+              'initial',
+              'individual1_partner1', 'individual2_partner1', 'individual3_partner1',
+              'individual1_partner2', 'individual2_partner2', 'individual3_partner2',
+              'final'
+            ];
+            
+            // Start searching from the current session's position
+            const currentIndex = sessionOrder.indexOf(sessionToUse.id);
+            let nextSessionId: string | null = null;
+            
+            if (currentIndex !== -1) {
+              // Search forward from current position
+              for (let i = currentIndex + 1; i < sessionOrder.length; i++) {
+                const sessionId = sessionOrder[i];
+                
+                // Check if this session is available (not already scheduled)
+                if (!existingSessionDates[sessionId] && isSessionAvailable(
+                  coupleTherapyJourney.find(e => e.id === sessionId) as TherapyJourneyEvent
+                )) {
+                  nextSessionId = sessionId;
+                  break;
+                }
+              }
+            }
+            
+            if (nextSessionId) {
+              // Found an available session - update sessionToUse
+              const nextEvent = coupleTherapyJourney.find(e => e.id === nextSessionId);
+              if (nextEvent) {
+                console.log(`Found next available session: ${nextSessionId}`);
+                toast.success(`La séance ${sessionToUse.id} est déjà programmée. Le rendez-vous sera enregistré pour la séance suivante : ${nextEvent.title}`);
+                sessionToUse = nextEvent;
+                // Also update the React state for UI consistency
+                setSelectedEvent(nextEvent);
+              } else {
+                // If we can't find the event, just cancel the operation
+                toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
+                return;
+              }
+            } else {
+              // No available sessions found
+              toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
+              return;
+            }
+          }
+          
+          // Create the new session detail
+          const newSessionDetail: SessionDetails = {
+            date: formattedDate,
+            eventUri: eventUri,
+            formattedDate: formattedDateCapitalized,
+            startTime: startTime,
+            endTime: endTime,
+            lastUpdated: Timestamp.now(),
+            sessionType: sessionToUse.id, // Using the determined session ID as the session type
+            status: 'scheduled',  // Default status for new appointments
+            calendlyData: {
+              eventUri: eventUri,
+              inviteeUri: inviteeUri
+            }
+          };
+          
+          // Add additional fields if available in the payload
+          if (eventData.payload?.event) {
+            // Add location if available
+            if (eventData.payload.event.location) {
+              newSessionDetail.location = eventData.payload.event.location;
+            }
+            
+            // Add cancel URL if available
+            const cancelUrl = eventData.payload.invitee?.cancel_url || 
+                            eventData.payload.event?.cancel_url;
+            
+            if (cancelUrl) {
+              newSessionDetail.cancelUrl = cancelUrl;
+            }
+            
+            // Add reschedule URL if available
+            const rescheduleUrl = eventData.payload.invitee?.reschedule_url || 
+                                eventData.payload.event?.reschedule_url;
+            
+            if (rescheduleUrl) {
+              newSessionDetail.rescheduleUrl = rescheduleUrl;
+            }
+          }
+          
+          // Create new objects with the updated data
+          const updatedSessionDetails = { ...existingSessionDetails };
+          updatedSessionDetails[sessionToUse.id] = newSessionDetail;
+          
+          const updatedSessionDates = { ...existingSessionDates };
+          updatedSessionDates[sessionToUse.id] = startTime;
+          
+          console.log('Updated session details to write:', updatedSessionDetails);
+          console.log('Updated session dates to write:', updatedSessionDates);
+          
+          // Update the document with direct update (no transaction)
+          await updateDoc(userDocRef, {
+            sessionDetails: updatedSessionDetails,
+            sessionDates: updatedSessionDates,
+            updatedAt: Timestamp.now()
+          });
+          
+          console.log("Document successfully updated!");
+          
+          // Verify data after update
+          const verifyDocSnap = await getDoc(userDocRef);
+          const verifyData = verifyDocSnap.data();
+          
+          console.log('VERIFICATION - Final saved session details:', verifyData?.sessionDetails);
+          console.log('VERIFICATION - Final saved session dates:', verifyData?.sessionDates);
+
+          // Alert the user with a unique ID to prevent duplicates
+          toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
+            id: `appointment-${sessionToUse.id}-${Date.now()}`
+          });
+
+          console.log(`Updated session ${sessionToUse.id} in Firestore with new date: ${formattedDate}`);
+
+          // Update session dates in state to reflect the new date
+          setSessionDates(prev => {
+            const newDates = { ...prev };
+            newDates[sessionToUse.id] = startTime;
+            return newDates;
+          });
+
+          // Reset selected session
+          setSelectedEvent(null);
+
+          // Force UI refresh
+          setUiRefreshKey(prev => prev + 1);
+        } catch (error) {
+          console.error("Error updating document:", error);
+          toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+          return;
+        }
+      } catch (error) {
+        console.error("Error handling appointment scheduling:", error);
+        toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+        setShowCalendlyModal(false);
+      }
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
       toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");

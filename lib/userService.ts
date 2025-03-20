@@ -74,6 +74,12 @@ export interface SessionDetails {
   formattedDate?: string; // Formatted date string for display
   lastUpdated?: Date | Timestamp; // Last update timestamp
   cancelUrl?: string;    // URL to cancel the appointment
+  rescheduleUrl?: string; // URL to reschedule the appointment
+  calendlyData?: {       // Specific Calendly information
+    eventUri?: string;   // URI of the Calendly event
+    inviteeUri?: string; // URI of the Calendly invitee
+    [key: string]: any;  // Any other Calendly-specific data
+  };
   sessionType: string;   // Type of session
   status: 'scheduled' | 'completed' | 'cancelled';
   formattedDateTime?: string; // Formatted date and time for display
