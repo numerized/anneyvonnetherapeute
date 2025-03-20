@@ -16,74 +16,63 @@ import {
 
 // User interface
 export interface User {
-  id?: string;
+  birthDate?: Date | Timestamp;
+  completedSessions?: string[];
+  createdAt?: Date | Timestamp;
   email?: string;
   firstName?: string;
+  id?: string;
   lastName?: string;
-  photo?: string | null; 
+  partnerProfile?: UserProfile;
   phone?: string;
-  birthDate?: Date | Timestamp;
+  photo?: string | null;
   role?: 'admin' | 'user' | 'partner';
-  partnerId?: string;
-  partnerEmail?: string;
-  isPartnerConnected?: boolean;
-  completedSessions?: string[];
   sessionDates?: Record<string, string>;
   sessionDetails?: Record<string, SessionDetails>;
-  createdAt?: Date | Timestamp;
   updatedAt?: Date | Timestamp;
 }
 
 // UserProfile interface (compatible with UserProfileSection component)
 export interface UserProfile {
-  id?: string;
-  uid?: string;
+  birthDate?: Date | Timestamp;
   email?: string;
   firstName?: string;
+  gender?: 'male' | 'female';
   lastName?: string;
-  photo?: string | null;
   phone?: string;
-  birthDate?: Date | Timestamp;
-  role?: 'admin' | 'user' | 'partner';
-  partnerId?: string;
-  partnerEmail?: string;
-  isPartnerConnected?: boolean;
-  completedSessions?: string[];
-  sessionDates?: Record<string, string>;
-  sessionDetails?: Record<string, SessionDetails>;
-  createdAt?: Date | Timestamp;
+  photo?: string | null;
   updatedAt?: Date | Timestamp;
 }
 
 // Session details interface
 export interface SessionDetails {
-  date: string;          // ISO date string
-  startTime?: string;    // Start time
-  endTime?: string;      // End time
-  duration?: number;     // Duration in minutes
-  location?: {           // Session location (V2 API format)
-    type?: string;       // Location type (physical, zoom, etc.)
-    location?: string;   // Physical location details
-    join_url?: string;   // URL for virtual meetings
-  } | string;            // Backward compatibility with string format
   calendarEvent?: string; // Calendar event link/ID
-  inviteeEmail?: string; // Email of the person who booked
-  inviteeName?: string;  // Name of the person who booked
-  textReminderNumber?: string; // Phone number for text reminders
-  eventUri?: string;     // Calendly event URI
-  formattedDate?: string; // Formatted date string for display
-  lastUpdated?: Date | Timestamp; // Last update timestamp
   cancelUrl?: string;    // URL to cancel the appointment
-  rescheduleUrl?: string; // URL to reschedule the appointment
   calendlyData?: {       // Specific Calendly information
     eventUri?: string;   // URI of the Calendly event
     inviteeUri?: string; // URI of the Calendly invitee
     [key: string]: any;  // Any other Calendly-specific data
   };
-  sessionType: string;   // Type of session
-  status: 'scheduled' | 'completed' | 'cancelled';
+  date: string;          // ISO date string
+  duration?: number;     // Duration in minutes
+  endTime?: string;      // End time
+  eventUri?: string;     // Calendly event URI
+  formattedDate?: string; // Formatted date string for display
   formattedDateTime?: string; // Formatted date and time for display
+  inviteeEmail?: string; // Email of the person who booked
+  inviteeName?: string;  // Name of the person who booked
+  lastUpdated?: Date | Timestamp; // Last update timestamp
+  location?: {           // Session location (V2 API format)
+    join_url?: string;   // URL for virtual meetings
+    location?: string;   // Physical location details
+    type?: string;       // Location type (physical, zoom, etc.)
+  } | string;            // Backward compatibility with string format
   notes?: string;        // Any additional notes
+  rescheduleUrl?: string; // URL to reschedule the appointment
+  sessionType: string;   // Type of session
+  startTime?: string;    // Start time
+  status: 'scheduled' | 'completed' | 'cancelled';
+  textReminderNumber?: string; // Phone number for text reminders
 }
 
 // Create a new user or update if exists
@@ -196,8 +185,36 @@ export async function getUserById(userId: string): Promise<User | null> {
 }
 
 // Get partner profile
-export async function getPartnerProfile(partnerId: string): Promise<User | null> {
-  return getUserById(partnerId);
+export async function getPartnerProfile(userId: string): Promise<UserProfile | null> {
+  const user = await getUserById(userId);
+  return user?.partnerProfile || null;
+}
+
+// Update partner profile
+export async function updatePartnerProfile(userId: string, partnerData: UserProfile): Promise<void> {
+  const db = getFirestore(app);
+  const userRef = doc(db, 'users', userId);
+
+  // Process dates for Firestore
+  const processedData: Record<string, any> = {};
+  Object.entries(partnerData).forEach(([key, value]) => {
+    if (value !== undefined) {
+      if (key === 'birthDate' && value instanceof Date) {
+        processedData[key] = Timestamp.fromDate(value);
+      } else if (key === 'photo' && value === null) {
+        processedData[key] = null;
+      } else if (value !== null) {
+        processedData[key] = value;
+      }
+    }
+  });
+
+  await updateDoc(userRef, {
+    partnerProfile: {
+      ...processedData,
+      updatedAt: Timestamp.now()
+    }
+  });
 }
 
 // Function to migrate user data to use English property names

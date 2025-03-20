@@ -1,5 +1,12 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
+import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
+import { ZenClickButton } from '@/components/ZenClickButton';
+import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
+import { app } from '@/lib/firebase';
+import { createOrUpdateUser, getUserById, UserProfile, SessionDetails } from '@/lib/userService';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
@@ -20,14 +27,6 @@ import { Calendar, Check, Clock, LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
-
-import { Button } from '@/components/ui/button';
-import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
-import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
-import { ZenClickButton } from '@/components/ZenClickButton';
-import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
-import { app } from '@/lib/firebase';
-import { createOrUpdateUser, getUserById, getPartnerProfile, UserProfile, SessionDetails } from '@/lib/userService';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -66,6 +65,32 @@ export default function DashboardPage() {
     }
   };
 
+  // Get user and partner profiles
+  const getUserProfiles = async (userId: string) => {
+    try {
+      const userProfile = await getUserById(userId);
+      if (!userProfile) {
+        return { userProfile: null, partnerProfile: null };
+      }
+
+      return {
+        userProfile,
+        partnerProfile: userProfile.partnerProfile || null
+      };
+    } catch (error) {
+      console.error('Error fetching user profiles:', error);
+      return { userProfile: null, partnerProfile: null };
+    }
+  };
+
+  // Handle profile update
+  const handleProfileUpdate = async () => {
+    if (!user?.uid) return;
+    const { userProfile, partnerProfile } = await getUserProfiles(user.uid);
+    setUserProfile(userProfile);
+    setPartnerProfile(partnerProfile);
+  };
+
   useEffect(() => {
     const auth = getAuth(app);
 
@@ -77,13 +102,9 @@ export default function DashboardPage() {
           if (!user || !user.uid) return;
 
           try {
-            const profileData = await getUserById(user.uid);
-            setUserProfile(profileData);
-
-            if (profileData?.partnerId) {
-              const partnerData = await getPartnerProfile(profileData.partnerId);
-              setPartnerProfile(partnerData);
-            }
+            const { userProfile, partnerProfile } = await getUserProfiles(user.uid);
+            setUserProfile(userProfile);
+            setPartnerProfile(partnerProfile);
           } catch (error) {
             console.error('Error fetching user profile:', error);
             toast.error('Failed to load user profile');
@@ -101,47 +122,29 @@ export default function DashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  // Fetch user data when component mounts or when UI needs refresh
+  // Effect to load user and partner profiles
   useEffect(() => {
-    if (user) {
-      // Fetch user profile data
-      async function fetchUserProfile() {
-        if (!user || !user.uid) return;
-
-        try {
-          const profileData = await getUserById(user.uid);
-          setUserProfile(profileData);
-
-          if (profileData?.partnerId) {
-            const partnerData = await getPartnerProfile(profileData.partnerId);
-            setPartnerProfile(partnerData);
-          }
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-          toast.error('Failed to load user profile');
-        } finally {
-          setLoading(false);
-        }
-      }
-
-      fetchUserProfile();
+    if (user?.uid) {
+      getUserProfiles(user.uid).then(({ userProfile, partnerProfile }) => {
+        setUserProfile(userProfile);
+        setPartnerProfile(partnerProfile);
+      });
     }
-  }, [user, uiRefreshKey]);
+  }, [user?.uid]);
 
-  // Initialize session state from user profile
+  // Effect to update completed sessions
   useEffect(() => {
-    if (userProfile) {
-      // Initialize completed sessions
-      if (userProfile.completedSessions && userProfile.completedSessions.length > 0) {
-        setCompletedSessions(new Set(userProfile.completedSessions));
-      }
-
-      // Initialize session dates
-      if (userProfile.sessionDates) {
-        setSessionDates(userProfile.sessionDates);
-      }
+    if (userProfile?.completedSessions !== undefined) {
+      setCompletedSessions(userProfile.completedSessions || []);
     }
-  }, [userProfile]);
+  }, [userProfile?.completedSessions]);
+
+  // Effect to update session dates
+  useEffect(() => {
+    if (userProfile?.sessionDates !== undefined) {
+      setSessionDates(userProfile.sessionDates || {});
+    }
+  }, [userProfile?.sessionDates]);
 
   // Function to check if a date is valid (at least 4 weeks after the previous session)
   const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
@@ -806,6 +809,17 @@ export default function DashboardPage() {
     );
   };
 
+  // Render user profile section
+  const renderUserProfileSection = () => (
+    <UserProfileSection
+      user={user}
+      partner={null}
+      userProfile={userProfile}
+      partnerProfile={partnerProfile}
+      onProfileUpdate={handleProfileUpdate}
+    />
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
@@ -834,15 +848,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <UserProfileSection
-          user={{
-            uid: user?.uid || "",
-            email: user?.email || null
-          }}
-          userProfile={userProfile}
-          partnerProfile={partnerProfile}
-          onProfileUpdate={() => setUiRefreshKey(prev => prev + 1)}
-        />
+        {renderUserProfileSection()}
 
         {/* Calendly Modal */}
         {selectedEvent && (

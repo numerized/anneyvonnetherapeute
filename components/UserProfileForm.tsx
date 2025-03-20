@@ -13,9 +13,10 @@ interface UserProfileFormProps {
   user: User | null;
   onSubmit: (userData: Partial<User>) => Promise<void>;
   isFirstTime?: boolean;
+  isPartner?: boolean;
 }
 
-export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserProfileFormProps) {
+export function UserProfileForm({ user, onSubmit, isFirstTime = false, isPartner = false }: UserProfileFormProps) {
   const [formData, setFormData] = useState<Partial<User>>({
     firstName: '',
     lastName: '',
@@ -362,7 +363,7 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
           value={formData.email}
           onChange={handleChange}
           required
-          disabled={true}
+          disabled={!isPartner}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream opacity-70"
         />
       </div>
