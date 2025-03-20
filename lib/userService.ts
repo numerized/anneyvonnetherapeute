@@ -35,12 +35,15 @@ export interface User {
 // UserProfile interface (compatible with UserProfileSection component)
 export interface UserProfile {
   birthDate?: Date | Timestamp;
+  completedSessions?: string[];
   email?: string;
   firstName?: string;
   gender?: 'male' | 'female';
   lastName?: string;
   phone?: string;
   photo?: string | null;
+  sessionDates?: Record<string, string>;
+  sessionDetails?: Record<string, SessionDetails>;
   updatedAt?: Date | Timestamp;
 }
 
