@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { UserProfileForm } from '@/components/UserProfileForm';
 import { app } from '@/lib/firebase';
 import { User, createOrUpdateUser, getUserById } from '@/lib/userService';
-import { UserProfileForm } from '@/components/UserProfileForm';
-import { toast } from 'sonner';
 
 export default function CompleteProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -31,10 +31,10 @@ export default function CompleteProfilePage() {
         setUser(firebaseUser);
         setUserData({
           id: firebaseUser.uid,
-          prenom: '',
-          nom: '',
-          telephone: '',
-          dateNaissance: undefined,
+          firstName: '',
+          lastName: '',
+          phone: '',
+          birthDate: undefined,
           email: firebaseUser.email || '',
           photo: undefined
         });

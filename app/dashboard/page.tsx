@@ -1,26 +1,26 @@
 'use client';
 
-import { format, isAfter, isBefore } from 'date-fns';
+import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
-import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, increment, limit, onSnapshot, orderBy, query, Timestamp, updateDoc, where } from 'firebase/firestore';
-import { Calendar, CheckSquare, Edit, Loader2, LogOut, PlusCircle, Square, User, X } from 'lucide-react';
+import { addDoc, collection, doc, getDoc, getFirestore, onSnapshot, query, Timestamp, updateDoc, where } from 'firebase/firestore';
+import { Calendar, Edit, Loader2, LogOut, PlusCircle, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-import { CalendlyModal, SessionType } from '@/components/dashboard/CalendlyModal';
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
 import { InvitePartnerForm } from '@/components/InvitePartnerForm';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { UserProfileForm } from '@/components/UserProfileForm';
 import { ZenClickButton } from '@/components/ZenClickButton';
-import { extractEventIdFromUri, getCalendlyEventDetails } from '@/lib/calendly';
-import { coupleTherapyJourney, getPhasePartnerEvents, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
+import { extractEventIdFromUri } from '@/lib/calendly';
+import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { app } from '@/lib/firebase';
-import { createOrUpdateUser, createOrUpdateUserWithFields, getPartnerProfile, getUserById, SessionDetails, User as UserProfile } from '@/lib/userService';
+import { createOrUpdateUser, getPartnerProfile, getUserById, User as UserProfile } from '@/lib/userService';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -30,20 +30,13 @@ export default function DashboardPage() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
-    evaluation: false,
-    questionnaire: false,
-    amoureux: false,
-    eros: false,
-    appointment: false
-  });
   const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
   const [hasAppointment, setHasAppointment] = useState(false);
   const [selectedSession, setSelectedSession] = useState<TherapyJourneyEvent | null>(null);
   const [isRescheduling, setIsRescheduling] = useState(false);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
   const [sessionDates, setSessionDates] = useState<Record<string, string>>({});
-  const [invalidDates, setInvalidDates] = useState<Set<string>>(new Set());
+  const [invalidDates, setInvalidDates] = useState<Record<string, boolean>>({});
   const [uiRefreshKey, setUiRefreshKey] = useState<number>(0);
   const router = useRouter();
 
@@ -176,10 +169,10 @@ export default function DashboardPage() {
 
       // Get all therapy journey events
       const allEvents = [
-        ...getPhasePartnerEvents('initial'),
-        ...getPhasePartnerEvents('individual', 'partner1'),
-        ...getPhasePartnerEvents('individual', 'partner2'),
-        ...getPhasePartnerEvents('final')
+        ...coupleTherapyJourney.filter(e => e.phase === 'initial'),
+        ...coupleTherapyJourney.filter(e => e.phase === 'individual' && e.partner === 'partner1'),
+        ...coupleTherapyJourney.filter(e => e.phase === 'individual' && e.partner === 'partner2'),
+        ...coupleTherapyJourney.filter(e => e.phase === 'final')
       ];
 
       // Check each event with a scheduled date
@@ -228,43 +221,28 @@ export default function DashboardPage() {
     // Define session dependencies (which session must be at least 4 weeks after which)
     const sessionDependencyMap: Record<string, string> = {
       'partner1_session_1': 'initial_session',
-      'partner1_session_2': 'partner1_session_1',
-      'partner1_session_3': 'partner1_session_2',
       'partner2_session_1': 'initial_session',
+      'partner1_session_2': 'partner1_session_1',
       'partner2_session_2': 'partner2_session_1',
-      'partner2_session_3': 'partner2_session_2',
-      'final_session': 'partner1_session_3' // Final depends on last partner1 session
+      'final_session': 'partner2_session_2'
     };
 
-    // If there's no dependency for this session, it's always valid
-    if (!sessionDependencyMap[sessionId]) {
-      return true;
-    }
-
-    // Get the previous session date
-    const previousSessionId = sessionDependencyMap[sessionId];
-    const previousSessionDateStr = sessionDates[previousSessionId];
-
-    // If previous session doesn't have a date yet, this date is invalid
-    if (!previousSessionDateStr) {
-      return false;
-    }
-
     try {
-      const currentDate = new Date(dateStr);
-      const previousDate = new Date(previousSessionDateStr);
+      const dependentSessionId = sessionDependencyMap[sessionId];
+      if (!dependentSessionId) return true; // No dependency, date is valid
 
-      // Calculate the difference in days
-      const diffTime = currentDate.getTime() - previousDate.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const dependentSessionDate = sessionDates[dependentSessionId];
+      if (!dependentSessionDate) return true; // No dependent session date, date is valid
 
-      // Debug log with detailed info
-      console.log(`[DATE CHECK] ${sessionId}: ${new Date(dateStr).toLocaleDateString('fr-FR')} ` +
-        `vs previous ${previousSessionId}: ${new Date(previousSessionDateStr).toLocaleDateString('fr-FR')} ` +
-        `= ${diffDays} days apart`);
+      const proposedDate = new Date(dateStr);
+      const previousDate = new Date(dependentSessionDate);
 
-      // Check if the difference is at least 28 days (4 weeks)
-      return diffDays >= 28;
+      // Add 4 weeks to the previous session date
+      const minDate = new Date(previousDate);
+      minDate.setDate(minDate.getDate() + 28); // 4 weeks = 28 days
+
+      // Date is valid if it's at least 4 weeks after the previous session
+      return proposedDate >= minDate;
     } catch (error) {
       console.error(`Error validating date for session ${sessionId}:`, error);
       return false;
@@ -274,143 +252,82 @@ export default function DashboardPage() {
   // Debugging for session dates
   useEffect(() => {
     console.log('------- DEBUG SESSION DATES -------');
-    console.log('All session dates:', sessionDates);
-    console.log('Invalid dates set:', Array.from(invalidDates));
+    console.log('Session Dates:', sessionDates);
 
-    // Check if any dates need validity checks but aren't being validated
-    Object.entries(sessionDates).forEach(([eventId, dateStr]) => {
-      // Skip initial session
-      if (eventId !== 'initial_session') {
-        const isValid = isDateValid(eventId, dateStr);
-        console.log(`* Date validity check for ${eventId}: ${dateStr} => ${isValid ? 'VALID' : 'INVALID'}`);
-      }
+    // Check each session date
+    Object.entries(sessionDates).forEach(([sessionId, dateStr]) => {
+      const isValid = isDateValid(sessionId, dateStr);
+      console.log(`Session ${sessionId}:`, {
+        date: dateStr,
+        isValid
+      });
     });
 
     console.log('------- END DEBUG -------');
-  }, [sessionDates, invalidDates, isDateValid]);
+  }, [sessionDates, isDateValid]);
 
   // Validate all existing dates when session dates change
   useEffect(() => {
-    const newInvalidDates = new Set<string>();
+    const newInvalidDates: Record<string, boolean> = {};
 
-    // Log all session dates for debugging
-    console.log('All session dates to validate:', sessionDates);
-
-    // Force checking each individual date, even if not in sessionDates yet
-    const allSessionIds = [
-      'partner1_session_1',
-      'partner1_session_2',
-      'partner1_session_3',
-      'partner2_session_1',
-      'partner2_session_2',
-      'partner2_session_3',
-      'final_session'
-    ];
-
-    // Check all session dates
-    allSessionIds.forEach(sessionId => {
-      // Skip if this session doesn't have a date
-      if (!sessionDates[sessionId]) return;
-
-      // Skip the initial session as it has no "previous" session
-      if (sessionId === 'initial_session') return;
-
-      const dateStr = sessionDates[sessionId];
-      const isValid = isDateValid(sessionId, dateStr);
-
-      console.log(`Validating ${sessionId}: ${dateStr} => ${isValid ? 'VALID' : 'INVALID'}`);
-
-      if (!isValid) {
-        newInvalidDates.add(sessionId);
-      }
+    // Check each session date
+    Object.entries(sessionDates).forEach(([sessionId, dateStr]) => {
+      newInvalidDates[sessionId] = !isDateValid(sessionId, dateStr);
     });
-
-    // Log the final set of invalid dates
-    console.log('Final invalid dates:', Array.from(newInvalidDates));
 
     // Update invalid dates state
     setInvalidDates(newInvalidDates);
   }, [sessionDates, isDateValid]);
 
+  // Function to handle update profile
   const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
     if (!user) return;
 
     try {
-      setIsUpdatingProfile(true);
-
-      const userData = {
+      const userData: UserProfile = {
+        ...userProfile,
         ...formData,
-        email: user.email || formData.email || ''
+        email: user.email || formData.email || '',
+        updatedAt: Timestamp.now()
       };
 
-      const updatedProfile = await createOrUpdateUserWithFields(user.uid, userData);
+      const updatedProfile = await createOrUpdateUser(userData);
       setUserProfile(updatedProfile);
       setIsEditingProfile(false);
       toast.success('Profil mis à jour avec succès');
     } catch (error) {
-      console.error('Error updating user profile:', error);
+      console.error('Error updating profile:', error);
       toast.error('Erreur lors de la mise à jour du profil');
-    } finally {
-      setIsUpdatingProfile(false);
     }
   };
 
+  // Function to handle invite partner
   const handleInvitePartner = async (email: string) => {
     if (!userProfile || !user) return;
 
     try {
-      setIsUpdatingProfile(true);
-
       // Update the userProfile with the partner email
-      const updatedUser = await createOrUpdateUserWithFields(user.uid, {
+      const updatedUser = await createOrUpdateUser({
         ...userProfile,
-        partnerEmail: email
+        partnerEmail: email,
+        updatedAt: Timestamp.now()
       });
 
       setUserProfile(updatedUser);
-      toast.success(`Invitation envoyée à ${email}`);
       setIsInviting(false);
+      toast.success('Invitation envoyée avec succès');
 
-      // In a real scenario, this would trigger a cloud function to send an email
-      // and create a partner account, then link the two accounts
+      // Force UI refresh
+      setUiRefreshKey(prev => prev + 1);
     } catch (error) {
       console.error('Error inviting partner:', error);
-      toast.error("Une erreur est survenue lors de l'envoi de l'invitation");
-    } finally {
-      setIsUpdatingProfile(false);
+      toast.error('Erreur lors de l\'envoi de l\'invitation');
     }
   };
 
+  // Function to handle photo click
   const handlePhotoClick = () => {
     setIsEditingProfile(true);
-  };
-
-  const handleDeletePhoto = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (!user) return;
-
-    try {
-      setIsUpdatingProfile(true);
-
-      const { photo, ...userData } = userProfile || {};
-
-      const updatedProfile = await createOrUpdateUserWithFields(user.uid, userData);
-      setUserProfile(updatedProfile);
-      toast.success('Photo supprimée avec succès');
-    } catch (error) {
-      console.error('Error deleting user photo:', error);
-      toast.error('Erreur lors de la suppression de la photo');
-    } finally {
-      setIsUpdatingProfile(false);
-    }
-  };
-
-  const toggleCheckbox = (id: string) => {
-    setCheckedItems(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
   };
 
   // Therapy Journey Logic
@@ -426,20 +343,20 @@ export default function DashboardPage() {
     // Make it available immediately after initial session is completed OR has a date set
     if (event.id === 'partner1_session_1') {
       return (isSessionCompleted('initial_session') || !!sessionDates['initial_session']) &&
-        !invalidDates.has('initial_session');
+        !invalidDates['initial_session'];
     }
 
     if (!event.dependsOn) return true;
 
     if (Array.isArray(event.dependsOn)) {
       return event.dependsOn.every(dep =>
-        (isSessionCompleted(dep) || !!sessionDates[dep]) && !invalidDates.has(dep)
+        (isSessionCompleted(dep) || !!sessionDates[dep]) && !invalidDates[dep]
       );
     }
 
     return (
       (isSessionCompleted(event.dependsOn) || !!sessionDates[event.dependsOn]) &&
-      !invalidDates.has(event.dependsOn)
+      !invalidDates[event.dependsOn]
     );
   };
 
@@ -465,7 +382,7 @@ export default function DashboardPage() {
     for (let i = 0; i < currentIndex; i++) {
       const prevSessionId = sessionOrder[i];
       // If previous session is in invalidDates list, return true
-      if (invalidDates.has(prevSessionId)) {
+      if (invalidDates[prevSessionId]) {
         console.log(`Session ${eventId} cannot be scheduled because ${prevSessionId} has an invalid date`);
         return true;
       }
@@ -515,7 +432,7 @@ export default function DashboardPage() {
         }
 
         // Check if any dependency has an invalid date
-        const invalidDeps = event.dependsOn.filter(dep => invalidDates.has(dep));
+        const invalidDeps = event.dependsOn.filter(dep => invalidDates[dep]);
         if (invalidDeps.length > 0) {
           return "Une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
         }
@@ -526,7 +443,7 @@ export default function DashboardPage() {
           return "Veuillez d'abord compléter les étapes précédentes.";
         }
 
-        if (invalidDates.has(event.dependsOn)) {
+        if (invalidDates[event.dependsOn]) {
           return "La séance précédente ne respecte pas l'écart de 4 semaines requis.";
         }
       }
@@ -542,7 +459,7 @@ export default function DashboardPage() {
       setIsRescheduling(true);
       
       // If we're rescheduling an invalid date, let it proceed
-      if (invalidDates.has(event.id)) {
+      if (invalidDates[event.id]) {
         console.log(`Rescheduling invalid session: ${event.id}`);
       } else {
         console.log(`Rescheduling valid session: ${event.id} with reschedule URL`);
@@ -672,7 +589,7 @@ export default function DashboardPage() {
         eventUri: formattedUri,
         formattedDate: formattedDateCapitalized,
         startTime: startTime,
-        lastUpdated: new Date().toISOString(),
+        lastUpdated: Timestamp.now(),
         isRescheduled: isReschedulingEvent,
       };
       
@@ -714,10 +631,10 @@ export default function DashboardPage() {
       // Check if the date is valid, and update invalidDates set if needed
       const isValid = isDateValid(selectedSession.id, startTime);
       if (!isValid) {
-        setInvalidDates(prev => new Set([...prev, selectedSession.id]));
-      } else if (invalidDates.has(selectedSession.id)) {
-        const newInvalidDates = new Set(invalidDates);
-        newInvalidDates.delete(selectedSession.id);
+        setInvalidDates(prev => ({ ...prev, [selectedSession.id]: true }));
+      } else if (invalidDates[selectedSession.id]) {
+        const newInvalidDates = { ...invalidDates };
+        delete newInvalidDates[selectedSession.id];
         setInvalidDates(newInvalidDates);
       }
 
@@ -770,7 +687,7 @@ export default function DashboardPage() {
 
   // Render journey timeline by phase
   const renderJourneyPhase = (phase: 'initial' | 'individual' | 'final', partner?: 'partner1' | 'partner2') => {
-    const events = getPhasePartnerEvents(phase, partner);
+    const events = coupleTherapyJourney.filter(e => e.phase === phase && (!partner || e.partner === partner));
 
     // Debug info
     if (phase === 'initial') {
@@ -847,9 +764,9 @@ export default function DashboardPage() {
                     }`}
                 >
                   {isComplete ? (
-                    <CheckSquare className="w-5 h-5" />
+                    <Calendar className="w-5 h-5" />
                   ) : (
-                    <Square className="w-5 h-5" />
+                    <Calendar className="w-5 h-5" />
                   )}
                 </div>
                 <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
@@ -866,21 +783,21 @@ export default function DashboardPage() {
                   {sessionDates[event.id] && (
                     <div
                       className={`text-sm mt-1 flex items-center gap-1.5 px-2 py-1 rounded-md w-fit
-                        ${invalidDates.has(event.id)
+                        ${invalidDates[event.id]
                           ? 'text-red-400 font-medium bg-red-900/30'
                           : 'text-green-400 font-medium bg-green-900/30'
                         }`}
                     >
                       <Calendar className="w-4 h-4" />
                       <span>{dateStr}</span>
-                      {invalidDates.has(event.id) && (
+                      {invalidDates[event.id] && (
                         <span className="text-xs ml-1">
                           (moins de 4 semaines)
                         </span>
                       )}
 
                       {/* Add edit icon for valid dates */}
-                      {!invalidDates.has(event.id) && (
+                      {!invalidDates[event.id] && (
 
                         <button
                           onClick={() => handleSessionClick(event)}
@@ -910,7 +827,7 @@ export default function DashboardPage() {
               )}
 
               {/* Show reschedule button only for invalid dates */}
-              {invalidDates.has(event.id) && (
+              {invalidDates[event.id] && (
                 <div className="ml-8">
                   <Button
                     variant="outline"
@@ -964,58 +881,31 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
             <div className="flex items-center gap-4">
-              <div className="relative">
-                {userProfile?.photo && !isUpdatingProfile && (
-                  <button
-                    type="button"
-                    onClick={handleDeletePhoto}
-                    className="absolute -top-2 -right-2 z-10 bg-black/70 rounded-full p-1 hover:bg-black/90 transition-colors"
-                    aria-label="Delete photo"
-                  >
-                    <X className="w-3.5 h-3.5 text-white" />
-                  </button>
+              <div
+                onClick={handlePhotoClick}
+                className="relative w-16 h-16 rounded-full overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+              >
+                {userProfile?.photo ? (
+                  <Image
+                    src={userProfile.photo}
+                    alt="Photo de profil"
+                    className="object-cover"
+                    fill
+                    sizes="64px"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-primary-cream/10 flex items-center justify-center">
+                    <User className="w-8 h-8 text-primary-cream/60" />
+                  </div>
                 )}
-                <div
-                  className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
-                  onClick={handlePhotoClick}
-                >
-                  {isUpdatingProfile ? (
-                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                      <Loader2 className="w-6 h-6 animate-spin" />
-                    </div>
-                  ) : userProfile?.photo ? (
-                    <Image
-                      src={userProfile.photo}
-                      alt="Profile"
-                      width={64}
-                      height={64}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
-                      <User className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-medium text-primary-cream">{userProfile?.prenom || 'Partenaire 1'}</h3>
+                <h2 className="text-lg font-medium text-primary-cream">
+                  {userProfile?.firstName} {userProfile?.lastName}
+                </h2>
                 <p className="text-sm text-primary-cream/60">{user?.email}</p>
               </div>
               <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
-                    disabled={isUpdatingProfile}
-                  >
-                    {isUpdatingProfile ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        MISE À JOUR...
-                      </>
-                    ) : 'MODIFIER'}</Button>
-                </DialogTrigger>
                 <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
                   <DialogHeader>
                     <DialogTitle className="text-primary-coral">Modifier votre profil</DialogTitle>
@@ -1065,7 +955,7 @@ export default function DashboardPage() {
                 ) : partnerProfile ? (
                   <>
                     <h3 className="text-lg font-medium text-primary-cream">
-                      {partnerProfile.prenom} {partnerProfile.nom}
+                      {partnerProfile.firstName} {partnerProfile.lastName}
                     </h3>
                     <p className="text-sm text-primary-cream/60">{partnerProfile.email}</p>
                   </>
@@ -1111,19 +1001,9 @@ export default function DashboardPage() {
               setIsCalendlyModalOpen(false);
               setSelectedSession(null);
             }}
-            sessionType={selectedSession?.sessionType || 'initial'}
+            sessionType="1h"
             onAppointmentScheduled={handleAppointmentScheduled}
-            minDate={getSessionDateConstraints(selectedSession).minDate}
-            maxDate={getSessionDateConstraints(selectedSession).maxDate}
             userEmail={userProfile?.email}
-            rescheduleUrl={
-              // If this is a rescheduling of an existing session
-              sessionDates[selectedSession.id]
-                ? userProfile?.sessionDetails?.[selectedSession.id]?.rescheduleUrl ||
-                // For testing, use a fixed URL if no URL exists in Firestore
-                "https://calendly.com/reschedulings/b30042ac-e4bf-4cd7-89f3-c8115cb00039"
-                : undefined
-            }
           />
         )}
 
