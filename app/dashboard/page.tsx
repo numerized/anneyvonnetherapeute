@@ -946,7 +946,7 @@ export default function DashboardPage() {
               setIsCalendlyModalOpen(false);
               setSelectedSession(null);
             }}
-            sessionType="1h"
+            sessionType={selectedSession.sessionType || 'initial'}
             onAppointmentScheduled={handleAppointmentScheduled}
             userEmail={userProfile?.email}
             minDate={selectedSession ? getSessionDateConstraints(selectedSession).minDate : undefined}

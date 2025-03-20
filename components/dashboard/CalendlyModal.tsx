@@ -5,15 +5,14 @@ import { useCallback, useEffect, useState } from 'react';
 
 // Re-export the SessionType for backward compatibility
 export type SessionType = 
-  | 'initial' 
-  | 'individual_male_1' 
-  | 'individual_male_2' 
-  | 'individual_male_3'
-  | 'individual_female_1'
-  | 'individual_female_2'
-  | 'individual_female_3'
-  | 'final'
-  | '1h';
+  | 'initial'
+  | 'individual1_partner1'
+  | 'individual2_partner1'
+  | 'individual3_partner1'
+  | 'individual1_partner2'
+  | 'individual2_partner2'
+  | 'individual3_partner2'
+  | 'final';
 
 // Props interface
 export interface CalendlyModalProps {
@@ -25,17 +24,24 @@ export interface CalendlyModalProps {
   minDate?: Date;
 }
 
-// Define session titles for different session types
-const SESSION_TITLES: Record<SessionType, string> = {
-  initial: 'Séance Initiale de Couple',
-  individual_male_1: 'Séance Individuelle Homme 1',
-  individual_male_2: 'Séance Individuelle Homme 2',
-  individual_male_3: 'Séance Individuelle Homme 3',
-  individual_female_1: 'Séance Individuelle Femme 1',
-  individual_female_2: 'Séance Individuelle Femme 2',
-  individual_female_3: 'Séance Individuelle Femme 3',
-  final: 'Séance Finale de Couple',
-  '1h': '1h'
+const getSessionTitle = (sessionType: SessionType): string => {
+  switch (sessionType) {
+    case 'initial':
+      return 'Séance de Couple Initiale';
+    case 'individual1_partner1':
+    case 'individual1_partner2':
+      return 'Séance Individuelle 1';
+    case 'individual2_partner1':
+    case 'individual2_partner2':
+      return 'Séance Individuelle 2';
+    case 'individual3_partner1':
+    case 'individual3_partner2':
+      return 'Séance Individuelle 3';
+    case 'final':
+      return 'Séance de Couple Finale';
+    default:
+      return 'Prendre Rendez-vous';
+  }
 };
 
 // Calendly URL (direct integration approach)
@@ -121,7 +127,7 @@ export function CalendlyModal({
       url: calendlyUrl,
       parentElement: container,
       prefill: {
-        name: SESSION_TITLES[sessionType],
+        name: getSessionTitle(sessionType),
         email: userEmail
       },
       utm: {
@@ -158,12 +164,7 @@ export function CalendlyModal({
       >
         <div className="flex flex-col items-start justify-between p-4 md:p-6 border-b">
           <h3 className="text-xl md:text-2xl font-semibold text-gray-800">
-            {sessionType?.includes('individual_male') && 'Séance Individuelle Homme'}
-            {sessionType?.includes('individual_female') && 'Séance Individuelle Femme'}
-            {sessionType?.includes('initial') && 'Première Séance de Couple'}
-            {sessionType?.includes('final') && 'Séance Finale de Couple'}
-            {!sessionType?.includes('individual_male') && !sessionType?.includes('individual_female') && 
-             !sessionType?.includes('initial') && !sessionType?.includes('final') && 'Prendre Rendez-vous'}
+            {getSessionTitle(sessionType)}
           </h3>
           {minDate && !sessionType?.includes('initial') && (
             <p className="text-red-500 text-sm mt-2"><b>
@@ -207,6 +208,22 @@ function useIsMobile() {
   }, []);
   
   return isMobile;
+}
+
+function initCalendly(
+  elementId: string, 
+  url: string = process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/numerized-ara/1h',
+  prefill: any = {},
+  utm: any = {}
+) {
+  if (typeof window !== 'undefined' && (window as any).Calendly) {
+    (window as any).Calendly.initInlineWidget({
+      url,
+      parentElement: document.getElementById(elementId),
+      prefill,
+      utm
+    });
+  }
 }
 
 // Add type definition for Calendly widget
