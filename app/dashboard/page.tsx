@@ -7,7 +7,7 @@ import { ZenClickButton } from '@/components/ZenClickButton';
 import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { app } from '@/lib/firebase';
 import { createOrUpdateUser, getUserById, UserProfile, SessionDetails } from '@/lib/userService';
-import { format } from 'date-fns';
+import { format, parseISO, addDays, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
 import {
@@ -23,7 +23,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore';
-import { Calendar, Check, Clock, LogOut, User } from 'lucide-react';
+import { Calendar, Check, Clock, LogOut, Square, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -647,7 +647,7 @@ export default function DashboardPage() {
             <div key={event.id} className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 <div
-                  className={`p-1 rounded ${isComplete
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${isComplete
                     ? 'text-emerald-500'
                     : isAvailable
                       ? 'text-primary-cream'
@@ -655,9 +655,9 @@ export default function DashboardPage() {
                     }`}
                 >
                   {isComplete ? (
-                    <Calendar className="w-5 h-5" />
+                    <Check className="w-5 h-5" />
                   ) : (
-                    <Calendar className="w-5 h-5" />
+                    <Square className="w-5 h-5" />
                   )}
                 </div>
                 <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
