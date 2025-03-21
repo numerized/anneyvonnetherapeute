@@ -26,7 +26,6 @@ import {
 import { Calendar, Check, Clock, LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { toast } from 'react-hot-toast';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -61,11 +60,9 @@ export default function DashboardPage() {
     try {
       const auth = getAuth(app);
       await signOut(auth);
-      toast.success('Déconnexion réussie');
       router.push('/'); // Redirect to home page after sign out
     } catch (error) {
       console.error('Error signing out:', error);
-      toast.error('Erreur lors de la déconnexion');
     }
   };
 
@@ -111,7 +108,6 @@ export default function DashboardPage() {
             setPartnerProfile(partnerProfile);
           } catch (error) {
             console.error('Error fetching user profile:', error);
-            toast.error('Failed to load user profile');
           } finally {
             setLoading(false);
           }
@@ -361,19 +357,19 @@ export default function DashboardPage() {
   const handleSessionClick = (event: TherapyJourneyEvent) => {
     // If this is a session that already has a date, don't allow rebooking
     if (getSessionDate(event.id)) {
-      toast.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
+      console.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
       return;
     }
 
     // Normal availability check for new bookings
     if (!isSessionAvailable(event)) {
       const reason = getSessionUnavailableReason(event);
-      toast.error(reason || "Veuillez d'abord compléter les étapes précédentes");
+      console.error(reason || "Veuillez d'abord compléter les étapes précédentes");
       return;
     }
 
     if (event.type !== 'session' || !event.sessionType) {
-      toast.error("Ce type d'événement ne peut pas être programmé");
+      console.error("Ce type d'événement ne peut pas être programmé");
       return;
     }
 
@@ -396,7 +392,7 @@ export default function DashboardPage() {
       // Validate that we have the expected event data structure
       if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
         console.error('Invalid event data format:', eventData);
-        toast.error("Format de données invalide. Veuillez réessayer.");
+        console.error("Format de données invalide. Veuillez réessayer.");
         setBookingSession(null); // Reset booking session state on error
         return;
       }
@@ -407,7 +403,7 @@ export default function DashboardPage() {
 
       if (!eventUri) {
         console.error('Missing event URI:', eventData);
-        toast.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
+        console.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
         setBookingSession(null); // Reset booking session state on error
         return;
       }
@@ -446,8 +442,8 @@ export default function DashboardPage() {
           endTime = scheduledEndTime.toISOString();
         }
 
-        // Dismiss loading toast
-        toast.dismiss();
+        // Dismiss loading 
+        console.log("Rendez-vous programmé");
 
         // Format date for display
         const dateObj = new Date(startTime);
@@ -541,9 +537,7 @@ export default function DashboardPage() {
           const verifyData = verifyDocSnap.data();
 
           // Alert the user with a unique ID to prevent duplicates
-          toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
-            id: `appointment-${sessionToUse.id}-${Date.now()}`
-          });
+          console.log(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
 
           // Update session dates in state to reflect the new date
           setSessionDates(prev => {
@@ -562,19 +556,19 @@ export default function DashboardPage() {
           setUiRefreshKey(prev => prev + 1);
         } catch (error) {
           console.error("Error updating document:", error);
-          toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+          console.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
           setBookingSession(null); // Reset booking session state on error
           return;
         }
       } catch (error) {
         console.error("Error handling appointment scheduling:", error);
-        toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+        console.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
         setShowCalendlyModal(false);
         setBookingSession(null); // Reset booking session state on error
       }
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
-      toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+      console.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
       setShowCalendlyModal(false);
       setBookingSession(null); // Reset booking session state on error
     }
