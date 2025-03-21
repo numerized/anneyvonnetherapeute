@@ -114,7 +114,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual2_partner1',
     partner: 'partner1',
     dependsOn: 'partner1_session_1',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -149,7 +149,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual3_partner1',
     partner: 'partner1',
     dependsOn: 'partner1_session_2',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -186,7 +186,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual1_partner2',
     partner: 'partner2',
     dependsOn: 'initial_session',
-    daysOffset: 7,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -221,7 +221,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual2_partner2',
     partner: 'partner2',
     dependsOn: 'partner2_session_1',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -256,7 +256,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual3_partner2',
     partner: 'partner2',
     dependsOn: 'partner2_session_2',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -293,7 +293,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'final',
     partner: 'both',
     dependsOn: ['partner1_session_3', 'partner2_session_3'],
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'final'
   },
   {

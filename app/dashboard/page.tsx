@@ -261,14 +261,14 @@ export default function DashboardPage() {
   const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
     const minDate = new Date();
 
-    // For the first individual session for partner 1, set minimum date to 4 weeks after initial session
-    if (event.id === 'individual1_partner1') {
+    // For the first individual session for either partner, set minimum date to 4 weeks after initial session
+    if (event.id === 'individual1_partner1' || event.id === 'individual1_partner2') {
       const initialDate = getSessionDate('initial');
       if (initialDate) {
         const initialSessionDate = new Date(initialDate);
         minDate.setTime(initialSessionDate.getTime());
         minDate.setDate(minDate.getDate() + 28); // 4 weeks minimum gap
-        console.log(`Setting min date for individual1_partner1 to 4 weeks after initial session: ${minDate.toISOString()}`);
+        console.log(`Setting min date for ${event.id} to 4 weeks after initial session: ${minDate.toISOString()}`);
       }
     } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
