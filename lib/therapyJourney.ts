@@ -167,7 +167,7 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
   // Séance Finale de Couple
   {
     type: 'email',
-    title: 'Préparation Séance Finale de Couple',
+    title: 'Préparation Séance de Couple Finale',
     description: 'Préparation pour la dernière séance de couple',
     triggerType: 'beforeSession',
     delayDays: 5,
@@ -175,7 +175,7 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
   {
     type: 'session',
     sessionType: 'couple',
-    title: 'Séance Finale de Couple',
+    title: 'Séance de Couple Finale',
     description: 'Dernière séance de couple pour intégrer les apprentissages et planifier l\'avenir',
   },
   {
