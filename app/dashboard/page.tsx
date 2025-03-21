@@ -148,7 +148,6 @@ export default function DashboardPage() {
     // If we have a bookingSession and that session now has a date in sessionDates,
     // we can reset the bookingSession state
     if (bookingSession && sessionDates[bookingSession]) {
-      console.log(`Session ${bookingSession} has been booked with date ${sessionDates[bookingSession]}, resetting booking state`);
       setBookingSession(null);
     }
   }, [bookingSession, sessionDates]);
@@ -176,7 +175,6 @@ export default function DashboardPage() {
         // Make sure all dependent sessions have dates
         const missingDates = dependentSessionId.filter(depId => !getSessionDate(depId));
         if (missingDates.length > 0) {
-          console.log(`Date ${dateStr} is invalid: missing dates for dependencies: ${missingDates.join(', ')}`);
           return false;
         }
 
@@ -203,7 +201,6 @@ export default function DashboardPage() {
 
         // Check if the proposed date is at least 4 weeks after the latest dependent session
         if (proposedDate < minimumDate) {
-          console.log(`Date ${dateStr} is invalid: must be at least 4 weeks after the latest dependent session (${latestDate.toISOString()})`);
           return false;
         }
 
@@ -223,7 +220,6 @@ export default function DashboardPage() {
 
       // Check if the proposed date is at least 4 weeks after the dependent session
       if (proposedDate < minimumDate) {
-        console.log(`Date ${dateStr} is invalid: must be at least 4 weeks after ${dependentSessionDate}`);
         return false;
       }
 
@@ -279,7 +275,6 @@ export default function DashboardPage() {
         const initialSessionDate = new Date(initialDate);
         minDate.setTime(initialSessionDate.getTime());
         minDate.setDate(minDate.getDate() + 28); // 4 weeks minimum gap
-        console.log(`Setting min date for ${event.id} to 4 weeks after initial session: ${minDate.toISOString()}`);
       }
     } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
@@ -364,7 +359,6 @@ export default function DashboardPage() {
   };
 
   const handleSessionClick = (event: TherapyJourneyEvent) => {
-    console.log(`Session ${event.id} clicked`);
     // If this is a session that already has a date, don't allow rebooking
     if (getSessionDate(event.id)) {
       toast.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
@@ -385,7 +379,6 @@ export default function DashboardPage() {
 
     // Set the booking session to show loading state
     setBookingSession(event.id);
-    console.log(`Setting booking session to ${event.id}`);
     setSelectedEvent(event);
     // Store which partner this session is for to determine which email to use
     setActivePartner(event.partner || 'both');
@@ -396,8 +389,6 @@ export default function DashboardPage() {
     try {
       if (!user || !selectedEvent) return;
 
-      console.log('Appointment scheduled data:', eventData);
-
       // Create a local variable to track which session we'll actually use
       // This allows us to modify which session we're setting without waiting for React state to update
       let sessionToUse = selectedEvent;
@@ -406,7 +397,6 @@ export default function DashboardPage() {
       if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
         console.error('Invalid event data format:', eventData);
         toast.error("Format de données invalide. Veuillez réessayer.");
-        console.log('Resetting booking session state due to invalid event data format');
         setBookingSession(null); // Reset booking session state on error
         return;
       }
@@ -418,20 +408,12 @@ export default function DashboardPage() {
       if (!eventUri) {
         console.error('Missing event URI:', eventData);
         toast.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
-        console.log('Resetting booking session state due to missing event URI');
         setBookingSession(null); // Reset booking session state on error
         return;
       }
 
-      console.log(`Event URI: ${eventUri}`);
-      console.log(`Invitee URI: ${inviteeUri}`);
-
       // Extract event ID from the URI
       const eventId = eventUri.split('/').pop() || '';
-      console.log(`Event ID: ${eventId}`);
-
-      // Show loading state
-      toast.loading("Récupération des détails du rendez-vous...");
 
       try {
         // Fetch event details from our API
@@ -442,7 +424,6 @@ export default function DashboardPage() {
         }
 
         const eventDetailsResult = await eventDetailsResponse.json();
-        console.log('Event details:', eventDetailsResult);
 
         if (!eventDetailsResult.success || !eventDetailsResult.data) {
           throw new Error('Invalid response from event details API');
@@ -455,7 +436,6 @@ export default function DashboardPage() {
         let endTime = eventDetails.end_time;
 
         if (!startTime) {
-          console.warn('Start time not available in API response, using fallback');
           // Fallback (should rarely happen)
           const scheduledTime = new Date();
           scheduledTime.setHours(scheduledTime.getHours() + 1);
@@ -480,7 +460,7 @@ export default function DashboardPage() {
           minute: 'numeric'
         }).format(dateObj);
 
-        // Format to capitalize first letter of day name
+        // Format to capitalize first letter of the day name
         const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 
         // Get Firestore reference
@@ -501,67 +481,6 @@ export default function DashboardPage() {
           // Get existing session details and dates or initialize if not present
           const existingSessionDetails = userData.sessionDetails || {};
           const existingSessionDates = userData.sessionDates || {};
-
-          console.log('Current session details:', existingSessionDetails);
-          console.log('Current session dates:', existingSessionDates);
-          console.log('Selected session ID:', sessionToUse.id);
-
-          // SAFETY CHECK: See if the selected session already has a date set
-          // This prevents accidentally overwriting existing session dates
-          if (existingSessionDates[sessionToUse.id]) {
-            console.warn(`Session ${sessionToUse.id} already has a date set. Looking for next available session...`);
-
-            // Find the next available session in the therapy journey
-            const sessionOrder = [
-              'initial',
-              'individual1_partner1', 'individual2_partner1', 'individual3_partner1',
-              'individual1_partner2', 'individual2_partner2', 'individual3_partner2',
-              'final'
-            ];
-
-            // Start searching from the current session's position
-            const currentIndex = sessionOrder.indexOf(sessionToUse.id);
-            let nextSessionId: string | null = null;
-
-            if (currentIndex !== -1) {
-              // Search forward from current position
-              for (let i = currentIndex + 1; i < sessionOrder.length; i++) {
-                const sessionId = sessionOrder[i];
-
-                // Check if this session is available (not already scheduled)
-                if (!existingSessionDates[sessionId] && isSessionAvailable(
-                  coupleTherapyJourney.find(e => e.id === sessionId) as TherapyJourneyEvent
-                )) {
-                  nextSessionId = sessionId;
-                  break;
-                }
-              }
-            }
-
-            if (nextSessionId) {
-              // Found an available session - update sessionToUse
-              const nextEvent = coupleTherapyJourney.find(e => e.id === nextSessionId);
-              if (nextEvent) {
-                console.log(`Found next available session: ${nextSessionId}`);
-                toast.success(`La séance ${sessionToUse.id} est déjà programmée. Le rendez-vous sera enregistré pour la séance suivante : ${nextEvent.title}`);
-                sessionToUse = nextEvent;
-                // Also update the React state for UI consistency
-                setSelectedEvent(nextEvent);
-              } else {
-                // If we can't find the event, just cancel the operation
-                toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
-                console.log('Resetting booking session state due to no available sessions');
-                setBookingSession(null); // Reset booking session state on error
-                return;
-              }
-            } else {
-              // No available sessions found
-              toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
-              console.log('Resetting booking session state due to no available sessions');
-              setBookingSession(null); // Reset booking session state on error
-              return;
-            }
-          }
 
           // Create the new session detail
           const newSessionDetail: SessionDetails = {
@@ -610,9 +529,6 @@ export default function DashboardPage() {
           const updatedSessionDates = { ...existingSessionDates };
           updatedSessionDates[sessionToUse.id] = startTime;
 
-          console.log('Updated session details to write:', updatedSessionDetails);
-          console.log('Updated session dates to write:', updatedSessionDates);
-
           // Update the document with direct update (no transaction)
           await updateDoc(userDocRef, {
             sessionDetails: updatedSessionDetails,
@@ -620,21 +536,14 @@ export default function DashboardPage() {
             updatedAt: Timestamp.now()
           });
 
-          console.log("Document successfully updated!");
-
           // Verify data after update
           const verifyDocSnap = await getDoc(userDocRef);
           const verifyData = verifyDocSnap.data();
-
-          console.log('VERIFICATION - Final saved session details:', verifyData?.sessionDetails);
-          console.log('VERIFICATION - Final saved session dates:', verifyData?.sessionDates);
 
           // Alert the user with a unique ID to prevent duplicates
           toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
             id: `appointment-${sessionToUse.id}-${Date.now()}`
           });
-
-          console.log(`Updated session ${sessionToUse.id} in Firestore with new date: ${formattedDate}`);
 
           // Update session dates in state to reflect the new date
           setSessionDates(prev => {
@@ -654,7 +563,6 @@ export default function DashboardPage() {
         } catch (error) {
           console.error("Error updating document:", error);
           toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
-          console.log('Resetting booking session state due to error updating document');
           setBookingSession(null); // Reset booking session state on error
           return;
         }
@@ -662,14 +570,12 @@ export default function DashboardPage() {
         console.error("Error handling appointment scheduling:", error);
         toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
         setShowCalendlyModal(false);
-        console.log('Resetting booking session state due to error handling appointment scheduling');
         setBookingSession(null); // Reset booking session state on error
       }
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
       toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
       setShowCalendlyModal(false);
-      console.log('Resetting booking session state due to error handling appointment scheduling');
       setBookingSession(null); // Reset booking session state on error
     }
   };
@@ -742,18 +648,6 @@ export default function DashboardPage() {
           // Determine if this event should have a booking button (all events except partner2 sessions)
           const showBookingButton = (phase === 'initial' || phase === 'final' ||
             phase === 'individual');
-
-          // Debug the information for partner1_session_1
-          if (event.id === 'individual1_partner1') {
-            console.log('individual1_partner1 details:', {
-              phase,
-              partner,
-              showBookingButton,
-              isComplete,
-              isAvailable,
-              hasDate: !!getSessionDate(event.id)
-            });
-          }
 
           return (
             <div key={event.id} className="flex flex-col gap-2">
