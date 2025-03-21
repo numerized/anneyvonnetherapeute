@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
+import { ResourceCheckboxes } from '@/components/dashboard/ResourceCheckboxes';
 import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
@@ -23,7 +24,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore';
-import { Calendar, Check, Clock, LogOut, Square, User } from 'lucide-react';
+import { Calendar, Check, Clock, LogOut, Mail, Square, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -637,7 +638,26 @@ export default function DashboardPage() {
             }
           }
 
-          if (event.type !== 'session') return null;
+          // Return null for non-session events, but first check if they have resources
+          // If they have resources, we'll render those separately
+          if (event.type !== 'session') {
+            if (event.resources && event.resources.length > 0) {
+              return (
+                <div key={event.id} className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-primary-cream/70">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div className="text-primary-cream/70">
+                      <div className="font-medium">{event.title}</div>
+                    </div>
+                  </div>
+                  <ResourceCheckboxes resources={event.resources} />
+                </div>
+              );
+            }
+            return null;
+          }
 
           // Determine if this event should have a booking button (all events except partner2 sessions)
           const showBookingButton = (phase === 'initial' || phase === 'final' ||
@@ -729,6 +749,9 @@ export default function DashboardPage() {
                     </div>
                   )
                 )
+              )}
+              {event.resources && event.resources.length > 0 && (
+                <ResourceCheckboxes resources={event.resources} />
               )}
             </div>
           );
