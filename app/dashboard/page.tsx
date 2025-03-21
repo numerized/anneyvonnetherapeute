@@ -49,6 +49,7 @@ export default function DashboardPage() {
 
   // Add state to track which partner is booking
   const [activePartner, setActivePartner] = useState<'partner1' | 'partner2' | 'both'>('both');
+  const [bookingSession, setBookingSession] = useState<string | null>(null);
 
   // Helper function to get session date - defined after sessionDates declaration
   const getSessionDate = useCallback((sessionId: string): string | undefined => {
@@ -141,6 +142,16 @@ export default function DashboardPage() {
       setSessionDates(userProfile.sessionDates || {});
     }
   }, [userProfile?.sessionDates]);
+
+  // Effect to reset bookingSession when sessionDates are updated from Firestore
+  useEffect(() => {
+    // If we have a bookingSession and that session now has a date in sessionDates,
+    // we can reset the bookingSession state
+    if (bookingSession && sessionDates[bookingSession]) {
+      console.log(`Session ${bookingSession} has been booked with date ${sessionDates[bookingSession]}, resetting booking state`);
+      setBookingSession(null);
+    }
+  }, [bookingSession, sessionDates]);
 
   // Function to check if a date is valid (at least 4 weeks after the previous session)
   const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
@@ -353,6 +364,7 @@ export default function DashboardPage() {
   };
 
   const handleSessionClick = (event: TherapyJourneyEvent) => {
+    console.log(`Session ${event.id} clicked`);
     // If this is a session that already has a date, don't allow rebooking
     if (getSessionDate(event.id)) {
       toast.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
@@ -371,6 +383,9 @@ export default function DashboardPage() {
       return;
     }
 
+    // Set the booking session to show loading state
+    setBookingSession(event.id);
+    console.log(`Setting booking session to ${event.id}`);
     setSelectedEvent(event);
     // Store which partner this session is for to determine which email to use
     setActivePartner(event.partner || 'both');
@@ -391,6 +406,8 @@ export default function DashboardPage() {
       if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
         console.error('Invalid event data format:', eventData);
         toast.error("Format de données invalide. Veuillez réessayer.");
+        console.log('Resetting booking session state due to invalid event data format');
+        setBookingSession(null); // Reset booking session state on error
         return;
       }
 
@@ -401,6 +418,8 @@ export default function DashboardPage() {
       if (!eventUri) {
         console.error('Missing event URI:', eventData);
         toast.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
+        console.log('Resetting booking session state due to missing event URI');
+        setBookingSession(null); // Reset booking session state on error
         return;
       }
 
@@ -531,11 +550,15 @@ export default function DashboardPage() {
               } else {
                 // If we can't find the event, just cancel the operation
                 toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
+                console.log('Resetting booking session state due to no available sessions');
+                setBookingSession(null); // Reset booking session state on error
                 return;
               }
             } else {
               // No available sessions found
               toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
+              console.log('Resetting booking session state due to no available sessions');
+              setBookingSession(null); // Reset booking session state on error
               return;
             }
           }
@@ -622,23 +645,32 @@ export default function DashboardPage() {
 
           // Reset selected session
           setSelectedEvent(null);
+          
+          // Note: We don't reset bookingSession here to keep the button disabled
+          // until the next Firestore update is detected by the useEffect
 
           // Force UI refresh
           setUiRefreshKey(prev => prev + 1);
         } catch (error) {
           console.error("Error updating document:", error);
           toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+          console.log('Resetting booking session state due to error updating document');
+          setBookingSession(null); // Reset booking session state on error
           return;
         }
       } catch (error) {
         console.error("Error handling appointment scheduling:", error);
         toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
         setShowCalendlyModal(false);
+        console.log('Resetting booking session state due to error handling appointment scheduling');
+        setBookingSession(null); // Reset booking session state on error
       }
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
       toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
       setShowCalendlyModal(false);
+      console.log('Resetting booking session state due to error handling appointment scheduling');
+      setBookingSession(null); // Reset booking session state on error
     }
   };
 
@@ -792,9 +824,19 @@ export default function DashboardPage() {
                         size="sm"
                         className="text-xs h-8 border-[rgb(247_237_226_)]/30 text-[rgb(247_237_226_)] hover:bg-[rgb(247_237_226_)]/10 hover:text-[rgb(247_237_226_)]"
                         onClick={() => handleSessionClick(event)}
+                        disabled={bookingSession === event.id}
                       >
-                        <Calendar className="w-3 h-3 mr-2" />
-                        Réserver cette séance
+                        {bookingSession === event.id ? (
+                          <>
+                            <span className="w-3 h-3 mr-2 rounded-full border-2 border-t-transparent border-[rgb(247_237_226_)] animate-spin" />
+                            Chargement...
+                          </>
+                        ) : (
+                          <>
+                            <Calendar className="w-3 h-3 mr-2" />
+                            Réserver cette séance
+                          </>
+                        )}
                       </Button>
                     </div>
                   )
@@ -852,10 +894,15 @@ export default function DashboardPage() {
         {selectedEvent && (
           <CalendlyModal
             isOpen={showCalendlyModal}
-            onClose={() => {
+            onClose={(isScheduled) => {
               setShowCalendlyModal(false);
               setSelectedEvent(null);
               setActivePartner('both');
+              
+              // Only reset bookingSession if the modal is closed without scheduling
+              if (!isScheduled) {
+                setBookingSession(null);
+              }
             }}
             sessionType={selectedEvent.sessionType || 'initial'}
             onAppointmentScheduled={handleAppointmentScheduled}
