@@ -1,4 +1,4 @@
-import { TherapyTimelineEvent } from '@/functions/src/templates/types';
+import { TherapyTimelineEvent, TherapyResource } from '@/functions/src/templates/types';
 
 export const therapyJourneyEvents: TherapyTimelineEvent[] = [
   // Première Séance de Couple
@@ -7,6 +7,13 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     title: 'Email de Bienvenue',
     description: 'Email initial de bienvenue avec introduction au parcours thérapeutique',
     triggerType: 'immediate',
+    resources: [
+      {
+        type: 'capsule',
+        title: 'Capsules Cœur à Corps',
+        description: 'Accès privilégié aux capsules pendant deux ans'
+      }
+    ]
   },
   {
     type: 'session',
@@ -20,6 +27,23 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     description: 'Email de suivi avec réflexions et préparation pour les séances individuelles',
     triggerType: 'afterSession',
     delayDays: 1,
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire de Préparation',
+        description: 'Formulaire à remplir avant la séance individuelle'
+      },
+      {
+        type: 'test',
+        title: 'Test de l\'Amoureux',
+        description: 'Test pour éclairer votre rapport à l\'amour et à la relation'
+      },
+      {
+        type: 'capsule',
+        title: 'Capsules Cœur à Corps',
+        description: 'Ressources pour approfondir votre réflexion'
+      }
+    ]
   },
 
   // Séances Partenaire Masculin
@@ -30,6 +54,13 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     triggerType: 'beforeSession',
     delayDays: 3,
     partner: 'male',
+    resources: [
+      {
+        type: 'reflection',
+        title: 'Réflexion sur les Premiers Modèles Relationnels',
+        description: 'Réflexion sur vos premières expériences d\'amour et d\'attachement'
+      }
+    ]
   },
   {
     type: 'session',
@@ -53,6 +84,13 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     triggerType: 'beforeSession',
     delayDays: 3,
     partner: 'male',
+    resources: [
+      {
+        type: 'test',
+        title: 'Test Dépendance Relationnelle',
+        description: 'Test pour identifier les zones de dépendance ou de rejet dans votre rapport aux autres'
+      }
+    ]
   },
   {
     type: 'session',
@@ -76,6 +114,18 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     triggerType: 'beforeSession',
     delayDays: 7,
     partner: 'male',
+    resources: [
+      {
+        type: 'audio',
+        title: 'Capsule Audio "Désir de Soi"',
+        description: 'Audio pour explorer votre désir de vous-même'
+      },
+      {
+        type: 'reflection',
+        title: 'Réflexion sur le Désir de Soi',
+        description: 'Réflexion sur la question "Que pourrais-je trouver de plus merveilleux que le désir de moi-même ?"'
+      }
+    ]
   },
   {
     type: 'session',
@@ -101,6 +151,13 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     triggerType: 'beforeSession',
     delayDays: 3,
     partner: 'female',
+    resources: [
+      {
+        type: 'reflection',
+        title: 'Réflexion sur les Premiers Modèles Relationnels',
+        description: 'Réflexion sur vos premières expériences d\'amour et d\'attachement'
+      }
+    ]
   },
   {
     type: 'session',
@@ -124,6 +181,13 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     triggerType: 'beforeSession',
     delayDays: 3,
     partner: 'female',
+    resources: [
+      {
+        type: 'test',
+        title: 'Test Dépendance Relationnelle',
+        description: 'Test pour identifier les zones de dépendance ou de rejet dans votre rapport aux autres'
+      }
+    ]
   },
   {
     type: 'session',
@@ -147,6 +211,18 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     triggerType: 'beforeSession',
     delayDays: 7,
     partner: 'female',
+    resources: [
+      {
+        type: 'audio',
+        title: 'Capsule Audio "Désir de Soi"',
+        description: 'Audio pour explorer votre désir de vous-même'
+      },
+      {
+        type: 'reflection',
+        title: 'Réflexion sur le Désir de Soi',
+        description: 'Réflexion sur la question "Que pourrais-je trouver de plus merveilleux que le désir de moi-même ?"'
+      }
+    ]
   },
   {
     type: 'session',
@@ -184,5 +260,27 @@ export const therapyJourneyEvents: TherapyTimelineEvent[] = [
     description: 'Suivi final et ressources pour continuer votre cheminement ensemble',
     triggerType: 'afterSession',
     delayDays: 1,
+    resources: [
+      {
+        type: 'test',
+        title: 'Test du Moi en Nous',
+        description: 'Test pour évaluer votre rapport à l\'amour et à la relation'
+      },
+      {
+        type: 'test',
+        title: 'État des Lieux Érotiques et Sexuels',
+        description: 'Évaluation personnelle pour identifier vos forces et vos besoins dans votre vie érotique et sexuelle'
+      },
+      {
+        type: 'audio',
+        title: 'Capsule sur "Le Couple Conscient"',
+        description: 'Capsule audio sur le couple conscient'
+      },
+      {
+        type: 'audio',
+        title: 'Audio Guidé',
+        description: 'Audio guidé pour continuer votre cheminement ensemble'
+      }
+    ]
   },
 ];
