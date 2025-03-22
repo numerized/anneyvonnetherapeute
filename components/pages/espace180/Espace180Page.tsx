@@ -26,7 +26,7 @@ const capsules: Capsule[] = [
     mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
     posterUrl: '/images/posters/CREATIVITE_CAPSULE-LIBRE-poster.jpg',
     gradient: 'from-transparent to-[rgb(146,71,127,0.62)]',
-    tags: ['Créativité', 'Expression', 'Bien-être'],
+    tags: ['Créativité', 'Expression', 'Bien-être', 'Minute'],
     mediaType: 'video'
   },
   {
@@ -37,7 +37,7 @@ const capsules: Capsule[] = [
     mediaUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
     posterUrl: '/images/posters/ZEN_CLIC_1-poster.jpg',
     gradient: 'from-transparent to-[rgb(41,53,49,0.62)]',
-    tags: ['Méditation', 'Zen', 'Relaxation'],
+    tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
     mediaType: 'video'
   },
   {
@@ -46,9 +46,9 @@ const capsules: Capsule[] = [
     description: 'Explorez les dimensions de l\'amour passionnel et ses manifestations dans nos relations. Une réflexion sur l\'intensité et la profondeur des liens amoureux.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Amour-passion.m4a',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir5.png',
     gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
-    tags: ['Amour', 'Passion', 'Relation', 'Couple'],
+    tags: ['Amour', 'Passion', 'Relation', 'Couple', 'Miroir'],
     mediaType: 'audio'
   },
   {
@@ -57,9 +57,9 @@ const capsules: Capsule[] = [
     description: 'Une invitation à explorer la connaissance de soi et des autres. Cette capsule audio vous guide dans une démarche introspective pour mieux vous comprendre et vous connecter à votre essence.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Capsule-connaitre---exploration-cac_Wind-Remover.mp3',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir6.png',
     gradient: 'from-transparent to-[rgb(71,94,146,0.62)]',
-    tags: ['Connaissance de soi', 'Exploration', 'Introspection'],
+    tags: ['Connaissance de soi', 'Exploration', 'Introspection', 'Miroir'],
     mediaType: 'audio'
   },
   {
@@ -68,9 +68,9 @@ const capsules: Capsule[] = [
     description: 'Une réflexion sur l\'évolution des relations amoureuses dans notre société contemporaine. Questionnez vos attentes et vos perceptions sur la durabilité des liens affectifs.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Et-si-la-relation-amoureuse-n_est-plus-faite-pour-durer.m4a',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir7.png',
     gradient: 'from-transparent to-[rgb(95,71,146,0.62)]',
-    tags: ['Relation', 'Couple', 'Évolution', 'Société'],
+    tags: ['Relation', 'Couple', 'Évolution', 'Société', 'Miroir'],
     mediaType: 'audio'
   },
   {
@@ -79,9 +79,9 @@ const capsules: Capsule[] = [
     description: 'Découvrez comment aligner vos pensées vers des objectifs positifs et constructifs. Cette méditation guidée vous aide à structurer votre réflexion pour plus de clarté et d\'efficacité.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/La-pensee-orientee_Wind-Remover.mp3',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir8.png',
     gradient: 'from-transparent to-[rgb(71,146,89,0.62)]',
-    tags: ['Pensée positive', 'Méditation', 'Clarté mentale'],
+    tags: ['Pensée positive', 'Méditation', 'Clarté mentale', 'Miroir'],
     mediaType: 'audio'
   },
   {
@@ -90,9 +90,9 @@ const capsules: Capsule[] = [
     description: 'Une exploration des dynamiques relationnelles et des interactions entre individus. Cette capsule vous invite à porter un regard nouveau sur la façon dont nous nous connectons les uns aux autres.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Les-uns-et-les-autres.m4a',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir9.png',
     gradient: 'from-transparent to-[rgb(146,132,71,0.62)]',
-    tags: ['Relations', 'Interactions sociales', 'Développement personnel'],
+    tags: ['Relations', 'Interactions sociales', 'Développement personnel', 'Miroir'],
     mediaType: 'audio'
   }
 ]
@@ -322,13 +322,12 @@ export default function Espace180Page() {
                             src={capsule.mediaUrl}
                             className="hidden"
                           />
-                          <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl bg-primary-dark flex items-center justify-center">
-                            <div className="text-white/40">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-24 h-24">
-                                <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
-                                <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
-                              </svg>
-                            </div>
+                          <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl overflow-hidden">
+                            <img 
+                              src={capsule.posterUrl} 
+                              alt={capsule.title}
+                              className="absolute inset-0 w-full h-full object-cover"
+                            />
                           </div>
                         </>
                       )}
