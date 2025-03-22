@@ -638,13 +638,18 @@ export default function Espace180Page() {
         )}
 
         {/* Capsule Info */}
-        <div className="flex-grow space-y-4 mt-6">
-          <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
-          {capsule.duration && <div className="text-sm text-white/60">{capsule.duration}</div>}
-          <p className="text-white/80">{capsule.description}</p>
+        <div className="flex-grow mt-6">
+          {/* Title and duration grouped without spacing */}
+          <div>
+            <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
+            {capsule.duration && <div className="text-sm text-white/60">{capsule.duration}</div>}
+          </div>
+          
+          {/* Description with spacing from title/duration group */}
+          <p className="text-white/80 mt-4">{capsule.description}</p>
 
           {/* Date - Moved between description and tags */}
-          <p className="text-sm text-white/60 text-right">
+          <p className="text-sm text-white/60 text-right mt-4">
             {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
           </p>
 
