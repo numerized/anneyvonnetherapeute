@@ -249,7 +249,14 @@ export default function Espace180Page() {
               onClick={() => setIsFilterOpen(!isFilterOpen)}
               className="w-full flex items-center justify-between bg-white/10 text-white px-4 py-3 rounded-lg"
             >
-              <span className="font-medium">Filtres</span>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Filtres</span>
+                {selectedTags.length > 0 && (
+                  <span className="bg-white text-primary-dark text-xs font-bold px-2 py-1 rounded-full">
+                    {selectedTags.length}
+                  </span>
+                )}
+              </div>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 24 24" 
