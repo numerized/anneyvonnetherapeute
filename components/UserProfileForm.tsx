@@ -8,6 +8,7 @@ import { PlusCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { User } from '@/lib/userService';
+import { toast } from 'sonner';
 
 interface UserProfileFormProps {
   user: User | null;
@@ -217,21 +218,27 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false, isPartner
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      // Filter out undefined values
-      const dataToSubmit: Partial<User> = {};
-      (Object.entries(formData) as [keyof User, any][]).forEach(([key, value]) => {
-        if (value !== undefined && value !== '') {
-          dataToSubmit[key] = value;
+      // Process the birth date
+      let processedData = { ...formData };
+      if (dateInputValue) {
+        try {
+          const parsedDate = parse(dateInputValue, 'dd/MM/yyyy', new Date());
+          processedData.birthDate = parsedDate;
+        } catch (error) {
+          toast.error('Format de date invalide. Utilisez le format jj/mm/aaaa');
+          setIsSubmitting(false);
+          return;
         }
-      });
+      }
 
-      await onSubmit(dataToSubmit);
+      await onSubmit(processedData);
+      // Success toast is handled by the parent component
     } catch (error) {
       console.error('Error submitting form:', error);
+      // Error toast is handled by the parent component
     } finally {
       setIsSubmitting(false);
     }
@@ -396,9 +403,14 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false, isPartner
       <Button 
         type="submit" 
         disabled={isSubmitting || isResizing}
-        className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream"
+        className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isSubmitting ? 'Enregistrement...' : isFirstTime ? 'Créer mon profil' : 'Mettre à jour mon profil'}
+        {isSubmitting ? (
+          <div className="flex items-center justify-center gap-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            <span>Mise à jour en cours...</span>
+          </div>
+        ) : isFirstTime ? 'Créer mon profil' : 'Mettre à jour mon profil'}
       </Button>
     </form>
   );

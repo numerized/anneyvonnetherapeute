@@ -3,10 +3,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { UserProfileForm } from '@/components/UserProfileForm';
 import { createOrUpdateUser, updatePartnerProfile, UserProfile } from '@/lib/userService';
 import { Timestamp } from 'firebase/firestore';
-import { User as UserIcon, Pencil } from 'lucide-react';
+import { User as UserIcon, Pencil, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
-import { toast } from 'react-hot-toast';
+import { useState, useRef } from 'react';
+import { toast } from 'sonner';
 
 // Simplified user type to avoid FirebaseUser dependency
 interface UserInfo {
@@ -33,6 +33,7 @@ export function UserProfileSection({
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isEditingPartnerProfile, setIsEditingPartnerProfile] = useState(false);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Function to handle photo click
   const handlePhotoClick = () => {
@@ -47,38 +48,111 @@ export function UserProfileSection({
   // Function to handle update profile
   const handleUpdateProfile = async (formData: Partial<UserProfile>, isPartner: boolean = false) => {
     if (!user) return;
+    
+    // Clear any existing timeout first
+    if (updateTimeoutRef.current) {
+      clearTimeout(updateTimeoutRef.current);
+      updateTimeoutRef.current = null;
+    }
 
     try {
       setIsUpdatingProfile(true);
       
+      // Set a timeout to show an error if the update takes too long (15 seconds)
+      updateTimeoutRef.current = setTimeout(() => {
+        setIsUpdatingProfile(false);
+        toast.error('La mise à jour a pris trop de temps. Veuillez réessayer.', {
+          duration: 5000,
+          style: {
+            backgroundColor: '#7f1d1d',
+            color: 'white',
+          }
+        });
+      }, 15000);
+      
+      // Create the updated profile data
+      const updatedData = isPartner 
+        ? {
+            ...partnerProfile,
+            ...formData,
+            updatedAt: Timestamp.now()
+          }
+        : {
+            ...userProfile,
+            ...formData,
+            id: user.uid,
+            email: user.email || formData.email || '',
+            updatedAt: Timestamp.now()
+          };
+      
+      // Check for network connectivity before attempting the update
+      if (!navigator.onLine) {
+        throw new Error('Vous êtes hors ligne. Veuillez vérifier votre connexion internet.');
+      }
+      
+      // Update the server in the background
       if (isPartner) {
-        // Update partner profile as nested object in main user's document
-        await updatePartnerProfile(user.uid!, {
-          ...formData,
-          updatedAt: Timestamp.now()
-        });
+        await updatePartnerProfile(user.uid!, updatedData);
       } else {
-        // Update main user profile
-        await createOrUpdateUser({
-          ...userProfile,
-          ...formData,
-          id: user.uid,
-          email: user.email || formData.email || '',
-          updatedAt: Timestamp.now()
-        });
+        await createOrUpdateUser(updatedData);
       }
 
+      // Clear the timeout since the update succeeded
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+        updateTimeoutRef.current = null;
+      }
+
+      toast.success('Profil mis à jour avec succès', {
+        duration: 3000,
+      });
+      
+      // Close dialogs only after successful update
       if (isPartner) {
         setIsEditingPartnerProfile(false);
       } else {
         setIsEditingProfile(false);
       }
-      toast.success('Profil mis à jour avec succès');
+      
+      // Only trigger a full refresh after the server update is complete
       onProfileUpdate();
     } catch (error) {
       console.error('Error updating profile:', error);
-      toast.error('Erreur lors de la mise à jour du profil');
+      
+      // Clear the timeout since we already know there's an error
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+        updateTimeoutRef.current = null;
+      }
+      
+      // Determine error message based on type
+      let errorMessage = 'Erreur lors de la mise à jour du profil';
+      
+      if (!navigator.onLine) {
+        errorMessage = 'Vous êtes hors ligne. Veuillez vérifier votre connexion internet.';
+      } else if (error instanceof Error) {
+        // If it's a network error or Firebase error with a specific message
+        if (error.message.includes('network') || error.message.includes('conn')) {
+          errorMessage = 'Problème de connexion réseau. Veuillez vérifier votre connexion internet.';
+        }
+      }
+      
+      toast.error(errorMessage, {
+        duration: 4000,
+      });
+      
+      // If there was an error, reopen the edit dialog
+      if (isPartner) {
+        setIsEditingPartnerProfile(true);
+      } else {
+        setIsEditingProfile(true);
+      }
     } finally {
+      // Make absolutely sure the timeout is cleared
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+        updateTimeoutRef.current = null;
+      }
       setIsUpdatingProfile(false);
     }
   };
@@ -116,9 +190,19 @@ export function UserProfileSection({
             variant="outline"
             className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
             onClick={handlePhotoClick}
+            disabled={isUpdatingProfile}
           >
-            <Pencil className="w-4 h-4 lg:hidden" />
-            <span className="hidden lg:inline">Modifier</span>
+            {isUpdatingProfile ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Mise à jour...
+              </>
+            ) : (
+              <>
+                <Pencil className="w-4 h-4 lg:hidden" />
+                <span className="hidden lg:inline">Modifier</span>
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -156,9 +240,19 @@ export function UserProfileSection({
             variant="outline"
             className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
             onClick={handlePartnerPhotoClick}
+            disabled={isUpdatingProfile}
           >
-            <Pencil className="w-4 h-4 lg:hidden" />
-            <span className="hidden lg:inline">{partnerProfile ? 'Modifier' : 'Ajouter'}</span>
+            {isUpdatingProfile ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Mise à jour...
+              </>
+            ) : (
+              <>
+                <Pencil className="w-4 h-4 lg:hidden" />
+                <span className="hidden lg:inline">{partnerProfile ? 'Modifier' : 'Ajouter'}</span>
+              </>
+            )}
           </Button>
         </div>
       </div>
