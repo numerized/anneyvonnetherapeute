@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Espace180Page from '@/components/pages/espace180/Espace180Page'
 import Espace180Navbar from '@/components/global/Navbar/Espace180Navbar'
 import { loadSettings } from '@/sanity/loader/loadQuery'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'Espace 180 - Anne Yvonne Relations',
@@ -14,7 +15,9 @@ export default async function Espace180() {
   return (
     <>
       <Espace180Navbar data={initial.data} />
-      <Espace180Page />
+      <Suspense fallback={<div className="min-h-screen bg-primary-dark flex items-center justify-center"><div className="text-white text-2xl">Chargement des capsules...</div></div>}>
+        <Espace180Page />
+      </Suspense>
     </>
   )
 }
