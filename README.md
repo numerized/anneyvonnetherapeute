@@ -31,6 +31,7 @@ The Studio connects to Sanity Content Lake, which gives you hosted content APIs 
 - [Questions and Answers](#questions-and-answers)
   - [It doesn't work! Where can I get help?](#it-doesnt-work-where-can-i-get-help)
   - [How can I remove the "Next steps" block from my personal website?](#how-can-i-remove-the-next-steps-block-from-my-personal-website)
+- [Calendly Integration](#calendly-integration)
 - [Liste des Emails et Contenus Associés](#liste-des-emails-et-contents-associés)
 - [Next steps](#next-steps)
 
@@ -101,6 +102,42 @@ Alternatively, you can deploy without a `git` hosting provider using the Vercel 
 npx vercel --prod
 ```
 
+## Questions and Answers
+
+### It doesn't work! Where can I get help?
+
+In case of any issues or questions, you can post:
+
+- [GitHub Discussions for Next.js][vercel-github]
+- [Sanity's GitHub Discussions][sanity-github]
+- [Sanity's Community Slack][sanity-community]
+
+### How can I remove the "Next steps" block from my personal website?
+
+You can remove it by deleting the `IntroTemplate` component in `/app/(personal)/layout.tsx`.
+
+## Calendly Integration
+
+This website uses the Calendly API V2 with OAuth2 authentication to manage scheduling events. To set up the Calendly integration:
+
+1. Create a Calendly account if you don't already have one.
+2. Register a new OAuth2 application in your Calendly account:
+   - Log in to Calendly
+   - Go to "Integrations" → "API & Webhooks"
+   - Click on "Create New App"
+   - Set the redirect URI to your website URL (e.g., `https://yoursite.com/dashboard`)
+   - Save the Client ID and Client Secret
+
+3. Create a `.env.local` file in the project root with the following variables:
+   ```
+   NEXT_PUBLIC_CALENDLY_CLIENT_ID=your_client_id_here
+   CALENDLY_CLIENT_SECRET=your_client_secret_here
+   ```
+
+4. Restart your development server after adding these environment variables.
+
+> **Security Note**: The Client Secret should never be exposed to the client-side code. Our implementation uses secure API routes to handle OAuth2 token exchange. The Client ID is public and can be safely used in client-side code.
+
 ## Liste des Emails et Contenus Associés
 
 1. **mail_0**
@@ -142,7 +179,7 @@ npx vercel --prod
 6. **mail_5**
    - "Préparation pour votre deuxième séance individuelle"
    - Contenu :
-     * FORM ENTRE2
+     * FORM_ENTRE2
      * Test de dépendance relationnelle
      * Capsule dépendance et rejet
 
@@ -171,20 +208,6 @@ npx vercel --prod
       * Capsule "Le Couple Conscient"
       * Test Etat des lieux sexuel
       * Code promo sur Cycle 2 10%
-
-## Questions and Answers
-
-### It doesn't work! Where can I get help?
-
-In case of any issues or questions, you can post:
-
-- [GitHub Discussions for Next.js][vercel-github]
-- [Sanity's GitHub Discussions][sanity-github]
-- [Sanity's Community Slack][sanity-community]
-
-### How can I remove the "Next steps" block from my personal website?
-
-You can remove it by deleting the `IntroTemplate` component in `/app/(personal)/layout.tsx`.
 
 ## Next steps
 

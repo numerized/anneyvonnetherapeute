@@ -25,6 +25,13 @@ export interface EmailTemplate {
 
 export type TherapyEventType = 'email' | 'session';
 
+export interface TherapyResource {
+  type: 'test' | 'form' | 'capsule' | 'audio' | 'reflection';
+  title: string;
+  description: string;
+  url?: string;
+}
+
 export interface TherapyTimelineEvent {
   type: TherapyEventType;
   title: string;
@@ -33,5 +40,6 @@ export interface TherapyTimelineEvent {
   delayDays?: number;
   triggerType?: 'immediate' | 'beforeSession' | 'afterSession';
   sessionType?: 'couple' | 'individual';
-  partner?: 'male' | 'female';
+  partner?: 'male' | 'female' | 'both' | 'partner1' | 'partner2';
+  resources?: TherapyResource[];
 }
