@@ -1,24 +1,31 @@
-import { useState, useEffect, useRef } from 'react';
-import { User } from '@/lib/userService';
+'use client';
+
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { format, parse } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import Image from 'next/image';
+import { PlusCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, X } from 'lucide-react';
+import { User } from '@/lib/userService';
 
 interface UserProfileFormProps {
   user: User | null;
   onSubmit: (userData: Partial<User>) => Promise<void>;
   isFirstTime?: boolean;
+  isPartner?: boolean;
 }
 
-export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserProfileFormProps) {
+export function UserProfileForm({ user, onSubmit, isFirstTime = false, isPartner = false }: UserProfileFormProps) {
   const [formData, setFormData] = useState<Partial<User>>({
-    prenom: '',
-    nom: '',
-    telephone: '',
-    dateNaissance: undefined,
+    firstName: '',
+    lastName: '',
+    phone: '',
+    birthDate: undefined,
     email: '',
     photo: undefined
   });
+  const [dateInputValue, setDateInputValue] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -26,22 +33,84 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
   useEffect(() => {
     if (user) {
       setFormData({
-        prenom: user.prenom || '',
-        nom: user.nom || '',
-        telephone: user.telephone || '',
-        dateNaissance: user.dateNaissance || undefined,
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        phone: user.phone || '',
+        birthDate: user.birthDate || undefined,
         email: user.email || '',
         photo: user.photo || undefined
       });
+      // Format the initial date value
+      if (user.birthDate) {
+        setDateInputValue(formatDateForInput(user.birthDate));
+      }
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'dateNaissance' ? (value ? new Date(value) : undefined) : value
-    }));
+    
+    if (name === 'birthDate') {
+      // Apply input mask for date (dd/mm/yyyy)
+      if (value) {
+        // Remove any non-digit characters from the new input
+        const digits = value.replace(/\D/g, '');
+        
+        // Format the digits with slashes
+        let formattedValue = '';
+        if (digits.length > 0) {
+          // Add first two digits (day)
+          formattedValue = digits.slice(0, 2);
+          if (digits.length > 2) {
+            // Add month after day
+            formattedValue += '/' + digits.slice(2, 4);
+            if (digits.length > 4) {
+              // Add year after month
+              formattedValue += '/' + digits.slice(4, 8);
+            }
+          }
+        }
+
+        // Update the input display value
+        setDateInputValue(formattedValue);
+
+        // Only try to parse if we have a complete date
+        if (formattedValue.length === 10) {
+          try {
+            // Try to parse the input value as dd/MM/yyyy
+            const parsedDate = parse(formattedValue, 'dd/MM/yyyy', new Date());
+            
+            // Validate the parsed date
+            if (!isNaN(parsedDate.getTime())) {
+              setFormData(prev => ({
+                ...prev,
+                birthDate: parsedDate
+              }));
+            }
+          } catch (error) {
+            console.error('Error parsing date:', error, 'Value:', formattedValue);
+          }
+        } else {
+          // Clear the date in formData if input is incomplete
+          setFormData(prev => ({
+            ...prev,
+            birthDate: undefined
+          }));
+        }
+      } else {
+        // Clear both the input value and the form data
+        setDateInputValue('');
+        setFormData(prev => ({
+          ...prev,
+          birthDate: undefined
+        }));
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handlePhotoClick = () => {
@@ -50,11 +119,12 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
     }
   };
 
-  const handleDeletePhoto = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering the parent click handler
+  const handleRemovePhoto = () => {
+    if (isSubmitting) return;
+    
     setFormData(prev => ({
       ...prev,
-      photo: undefined
+      photo: null // Explicitly set to null to trigger deletion
     }));
   };
 
@@ -64,7 +134,8 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
       setIsResizing(true);
       
       // Create an image object
-      const img = new Image();
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
       img.onload = () => {
         // Calculate new dimensions while maintaining aspect ratio
         let width = img.width;
@@ -84,46 +155,36 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
           }
         }
         
-        // Create canvas and resize
+        // Create a canvas and draw the resized image
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        
         const ctx = canvas.getContext('2d');
+        
         if (!ctx) {
           setIsResizing(false);
-          reject(new Error('Could not get canvas context'));
+          reject(new Error('Unable to get canvas context'));
           return;
         }
         
-        // Draw image on canvas with new dimensions
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Get base64 data URL (JPEG format with 0.9 quality)
-        const resizedBase64 = canvas.toDataURL('image/jpeg', 0.9);
+        // Convert to data URL and resolve promise
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        URL.revokeObjectURL(img.src); // Clean up
         setIsResizing(false);
-        resolve(resizedBase64);
+        resolve(dataUrl);
       };
       
       img.onerror = () => {
+        URL.revokeObjectURL(img.src); // Clean up
         setIsResizing(false);
         reject(new Error('Error loading image'));
       };
-      
-      // Load the image from the file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        img.src = e.target?.result as string;
-      };
-      reader.onerror = () => {
-        setIsResizing(false);
-        reject(new Error('Error reading file'));
-      };
-      reader.readAsDataURL(file);
     });
   };
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -156,21 +217,62 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setIsSubmitting(true);
-    
+
     try {
-      await onSubmit(formData);
+      // Filter out undefined values
+      const dataToSubmit: Partial<User> = {};
+      (Object.entries(formData) as [keyof User, any][]).forEach(([key, value]) => {
+        if (value !== undefined && value !== '') {
+          dataToSubmit[key] = value;
+        }
+      });
+
+      await onSubmit(dataToSubmit);
     } catch (error) {
-      console.error('Error submitting user data:', error);
+      console.error('Error submitting form:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Format date to YYYY-MM-DD for input
-  const formatDateForInput = (date: Date | undefined): string => {
+  // Format date for display
+  const formatDateForInput = (date: Date | string | any | undefined): string => {
     if (!date) return '';
-    return date.toISOString().split('T')[0];
+    
+    // If it's already in dd/mm/yyyy format, return as is
+    if (typeof date === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(date)) {
+      return date;
+    }
+
+    try {
+      let dateObj: Date;
+
+      // If it's already a Date object
+      if (date instanceof Date) {
+        dateObj = date;
+      }
+      // Check if it's a Firestore Timestamp
+      else if (typeof date === 'object' && date !== null && 'toDate' in date && typeof date.toDate === 'function') {
+        dateObj = date.toDate();
+      }
+      // If it's a string or other value, try to create a Date
+      else {
+        dateObj = new Date(date);
+      }
+
+      // Validate the date
+      if (!dateObj || isNaN(dateObj.getTime())) {
+        console.warn('Invalid date value:', date);
+        return '';
+      }
+
+      return format(dateObj, 'dd/MM/yyyy', { locale: fr });
+    } catch (error) {
+      console.error('Error formatting date:', error, 'Value:', date);
+      return '';
+    }
   };
 
   return (
@@ -181,7 +283,7 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
           {formData.photo && (
             <button
               type="button"
-              onClick={handleDeletePhoto}
+              onClick={handleRemovePhoto}
               className="absolute -top-2 -right-2 z-10 bg-black/70 rounded-full p-1 hover:bg-black/90 transition-colors"
               aria-label="Delete photo"
             >
@@ -193,9 +295,11 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
             onClick={handlePhotoClick}
           >
             {formData.photo ? (
-              <img 
+              <Image 
                 src={formData.photo} 
                 alt="Profile" 
+                width={96}
+                height={96}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -227,11 +331,11 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="prenom" className="block text-sm font-medium text-primary-cream">Prénom</label>
+        <label htmlFor="firstName" className="block text-sm font-medium text-primary-cream">Prénom</label>
         <Input
-          id="prenom"
-          name="prenom"
-          value={formData.prenom}
+          id="firstName"
+          name="firstName"
+          value={formData.firstName}
           onChange={handleChange}
           required={isFirstTime}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream"
@@ -239,11 +343,11 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
       </div>
       
       <div className="space-y-2">
-        <label htmlFor="nom" className="block text-sm font-medium text-primary-cream">Nom</label>
+        <label htmlFor="lastName" className="block text-sm font-medium text-primary-cream">Nom</label>
         <Input
-          id="nom"
-          name="nom"
-          value={formData.nom}
+          id="lastName"
+          name="lastName"
+          value={formData.lastName}
           onChange={handleChange}
           required={isFirstTime}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream"
@@ -259,29 +363,31 @@ export function UserProfileForm({ user, onSubmit, isFirstTime = false }: UserPro
           value={formData.email}
           onChange={handleChange}
           required
-          disabled={true}
+          disabled={!isPartner}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream opacity-70"
         />
       </div>
       
       <div className="space-y-2">
-        <label htmlFor="telephone" className="block text-sm font-medium text-primary-cream">Téléphone</label>
+        <label htmlFor="phone" className="block text-sm font-medium text-primary-cream">Téléphone</label>
         <Input
-          id="telephone"
-          name="telephone"
-          value={formData.telephone}
+          id="phone"
+          name="phone"
+          value={formData.phone}
           onChange={handleChange}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream"
         />
       </div>
       
       <div className="space-y-2">
-        <label htmlFor="dateNaissance" className="block text-sm font-medium text-primary-cream">Date de naissance</label>
+        <label htmlFor="birthDate" className="block text-sm font-medium text-primary-cream">Date de naissance</label>
         <Input
-          id="dateNaissance"
-          name="dateNaissance"
-          type="date"
-          value={formatDateForInput(formData.dateNaissance)}
+          id="birthDate"
+          name="birthDate"
+          type="text"
+          placeholder="jj/mm/aaaa"
+          maxLength={10}
+          value={dateInputValue}
           onChange={handleChange}
           className="bg-primary-cream/10 border-primary-cream/20 text-primary-cream"
         />

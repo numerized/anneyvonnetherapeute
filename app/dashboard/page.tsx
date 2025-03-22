@@ -1,41 +1,97 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { User as FirebaseUser, getAuth } from 'firebase/auth';
-import { app } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { CheckSquare, Square, Loader2, PlusCircle, X, User } from 'lucide-react';
-import Link from 'next/link';
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
+import { ResourceCheckboxes } from '@/components/dashboard/ResourceCheckboxes';
+import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
-import { getUserById, createOrUpdateUser, getPartnerProfile, User as UserProfile } from '@/lib/userService';
-import { UserProfileForm } from '@/components/UserProfileForm';
-import { InvitePartnerForm } from '@/components/InvitePartnerForm';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { OffersPanel } from '@/components/OffersPanel';
+import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
+import { app } from '@/lib/firebase';
+import { createOrUpdateUser, getUserById, UserProfile, SessionDetails } from '@/lib/userService';
+import { format, parseISO, addDays, isValid } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  onSnapshot,
+  query,
+  runTransaction,
+  Timestamp,
+  updateDoc,
+  where
+} from 'firebase/firestore';
+import { Calendar, Check, Clock, LogOut, Mail, Square, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export default function DashboardPage() {
+  const router = useRouter();
+
+  // Authentication state
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [partnerProfile, setPartnerProfile] = useState<UserProfile | null>(null);
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [isInviting, setIsInviting] = useState(false);
-  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({
-    evaluation: false,
-    questionnaire: false,
-    amoureux: false,
-    eros: false,
-    appointment: false,
-    partner_evaluation: false,
-    partner_questionnaire: false,
-    partner_amoureux: false,
-    partner_eros: false
-  });
-  const [offersCount, setOffersCount] = useState(0);
-  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  // Session state
+  const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
+  const [sessionDates, setSessionDates] = useState<Record<string, string>>({});
+  const [invalidDates, setInvalidDates] = useState<Record<string, boolean>>({});
+  const [selectedEvent, setSelectedEvent] = useState<TherapyJourneyEvent | null>(null);
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false);
+
+  // UI refresh counter
+  const [uiRefreshKey, setUiRefreshKey] = useState(0);
+
+  // Add state to track which partner is booking
+  const [activePartner, setActivePartner] = useState<'partner1' | 'partner2' | 'both'>('both');
+  const [bookingSession, setBookingSession] = useState<string | null>(null);
+
+  // Helper function to get session date - defined after sessionDates declaration
+  const getSessionDate = useCallback((sessionId: string): string | undefined => {
+    return sessionDates[sessionId];
+  }, [sessionDates]);
+
+  // Function to handle sign out
+  const handleSignOut = async () => {
+    try {
+      const auth = getAuth(app);
+      await signOut(auth);
+      router.push('/'); // Redirect to home page after sign out
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  // Get user and partner profiles
+  const getUserProfiles = async (userId: string) => {
+    try {
+      const userProfile = await getUserById(userId);
+      if (!userProfile) {
+        return { userProfile: null, partnerProfile: null };
+      }
+
+      return {
+        userProfile,
+        partnerProfile: userProfile.partnerProfile || null
+      };
+    } catch (error) {
+      console.error('Error fetching user profiles:', error);
+      return { userProfile: null, partnerProfile: null };
+    }
+  };
+
+  // Handle profile update
+  const handleProfileUpdate = async () => {
+    if (!user?.uid) return;
+    const { userProfile, partnerProfile } = await getUserProfiles(user.uid);
+    setUserProfile(userProfile);
+    setPartnerProfile(partnerProfile);
+  };
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -43,45 +99,21 @@ export default function DashboardPage() {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
-        
-        async function fetchUserProfile() {
-          if (!user) return;
-          
-          try {
-            console.log('Fetching user profile for ID:', user.uid);
-            const profileData = await getUserById(user.uid);
-            console.log('User profile data:', profileData);
-            setUserProfile(profileData);
 
-            if (profileData?.partnerId) {
-              console.log('Fetching partner profile for ID:', profileData.partnerId);
-              const partnerData = await getPartnerProfile(profileData.partnerId);
-              console.log('Partner data:', partnerData);
-              if (partnerData) {
-                setPartnerProfile(partnerData);
-              } else {
-                console.log('No partner data found');
-                // If no partner data found but we have partner email, create a minimal partner profile
-                if (profileData.partnerEmail) {
-                  setPartnerProfile({
-                    id: profileData.partnerId,
-                    email: profileData.partnerEmail,
-                    role: 'partner'
-                  });
-                }
-              }
-            } else {
-              // Clear partner profile if no partner ID
-              setPartnerProfile(null);
-            }
+        async function fetchUserProfile() {
+          if (!user || !user.uid) return;
+
+          try {
+            const { userProfile, partnerProfile } = await getUserProfiles(user.uid);
+            setUserProfile(userProfile);
+            setPartnerProfile(partnerProfile);
           } catch (error) {
             console.error('Error fetching user profile:', error);
-            toast.error('Failed to load user profile');
           } finally {
             setLoading(false);
           }
         }
-        
+
         fetchUserProfile();
       } else {
         router.push('/login');
@@ -91,425 +123,744 @@ export default function DashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  const handleUpdateProfile = async (formData: Partial<UserProfile>) => {
-    if (!user) return;
-    
+  // Effect to load user and partner profiles
+  useEffect(() => {
+    if (user?.uid) {
+      getUserProfiles(user.uid).then(({ userProfile, partnerProfile }) => {
+        setUserProfile(userProfile);
+        setPartnerProfile(partnerProfile);
+      });
+    }
+  }, [user?.uid]);
+  
+  // Effect to update session dates
+  useEffect(() => {
+    if (userProfile?.sessionDates !== undefined) {
+      setSessionDates(userProfile.sessionDates || {});
+    }
+  }, [userProfile?.sessionDates]);
+
+  // Effect to reset bookingSession when sessionDates are updated from Firestore
+  useEffect(() => {
+    // If we have a bookingSession and that session now has a date in sessionDates,
+    // we can reset the bookingSession state
+    if (bookingSession && sessionDates[bookingSession]) {
+      setBookingSession(null);
+    }
+  }, [bookingSession, sessionDates]);
+
+  // Function to check if a date is valid (at least 4 weeks after the previous session)
+  const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
+    // Define session dependencies (which session must be at least 4 weeks after which)
+    const sessionDependencyMap: Record<string, string | string[]> = {
+      'individual1_partner1': 'initial',
+      'individual2_partner1': 'individual1_partner1',
+      'individual3_partner1': 'individual2_partner1',
+      'individual1_partner2': 'initial',
+      'individual2_partner2': 'individual1_partner2',
+      'individual3_partner2': 'individual2_partner2',
+      'final': ['individual3_partner1', 'individual3_partner2']
+    };
+
     try {
-      setIsUpdatingProfile(true);
-      
-      // Clean up the form data to remove undefined values
-      const cleanedFormData = Object.entries(formData).reduce((acc, [key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          acc[key] = value;
-        }
-        return acc;
-      }, {} as Record<string, any>);
-      
-      const userData = {
-        ...cleanedFormData,
-        email: user.email || cleanedFormData.email || ''
-      };
-      
-      const updatedProfile = await createOrUpdateUser(user.uid, userData);
-      setUserProfile(updatedProfile);
+      // Check if the session has a dependency
+      const dependentSessionId = sessionDependencyMap[sessionId];
+      if (!dependentSessionId) return true; // No dependency, date is valid
 
-      // If partner email changed, refetch partner profile
-      if (updatedProfile.partnerId && (!partnerProfile || partnerProfile.id !== updatedProfile.partnerId)) {
-        const partnerData = await getPartnerProfile(updatedProfile.partnerId);
-        if (partnerData) {
-          setPartnerProfile(partnerData);
+      // If dependentSessionId is an array, check each dependency
+      if (Array.isArray(dependentSessionId)) {
+        // Make sure all dependent sessions have dates
+        const missingDates = dependentSessionId.filter(depId => !getSessionDate(depId));
+        if (missingDates.length > 0) {
+          return false;
         }
+
+        // Find the most recent dependent session date
+        let latestDate: Date | null = null;
+
+        for (const depId of dependentSessionId) {
+          const depDate = getSessionDate(depId);
+          if (depDate) {
+            const date = new Date(depDate);
+            if (!latestDate || date > latestDate) {
+              latestDate = date;
+            }
+          }
+        }
+
+        if (!latestDate) return true; // No dependent session dates, date is valid
+
+        const proposedDate = new Date(dateStr);
+
+        // Calculate the minimum allowed date (latestDate + 4 weeks)
+        const minimumDate = new Date(latestDate);
+        minimumDate.setDate(minimumDate.getDate() + 28); // 4 weeks minimum gap
+
+        // Check if the proposed date is at least 4 weeks after the latest dependent session
+        if (proposedDate < minimumDate) {
+          return false;
+        }
+
+        return true;
       }
 
-      setIsEditingProfile(false);
-      toast.success('Profil mis à jour avec succès');
+      // Single dependency case
+      const dependentSessionDate = getSessionDate(dependentSessionId);
+      if (!dependentSessionDate) return true; // No dependent session date, date is valid
+
+      const proposedDate = new Date(dateStr);
+      const dependentDate = new Date(dependentSessionDate);
+
+      // Calculate the minimum allowed date (dependentDate + 4 weeks)
+      const minimumDate = new Date(dependentDate);
+      minimumDate.setDate(minimumDate.getDate() + 28); // 4 weeks minimum gap
+
+      // Check if the proposed date is at least 4 weeks after the dependent session
+      if (proposedDate < minimumDate) {
+        return false;
+      }
+
+      return true;
     } catch (error) {
-      console.error('Error updating user profile:', error);
-      toast.error('Erreur lors de la mise à jour du profil');
-    } finally {
-      setIsUpdatingProfile(false);
+      console.error(`Error validating date for session ${sessionId}:`, error);
+      return false;
     }
+  }, [getSessionDate]);
+
+  // Validate all existing dates when session dates change
+  useEffect(() => {
+    const newInvalidDates: Record<string, boolean> = {};
+
+    // Check each session date
+    Object.entries(sessionDates).forEach(([sessionId, dateStr]) => {
+      newInvalidDates[sessionId] = !isDateValid(sessionId, dateStr);
+    });
+
+    // Update invalid dates state
+    setInvalidDates(newInvalidDates);
+  }, [sessionDates, isDateValid]);
+
+  // Therapy Journey Logic
+  const isSessionAvailable = (event: TherapyJourneyEvent): boolean => {
+    if (event.type !== 'session') return false;
+
+    // First make sure all the dependencies are completed or at least scheduled
+    // AND that they don't have invalid dates
+    if (event.id === 'initial') return true;
+
+    if (!event.dependsOn) return true;
+
+    if (Array.isArray(event.dependsOn)) {
+      return event.dependsOn.every(dep =>
+        (isSessionCompleted(dep) || !!getSessionDate(dep)) && !invalidDates[dep]
+      );
+    }
+
+    return (
+      (isSessionCompleted(event.dependsOn) || !!getSessionDate(event.dependsOn)) &&
+      !invalidDates[event.dependsOn]
+    );
   };
 
-  const handlePhotoClick = () => {
-    setIsEditingProfile(true);
+  const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
+    const minDate = new Date();
+
+    // For the first individual session for either partner, set minimum date to 4 weeks after initial session
+    if (event.id === 'individual1_partner1' || event.id === 'individual1_partner2') {
+      const initialDate = getSessionDate('initial');
+      if (initialDate) {
+        const initialSessionDate = new Date(initialDate);
+        minDate.setTime(initialSessionDate.getTime());
+        minDate.setDate(minDate.getDate() + 28); // 4 weeks minimum gap
+      }
+    } else if (event.dependsOn && event.daysOffset) {
+      const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
+
+      const dependentDate = getSessionDate(dependentId);
+      if (dependentDate) {
+        const depDate = new Date(dependentDate);
+        minDate.setTime(depDate.getTime());
+        minDate.setDate(minDate.getDate() + event.daysOffset);
+      }
+    }
+
+    const maxDate = new Date(minDate);
+    maxDate.setDate(maxDate.getDate() + 30); // Allow booking up to 30 days after min date
+
+    return { minDate, maxDate };
   };
 
-  const handleDeletePhoto = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    if (!user) return;
-    
+  const hasPreviousInvalidDates = (sessionId: string): boolean => {
+    // Define session dependencies based on the therapy journey
+    const sessionDependencyMap: Record<string, string | string[]> = {
+      'individual1_partner1': 'initial',
+      'individual2_partner1': 'individual1_partner1',
+      'individual3_partner1': 'individual2_partner1',
+      'individual1_partner2': 'initial',
+      'individual2_partner2': 'individual1_partner2',
+      'individual3_partner2': 'individual2_partner2',
+      'final': ['individual3_partner1', 'individual3_partner2']
+    };
+
+    // Check if any direct dependencies have invalid dates
+    const directDependencies = sessionDependencyMap[sessionId];
+    if (!directDependencies) return false;
+
+    // Check each dependency (array or single value)
+    if (Array.isArray(directDependencies)) {
+      return directDependencies.some(depId =>
+        invalidDates[depId] || hasPreviousInvalidDates(depId)
+      );
+    }
+
+    // Single dependency case
+    return invalidDates[directDependencies] || hasPreviousInvalidDates(directDependencies);
+  };
+
+  const getSessionUnavailableReason = (event: TherapyJourneyEvent): string => {
+    // Check if there are invalid dates in previous sessions
+    if (event.id !== 'initial' && hasPreviousInvalidDates(event.id)) {
+      return "Impossible de réserver cette séance car une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
+    }
+
+    // Check if dependencies are completed
+    if (event.dependsOn) {
+      // Handle array of dependencies
+      if (Array.isArray(event.dependsOn)) {
+        const missingDeps = event.dependsOn.filter(dep =>
+          !isSessionCompleted(dep) && !getSessionDate(dep)
+        );
+        if (missingDeps.length > 0) {
+          return "Veuillez d'abord compléter les étapes précédentes.";
+        }
+
+        // Check if any dependency has an invalid date
+        const invalidDeps = event.dependsOn.filter(dep => invalidDates[dep]);
+        if (invalidDeps.length > 0) {
+          return "Une ou plusieurs séances précédentes ne respectent pas l'écart de 4 semaines requis.";
+        }
+      }
+      // Handle single dependency
+      else {
+        if (!isSessionCompleted(event.dependsOn) && !getSessionDate(event.dependsOn)) {
+          return "Veuillez d'abord compléter les étapes précédentes.";
+        }
+
+        if (invalidDates[event.dependsOn]) {
+          return "La séance précédente ne respecte pas l'écart de 4 semaines requis.";
+        }
+      }
+    }
+
+    return "";
+  };
+
+  const handleSessionClick = (event: TherapyJourneyEvent) => {
+    // If this is a session that already has a date, don't allow rebooking
+    if (getSessionDate(event.id)) {
+      console.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
+      return;
+    }
+
+    // Normal availability check for new bookings
+    if (!isSessionAvailable(event)) {
+      const reason = getSessionUnavailableReason(event);
+      console.error(reason || "Veuillez d'abord compléter les étapes précédentes");
+      return;
+    }
+
+    if (event.type !== 'session' || !event.sessionType) {
+      console.error("Ce type d'événement ne peut pas être programmé");
+      return;
+    }
+
+    // Set the booking session to show loading state
+    setBookingSession(event.id);
+    setSelectedEvent(event);
+    // Store which partner this session is for to determine which email to use
+    setActivePartner(event.partner || 'both');
+    setShowCalendlyModal(true);
+  };
+
+  const handleAppointmentScheduled = async (eventData: any) => {
     try {
-      setIsUpdatingProfile(true);
-      
-      const userData = {
-        ...userProfile,
-        photo: undefined
-      };
-      
-      const updatedProfile = await createOrUpdateUser(user.uid, userData);
-      setUserProfile(updatedProfile);
-      toast.success('Photo supprimée avec succès');
+      if (!user || !selectedEvent) return;
+
+      // Create a local variable to track which session we'll actually use
+      // This allows us to modify which session we're setting without waiting for React state to update
+      let sessionToUse = selectedEvent;
+
+      // Validate that we have the expected event data structure
+      if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
+        console.error('Invalid event data format:', eventData);
+        console.error("Format de données invalide. Veuillez réessayer.");
+        setBookingSession(null); // Reset booking session state on error
+        return;
+      }
+
+      // Extract data from Calendly's standard event structure
+      const eventUri = eventData.payload?.event?.uri || '';
+      const inviteeUri = eventData.payload?.invitee?.uri || '';
+
+      if (!eventUri) {
+        console.error('Missing event URI:', eventData);
+        console.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
+        setBookingSession(null); // Reset booking session state on error
+        return;
+      }
+
+      // Extract event ID from the URI
+      const eventId = eventUri.split('/').pop() || '';
+
+      try {
+        // Fetch event details from our API
+        const eventDetailsResponse = await fetch(`/api/calendly/event-details?eventUri=${encodeURIComponent(eventUri)}`);
+
+        if (!eventDetailsResponse.ok) {
+          throw new Error(`Failed to fetch event details: ${eventDetailsResponse.status}`);
+        }
+
+        const eventDetailsResult = await eventDetailsResponse.json();
+
+        if (!eventDetailsResult.success || !eventDetailsResult.data) {
+          throw new Error('Invalid response from event details API');
+        }
+
+        const eventDetails = eventDetailsResult.data;
+
+        // Get event start time and end time
+        let startTime = eventDetails.start_time;
+        let endTime = eventDetails.end_time;
+
+        if (!startTime) {
+          // Fallback (should rarely happen)
+          const scheduledTime = new Date();
+          scheduledTime.setHours(scheduledTime.getHours() + 1);
+          startTime = scheduledTime.toISOString();
+
+          const scheduledEndTime = new Date(scheduledTime);
+          scheduledEndTime.setHours(scheduledEndTime.getHours() + 1);
+          endTime = scheduledEndTime.toISOString();
+        }
+
+        // Dismiss loading 
+        console.log("Rendez-vous programmé");
+
+        // Format date for display
+        const dateObj = new Date(startTime);
+        const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
+        }).format(dateObj);
+
+        // Format to capitalize first letter of the day name
+        const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
+        // Get Firestore reference
+        const db = getFirestore(app);
+        const userDocRef = doc(db, 'users', user.uid);
+
+        try {
+          // Get current data first
+          const userDocSnap = await getDoc(userDocRef);
+
+          if (!userDocSnap.exists()) {
+            throw new Error("User document does not exist!");
+          }
+
+          // Get current data
+          const userData = userDocSnap.data();
+
+          // Get existing session details and dates or initialize if not present
+          const existingSessionDetails = userData.sessionDetails || {};
+          const existingSessionDates = userData.sessionDates || {};
+
+          // Create the new session detail
+          const newSessionDetail: SessionDetails = {
+            date: formattedDate,
+            eventUri: eventUri,
+            formattedDate: formattedDateCapitalized,
+            startTime: startTime,
+            endTime: endTime,
+            lastUpdated: Timestamp.now(),
+            sessionType: sessionToUse.id, // Using the determined session ID as the session type
+            status: 'scheduled',  // Default status for new appointments
+            calendlyData: {
+              eventUri: eventUri,
+              inviteeUri: inviteeUri
+            }
+          };
+
+          // Add additional fields if available in the payload
+          if (eventData.payload?.event) {
+            // Add location if available
+            if (eventData.payload.event.location) {
+              newSessionDetail.location = eventData.payload.event.location;
+            }
+
+            // Add cancel URL if available
+            const cancelUrl = eventData.payload.invitee?.cancel_url ||
+              eventData.payload.event?.cancel_url;
+
+            if (cancelUrl) {
+              newSessionDetail.cancelUrl = cancelUrl;
+            }
+
+            // Add reschedule URL if available
+            const rescheduleUrl = eventData.payload.invitee?.reschedule_url ||
+              eventData.payload.event?.reschedule_url;
+
+            if (rescheduleUrl) {
+              newSessionDetail.rescheduleUrl = rescheduleUrl;
+            }
+          }
+
+          // Create new objects with the updated data
+          const updatedSessionDetails = { ...existingSessionDetails };
+          updatedSessionDetails[sessionToUse.id] = newSessionDetail;
+
+          const updatedSessionDates = { ...existingSessionDates };
+          updatedSessionDates[sessionToUse.id] = startTime;
+
+          // Update the document with direct update (no transaction)
+          await updateDoc(userDocRef, {
+            sessionDetails: updatedSessionDetails,
+            sessionDates: updatedSessionDates,
+            updatedAt: Timestamp.now()
+          });
+
+          // Verify data after update
+          const verifyDocSnap = await getDoc(userDocRef);
+          const verifyData = verifyDocSnap.data();
+
+          // Alert the user with a unique ID to prevent duplicates
+          console.log(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
+
+          // Update session dates in state to reflect the new date
+          setSessionDates(prev => {
+            const newDates = { ...prev };
+            newDates[sessionToUse.id] = startTime;
+            return newDates;
+          });
+
+          // Reset selected session
+          setSelectedEvent(null);
+          
+          // Note: We don't reset bookingSession here to keep the button disabled
+          // until the next Firestore update is detected by the useEffect
+
+          // Force UI refresh
+          setUiRefreshKey(prev => prev + 1);
+        } catch (error) {
+          console.error("Error updating document:", error);
+          console.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+          setBookingSession(null); // Reset booking session state on error
+          return;
+        }
+      } catch (error) {
+        console.error("Error handling appointment scheduling:", error);
+        console.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+        setShowCalendlyModal(false);
+        setBookingSession(null); // Reset booking session state on error
+      }
     } catch (error) {
-      console.error('Error deleting user photo:', error);
-      toast.error('Erreur lors de la suppression de la photo');
-    } finally {
-      setIsUpdatingProfile(false);
+      console.error("Error handling appointment scheduling:", error);
+      console.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+      setShowCalendlyModal(false);
+      setBookingSession(null); // Reset booking session state on error
     }
   };
 
-  const toggleCheckbox = (key: string) => {
-    setCheckedItems(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+  // Check if a session should be marked as completed based on its date
+  const isSessionCompleted = (sessionId: string): boolean => {
+    // If it's in completedSessions from database/state, it's completed
+    if (completedSessions.has(sessionId)) {
+      return true;
+    }
 
-    // If this is a partner step, check if all partner steps are completed
-    if (key.startsWith('partner_') && !checkedItems[key]) {
-      const allPartnerStepsCompleted = ['evaluation', 'amoureux', 'eros']
-        .every(step => checkedItems[`partner_${step}`] || step === key.replace('partner_', ''));
-      
-      if (allPartnerStepsCompleted) {
-        toast.success('Votre partenaire a complété toutes les étapes !');
+    // If the session has a scheduled date, check if that time + 1 hour has passed
+    const sessionDate = getSessionDate(sessionId);
+    if (sessionDate) {
+      try {
+        const sessionDateTime = new Date(sessionDate);
+
+        // Add 1 hour to the session date
+        const sessionEndTime = new Date(sessionDateTime);
+        sessionEndTime.setHours(sessionEndTime.getHours() + 1);
+
+        // Compare with current time
+        const currentTime = new Date();
+
+        // If the session end time has passed, mark as completed
+        if (sessionEndTime <= currentTime) {
+          // Don't update state here to avoid re-renders during render
+          return true;
+        }
+      } catch (error) {
+        console.error('Error checking session completion status:', error);
       }
     }
-    
-    // If this is a user step, check if all user steps are completed
-    if (!key.startsWith('partner_') && !checkedItems[key]) {
-      const allUserStepsCompleted = ['evaluation', 'amoureux', 'eros']
-        .every(step => checkedItems[step] || step === key);
-      
-      if (allUserStepsCompleted) {
-        toast.success('Vous avez complété toutes vos étapes !');
-      }
-    }
+
+    return false;
   };
+
+  // Render journey timeline by phase
+  const renderJourneyPhase = (phase: 'initial' | 'individual' | 'final', partner?: 'partner1' | 'partner2') => {
+    const events = coupleTherapyJourney.filter(e => e.phase === phase && (!partner || e.partner === partner));
+
+    return (
+      <div className="space-y-3">
+        {events.map((event) => {
+          const isComplete = isSessionCompleted(event.id);
+          const isAvailable = isSessionAvailable(event);
+
+          // Format date if exists
+          let dateStr = '';
+          if (getSessionDate(event.id)) {
+            try {
+              const sessionDateStr = getSessionDate(event.id) || '';
+              const sessionDate = new Date(sessionDateStr);
+              if (!isNaN(sessionDate.getTime())) {
+                // Capitalize first letter of the day name
+                dateStr = format(sessionDate, 'EEEE d MMMM yyyy à HH:mm', { locale: fr });
+                dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+              } else {
+                console.error(`Invalid date for event ${event.id}:`, getSessionDate(event.id));
+                dateStr = 'Date invalide';
+              }
+            } catch (error) {
+              console.error(`Error formatting date for event ${event.id}:`, error);
+              dateStr = 'Erreur de date';
+            }
+          }
+
+          // Return null for non-session events, but first check if they have resources
+          // If they have resources, we'll render those separately
+          if (event.type !== 'session') {
+            if (event.resources && event.resources.length > 0) {
+              return (
+                <div key={event.id} className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-primary-cream/70">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div className="text-primary-cream/70">
+                      <div className="font-medium">{event.title}</div>
+                    </div>
+                  </div>
+                  <ResourceCheckboxes resources={event.resources} />
+                </div>
+              );
+            }
+            return null;
+          }
+
+          // Determine if this event should have a booking button (all events except partner2 sessions)
+          const showBookingButton = (phase === 'initial' || phase === 'final' ||
+            phase === 'individual');
+
+          return (
+            <div key={event.id} className="flex flex-col gap-2">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${isComplete
+                    ? 'text-emerald-500'
+                    : isAvailable
+                      ? 'text-primary-cream'
+                      : 'text-primary-cream/30'
+                    }`}
+                >
+                  {isComplete ? (
+                    <Check className="w-5 h-5" />
+                  ) : (
+                    <Square className="w-5 h-5" />
+                  )}
+                </div>
+                <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
+                  <div className="font-medium">
+                    {event.title}
+                    {!isComplete && isAvailable && !getSessionDate(event.id) && (
+                      <span className="block text-xs text-[rgb(247_237_226_)] mt-1">
+                        Prendre rendez-vous {event.title.split(' - ')[0]}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Render the date with appropriate styling */}
+                  {getSessionDate(event.id) && (
+                    <div
+                      className={`text-sm mt-1 flex items-center gap-1.5 px-2 py-1 rounded-md w-fit
+                        ${invalidDates[event.id]
+                          ? 'text-red-400 font-medium bg-red-900/30'
+                          : 'text-green-400 font-medium bg-green-900/30'
+                        }`}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span>{dateStr}</span>
+                      {invalidDates[event.id] && (
+                        <span className="text-xs ml-1">
+                          (moins de 4 semaines)
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {showBookingButton && !isComplete && (
+                // Show date under "Séance de Couple Initiale" when booked
+                event.id === 'initial' && getSessionDate(event.id) ? (
+                  <div className="ml-8">
+                    <div
+                      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs ${invalidDates[event.id] ? 'bg-yellow-500/20 text-yellow-200' : 'bg-blue-500/20 text-blue-200'
+                        }`}
+                    >
+                      <Calendar className="w-3 h-3" />
+                      <span>{new Date(getSessionDate(event.id) as string).toLocaleDateString('fr-FR')}</span>
+                    </div>
+                  </div>
+                ) : (
+                  // For "Séance Individuelle 1" or other sessions show the booking button
+                  !getSessionDate(event.id) && isAvailable && (
+                    <div className="ml-8">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs h-8 border-[rgb(247_237_226_)]/30 text-[rgb(247_237_226_)] hover:bg-[rgb(247_237_226_)]/10 hover:text-[rgb(247_237_226_)]"
+                        onClick={() => handleSessionClick(event)}
+                        disabled={bookingSession === event.id}
+                      >
+                        {bookingSession === event.id ? (
+                          <>
+                            <span className="w-3 h-3 mr-2 rounded-full border-2 border-t-transparent border-[rgb(247_237_226_)] animate-spin" />
+                            Chargement...
+                          </>
+                        ) : (
+                          <>
+                            <Calendar className="w-3 h-3 mr-2" />
+                            Réserver cette séance
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )
+                )
+              )}
+              {event.resources && event.resources.length > 0 && (
+                <ResourceCheckboxes resources={event.resources} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // Render user profile section
+  const renderUserProfileSection = () => (
+    <UserProfileSection
+      user={user}
+      partner={null}
+      userProfile={userProfile}
+      partnerProfile={partnerProfile}
+      onProfileUpdate={handleProfileUpdate}
+    />
+  );
 
   if (loading) {
     return (
       <div className="min-h-screen bg-primary-forest flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-6 h-6 animate-spin text-primary-cream/80" />
+          <Clock className="w-6 h-6 animate-spin text-primary-cream/80" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-primary-forest text-primary-cream">
+    <div key={uiRefreshKey} className="min-h-screen bg-primary-forest text-primary-cream">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-primary-coral text-center">Tableau de bord</h1>
-          <div>
+          <div className="flex gap-4">
             <ZenClickButton />
+            <Button
+              variant="outline"
+              className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
+              onClick={handleSignOut}
+            >
+              <LogOut className="w-5 h-5 mr-2" />
+              Déconnexion
+            </Button>
           </div>
         </div>
 
-        {/* Couple Profile Boxes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* Profile Box 1 */}
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                {userProfile?.photo && !isUpdatingProfile && (
-                  <button
-                    type="button"
-                    onClick={handleDeletePhoto}
-                    className="absolute -top-2 -right-2 z-10 bg-black/70 rounded-full p-1 hover:bg-black/90 transition-colors"
-                    aria-label="Delete photo"
-                  >
-                    <X className="w-3.5 h-3.5 text-white" />
-                  </button>
-                )}
-                <div 
-                  className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20 cursor-pointer"
-                  onClick={handlePhotoClick}
-                >
-                  {isUpdatingProfile ? (
-                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                      <Loader2 className="w-6 h-6 animate-spin" />
-                    </div>
-                  ) : userProfile?.photo ? (
-                    <img 
-                      src={userProfile.photo} 
-                      alt="Profile" 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-cream/60 text-center">
-                      <User className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-medium text-primary-cream">{userProfile?.prenom || 'Partenaire 1'}</h3>
-                <p className="text-sm text-primary-cream/60">{user?.email}</p>
-              </div>
-              <Dialog open={isEditingProfile} onOpenChange={setIsEditingProfile}>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
-                    disabled={isUpdatingProfile}
-                  >
-                    {isUpdatingProfile ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        MISE À JOUR...
-                      </>
-                    ) : 'MODIFIER'}</Button>
-                </DialogTrigger>
-                <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
-                  <DialogHeader>
-                    <DialogTitle className="text-primary-coral">Modifier votre profil</DialogTitle>
-                    <DialogDescription className="text-primary-cream/60">
-                      Mettez à jour vos informations personnelles
-                    </DialogDescription>
-                  </DialogHeader>
-                  <UserProfileForm 
-                    user={userProfile} 
-                    onSubmit={handleUpdateProfile}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
+        {renderUserProfileSection()}
 
-          {/* Profile Box 2 */}
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary-cream/20">
-                  {partnerProfile?.photo ? (
-                    <img 
-                      src={partnerProfile.photo} 
-                      alt="Partner Profile" 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-primary-cream/60">
-                      <User className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex-1">
-                {loading ? (
-                  <div className="animate-pulse">
-                    <div className="h-5 w-32 bg-primary-cream/10 rounded mb-2"></div>
-                    <div className="h-4 w-24 bg-primary-cream/10 rounded"></div>
-                  </div>
-                ) : userProfile?.partnerId ? (
-                  <>
-                    <h3 className="text-lg font-medium text-primary-cream">
-                      {partnerProfile?.prenom ? `${partnerProfile.prenom} ${partnerProfile.nom || ''}` : 'Partenaire connecté'}
-                    </h3>
-                    <p className="text-sm text-primary-cream/60">
-                      {partnerProfile?.email || userProfile.partnerEmail || 'Email non disponible'}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-lg font-medium text-primary-cream">Votre Partenaire</h3>
-                    <p className="text-sm text-primary-cream/60">Ajoutez votre partenaire ici et commencez votre parcours</p>
-                  </>
-                )}
-              </div>
-              {!userProfile?.partnerId && (
-                <Button 
-                  variant="outline" 
-                  className="border-primary-cream/20 text-primary-cream hover:bg-primary-cream/10 hover:text-primary-coral"
-                  onClick={() => setIsInviting(true)}
-                >
-                  INVITER
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <Dialog open={isInviting} onOpenChange={setIsInviting}>
-          <DialogContent className="bg-primary-forest border-primary-cream/20 text-primary-cream">
-            <DialogHeader>
-              <DialogTitle className="text-primary-coral">Inviter votre partenaire</DialogTitle>
-              <DialogDescription className="text-primary-cream/60">
-                Envoyez une invitation à votre partenaire pour commencer votre parcours ensemble
-              </DialogDescription>
-            </DialogHeader>
-            <InvitePartnerForm onClose={() => setIsInviting(false)} />
-          </DialogContent>
-        </Dialog>
-
-        {/* Checklist Section */}
-        <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-primary-coral mb-6 text-center">Votre parcours</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left Column - Your Steps */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-primary-cream mb-3">Vos étapes</h3>
-              <Link href="/evaluation-handicap-relationnel" className="block">
-                <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                  <div onClick={(e) => { e.preventDefault(); toggleCheckbox('evaluation'); }} className="cursor-pointer">
-                    {checkedItems.evaluation ? (
-                      <CheckSquare className="w-5 h-5 text-primary-coral" />
-                    ) : (
-                      <Square className="w-5 h-5 text-primary-cream/60" />
-                    )}
-                  </div>
-                  <span className={`${checkedItems.evaluation ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                    Évaluation du handicap relationnel
-                  </span>
-                </div>
-              </Link>
-
-              <Link href="/quel-amoureuse-ou-quel-amoureux-es-tu" className="block">
-                <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                  <div onClick={(e) => { e.preventDefault(); toggleCheckbox('amoureux'); }} className="cursor-pointer">
-                    {checkedItems.amoureux ? (
-                      <CheckSquare className="w-5 h-5 text-primary-coral" />
-                    ) : (
-                      <Square className="w-5 h-5 text-primary-cream/60" />
-                    )}
-                  </div>
-                  <span className={`${checkedItems.amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                    Quel(le) amoureux(se) êtes-vous ?
-                  </span>
-                </div>
-              </Link>
-
-              <Link href="/eros-test" className="block">
-                <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                  <div onClick={(e) => { e.preventDefault(); toggleCheckbox('eros'); }} className="cursor-pointer">
-                    {checkedItems.eros ? (
-                      <CheckSquare className="w-5 h-5 text-primary-coral" />
-                    ) : (
-                      <Square className="w-5 h-5 text-primary-cream/60" />
-                    )}
-                  </div>
-                  <span className={`${checkedItems.eros ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                    Test Eros
-                  </span>
-                </div>
-              </Link>
-            </div>
-
-            {/* Right Column - Partner Steps */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-primary-cream mb-3">
-                {userProfile?.partnerId ? 'Les étapes de votre partenaire' : (
-                  <span className="text-primary-cream/60">En attente de votre partenaire</span>
-                )}
-              </h3>
-              {userProfile?.partnerId ? (
-                <>
-                  <Link href="/evaluation-handicap-relationnel" className="block">
-                    <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                      <div onClick={(e) => { e.preventDefault(); toggleCheckbox('partner_evaluation'); }} className="cursor-pointer">
-                        {checkedItems.partner_evaluation ? (
-                          <CheckSquare className="w-5 h-5 text-primary-coral" />
-                        ) : (
-                          <Square className="w-5 h-5 text-primary-cream/60" />
-                        )}
-                      </div>
-                      <span className={`${checkedItems.partner_evaluation ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                        Évaluation du handicap relationnel
-                      </span>
-                    </div>
-                  </Link>
-
-                  <Link href="/quel-amoureuse-ou-quel-amoureux-es-tu" className="block">
-                    <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                      <div onClick={(e) => { e.preventDefault(); toggleCheckbox('partner_amoureux'); }} className="cursor-pointer">
-                        {checkedItems.partner_amoureux ? (
-                          <CheckSquare className="w-5 h-5 text-primary-coral" />
-                        ) : (
-                          <Square className="w-5 h-5 text-primary-cream/60" />
-                        )}
-                      </div>
-                      <span className={`${checkedItems.partner_amoureux ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                        Quel(le) amoureux(se) êtes-vous ?
-                      </span>
-                    </div>
-                  </Link>
-
-                  <Link href="/eros-test" className="block">
-                    <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-                      <div onClick={(e) => { e.preventDefault(); toggleCheckbox('partner_eros'); }} className="cursor-pointer">
-                        {checkedItems.partner_eros ? (
-                          <CheckSquare className="w-5 h-5 text-primary-coral" />
-                        ) : (
-                          <Square className="w-5 h-5 text-primary-cream/60" />
-                        )}
-                      </div>
-                      <span className={`${checkedItems.partner_eros ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                        Test Eros
-                      </span>
-                    </div>
-                  </Link>
-                </>
-              ) : (
-                <div className="text-center py-8 text-primary-cream/40 italic">
-                  Invitez votre partenaire pour commencer votre parcours ensemble
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Common Steps - Below both columns */}
-          <div className="mt-8 pt-6 border-t border-primary-cream/10">
-            <h3 className="text-lg font-medium text-primary-cream mb-3">Étapes communes</h3>
-            <div className="flex items-center gap-2 hover:bg-primary-cream/5 p-2 rounded-md transition-colors">
-              <div onClick={() => toggleCheckbox('appointment')} className="cursor-pointer">
-                {checkedItems.appointment ? (
-                  <CheckSquare className="w-5 h-5 text-primary-coral" />
-                ) : (
-                  <Square className="w-5 h-5 text-primary-cream/60" />
-                )}
-              </div>
-              <span className={`${checkedItems.appointment ? 'text-primary-cream/60 line-through' : 'text-primary-cream'}`}>
-                Prendre rendez-vous pour votre premier entretien
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Offers Panel */}
-        {user && (
-          <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6 mb-6">
-            <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">
-              {offersCount === 1 ? 'Votre Offre' : 'Vos Offres'}
-            </h2>
-            <OffersPanel 
-              userId={user.uid} 
-              partnerId={userProfile?.partnerId} 
-              onOffersLoaded={(offers) => setOffersCount(offers.length)}
-            />
-          </div>
+        {/* Calendly Modal */}
+        {selectedEvent && (
+          <CalendlyModal
+            isOpen={showCalendlyModal}
+            onClose={(isScheduled) => {
+              setShowCalendlyModal(false);
+              setSelectedEvent(null);
+              setActivePartner('both');
+              
+              // Only reset bookingSession if the modal is closed without scheduling
+              if (!isScheduled) {
+                setBookingSession(null);
+              }
+            }}
+            sessionType={selectedEvent.sessionType || 'initial'}
+            onAppointmentScheduled={handleAppointmentScheduled}
+            userEmail={activePartner === 'partner2' ? partnerProfile?.email : userProfile?.email}
+            guestEmail={(selectedEvent.phase === 'initial' || selectedEvent.phase === 'final') ? 
+              (activePartner === 'partner2' ? userProfile?.email : partnerProfile?.email) : undefined}
+            minDate={selectedEvent ? getSessionDateConstraints(selectedEvent).minDate : undefined}
+          />
         )}
 
-        {/* Resources Section */}
-        <div className="rounded-lg border border-primary-cream/20 bg-primary-cream/10 p-6">
-          <h2 className="text-xl font-semibold text-primary-coral mb-4 text-center">Ressources</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Link href="/resources/communication" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
-              <h3 className="text-lg font-medium text-primary-coral mb-1">Communication</h3>
-              <p className="text-sm text-primary-cream/60">Techniques pour améliorer votre communication de couple</p>
-            </Link>
-            <Link href="/resources/exercises" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
-              <h3 className="text-lg font-medium text-primary-coral mb-1">Exercices</h3>
-              <p className="text-sm text-primary-cream/60">Exercices pratiques à faire ensemble</p>
-            </Link>
-            <Link href="/resources/articles" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
-              <h3 className="text-lg font-medium text-primary-coral mb-1">Articles</h3>
-              <p className="text-sm text-primary-cream/60">Articles sur la thérapie de couple</p>
-            </Link>
-            <Link href="/resources/faq" className="block p-4 rounded-md bg-primary-cream/5 hover:bg-primary-cream/10 transition-colors border border-primary-cream/10">
-              <h3 className="text-lg font-medium text-primary-coral mb-1">FAQ</h3>
-              <p className="text-sm text-primary-cream/60">Questions fréquemment posées</p>
-            </Link>
+        {/* Therapy Journey Section */}
+        <div className="bg-[rgb(247_237_226_/0.1)] rounded-lg shadow-lg p-6 mt-6">
+          <h2 className="text-2xl font-semibold mb-1 text-primary-coral">Votre parcours thérapeutique</h2>
+          <p className="text-[rgb(247_237_226_)]/70 mb-6">Tous les rendez-vous, ici, les liens vers les appels vidéo s'afficheront ici 30min avant le rendez-vous.</p>
+
+          {/* Display therapy journey phases */}
+          <div className="mt-8 space-y-8">
+            {/* Initial Phase */}
+            <div>
+              <h3 className="text-xl font-semibold text-primary-coral mb-4">Phase Initiale</h3>
+              {renderJourneyPhase('initial')}
+            </div>
+
+            {/* Individual Phases */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Partner 1 Journey */}
+              <div>
+                <h3 className="text-xl font-semibold text-primary-coral mb-4">
+                  Parcours Individuel de {userProfile?.firstName ? `${userProfile.firstName}` : '- Partenaire 1'} 
+                </h3>
+                {renderJourneyPhase('individual', 'partner1')}
+              </div>
+
+              {/* Partner 2 Journey */}
+              <div>
+                <h3 className="text-xl font-semibold text-primary-coral mb-4">
+                  Parcours Individuel de {partnerProfile?.firstName ? `${partnerProfile.firstName}` : '- Partenaire 2'} 
+                </h3>
+                {renderJourneyPhase('individual', 'partner2')}
+              </div>
+            </div>
+
+            {/* Final Phase */}
+            <div>
+              <h3 className="text-xl font-semibold text-primary-coral mb-4">Phase Finale</h3>
+              {renderJourneyPhase('final')}
+            </div>
           </div>
         </div>
       </div>
