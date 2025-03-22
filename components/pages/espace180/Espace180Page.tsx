@@ -7,99 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Masonry from 'react-masonry-css'
 import { useSearchParams, useParams } from 'next/navigation'
-
-interface Capsule {
-  id: number
-  title: string
-  description: string
-  date: Date
-  mediaUrl: string
-  posterUrl: string
-  squarePosterUrl?: string
-  gradient?: string
-  tags: string[]
-  mediaType: 'audio' | 'video'
-}
-
-const capsules: Capsule[] = [
-  {
-    id: 1,
-    title: 'Meditation Erozen 001',
-    description: 'Une capsule conçue pour libérer votre créativité et explorer votre potentiel d\'expression. Laissez-vous guider dans cet espace où l\'imagination se déploie sans contraintes.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
-    posterUrl: '/images/posters/CREATIVITE_CAPSULE-LIBRE-poster.jpg',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/meditationerozen2.png',
-    tags: ['Créativité', 'Expression', 'Bien-être', 'Minute'],
-    mediaType: 'video'
-  },
-  {
-    id: 2,
-    title: 'Zen Clic 1',
-    description: 'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
-    posterUrl: '/images/posters/ZEN_CLIC_1-poster.jpg',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/ZEN_CLIC_1-poster.jpg',
-    tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
-    mediaType: 'video'
-  },
-  {
-    id: 3,
-    title: 'Amour Passion',
-    description: 'Explorez les dimensions de l\'amour passionnel et ses manifestations dans nos relations. Une réflexion sur l\'intensité et la profondeur des liens amoureux.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MIROIR/Amour-passion.m4a',
-    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir5.png',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir5.png',
-    tags: ['Amour', 'Passion', 'Relation', 'Couple', 'Miroir'],
-    mediaType: 'audio'
-  },
-  {
-    id: 4,
-    title: 'Capsule Connaître - Exploration',
-    description: 'Une invitation à explorer la connaissance de soi et des autres. Cette capsule audio vous guide dans une démarche introspective pour mieux vous comprendre et vous connecter à votre essence.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MIROIR/Capsule-connaitre---exploration-cac_Wind-Remover.mp3',
-    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir6.png',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir6.png',
-    tags: ['Connaissance de soi', 'Exploration', 'Introspection', 'Miroir'],
-    mediaType: 'audio'
-  },
-  {
-    id: 5,
-    title: 'Et si la relation amoureuse n\'est plus faite pour durer',
-    description: 'Une réflexion sur l\'évolution des relations amoureuses dans notre société contemporaine. Questionnez vos attentes et vos perceptions sur la durabilité des liens affectifs.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MIROIR/Et-si-la-relation-amoureuse-n_est-plus-faite-pour-durer.m4a',
-    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir7.png',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir7.png',
-    tags: ['Relation', 'Couple', 'Évolution', 'Société', 'Miroir'],
-    mediaType: 'audio'
-  },
-  {
-    id: 6,
-    title: 'La Pensée Orientée',
-    description: 'Découvrez comment aligner vos pensées vers des objectifs positifs et constructifs. Cette méditation guidée vous aide à structurer votre réflexion pour plus de clarté et d\'efficacité.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MIROIR/La-pensee-orientee_Wind-Remover.mp3',
-    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir8.png',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir8.png',
-    tags: ['Pensée', 'Orientation', 'Conscience', 'Liberté', 'Transformation', 'Tantra', 'Haut Potentiel', 'Hédonisme', 'Miroir'],
-    mediaType: 'audio'
-  },
-  {
-    id: 7,
-    title: 'Les Uns et Les Autres',
-    description: 'Une exploration des dynamiques relationnelles et des interactions entre individus. Cette capsule vous invite à porter un regard nouveau sur la façon dont nous nous connectons les uns aux autres.',
-    date: new Date('2025-03-22'),
-    mediaUrl: '/CAPSULES_MIROIR/Les-uns-et-les-autres.m4a',
-    posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir9.png',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir9.png',
-    tags: ['Relations', 'Interactions sociales', 'Développement personnel', 'Miroir'],
-    mediaType: 'audio'
-  },
-]
+import { Capsule, capsules } from './data/capsules'
 
 export default function Espace180Page() {
   const [isClient, setIsClient] = useState(false)
@@ -161,7 +69,7 @@ export default function Espace180Page() {
             setIsPlaying(true);
           }
         });
-        
+
         navigator.mediaSession.setActionHandler('pause', () => {
           const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
           if (media && !media.paused) {
@@ -169,7 +77,7 @@ export default function Espace180Page() {
             setIsPlaying(false);
           }
         });
-        
+
         // Optional seek controls
         navigator.mediaSession.setActionHandler('seekforward', () => {
           const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
@@ -177,7 +85,7 @@ export default function Espace180Page() {
             media.currentTime = Math.min(media.currentTime + 10, media.duration);
           }
         });
-        
+
         navigator.mediaSession.setActionHandler('seekbackward', () => {
           const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
           if (media) {
@@ -185,10 +93,10 @@ export default function Espace180Page() {
           }
         });
       };
-      
+
       if (activeMedia !== null) {
         updateMediaSession();
-        
+
         // Update play state
         const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
         if (media) {
@@ -202,29 +110,29 @@ export default function Espace180Page() {
       }
     }
   }, [isClient, activeMedia]);
-  
+
   // Handle media events
   useEffect(() => {
     if (!isClient) return;
-    
+
     // Store refs to current values to use in cleanup function
     const currentAudioRefs = audioRefs.current;
     const currentVideoRefs = videoRefs.current;
-    
+
     const handlePlay = (event: Event) => {
       const element = event.target as HTMLMediaElement;
-      
+
       // Find which capsule is playing
       const capsuleId = Object.entries(currentAudioRefs).find(
         ([_, ref]) => ref === element
       )?.[0] || Object.entries(currentVideoRefs).find(
         ([_, ref]) => ref === element
       )?.[0];
-      
+
       if (capsuleId) {
         setActiveMedia(parseInt(capsuleId));
         setIsPlaying(true);
-        
+
         // Update media session
         if ('mediaSession' in navigator && navigator.mediaSession) {
           // @ts-ignore - playbackState might not be typescripted correctly
@@ -232,17 +140,17 @@ export default function Espace180Page() {
         }
       }
     };
-    
+
     const handlePause = () => {
       setIsPlaying(false);
-      
+
       // Update media session
       if ('mediaSession' in navigator && navigator.mediaSession) {
         // @ts-ignore - playbackState might not be typescripted correctly
         navigator.mediaSession.playbackState = 'paused';
       }
     };
-    
+
     // Add event listeners to all media elements
     Object.values(currentAudioRefs).forEach(audio => {
       if (audio) {
@@ -250,14 +158,14 @@ export default function Espace180Page() {
         audio.addEventListener('pause', handlePause);
       }
     });
-    
+
     Object.values(currentVideoRefs).forEach(video => {
       if (video) {
         video.addEventListener('play', handlePlay);
         video.addEventListener('pause', handlePause);
       }
     });
-    
+
     return () => {
       // Remove event listeners using the same refs from closure
       Object.values(currentAudioRefs).forEach(audio => {
@@ -266,7 +174,7 @@ export default function Espace180Page() {
           audio.removeEventListener('pause', handlePause);
         }
       });
-      
+
       Object.values(currentVideoRefs).forEach(video => {
         if (video) {
           video.removeEventListener('play', handlePlay);
@@ -275,7 +183,7 @@ export default function Espace180Page() {
       });
     };
   }, [isClient]);
-  
+
   // Load liked capsules from localStorage
   useEffect(() => {
     setIsClient(true)
@@ -348,7 +256,7 @@ export default function Espace180Page() {
     })
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
+    setSelectedTags(prev =>
       prev.includes(tag)
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
@@ -360,9 +268,9 @@ export default function Espace180Page() {
     const isLiked = likedCapsules[capsule.id] || 0 > 0;
     const hasFavoriteTag = selectedTags.includes('Mes Préférées');
     const otherTags = selectedTags.filter(tag => tag !== 'Mes Préférées');
-    
+
     // Check if capsule matches other selected tags
-    const matchesOtherTags = otherTags.length === 0 || 
+    const matchesOtherTags = otherTags.length === 0 ||
       otherTags.some(tag => capsule.tags.includes(tag));
 
     // If favorites is selected, show liked capsules that match other tags (if any)
@@ -372,7 +280,7 @@ export default function Espace180Page() {
       }
       return isLiked;
     }
-    
+
     // If favorites is not selected, only show capsules matching other tags
     return matchesOtherTags;
   });
@@ -399,146 +307,147 @@ export default function Espace180Page() {
 
   const renderCapsule = (capsule: Capsule, isLarge: boolean) => {
     return (
-    <div key={capsule.id} className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}>
-      {/* Media Container */}
-      <div className="relative w-full rounded-[32px] overflow-hidden">
-        {/* Aspect ratio container */}
-        <div className="relative pb-[56.25%]">
-          {isClient && (
-            <>
-              {capsule.mediaType === 'video' ? (
-                <video
-                  ref={(el) => setMediaRef(el, capsule.id)}
-                  className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
-                  playsInline
-                  webkit-playsinline="true"
-                  src={capsule.mediaUrl}
-                  poster={capsule.posterUrl}
-                />
-              ) : (
-                <>
-                  <audio
+      <div key={capsule.id} className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}>
+        {/* Media Container */}
+        <div className="relative w-full rounded-[32px] overflow-hidden">
+          {/* Aspect ratio container */}
+          <div className="relative pb-[56.25%]">
+            {isClient && (
+              <>
+                {capsule.mediaType === 'video' ? (
+                  <video
                     ref={(el) => setMediaRef(el, capsule.id)}
+                    className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+                    playsInline
+                    webkit-playsinline="true"
                     src={capsule.mediaUrl}
-                    className="hidden"
+                    poster={capsule.posterUrl}
                   />
-                  <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl overflow-hidden">
-                    <img 
-                      src={capsule.posterUrl} 
-                      alt={capsule.title}
-                      className="absolute inset-0 w-full h-full object-cover"
+                ) : (
+                  <>
+                    <audio
+                      ref={(el) => setMediaRef(el, capsule.id)}
+                      src={capsule.mediaUrl}
+                      className="hidden"
                     />
-                  </div>
-                </>
-              )}
-              {/* Frost bubbles */}
-              <div className="absolute top-4 right-4 flex gap-4 z-20">
-                {/* Capsule title bubble */}
-                <Link href={`/espace180/capsule/${capsule.id}`} className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all">
-                  <span className="text-white font-medium">#{capsule.id}</span>
-                </Link>
-              </div>
-              {/* Play button - Left side */}
-              <div className="absolute left-4 bottom-4 z-20">
-                {/* Play/Pause button */}
-                <button
-                  onClick={() => togglePlay(capsule.id)}
-                  className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-                  aria-label={activeMedia === capsule.id ? 'Pause media' : 'Play media'}
-                >
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    {activeMedia === capsule.id ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                        <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                        <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
-              </div>
-              {/* Like button - Right side */}
-              <div className="absolute right-4 bottom-4 z-20">
-                <div className="w-14 h-14 rounded-full relative">
+                    <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl overflow-hidden">
+                      <img
+                        src={capsule.posterUrl}
+                        alt={capsule.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    </div>
+                  </>
+                )}
+                {/* Frost bubbles */}
+                <div className="absolute top-4 right-4 flex gap-4 z-20">
+                  {/* Capsule title bubble */}
+                  <Link href={`/espace180/capsule/${capsule.id}`} className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all">
+                    <span className="text-white font-medium">#{capsule.id}</span>
+                  </Link>
+                </div>
+                {/* Play button - Left side */}
+                <div className="absolute left-4 bottom-4 z-20">
+                  {/* Play/Pause button */}
                   <button
-                    onClick={() => {
-                      toggleLike(capsule.id)
-                    }}
-                    className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 hover:text-white flex items-center gap-2"
-                    aria-label="Like this capsule"
+                    onClick={() => togglePlay(capsule.id)}
+                    className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
+                    aria-label={activeMedia === capsule.id ? 'Pause media' : 'Play media'}
                   >
                     <div className="w-6 h-6 flex items-center justify-center">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="currentColor" 
-                        className={`w-6 h-6 transition-all ${likedCapsules[capsule.id] > 0 ? 'text-red-500' : 'text-white group-hover:text-white/80'}`}
-                      >
-                        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                      </svg>
+                      {activeMedia === capsule.id ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                          <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                          <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                        </svg>
+                      )}
                     </div>
                   </button>
                 </div>
-              </div>
-            </>
-          )}
+                {/* Like button - Right side */}
+                <div className="absolute right-4 bottom-4 z-20">
+                  <div className="w-14 h-14 rounded-full relative">
+                    <button
+                      onClick={() => {
+                        toggleLike(capsule.id)
+                      }}
+                      className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 hover:text-white flex items-center gap-2"
+                      aria-label="Like this capsule"
+                    >
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className={`w-6 h-6 transition-all ${likedCapsules[capsule.id] > 0 ? 'text-red-500' : 'text-white group-hover:text-white/80'}`}
+                        >
+                          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-      
-      {/* Capsule Info */}
-      <div className="flex-grow space-y-4 mt-6">
-        <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
-        <p className="text-white/80">{capsule.description}</p>
-        
-        {/* Date - Moved between description and tags */}
-        <p className="text-sm text-white/60 text-right">
-          {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
-        </p>
-        
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-4 justify-end" style={{ position: 'relative', zIndex: 30 }}>
-          {capsule.tags.map((tag, index) => {
-            // Create a function to handle tag click that's unique to this instance
-            const handleThisTagClick = (e: React.MouseEvent) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log(`Tag clicked: ${tag}`);
-              
-              if (singleCapsule) {
-                // Set this tag and navigate back to main view
-                window.location.href = '/espace180';
-              } else {
-                // Toggle this tag in the filter
-                toggleTag(tag);
-              }
-              return false;
-            };
-            
-            return (
-              <span
-                key={index}
-                onClick={handleThisTagClick}
-                className="px-3 py-1 text-xs rounded-full transition-all cursor-pointer inline-block relative z-30 hover:bg-white/30"
-                style={{ 
-                  backgroundColor: selectedTags.includes(tag) ? 'white' : 'rgba(255, 255, 255, 0.1)',
-                  color: selectedTags.includes(tag) ? '#1a202c' : 'white',
-                  fontWeight: selectedTags.includes(tag) ? 500 : 400,
-                  pointerEvents: 'auto'
-                }}
-              >
-                {tag}
-              </span>
-            );
-          })}
+
+        {/* Capsule Info */}
+        <div className="flex-grow space-y-4 mt-6">
+          <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
+          {capsule.duration && <div className="text-sm text-white/60">{capsule.duration}</div>}
+          <p className="text-white/80">{capsule.description}</p>
+
+          {/* Date - Moved between description and tags */}
+          <p className="text-sm text-white/60 text-right">
+            {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mt-4 justify-end" style={{ position: 'relative', zIndex: 30 }}>
+            {capsule.tags.map((tag, index) => {
+              // Create a function to handle tag click that's unique to this instance
+              const handleThisTagClick = (e: React.MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`Tag clicked: ${tag}`);
+
+                if (singleCapsule) {
+                  // Set this tag and navigate back to main view
+                  window.location.href = '/espace180';
+                } else {
+                  // Toggle this tag in the filter
+                  toggleTag(tag);
+                }
+                return false;
+              };
+
+              return (
+                <span
+                  key={index}
+                  onClick={handleThisTagClick}
+                  className="px-3 py-1 text-xs rounded-full transition-all cursor-pointer inline-block relative z-30 hover:bg-white/30"
+                  style={{
+                    backgroundColor: selectedTags.includes(tag) ? 'white' : 'rgba(255, 255, 255, 0.1)',
+                    color: selectedTags.includes(tag) ? '#1a202c' : 'white',
+                    fontWeight: selectedTags.includes(tag) ? 500 : 400,
+                    pointerEvents: 'auto'
+                  }}
+                >
+                  {tag}
+                </span>
+              );
+            })}
+          </div>
+
         </div>
 
       </div>
-
-    </div>
-  );
-};
+    );
+  };
 
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
@@ -550,7 +459,7 @@ export default function Espace180Page() {
               Espace 180
             </h1>
             <p className="text-xl text-primary-cream/80">
-              Découvrez notre collection de méditations guidées et d'exercices pratiques 
+              Découvrez notre collection de méditations guidées et d'exercices pratiques
               pour vous accompagner dans votre cheminement personnel.
             </p>
           </div>
@@ -573,7 +482,7 @@ export default function Espace180Page() {
             <div className="container mx-auto px-4">
               {/* Mobile Filter Accordion Header */}
               <div className="md:hidden mb-4">
-                <button 
+                <button
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
                   className="w-full flex items-center justify-between bg-white/10 text-white px-4 py-3 rounded-lg"
                 >
@@ -585,22 +494,21 @@ export default function Espace180Page() {
                       </span>
                     )}
                   </div>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="0 0 24 24" 
-                    fill="currentColor" 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
                     className={`w-5 h-5 transition-transform duration-300 ${isFilterOpen ? 'rotate-90' : ''}`}
                   >
                     <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
                   </svg>
                 </button>
               </div>
-              
+
               {/* Filter Content - Hidden on mobile unless expanded */}
-              <div 
-                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${
-                  isFilterOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
-                }`}
+              <div
+                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${isFilterOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
+                  }`}
               >
                 <div className="flex flex-wrap gap-3 justify-center">
                   {/* Favorites Filter */}
@@ -608,10 +516,10 @@ export default function Espace180Page() {
                     onClick={() => toggleTag('Mes Préférées')}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${selectedTags.includes('Mes Préférées') ? 'bg-red-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
                   >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 24 24" 
-                      fill="currentColor" 
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
                       className="w-4 h-4"
                     >
                       <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
@@ -676,20 +584,20 @@ export default function Espace180Page() {
           )}
           {/* CSS for Masonry Grid */}
           <style jsx global>{`
-            .my-masonry-grid {
-              display: flex;
-              width: auto;
-              gap: 2rem;
-            }
-            .my-masonry-grid_column {
-              background-clip: padding-box;
-            }
-            .my-masonry-grid_column > div {
-              margin-bottom: 2rem;
-            }
-          `}</style>
+              .my-masonry-grid {
+                display: flex;
+                width: auto;
+                gap: 2rem;
+              }
+              .my-masonry-grid_column {
+                background-clip: padding-box;
+              }
+              .my-masonry-grid_column > div {
+                margin-bottom: 2rem;
+              }
+            `}</style>
         </div>
       </div>
     </main>
-  )
+  );
 }
