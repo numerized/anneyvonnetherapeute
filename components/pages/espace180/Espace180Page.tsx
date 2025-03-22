@@ -374,16 +374,15 @@ export default function Espace180Page() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 relative">
+      <div className="relative">
         {/* Background gradient blobs */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
           <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
         </div>
 
         {/* Tag Filters - Only show if not in single capsule view */}
         {!singleCapsule && (
-          <div className="bg-primary-dark/30 backdrop-blur-sm py-8">
+          <div className="bg-primary-dark/30 backdrop-blur-sm py-8 mb-12 w-full">
             <div className="container mx-auto px-4">
               {/* Mobile Filter Accordion Header */}
               <div className="md:hidden mb-4">
@@ -450,48 +449,50 @@ export default function Espace180Page() {
         )}
 
         {/* Capsules Grid */}
-        {filteredCapsules.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-white text-xl">Aucune capsule ne correspond à votre sélection.</p>
-          </div>
-        ) : filteredCapsules.length === 1 && !singleCapsule ? (
-          // Single filtered capsule view - make it centered and larger
-          <div className="max-w-5xl mx-auto px-4">
-            {renderCapsule(filteredCapsules[0], true)}
-          </div>
-        ) : singleCapsule ? (
-          // Single capsule from URL parameter - already centered
-          <div className="max-w-5xl mx-auto px-4">
-            {renderCapsule(singleCapsule, true)}
-          </div>
-        ) : (
-          // Multiple capsules - masonry grid
-          <Masonry
-            breakpointCols={{
-              default: 3,
-              1024: 2,
-              640: 1
-            }}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
-            {filteredCapsules.map((capsule) => renderCapsule(capsule, false))}
-          </Masonry>
-        )}
-        {/* CSS for Masonry Grid */}
-        <style jsx global>{`
-          .my-masonry-grid {
-            display: flex;
-            width: auto;
-            gap: 2rem;
-          }
-          .my-masonry-grid_column {
-            background-clip: padding-box;
-          }
-          .my-masonry-grid_column > div {
-            margin-bottom: 2rem;
-          }
-        `}</style>
+        <div className="container mx-auto px-4 pb-16">
+          {filteredCapsules.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-white text-xl">Aucune capsule ne correspond à votre sélection.</p>
+            </div>
+          ) : filteredCapsules.length === 1 && !singleCapsule ? (
+            // Single filtered capsule view - make it centered and larger
+            <div className="max-w-5xl mx-auto">
+              {renderCapsule(filteredCapsules[0], true)}
+            </div>
+          ) : singleCapsule ? (
+            // Single capsule from URL parameter - already centered
+            <div className="max-w-5xl mx-auto">
+              {renderCapsule(singleCapsule, true)}
+            </div>
+          ) : (
+            // Multiple capsules - masonry grid
+            <Masonry
+              breakpointCols={{
+                default: 3,
+                1024: 2,
+                640: 1
+              }}
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {filteredCapsules.map((capsule) => renderCapsule(capsule, false))}
+            </Masonry>
+          )}
+          {/* CSS for Masonry Grid */}
+          <style jsx global>{`
+            .my-masonry-grid {
+              display: flex;
+              width: auto;
+              gap: 2rem;
+            }
+            .my-masonry-grid_column {
+              background-clip: padding-box;
+            }
+            .my-masonry-grid_column > div {
+              margin-bottom: 2rem;
+            }
+          `}</style>
+        </div>
       </div>
     </main>
   )
