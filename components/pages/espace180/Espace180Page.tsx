@@ -105,6 +105,7 @@ export default function Espace180Page() {
   const [activeMedia, setActiveMedia] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [likedCapsules, setLikedCapsules] = useState<{ [key: number]: number }>({})
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({})
   const audioRefs = useRef<{ [key: number]: HTMLAudioElement | null }>({})
   const searchParams = useSearchParams()
@@ -123,21 +124,21 @@ export default function Espace180Page() {
     // Load liked capsules from localStorage
     const savedLikes = localStorage.getItem('espace180Likes')
     if (savedLikes) {
-      // setLikedCapsules(JSON.parse(savedLikes))
+      setLikedCapsules(JSON.parse(savedLikes))
     }
   }, [])
 
   const toggleLike = (capsuleId: number) => {
-    // setLikedCapsules(prev => {
-    //   const currentLikes = prev[capsuleId] || 0
-    //   const newLikes = {
-    //     ...prev,
-    //     [capsuleId]: currentLikes > 0 ? 0 : 1 // Toggle between 0 and 1
-    //   }
-    //   // Save to localStorage
-    //   localStorage.setItem('espace180Likes', JSON.stringify(newLikes))
-    //   return newLikes
-    // })
+    setLikedCapsules(prev => {
+      const currentLikes = prev[capsuleId] || 0
+      const newLikes = {
+        ...prev,
+        [capsuleId]: currentLikes > 0 ? 0 : 1 // Toggle between 0 and 1
+      }
+      // Save to localStorage
+      localStorage.setItem('espace180Likes', JSON.stringify(newLikes))
+      return newLikes
+    })
   }
 
   const togglePlay = (capsuleId: number) => {
@@ -197,7 +198,7 @@ export default function Espace180Page() {
 
   // Filter capsules based on selected tags
   const filteredCapsules = capsules.filter(capsule => {
-    const isLiked = false; // (likedCapsules[capsule.id] || 0) > 0;
+    const isLiked = likedCapsules[capsule.id] || 0 > 0;
     const hasFavoriteTag = selectedTags.includes('Mes Préférées');
     const otherTags = selectedTags.filter(tag => tag !== 'Mes Préférées');
     
@@ -218,12 +219,12 @@ export default function Espace180Page() {
   });
 
   // Get count of liked capsules for the counter
-  const likedCapsulesCount = 0; // Object.values(likedCapsules).filter(count => count > 0).length;
+  const likedCapsulesCount = Object.values(likedCapsules).filter(count => count > 0).length;
 
   // Add reset likes function
   const resetAllLikes = () => {
-    // localStorage.removeItem('espace180Likes');
-    // setLikedCapsules({});
+    localStorage.removeItem('espace180Likes');
+    setLikedCapsules({});
   };
 
   // Function to set the ref based on media type
@@ -306,7 +307,7 @@ export default function Espace180Page() {
                     onClick={() => {
                       toggleLike(capsule.id)
                     }}
-                    className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-red-500 hover:text-white flex items-center gap-2"
+                    className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 hover:text-white flex items-center gap-2"
                     aria-label="Like this capsule"
                   >
                     <div className="w-6 h-6 flex items-center justify-center">
@@ -314,7 +315,7 @@ export default function Espace180Page() {
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24" 
                         fill="currentColor" 
-                        className={`w-6 h-6 transition-all ${false ? 'text-red-500' : 'text-white group-hover:text-red-500'}`}
+                        className={`w-6 h-6 transition-all ${likedCapsules[capsule.id] > 0 ? 'text-red-500' : 'text-white group-hover:text-red-500'}`}
                       >
                         <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                       </svg>
