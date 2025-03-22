@@ -29,7 +29,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
     posterUrl: '/images/posters/CREATIVITE_CAPSULE-LIBRE-poster.jpg',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/anneyvonneracine1.png',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/meditationerozen2.png',
     tags: ['Créativité', 'Expression', 'Bien-être', 'Minute'],
     mediaType: 'video'
   },
@@ -40,7 +40,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
     posterUrl: '/images/posters/ZEN_CLIC_1-poster.jpg',
-    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/meditationerozen2.png',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/ZEN_CLIC_1-poster.jpg',
     tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
     mediaType: 'video'
   },
@@ -278,15 +278,13 @@ export default function Espace180Page() {
   
   // Load liked capsules from localStorage
   useEffect(() => {
+    setIsClient(true)
     const savedLikes = localStorage.getItem('espace180Likes')
     if (savedLikes) {
       setLikedCapsules(JSON.parse(savedLikes))
     }
-    // Load selected tag from localStorage
-    const savedTag = localStorage.getItem('espace180SelectedTag')
-    if (savedTag) {
-      setSelectedTags([savedTag])
-    }
+    // Clear any existing selected tag from localStorage
+    localStorage.removeItem('espace180SelectedTag')
   }, [])
 
   const toggleLike = (capsuleId: number) => {
@@ -355,8 +353,6 @@ export default function Espace180Page() {
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
     )
-    // Save selected tag to localStorage
-    localStorage.setItem('espace180SelectedTag', tag)
   }
 
   // Filter capsules based on selected tags
@@ -512,7 +508,6 @@ export default function Espace180Page() {
               
               if (singleCapsule) {
                 // Set this tag and navigate back to main view
-                localStorage.setItem('espace180SelectedTag', tag);
                 window.location.href = '/espace180';
               } else {
                 // Toggle this tag in the filter
