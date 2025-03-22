@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import Masonry from 'react-masonry-css'
+import { useSearchParams, useParams } from 'next/navigation'
+import Link from 'next/link'
 
 interface Capsule {
   id: number
@@ -99,42 +101,53 @@ const capsules: Capsule[] = [
 
 export default function Espace180Page() {
   const [isClient, setIsClient] = useState(false)
-  const [activeMedia, setActiveMedia] = useState<number | null>(null)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [likedCapsules, setLikedCapsules] = useState<{ [key: number]: number }>({})
+  const [activeMedia, setActiveMedia] = useState<number | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | HTMLAudioElement }>({})
+  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({})
+  const audioRefs = useRef<{ [key: number]: HTMLAudioElement | null }>({})
+  const searchParams = useSearchParams()
+  const params = useParams()
+  
+  // Check for capsule ID from both route params and search params
+  const routeParamId = params?.id ? parseInt(params.id as string, 10) : null
+  const searchParamId = searchParams.get('capsule') ? parseInt(searchParams.get('capsule') as string, 10) : null
+  const singleCapsuleId = routeParamId || searchParamId
+  
+  // Find the single capsule if ID is provided
+  const singleCapsule = singleCapsuleId ? capsules.find(c => c.id === singleCapsuleId) : null
 
   useEffect(() => {
     setIsClient(true)
     // Load liked capsules from localStorage
     const savedLikes = localStorage.getItem('espace180Likes')
     if (savedLikes) {
-      setLikedCapsules(JSON.parse(savedLikes))
+      // setLikedCapsules(JSON.parse(savedLikes))
     }
   }, [])
 
   const toggleLike = (capsuleId: number) => {
-    setLikedCapsules(prev => {
-      const currentLikes = prev[capsuleId] || 0
-      const newLikes = {
-        ...prev,
-        [capsuleId]: currentLikes > 0 ? 0 : 1 // Toggle between 0 and 1
-      }
-      // Save to localStorage
-      localStorage.setItem('espace180Likes', JSON.stringify(newLikes))
-      return newLikes
-    })
+    // setLikedCapsules(prev => {
+    //   const currentLikes = prev[capsuleId] || 0
+    //   const newLikes = {
+    //     ...prev,
+    //     [capsuleId]: currentLikes > 0 ? 0 : 1 // Toggle between 0 and 1
+    //   }
+    //   // Save to localStorage
+    //   localStorage.setItem('espace180Likes', JSON.stringify(newLikes))
+    //   return newLikes
+    // })
   }
 
   const togglePlay = (capsuleId: number) => {
-    const media = videoRefs.current[capsuleId]
+    const media = videoRefs.current[capsuleId] || audioRefs.current[capsuleId]
     if (!media) return
 
     if (media.paused) {
       // Pause any other playing media
       if (activeMedia !== null && activeMedia !== capsuleId) {
-        const activeMediaElement = videoRefs.current[activeMedia]
+        const activeMediaElement = videoRefs.current[activeMedia] || audioRefs.current[activeMedia]
         if (activeMediaElement) {
           activeMediaElement.pause()
         }
@@ -184,7 +197,7 @@ export default function Espace180Page() {
 
   // Filter capsules based on selected tags
   const filteredCapsules = capsules.filter(capsule => {
-    const isLiked = (likedCapsules[capsule.id] || 0) > 0;
+    const isLiked = false; // (likedCapsules[capsule.id] || 0) > 0;
     const hasFavoriteTag = selectedTags.includes('Mes Préférées');
     const otherTags = selectedTags.filter(tag => tag !== 'Mes Préférées');
     
@@ -205,20 +218,140 @@ export default function Espace180Page() {
   });
 
   // Get count of liked capsules for the counter
-  const likedCapsulesCount = Object.values(likedCapsules).filter(count => count > 0).length;
+  const likedCapsulesCount = 0; // Object.values(likedCapsules).filter(count => count > 0).length;
 
   // Add reset likes function
   const resetAllLikes = () => {
-    localStorage.removeItem('espace180Likes');
-    setLikedCapsules({});
+    // localStorage.removeItem('espace180Likes');
+    // setLikedCapsules({});
   };
 
   // Function to set the ref based on media type
   const setMediaRef = (element: HTMLVideoElement | HTMLAudioElement | null, id: number) => {
     if (element) {
-      videoRefs.current[id] = element;
+      if (element instanceof HTMLVideoElement) {
+        videoRefs.current[id] = element;
+      } else {
+        audioRefs.current[id] = element;
+      }
     }
   };
+
+  const renderCapsule = (capsule: Capsule, isLarge: boolean) => (
+    <div key={capsule.id} className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}>
+      {/* Media Container */}
+      <div className="relative w-full rounded-[32px] overflow-hidden">
+        {/* Aspect ratio container */}
+        <div className="relative pb-[56.25%]">
+          {isClient && (
+            <>
+              {capsule.mediaType === 'video' ? (
+                <video
+                  ref={(el) => setMediaRef(el, capsule.id)}
+                  className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+                  playsInline
+                  webkit-playsinline="true"
+                  src={capsule.mediaUrl}
+                  poster={capsule.posterUrl}
+                />
+              ) : (
+                <>
+                  <audio
+                    ref={(el) => setMediaRef(el, capsule.id)}
+                    src={capsule.mediaUrl}
+                    className="hidden"
+                  />
+                  <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl overflow-hidden">
+                    <img 
+                      src={capsule.posterUrl} 
+                      alt={capsule.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                </>
+              )}
+              {/* Gradient overlay - Removed as requested */}
+              {/* Frost bubbles */}
+              <div className="absolute top-4 right-4 flex gap-4 z-20">
+                {/* Capsule title bubble */}
+                <Link href={`/espace180/capsule/${capsule.id}`} className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all">
+                  <span className="text-white font-medium">#{capsule.id}</span>
+                </Link>
+              </div>
+              {/* Play button - Left side */}
+              <div className="absolute left-4 bottom-4 z-20">
+                {/* Play/Pause button */}
+                <button
+                  onClick={() => togglePlay(capsule.id)}
+                  className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
+                  aria-label={activeMedia === capsule.id ? 'Pause media' : 'Play media'}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    {activeMedia === capsule.id ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                        <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                        <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+              </div>
+              {/* Like button - Right side */}
+              <div className="absolute right-4 bottom-4 z-20">
+                <div className="w-14 h-14 rounded-full relative">
+                  <button
+                    onClick={() => {
+                      toggleLike(capsule.id)
+                    }}
+                    className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-red-500 hover:text-white flex items-center gap-2"
+                    aria-label="Like this capsule"
+                  >
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className={`w-6 h-6 transition-all ${false ? 'text-red-500' : 'text-white group-hover:text-red-500'}`}
+                      >
+                        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                      </svg>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      
+      {/* Capsule Info */}
+      <div className="flex-grow space-y-4 mt-6">
+        <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
+        <p className="text-white/80">{capsule.description}</p>
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mt-4 justify-end">
+          {capsule.tags.map((tag, index) => (
+            <span
+              key={index}
+              className={`px-3 py-1 text-xs rounded-full transition-all ${selectedTags.includes(tag) ? 'bg-white text-primary-dark font-medium' : 'bg-white/10 text-white'}`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Date - Always at bottom */}
+      <div className="text-right mt-4">
+        <p className="text-sm text-white/60">
+          {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
+        </p>
+      </div>
+    </div>
+  )
 
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
@@ -240,74 +373,112 @@ export default function Espace180Page() {
         <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
       </div>
 
-      {/* Tag Filters */}
-      <div className="bg-primary-dark/30 backdrop-blur-sm py-8">
-        <div className="container mx-auto px-4">
-          {/* Mobile Filter Accordion Header */}
-          <div className="md:hidden mb-4">
-            <button 
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="w-full flex items-center justify-between bg-white/10 text-white px-4 py-3 rounded-lg"
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-medium">Filtres</span>
-                {selectedTags.length > 0 && (
-                  <span className="bg-white text-primary-dark text-xs font-bold px-2 py-1 rounded-full">
-                    {selectedTags.length}
-                  </span>
-                )}
-              </div>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="currentColor" 
-                className={`w-5 h-5 transition-transform duration-300 ${isFilterOpen ? 'rotate-90' : ''}`}
-              >
-                <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-          
-          {/* Filter Content - Hidden on mobile unless expanded */}
-          <div 
-            className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${
-              isFilterOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
-            }`}
-          >
-            <div className="flex flex-wrap gap-3 justify-center">
-              {/* Favorites Filter */}
-              <button
-                onClick={() => toggleTag('Mes Préférées')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${selectedTags.includes('Mes Préférées') ? 'bg-red-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
-              >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  viewBox="0 0 24 24" 
-                  fill="currentColor" 
-                  className="w-4 h-4"
-                >
-                  <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                </svg>
-                Mes Préférées
-              </button>
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-12 relative">
+        {/* Background gradient blobs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
+          <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
+        </div>
 
-              {/* Other Tags */}
-              {sortedTags.map(([tag, count]) => (
-                <button
-                  key={tag}
-                  onClick={() => toggleTag(tag)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedTags.includes(tag) ? 'bg-white text-primary-dark' : 'bg-white/10 text-white hover:bg-white/20'}`}
+        {/* Tag Filters - Only show if not in single capsule view */}
+        {!singleCapsule && (
+          <div className="bg-primary-dark/30 backdrop-blur-sm py-8">
+            <div className="container mx-auto px-4">
+              {/* Mobile Filter Accordion Header */}
+              <div className="md:hidden mb-4">
+                <button 
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className="w-full flex items-center justify-between bg-white/10 text-white px-4 py-3 rounded-lg"
                 >
-                  {tag} ({count})
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">Filtres</span>
+                    {selectedTags.length > 0 && (
+                      <span className="bg-white text-primary-dark text-xs font-bold px-2 py-1 rounded-full">
+                        {selectedTags.length}
+                      </span>
+                    )}
+                  </div>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    fill="currentColor" 
+                    className={`w-5 h-5 transition-transform duration-300 ${isFilterOpen ? 'rotate-90' : ''}`}
+                  >
+                    <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
+                  </svg>
                 </button>
-              ))}
+              </div>
+              
+              {/* Filter Content - Hidden on mobile unless expanded */}
+              <div 
+                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${
+                  isFilterOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
+                }`}
+              >
+                <div className="flex flex-wrap gap-3 justify-center">
+                  {/* Favorites Filter */}
+                  <button
+                    onClick={() => toggleTag('Mes Préférées')}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${selectedTags.includes('Mes Préférées') ? 'bg-red-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      viewBox="0 0 24 24" 
+                      fill="currentColor" 
+                      className="w-4 h-4"
+                    >
+                      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+                    Mes Préférées
+                  </button>
+
+                  {/* Other Tags */}
+                  {sortedTags.map(([tag, count]) => (
+                    <button
+                      key={tag}
+                      onClick={() => toggleTag(tag)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedTags.includes(tag) ? 'bg-white text-primary-dark' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                    >
+                      {tag} ({count})
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* Capsules Grid */}
-      <div className="container mx-auto px-4 py-16">
+        {/* Capsules Grid */}
+        {filteredCapsules.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-white text-xl">Aucune capsule ne correspond à votre sélection.</p>
+          </div>
+        ) : filteredCapsules.length === 1 && !singleCapsule ? (
+          // Single filtered capsule view - make it centered and larger
+          <div className="max-w-5xl mx-auto px-4">
+            {renderCapsule(filteredCapsules[0], true)}
+          </div>
+        ) : singleCapsule ? (
+          // Single capsule from URL parameter - already centered
+          <div className="max-w-5xl mx-auto px-4">
+            {renderCapsule(singleCapsule, true)}
+          </div>
+        ) : (
+          // Multiple capsules - masonry grid
+          <Masonry
+            breakpointCols={{
+              default: 3,
+              1024: 2,
+              640: 1
+            }}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {filteredCapsules.map((capsule) => renderCapsule(capsule, false))}
+          </Masonry>
+        )}
+        {/* CSS for Masonry Grid */}
         <style jsx global>{`
           .my-masonry-grid {
             display: flex;
@@ -321,156 +492,6 @@ export default function Espace180Page() {
             margin-bottom: 2rem;
           }
         `}</style>
-        
-        <Masonry
-          breakpointCols={{
-            default: 3,
-            1280: 2,
-            768: 1
-          }}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {filteredCapsules.map((capsule) => (
-            <div key={capsule.id} className="bg-primary-dark p-8 rounded-[32px] flex flex-col">
-              {/* Media Container */}
-              <div className="relative w-full rounded-[32px] overflow-hidden">
-                {/* Aspect ratio container */}
-                <div className="relative pb-[56.25%]">
-                  {isClient && (
-                    <>
-                      {capsule.mediaType === 'video' ? (
-                        <video
-                          ref={(el) => setMediaRef(el, capsule.id)}
-                          className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
-                          playsInline
-                          webkit-playsinline="true"
-                          src={capsule.mediaUrl}
-                          poster={capsule.posterUrl}
-                        />
-                      ) : (
-                        <>
-                          <audio
-                            ref={(el) => setMediaRef(el, capsule.id)}
-                            src={capsule.mediaUrl}
-                            className="hidden"
-                          />
-                          <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl overflow-hidden">
-                            <img 
-                              src={capsule.posterUrl} 
-                              alt={capsule.title}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
-                          </div>
-                        </>
-                      )}
-                      {/* Gradient overlay - Removed as requested */}
-                      {/* Frost bubbles */}
-                      <div className="absolute top-4 right-4 flex gap-4 z-20">
-                        {/* Capsule title bubble */}
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                          <span className="text-white font-medium">#{capsule.id}</span>
-                        </div>
-                      </div>
-                      {/* Play button - Left side */}
-                      <div className="absolute left-4 bottom-4 z-20">
-                        {/* Play/Pause button */}
-                        <button
-                          onClick={() => togglePlay(capsule.id)}
-                          className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-                          aria-label={activeMedia === capsule.id ? 'Pause media' : 'Play media'}
-                        >
-                          <div className="w-6 h-6 flex items-center justify-center">
-                            {activeMedia === capsule.id ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                                <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
-                              </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                                <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-                              </svg>
-                            )}
-                          </div>
-                        </button>
-                      </div>
-                      {/* Like button - Right side */}
-                      <div className="absolute right-4 bottom-4 z-20">
-                        <div className="w-14 h-14 rounded-full relative">
-                          <button
-                            onClick={() => {
-                              toggleLike(capsule.id)
-                            }}
-                            className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-red-500 hover:text-white flex items-center gap-2"
-                            aria-label="Like this capsule"
-                          >
-                            <div className="w-6 h-6 flex items-center justify-center">
-                              <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                viewBox="0 0 24 24" 
-                                fill="currentColor" 
-                                className={`w-6 h-6 transition-all ${likedCapsules[capsule.id] ? 'text-red-500' : 'text-white group-hover:text-red-500'}`}
-                              >
-                                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                              </svg>
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-              
-              {/* Capsule Info */}
-              <div className="flex-grow space-y-4 mt-6">
-                <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
-                <p className="text-white/80">{capsule.description}</p>
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mt-4 justify-end">
-                  {capsule.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className={`px-3 py-1 text-xs rounded-full transition-all
-                        ${selectedTags.includes(tag)
-                          ? 'bg-white text-primary-dark font-medium'
-                          : 'bg-white/10 text-white'
-                        }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Date - Always at bottom */}
-              <div className="text-right mt-4">
-                <p className="text-sm text-white/60">
-                  {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
-                </p>
-              </div>
-            </div>
-          ))}
-        </Masonry>
-
-        {/* Reset Likes Button */}
-        {Object.keys(likedCapsules).length > 0 && (
-          <div className="flex justify-center pb-12">
-            <button
-              onClick={resetAllLikes}
-              className="px-6 py-3 rounded-full text-sm font-medium transition-all bg-white/10 text-white hover:bg-red-500 hover:text-white flex items-center gap-2"
-            >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="currentColor" 
-                className="w-4 h-4"
-              >
-                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-              </svg>
-              Réinitialiser mes préférées
-            </button>
-          </div>
-        )}
       </div>
     </main>
   )
