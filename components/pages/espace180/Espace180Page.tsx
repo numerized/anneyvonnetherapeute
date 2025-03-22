@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import Image from 'next/image'
+import Link from 'next/link'
 import Masonry from 'react-masonry-css'
 import { useSearchParams, useParams } from 'next/navigation'
-import Link from 'next/link'
 
 interface Capsule {
   id: number
@@ -199,19 +200,23 @@ export default function Espace180Page() {
         navigator.mediaSession.playbackState = 'none';
       }
     }
-  }, [isClient, activeMedia, capsules]);
+  }, [isClient, activeMedia]);
   
   // Handle media events
   useEffect(() => {
     if (!isClient) return;
     
+    // Store refs to current values to use in cleanup function
+    const currentAudioRefs = audioRefs.current;
+    const currentVideoRefs = videoRefs.current;
+    
     const handlePlay = (event: Event) => {
       const element = event.target as HTMLMediaElement;
       
       // Find which capsule is playing
-      const capsuleId = Object.entries(audioRefs.current).find(
+      const capsuleId = Object.entries(currentAudioRefs).find(
         ([_, ref]) => ref === element
-      )?.[0] || Object.entries(videoRefs.current).find(
+      )?.[0] || Object.entries(currentVideoRefs).find(
         ([_, ref]) => ref === element
       )?.[0];
       
@@ -238,14 +243,14 @@ export default function Espace180Page() {
     };
     
     // Add event listeners to all media elements
-    Object.values(audioRefs.current).forEach(audio => {
+    Object.values(currentAudioRefs).forEach(audio => {
       if (audio) {
         audio.addEventListener('play', handlePlay);
         audio.addEventListener('pause', handlePause);
       }
     });
     
-    Object.values(videoRefs.current).forEach(video => {
+    Object.values(currentVideoRefs).forEach(video => {
       if (video) {
         video.addEventListener('play', handlePlay);
         video.addEventListener('pause', handlePause);
@@ -253,23 +258,23 @@ export default function Espace180Page() {
     });
     
     return () => {
-      // Remove event listeners
-      Object.values(audioRefs.current).forEach(audio => {
+      // Remove event listeners using the same refs from closure
+      Object.values(currentAudioRefs).forEach(audio => {
         if (audio) {
           audio.removeEventListener('play', handlePlay);
           audio.removeEventListener('pause', handlePause);
         }
       });
       
-      Object.values(videoRefs.current).forEach(video => {
+      Object.values(currentVideoRefs).forEach(video => {
         if (video) {
           video.removeEventListener('play', handlePlay);
           video.removeEventListener('pause', handlePause);
         }
       });
     };
-  }, [isClient, audioRefs, videoRefs]);
-
+  }, [isClient]);
+  
   // Load liked capsules from localStorage
   useEffect(() => {
     const savedLikes = localStorage.getItem('espace180Likes')
