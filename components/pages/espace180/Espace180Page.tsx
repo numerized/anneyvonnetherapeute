@@ -331,6 +331,12 @@ export default function Espace180Page() {
       <div className="flex-grow space-y-4 mt-6">
         <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
         <p className="text-white/80">{capsule.description}</p>
+        
+        {/* Date - Moved between description and tags */}
+        <p className="text-sm text-white/60 text-right">
+          {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
+        </p>
+        
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-4 justify-end">
           {capsule.tags.map((tag, index) => (
@@ -344,12 +350,6 @@ export default function Espace180Page() {
         </div>
       </div>
 
-      {/* Date - Always at bottom */}
-      <div className="text-right mt-4">
-        <p className="text-sm text-white/60">
-          {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
-        </p>
-      </div>
     </div>
   )
 
