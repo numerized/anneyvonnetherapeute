@@ -2,12 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
+import { ResourceCheckboxes } from '@/components/dashboard/ResourceCheckboxes';
 import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { app } from '@/lib/firebase';
 import { createOrUpdateUser, getUserById, UserProfile, SessionDetails } from '@/lib/userService';
-import { format } from 'date-fns';
+import { format, parseISO, addDays, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
 import {
@@ -23,10 +24,9 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore';
-import { Calendar, Check, Clock, LogOut, User } from 'lucide-react';
+import { Calendar, Check, Clock, LogOut, Mail, Square, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { toast } from 'react-hot-toast';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -49,6 +49,7 @@ export default function DashboardPage() {
 
   // Add state to track which partner is booking
   const [activePartner, setActivePartner] = useState<'partner1' | 'partner2' | 'both'>('both');
+  const [bookingSession, setBookingSession] = useState<string | null>(null);
 
   // Helper function to get session date - defined after sessionDates declaration
   const getSessionDate = useCallback((sessionId: string): string | undefined => {
@@ -60,11 +61,9 @@ export default function DashboardPage() {
     try {
       const auth = getAuth(app);
       await signOut(auth);
-      toast.success('Déconnexion réussie');
       router.push('/'); // Redirect to home page after sign out
     } catch (error) {
       console.error('Error signing out:', error);
-      toast.error('Erreur lors de la déconnexion');
     }
   };
 
@@ -110,7 +109,6 @@ export default function DashboardPage() {
             setPartnerProfile(partnerProfile);
           } catch (error) {
             console.error('Error fetching user profile:', error);
-            toast.error('Failed to load user profile');
           } finally {
             setLoading(false);
           }
@@ -142,6 +140,15 @@ export default function DashboardPage() {
     }
   }, [userProfile?.sessionDates]);
 
+  // Effect to reset bookingSession when sessionDates are updated from Firestore
+  useEffect(() => {
+    // If we have a bookingSession and that session now has a date in sessionDates,
+    // we can reset the bookingSession state
+    if (bookingSession && sessionDates[bookingSession]) {
+      setBookingSession(null);
+    }
+  }, [bookingSession, sessionDates]);
+
   // Function to check if a date is valid (at least 4 weeks after the previous session)
   const isDateValid = useCallback((sessionId: string, dateStr: string): boolean => {
     // Define session dependencies (which session must be at least 4 weeks after which)
@@ -165,7 +172,6 @@ export default function DashboardPage() {
         // Make sure all dependent sessions have dates
         const missingDates = dependentSessionId.filter(depId => !getSessionDate(depId));
         if (missingDates.length > 0) {
-          console.log(`Date ${dateStr} is invalid: missing dates for dependencies: ${missingDates.join(', ')}`);
           return false;
         }
 
@@ -192,7 +198,6 @@ export default function DashboardPage() {
 
         // Check if the proposed date is at least 4 weeks after the latest dependent session
         if (proposedDate < minimumDate) {
-          console.log(`Date ${dateStr} is invalid: must be at least 4 weeks after the latest dependent session (${latestDate.toISOString()})`);
           return false;
         }
 
@@ -212,7 +217,6 @@ export default function DashboardPage() {
 
       // Check if the proposed date is at least 4 weeks after the dependent session
       if (proposedDate < minimumDate) {
-        console.log(`Date ${dateStr} is invalid: must be at least 4 weeks after ${dependentSessionDate}`);
         return false;
       }
 
@@ -261,14 +265,13 @@ export default function DashboardPage() {
   const getSessionDateConstraints = (event: TherapyJourneyEvent) => {
     const minDate = new Date();
 
-    // For the first individual session for partner 1, set minimum date to 4 weeks after initial session
-    if (event.id === 'individual1_partner1') {
+    // For the first individual session for either partner, set minimum date to 4 weeks after initial session
+    if (event.id === 'individual1_partner1' || event.id === 'individual1_partner2') {
       const initialDate = getSessionDate('initial');
       if (initialDate) {
         const initialSessionDate = new Date(initialDate);
         minDate.setTime(initialSessionDate.getTime());
         minDate.setDate(minDate.getDate() + 28); // 4 weeks minimum gap
-        console.log(`Setting min date for individual1_partner1 to 4 weeks after initial session: ${minDate.toISOString()}`);
       }
     } else if (event.dependsOn && event.daysOffset) {
       const dependentId = Array.isArray(event.dependsOn) ? event.dependsOn[0] : event.dependsOn;
@@ -355,22 +358,24 @@ export default function DashboardPage() {
   const handleSessionClick = (event: TherapyJourneyEvent) => {
     // If this is a session that already has a date, don't allow rebooking
     if (getSessionDate(event.id)) {
-      toast.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
+      console.error("Cette séance est déjà programmée. Utilisez le bouton d'annulation si vous souhaitez la reprogrammer.");
       return;
     }
 
     // Normal availability check for new bookings
     if (!isSessionAvailable(event)) {
       const reason = getSessionUnavailableReason(event);
-      toast.error(reason || "Veuillez d'abord compléter les étapes précédentes");
+      console.error(reason || "Veuillez d'abord compléter les étapes précédentes");
       return;
     }
 
     if (event.type !== 'session' || !event.sessionType) {
-      toast.error("Ce type d'événement ne peut pas être programmé");
+      console.error("Ce type d'événement ne peut pas être programmé");
       return;
     }
 
+    // Set the booking session to show loading state
+    setBookingSession(event.id);
     setSelectedEvent(event);
     // Store which partner this session is for to determine which email to use
     setActivePartner(event.partner || 'both');
@@ -381,8 +386,6 @@ export default function DashboardPage() {
     try {
       if (!user || !selectedEvent) return;
 
-      console.log('Appointment scheduled data:', eventData);
-
       // Create a local variable to track which session we'll actually use
       // This allows us to modify which session we're setting without waiting for React state to update
       let sessionToUse = selectedEvent;
@@ -390,7 +393,8 @@ export default function DashboardPage() {
       // Validate that we have the expected event data structure
       if (eventData.event !== 'calendly.event_scheduled' || !eventData.payload) {
         console.error('Invalid event data format:', eventData);
-        toast.error("Format de données invalide. Veuillez réessayer.");
+        console.error("Format de données invalide. Veuillez réessayer.");
+        setBookingSession(null); // Reset booking session state on error
         return;
       }
 
@@ -400,19 +404,13 @@ export default function DashboardPage() {
 
       if (!eventUri) {
         console.error('Missing event URI:', eventData);
-        toast.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
+        console.error("Impossible de trouver les détails du rendez-vous. Veuillez réessayer.");
+        setBookingSession(null); // Reset booking session state on error
         return;
       }
 
-      console.log(`Event URI: ${eventUri}`);
-      console.log(`Invitee URI: ${inviteeUri}`);
-
       // Extract event ID from the URI
       const eventId = eventUri.split('/').pop() || '';
-      console.log(`Event ID: ${eventId}`);
-
-      // Show loading state
-      toast.loading("Récupération des détails du rendez-vous...");
 
       try {
         // Fetch event details from our API
@@ -423,7 +421,6 @@ export default function DashboardPage() {
         }
 
         const eventDetailsResult = await eventDetailsResponse.json();
-        console.log('Event details:', eventDetailsResult);
 
         if (!eventDetailsResult.success || !eventDetailsResult.data) {
           throw new Error('Invalid response from event details API');
@@ -436,7 +433,6 @@ export default function DashboardPage() {
         let endTime = eventDetails.end_time;
 
         if (!startTime) {
-          console.warn('Start time not available in API response, using fallback');
           // Fallback (should rarely happen)
           const scheduledTime = new Date();
           scheduledTime.setHours(scheduledTime.getHours() + 1);
@@ -447,8 +443,8 @@ export default function DashboardPage() {
           endTime = scheduledEndTime.toISOString();
         }
 
-        // Dismiss loading toast
-        toast.dismiss();
+        // Dismiss loading 
+        console.log("Rendez-vous programmé");
 
         // Format date for display
         const dateObj = new Date(startTime);
@@ -461,7 +457,7 @@ export default function DashboardPage() {
           minute: 'numeric'
         }).format(dateObj);
 
-        // Format to capitalize first letter of day name
+        // Format to capitalize first letter of the day name
         const formattedDateCapitalized = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 
         // Get Firestore reference
@@ -482,63 +478,6 @@ export default function DashboardPage() {
           // Get existing session details and dates or initialize if not present
           const existingSessionDetails = userData.sessionDetails || {};
           const existingSessionDates = userData.sessionDates || {};
-
-          console.log('Current session details:', existingSessionDetails);
-          console.log('Current session dates:', existingSessionDates);
-          console.log('Selected session ID:', sessionToUse.id);
-
-          // SAFETY CHECK: See if the selected session already has a date set
-          // This prevents accidentally overwriting existing session dates
-          if (existingSessionDates[sessionToUse.id]) {
-            console.warn(`Session ${sessionToUse.id} already has a date set. Looking for next available session...`);
-
-            // Find the next available session in the therapy journey
-            const sessionOrder = [
-              'initial',
-              'individual1_partner1', 'individual2_partner1', 'individual3_partner1',
-              'individual1_partner2', 'individual2_partner2', 'individual3_partner2',
-              'final'
-            ];
-
-            // Start searching from the current session's position
-            const currentIndex = sessionOrder.indexOf(sessionToUse.id);
-            let nextSessionId: string | null = null;
-
-            if (currentIndex !== -1) {
-              // Search forward from current position
-              for (let i = currentIndex + 1; i < sessionOrder.length; i++) {
-                const sessionId = sessionOrder[i];
-
-                // Check if this session is available (not already scheduled)
-                if (!existingSessionDates[sessionId] && isSessionAvailable(
-                  coupleTherapyJourney.find(e => e.id === sessionId) as TherapyJourneyEvent
-                )) {
-                  nextSessionId = sessionId;
-                  break;
-                }
-              }
-            }
-
-            if (nextSessionId) {
-              // Found an available session - update sessionToUse
-              const nextEvent = coupleTherapyJourney.find(e => e.id === nextSessionId);
-              if (nextEvent) {
-                console.log(`Found next available session: ${nextSessionId}`);
-                toast.success(`La séance ${sessionToUse.id} est déjà programmée. Le rendez-vous sera enregistré pour la séance suivante : ${nextEvent.title}`);
-                sessionToUse = nextEvent;
-                // Also update the React state for UI consistency
-                setSelectedEvent(nextEvent);
-              } else {
-                // If we can't find the event, just cancel the operation
-                toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
-                return;
-              }
-            } else {
-              // No available sessions found
-              toast.error("La séance sélectionnée est déjà programmée et aucune autre séance n'est disponible.");
-              return;
-            }
-          }
 
           // Create the new session detail
           const newSessionDetail: SessionDetails = {
@@ -587,9 +526,6 @@ export default function DashboardPage() {
           const updatedSessionDates = { ...existingSessionDates };
           updatedSessionDates[sessionToUse.id] = startTime;
 
-          console.log('Updated session details to write:', updatedSessionDetails);
-          console.log('Updated session dates to write:', updatedSessionDates);
-
           // Update the document with direct update (no transaction)
           await updateDoc(userDocRef, {
             sessionDetails: updatedSessionDetails,
@@ -597,21 +533,12 @@ export default function DashboardPage() {
             updatedAt: Timestamp.now()
           });
 
-          console.log("Document successfully updated!");
-
           // Verify data after update
           const verifyDocSnap = await getDoc(userDocRef);
           const verifyData = verifyDocSnap.data();
 
-          console.log('VERIFICATION - Final saved session details:', verifyData?.sessionDetails);
-          console.log('VERIFICATION - Final saved session dates:', verifyData?.sessionDates);
-
           // Alert the user with a unique ID to prevent duplicates
-          toast.success(`Votre séance est programmée pour le ${formattedDateCapitalized}`, {
-            id: `appointment-${sessionToUse.id}-${Date.now()}`
-          });
-
-          console.log(`Updated session ${sessionToUse.id} in Firestore with new date: ${formattedDate}`);
+          console.log(`Votre séance est programmée pour le ${formattedDateCapitalized}`);
 
           // Update session dates in state to reflect the new date
           setSessionDates(prev => {
@@ -622,23 +549,29 @@ export default function DashboardPage() {
 
           // Reset selected session
           setSelectedEvent(null);
+          
+          // Note: We don't reset bookingSession here to keep the button disabled
+          // until the next Firestore update is detected by the useEffect
 
           // Force UI refresh
           setUiRefreshKey(prev => prev + 1);
         } catch (error) {
           console.error("Error updating document:", error);
-          toast.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+          console.error("Une erreur est survenue lors de l'enregistrement du rendez-vous.");
+          setBookingSession(null); // Reset booking session state on error
           return;
         }
       } catch (error) {
         console.error("Error handling appointment scheduling:", error);
-        toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+        console.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
         setShowCalendlyModal(false);
+        setBookingSession(null); // Reset booking session state on error
       }
     } catch (error) {
       console.error("Error handling appointment scheduling:", error);
-      toast.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
+      console.error("Une erreur s'est produite lors de la programmation. Veuillez réessayer.");
       setShowCalendlyModal(false);
+      setBookingSession(null); // Reset booking session state on error
     }
   };
 
@@ -705,29 +638,36 @@ export default function DashboardPage() {
             }
           }
 
-          if (event.type !== 'session') return null;
+          // Return null for non-session events, but first check if they have resources
+          // If they have resources, we'll render those separately
+          if (event.type !== 'session') {
+            if (event.resources && event.resources.length > 0) {
+              return (
+                <div key={event.id} className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-primary-cream/70">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div className="text-primary-cream/70">
+                      <div className="font-medium">{event.title}</div>
+                    </div>
+                  </div>
+                  <ResourceCheckboxes resources={event.resources} />
+                </div>
+              );
+            }
+            return null;
+          }
 
           // Determine if this event should have a booking button (all events except partner2 sessions)
           const showBookingButton = (phase === 'initial' || phase === 'final' ||
             phase === 'individual');
 
-          // Debug the information for partner1_session_1
-          if (event.id === 'individual1_partner1') {
-            console.log('individual1_partner1 details:', {
-              phase,
-              partner,
-              showBookingButton,
-              isComplete,
-              isAvailable,
-              hasDate: !!getSessionDate(event.id)
-            });
-          }
-
           return (
             <div key={event.id} className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 <div
-                  className={`p-1 rounded ${isComplete
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${isComplete
                     ? 'text-emerald-500'
                     : isAvailable
                       ? 'text-primary-cream'
@@ -735,9 +675,9 @@ export default function DashboardPage() {
                     }`}
                 >
                   {isComplete ? (
-                    <Calendar className="w-5 h-5" />
+                    <Check className="w-5 h-5" />
                   ) : (
-                    <Calendar className="w-5 h-5" />
+                    <Square className="w-5 h-5" />
                   )}
                 </div>
                 <div className={isAvailable ? 'text-[rgb(247_237_226_)]' : 'text-[rgb(247_237_226_)]/30'}>
@@ -792,13 +732,26 @@ export default function DashboardPage() {
                         size="sm"
                         className="text-xs h-8 border-[rgb(247_237_226_)]/30 text-[rgb(247_237_226_)] hover:bg-[rgb(247_237_226_)]/10 hover:text-[rgb(247_237_226_)]"
                         onClick={() => handleSessionClick(event)}
+                        disabled={bookingSession === event.id}
                       >
-                        <Calendar className="w-3 h-3 mr-2" />
-                        Réserver cette séance
+                        {bookingSession === event.id ? (
+                          <>
+                            <span className="w-3 h-3 mr-2 rounded-full border-2 border-t-transparent border-[rgb(247_237_226_)] animate-spin" />
+                            Chargement...
+                          </>
+                        ) : (
+                          <>
+                            <Calendar className="w-3 h-3 mr-2" />
+                            Réserver cette séance
+                          </>
+                        )}
                       </Button>
                     </div>
                   )
                 )
+              )}
+              {event.resources && event.resources.length > 0 && (
+                <ResourceCheckboxes resources={event.resources} />
               )}
             </div>
           );
@@ -852,10 +805,15 @@ export default function DashboardPage() {
         {selectedEvent && (
           <CalendlyModal
             isOpen={showCalendlyModal}
-            onClose={() => {
+            onClose={(isScheduled) => {
               setShowCalendlyModal(false);
               setSelectedEvent(null);
               setActivePartner('both');
+              
+              // Only reset bookingSession if the modal is closed without scheduling
+              if (!isScheduled) {
+                setBookingSession(null);
+              }
             }}
             sessionType={selectedEvent.sessionType || 'initial'}
             onAppointmentScheduled={handleAppointmentScheduled}
