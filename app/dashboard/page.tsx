@@ -1007,12 +1007,12 @@ export default function DashboardPage() {
         {process.env.NODE_ENV === 'development' && (
           <div className="fixed top-4 right-4 z-50">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className={`text-xs ${simulationEnabled ? 'bg-emerald-600 border-emerald-700 text-white' : 'bg-slate-100'}`}
+              className={`text-xs px-2 py-1 h-6 ${simulationEnabled ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
               onClick={toggleSimulationMode}
             >
-              {simulationEnabled ? 'Désactiver Simulation' : 'Activer Simulation Temporelle'}
+              {simulationEnabled ? 'Désactiver Simulation' : 'Activer Simulation'}
             </Button>
           </div>
         )}
