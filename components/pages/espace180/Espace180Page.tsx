@@ -256,7 +256,7 @@ export default function Espace180Page() {
               >
                 <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
               </svg>
-              Mes Préférées ({likedCapsulesCount})
+              Mes Préférées
             </button>
 
             {/* Other Tags */}
@@ -344,28 +344,26 @@ export default function Espace180Page() {
                       {/* Control buttons */}
                       <div className="absolute right-4 bottom-4 z-20 flex gap-2">
                         {/* Like button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            toggleLike(capsule.id)
-                          }}
-                          className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 relative group"
-                          aria-label="Like this capsule"
-                        >
-                          <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            viewBox="0 0 24 24" 
-                            fill="currentColor" 
-                            className={`w-6 h-6 transition-all ${likedCapsules[capsule.id] ? 'text-red-500' : 'text-white group-hover:text-red-500'}`}
+                        <div className="w-14 h-14 rounded-full relative">
+                          <button
+                            onClick={() => {
+                              toggleLike(capsule.id)
+                            }}
+                            className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-red-500/30 group cursor-pointer"
+                            aria-label="Like this capsule"
                           >
-                            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                          </svg>
-                          {likedCapsules[capsule.id] > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                              {likedCapsules[capsule.id]}
-                            </span>
-                          )}
-                        </button>
+                            <div className="w-6 h-6 flex items-center justify-center">
+                              <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                viewBox="0 0 24 24" 
+                                fill="currentColor" 
+                                className={`w-6 h-6 transition-all ${likedCapsules[capsule.id] ? 'text-red-500' : 'text-white group-hover:text-red-500'}`}
+                              >
+                                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                              </svg>
+                            </div>
+                          </button>
+                        </div>
                         {/* Play/Pause button */}
                         <button
                           onClick={() => togglePlay(capsule.id)}
