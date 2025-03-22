@@ -10,10 +10,11 @@ interface Capsule {
   title: string
   description: string
   date: Date
-  videoUrl: string
+  mediaUrl: string
   posterUrl: string
   gradient: string
   tags: string[]
+  mediaType: 'audio' | 'video'
 }
 
 const capsules: Capsule[] = [
@@ -22,79 +23,86 @@ const capsules: Capsule[] = [
     title: 'Créativité - Capsule Libre',
     description: 'Une capsule conçue pour libérer votre créativité et explorer votre potentiel d\'expression. Laissez-vous guider dans cet espace où l\'imagination se déploie sans contraintes.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MINUTES/CREATIVITÉ_CAPSULE LIBRE.mp4',
+    mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,71,127,0.62)]',
-    tags: ['Créativité', 'Expression', 'Bien-être']
+    tags: ['Créativité', 'Expression', 'Bien-être'],
+    mediaType: 'video'
   },
   {
     id: 2,
     title: 'Zen Clic 1',
     description: 'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
+    mediaUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(41,53,49,0.62)]',
-    tags: ['Méditation', 'Zen', 'Relaxation']
+    tags: ['Méditation', 'Zen', 'Relaxation'],
+    mediaType: 'video'
   },
   {
     id: 3,
     title: 'Amour Passion',
     description: 'Explorez les dimensions de l\'amour passionnel et ses manifestations dans nos relations. Une réflexion sur l\'intensité et la profondeur des liens amoureux.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MIROIR/Amour passion.m4a',
+    mediaUrl: '/CAPSULES_MIROIR/Amour-passion.m4a',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
-    tags: ['Amour', 'Passion', 'Relation', 'Couple']
+    tags: ['Amour', 'Passion', 'Relation', 'Couple'],
+    mediaType: 'audio'
   },
   {
     id: 4,
     title: 'Capsule Connaître - Exploration',
     description: 'Une invitation à explorer la connaissance de soi et des autres. Cette capsule audio vous guide dans une démarche introspective pour mieux vous comprendre et vous connecter à votre essence.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MIROIR/Capsule connaître - exploration cac_Wind Remover.mp3',
+    mediaUrl: '/CAPSULES_MIROIR/Capsule-connaitre---exploration-cac_Wind-Remover.mp3',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(71,94,146,0.62)]',
-    tags: ['Connaissance de soi', 'Exploration', 'Introspection']
+    tags: ['Connaissance de soi', 'Exploration', 'Introspection'],
+    mediaType: 'audio'
   },
   {
     id: 5,
     title: 'Et si la relation amoureuse n\'est plus faite pour durer',
     description: 'Une réflexion sur l\'évolution des relations amoureuses dans notre société contemporaine. Questionnez vos attentes et vos perceptions sur la durabilité des liens affectifs.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MIROIR/Et si la relation amoureuse n\'est plus faite pour durer.m4a',
+    mediaUrl: '/CAPSULES_MIROIR/Et-si-la-relation-amoureuse-n_est-plus-faite-pour-durer.m4a',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(95,71,146,0.62)]',
-    tags: ['Relation', 'Couple', 'Évolution', 'Société']
+    tags: ['Relation', 'Couple', 'Évolution', 'Société'],
+    mediaType: 'audio'
   },
   {
     id: 6,
     title: 'La Pensée Orientée',
     description: 'Découvrez comment aligner vos pensées vers des objectifs positifs et constructifs. Cette méditation guidée vous aide à structurer votre réflexion pour plus de clarté et d\'efficacité.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MIROIR/La pensée orientée_Wind Remover.mp3',
+    mediaUrl: '/CAPSULES_MIROIR/La-pensee-orientee_Wind-Remover.mp3',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(71,146,89,0.62)]',
-    tags: ['Pensée positive', 'Méditation', 'Clarté mentale']
+    tags: ['Pensée positive', 'Méditation', 'Clarté mentale'],
+    mediaType: 'audio'
   },
   {
     id: 7,
     title: 'Les Uns et Les Autres',
     description: 'Une exploration des dynamiques relationnelles et des interactions entre individus. Cette capsule vous invite à porter un regard nouveau sur la façon dont nous nous connectons les uns aux autres.',
     date: new Date('2025-03-22'),
-    videoUrl: '/CAPSULES_MIROIR/Les uns et les autres.m4a',
+    mediaUrl: '/CAPSULES_MIROIR/Les-uns-et-les-autres.m4a',
     posterUrl: '/images/cover0.webp',
     gradient: 'from-transparent to-[rgb(146,132,71,0.62)]',
-    tags: ['Relations', 'Interactions sociales', 'Développement personnel']
+    tags: ['Relations', 'Interactions sociales', 'Développement personnel'],
+    mediaType: 'audio'
   }
 ]
 
 export default function Espace180Page() {
   const [isClient, setIsClient] = useState(false)
-  const [activeVideo, setActiveVideo] = useState<number | null>(null)
+  const [activeMedia, setActiveMedia] = useState<number | null>(null)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [likedCapsules, setLikedCapsules] = useState<{ [key: number]: number }>({})
-  const videoRefs = useRef<{ [key: number]: HTMLVideoElement }>({})
+  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | HTMLAudioElement }>({})
 
   useEffect(() => {
     setIsClient(true)
@@ -119,22 +127,32 @@ export default function Espace180Page() {
   }
 
   const togglePlay = (capsuleId: number) => {
-    const video = videoRefs.current[capsuleId]
-    if (!video) return
+    const media = videoRefs.current[capsuleId]
+    if (!media) return
 
-    if (video.paused) {
-      // Pause any other playing video
-      if (activeVideo !== null && activeVideo !== capsuleId) {
-        const activeVideoElement = videoRefs.current[activeVideo]
-        if (activeVideoElement) {
-          activeVideoElement.pause()
+    if (media.paused) {
+      // Pause any other playing media
+      if (activeMedia !== null && activeMedia !== capsuleId) {
+        const activeMediaElement = videoRefs.current[activeMedia]
+        if (activeMediaElement) {
+          activeMediaElement.pause()
         }
       }
-      video.play()
-      setActiveVideo(capsuleId)
+      // Play the media
+      try {
+        const playPromise = media.play()
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error("Error playing media:", error)
+          })
+        }
+      } catch (error) {
+        console.error("Exception playing media:", error)
+      }
+      setActiveMedia(capsuleId)
     } else {
-      video.pause()
-      setActiveVideo(null)
+      media.pause()
+      setActiveMedia(null)
     }
   }
 
@@ -194,7 +212,8 @@ export default function Espace180Page() {
     setLikedCapsules({});
   };
 
-  const setVideoRef = (element: HTMLVideoElement | null, id: number) => {
+  // Function to set the ref based on media type
+  const setMediaRef = (element: HTMLVideoElement | HTMLAudioElement | null, id: number) => {
     if (element) {
       videoRefs.current[id] = element;
     }
@@ -210,7 +229,7 @@ export default function Espace180Page() {
               Espace 180
             </h1>
             <p className="text-xl text-primary-cream/80">
-              Découvrez notre collection de méditations guidées et d&apos;exercices pratiques 
+              Découvrez notre collection de méditations guidées et d'exercices pratiques 
               pour vous accompagner dans votre cheminement personnel.
             </p>
           </div>
@@ -281,20 +300,38 @@ export default function Espace180Page() {
         >
           {filteredCapsules.map((capsule) => (
             <div key={capsule.id} className="bg-primary-dark p-8 rounded-[32px] flex flex-col">
-              {/* Video Container */}
+              {/* Media Container */}
               <div className="relative w-full rounded-[32px] overflow-hidden">
                 {/* Aspect ratio container */}
                 <div className="relative pb-[56.25%]">
                   {isClient && (
                     <>
-                      <video
-                        ref={(el) => setVideoRef(el, capsule.id)}
-                        className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
-                        playsInline
-                        webkit-playsinline="true"
-                        src={capsule.videoUrl}
-                        poster={capsule.posterUrl}
-                      />
+                      {capsule.mediaType === 'video' ? (
+                        <video
+                          ref={(el) => setMediaRef(el, capsule.id)}
+                          className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+                          playsInline
+                          webkit-playsinline="true"
+                          src={capsule.mediaUrl}
+                          poster={capsule.posterUrl}
+                        />
+                      ) : (
+                        <>
+                          <audio
+                            ref={(el) => setMediaRef(el, capsule.id)}
+                            src={capsule.mediaUrl}
+                            className="hidden"
+                          />
+                          <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl bg-primary-dark flex items-center justify-center">
+                            <div className="text-white/40">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-24 h-24">
+                                <path d="M8.25 4.5a3.75 3.75 0 117.5 0v8.25a3.75 3.75 0 11-7.5 0V4.5z" />
+                                <path d="M6 10.5a.75.75 0 01.75.75v1.5a5.25 5.25 0 1010.5 0v-1.5a.75.75 0 011.5 0v1.5a6.751 6.751 0 01-6 6.709v2.291h3a.75.75 0 010 1.5h-7.5a.75.75 0 010-1.5h3v-2.291a6.751 6.751 0 01-6-6.709v-1.5A.75.75 0 016 10.5z" />
+                              </svg>
+                            </div>
+                          </div>
+                        </>
+                      )}
                       {/* Gradient overlay */}
                       <div className={`absolute inset-0 bg-gradient-to-r ${capsule.gradient} rounded-[32px]`} />
                       {/* Frost bubbles */}
@@ -333,10 +370,10 @@ export default function Espace180Page() {
                         <button
                           onClick={() => togglePlay(capsule.id)}
                           className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-                          aria-label={activeVideo === capsule.id ? 'Pause video' : 'Play video'}
+                          aria-label={activeMedia === capsule.id ? 'Pause media' : 'Play media'}
                         >
                           <div className="w-6 h-6 flex items-center justify-center">
-                            {activeVideo === capsule.id ? (
+                            {activeMedia === capsule.id ? (
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
                                 <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
                               </svg>
