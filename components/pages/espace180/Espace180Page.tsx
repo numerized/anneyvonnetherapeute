@@ -126,6 +126,11 @@ export default function Espace180Page() {
     if (savedLikes) {
       setLikedCapsules(JSON.parse(savedLikes))
     }
+    // Load selected tag from localStorage
+    const savedTag = localStorage.getItem('espace180SelectedTag')
+    if (savedTag) {
+      setSelectedTags([savedTag])
+    }
   }, [])
 
   const toggleLike = (capsuleId: number) => {
@@ -194,6 +199,8 @@ export default function Espace180Page() {
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
     )
+    // Save selected tag to localStorage
+    localStorage.setItem('espace180SelectedTag', tag)
   }
 
   // Filter capsules based on selected tags
@@ -238,7 +245,8 @@ export default function Espace180Page() {
     }
   };
 
-  const renderCapsule = (capsule: Capsule, isLarge: boolean) => (
+  const renderCapsule = (capsule: Capsule, isLarge: boolean) => {
+    return (
     <div key={capsule.id} className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}>
       {/* Media Container */}
       <div className="relative w-full rounded-[32px] overflow-hidden">
@@ -339,21 +347,48 @@ export default function Espace180Page() {
         </p>
         
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-4 justify-end">
-          {capsule.tags.map((tag, index) => (
-            <span
-              key={index}
-              className={`px-3 py-1 text-xs rounded-full transition-all ${selectedTags.includes(tag) ? 'bg-white text-primary-dark font-medium' : 'bg-white/10 text-white'}`}
-            >
-              {tag}
-            </span>
-          ))}
+        <div className="flex flex-wrap gap-2 mt-4 justify-end" style={{ position: 'relative', zIndex: 30 }}>
+          {capsule.tags.map((tag, index) => {
+            // Create a function to handle tag click that's unique to this instance
+            const handleThisTagClick = (e: React.MouseEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log(`Tag clicked: ${tag}`);
+              
+              if (singleCapsule) {
+                // Set this tag and navigate back to main view
+                localStorage.setItem('espace180SelectedTag', tag);
+                window.location.href = '/espace180';
+              } else {
+                // Toggle this tag in the filter
+                toggleTag(tag);
+              }
+              return false;
+            };
+            
+            return (
+              <span
+                key={index}
+                onClick={handleThisTagClick}
+                className="px-3 py-1 text-xs rounded-full transition-all cursor-pointer inline-block relative z-30 hover:bg-white/30"
+                style={{ 
+                  backgroundColor: selectedTags.includes(tag) ? 'white' : 'rgba(255, 255, 255, 0.1)',
+                  color: selectedTags.includes(tag) ? '#1a202c' : 'white',
+                  fontWeight: selectedTags.includes(tag) ? 500 : 400,
+                  pointerEvents: 'auto'
+                }}
+              >
+                {tag}
+              </span>
+            );
+          })}
         </div>
+
       </div>
 
     </div>
-  )
-
+  );
+};
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
       {/* Hero Section */}
