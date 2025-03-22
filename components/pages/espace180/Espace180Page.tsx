@@ -81,7 +81,7 @@ const capsules: Capsule[] = [
     mediaUrl: '/CAPSULES_MIROIR/La-pensee-orientee_Wind-Remover.mp3',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir8.png',
     gradient: 'from-transparent to-[rgb(71,146,89,0.62)]',
-    tags: ['Pensée positive', 'Méditation', 'Clarté mentale', 'Miroir'],
+    tags: ['Pensée', 'Orientation', 'Conscience', 'Liberté', 'Transformation', 'Tantra', 'Haut Potentiel', 'Hédonisme', 'Miroir'],
     mediaType: 'audio'
   },
   {
