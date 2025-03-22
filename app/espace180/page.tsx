@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Espace180Page from '@/components/pages/espace180/Espace180Page'
-import { ClientNavbar } from '@/components/global/Navbar/ClientNavbar'
+import Espace180Navbar from '@/components/global/Navbar/Espace180Navbar'
 import { loadSettings } from '@/sanity/loader/loadQuery'
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default async function Espace180() {
 
   return (
     <>
-      <ClientNavbar data={initial.data} />
+      <Espace180Navbar data={initial.data} />
       <Espace180Page />
     </>
   )

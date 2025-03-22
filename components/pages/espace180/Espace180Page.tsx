@@ -20,7 +20,7 @@ interface Capsule {
 const capsules: Capsule[] = [
   {
     id: 1,
-    title: 'Créativité - Capsule Libre',
+    title: 'Meditation Erozen 001',
     description: 'Une capsule conçue pour libérer votre créativité et explorer votre potentiel d\'expression. Laissez-vous guider dans cet espace où l\'imagination se déploie sans contraintes.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
