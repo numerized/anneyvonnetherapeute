@@ -110,18 +110,168 @@ export default function Espace180Page() {
   const audioRefs = useRef<{ [key: number]: HTMLAudioElement | null }>({})
   const searchParams = useSearchParams()
   const params = useParams()
-  
+
   // Check for capsule ID from both route params and search params
   const routeParamId = params?.id ? parseInt(params.id as string, 10) : null
   const searchParamId = searchParams.get('capsule') ? parseInt(searchParams.get('capsule') as string, 10) : null
   const singleCapsuleId = routeParamId || searchParamId
-  
+
   // Find the single capsule if ID is provided
   const singleCapsule = singleCapsuleId ? capsules.find(c => c.id === singleCapsuleId) : null
 
+  // Client-side only effects
   useEffect(() => {
     setIsClient(true)
-    // Load liked capsules from localStorage
+  }, [])
+
+  // Set up Media Session API for mobile devices
+  useEffect(() => {
+    if (!isClient) return;
+    
+    if ('mediaSession' in navigator && navigator.mediaSession) {
+      const updateMediaSession = () => {
+        if (activeMedia === null) return;
+        
+        const activeCapsule = capsules.find(c => c.id === activeMedia);
+        if (!activeCapsule) return;
+        
+        // Update metadata on lock screen / control center
+        if (typeof MediaMetadata !== 'undefined') {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: activeCapsule.title || 'Audio Capsule',
+            artist: 'Anne Yvonne Relations',
+            album: 'Espace 180',
+            artwork: [
+              { 
+                src: activeCapsule.posterUrl,
+                sizes: '512x512',
+                type: 'image/jpeg'
+              }
+            ]
+          });
+        }
+        
+        // Set up playback control handlers
+        navigator.mediaSession.setActionHandler('play', () => {
+          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          if (media && media.paused) {
+            media.play().catch(err => console.error('Error playing media:', err));
+            setIsPlaying(true);
+          }
+        });
+        
+        navigator.mediaSession.setActionHandler('pause', () => {
+          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          if (media && !media.paused) {
+            media.pause();
+            setIsPlaying(false);
+          }
+        });
+        
+        // Optional seek controls
+        navigator.mediaSession.setActionHandler('seekforward', () => {
+          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          if (media) {
+            media.currentTime = Math.min(media.currentTime + 10, media.duration);
+          }
+        });
+        
+        navigator.mediaSession.setActionHandler('seekbackward', () => {
+          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          if (media) {
+            media.currentTime = Math.max(media.currentTime - 10, 0);
+          }
+        });
+      };
+      
+      if (activeMedia !== null) {
+        updateMediaSession();
+        
+        // Update play state
+        const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+        if (media) {
+          // @ts-ignore - playbackState might not be typescripted correctly
+          navigator.mediaSession.playbackState = media.paused ? 'paused' : 'playing';
+        }
+      } else {
+        // No active media
+        // @ts-ignore - playbackState might not be typescripted correctly
+        navigator.mediaSession.playbackState = 'none';
+      }
+    }
+  }, [isClient, activeMedia, capsules]);
+  
+  // Handle media events
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const handlePlay = (event: Event) => {
+      const element = event.target as HTMLMediaElement;
+      
+      // Find which capsule is playing
+      const capsuleId = Object.entries(audioRefs.current).find(
+        ([_, ref]) => ref === element
+      )?.[0] || Object.entries(videoRefs.current).find(
+        ([_, ref]) => ref === element
+      )?.[0];
+      
+      if (capsuleId) {
+        setActiveMedia(parseInt(capsuleId));
+        setIsPlaying(true);
+        
+        // Update media session
+        if ('mediaSession' in navigator && navigator.mediaSession) {
+          // @ts-ignore - playbackState might not be typescripted correctly
+          navigator.mediaSession.playbackState = 'playing';
+        }
+      }
+    };
+    
+    const handlePause = () => {
+      setIsPlaying(false);
+      
+      // Update media session
+      if ('mediaSession' in navigator && navigator.mediaSession) {
+        // @ts-ignore - playbackState might not be typescripted correctly
+        navigator.mediaSession.playbackState = 'paused';
+      }
+    };
+    
+    // Add event listeners to all media elements
+    Object.values(audioRefs.current).forEach(audio => {
+      if (audio) {
+        audio.addEventListener('play', handlePlay);
+        audio.addEventListener('pause', handlePause);
+      }
+    });
+    
+    Object.values(videoRefs.current).forEach(video => {
+      if (video) {
+        video.addEventListener('play', handlePlay);
+        video.addEventListener('pause', handlePause);
+      }
+    });
+    
+    return () => {
+      // Remove event listeners
+      Object.values(audioRefs.current).forEach(audio => {
+        if (audio) {
+          audio.removeEventListener('play', handlePlay);
+          audio.removeEventListener('pause', handlePause);
+        }
+      });
+      
+      Object.values(videoRefs.current).forEach(video => {
+        if (video) {
+          video.removeEventListener('play', handlePlay);
+          video.removeEventListener('pause', handlePause);
+        }
+      });
+    };
+  }, [isClient, audioRefs, videoRefs]);
+
+  // Load liked capsules from localStorage
+  useEffect(() => {
     const savedLikes = localStorage.getItem('espace180Likes')
     if (savedLikes) {
       setLikedCapsules(JSON.parse(savedLikes))
@@ -279,7 +429,6 @@ export default function Espace180Page() {
                   </div>
                 </>
               )}
-              {/* Gradient overlay - Removed as requested */}
               {/* Frost bubbles */}
               <div className="absolute top-4 right-4 flex gap-4 z-20">
                 {/* Capsule title bubble */}
@@ -389,6 +538,7 @@ export default function Espace180Page() {
     </div>
   );
 };
+
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
       {/* Hero Section */}
