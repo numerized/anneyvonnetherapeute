@@ -769,7 +769,20 @@ export default function DashboardPage() {
                       <Mail className="w-5 h-5" />
                     </div>
                     <div className="text-primary-cream/70">
-                      <div className="font-medium">{event.title}</div>
+                      <div className="font-medium">
+                        {event.title}
+                        
+                        {/* Show email timing information in localhost development mode */}
+                        {process.env.NODE_ENV === 'development' && (
+                          <span className="ml-2 text-xs font-normal text-orange-400">
+                            {event.triggerType === 'immediate' && '(envoi immédiat)'}
+                            {event.triggerType === 'before' && event.triggerDays && 
+                              `(${event.triggerDays} jour${event.triggerDays > 1 ? 's' : ''} avant)`}
+                            {event.triggerType === 'after' && event.triggerDays && 
+                              `(${event.triggerDays} jour${event.triggerDays > 1 ? 's' : ''} après)`}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <ResourceCheckboxes resources={event.resources} />
@@ -996,7 +1009,7 @@ export default function DashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className={`text-xs ${simulationEnabled ? 'bg-amber-100 border-amber-500 text-amber-800' : 'bg-slate-100'}`}
+              className={`text-xs ${simulationEnabled ? 'bg-emerald-600 border-emerald-700 text-white' : 'bg-slate-100'}`}
               onClick={toggleSimulationMode}
             >
               {simulationEnabled ? 'Désactiver Simulation' : 'Activer Simulation Temporelle'}
