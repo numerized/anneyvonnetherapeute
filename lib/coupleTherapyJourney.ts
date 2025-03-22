@@ -1,4 +1,5 @@
 import { SessionType } from '@/components/dashboard/CalendlyModal';
+import { TherapyResource } from '@/functions/src/templates/types';
 
 // Re-export SessionType so it can be imported from this module
 export type { SessionType };
@@ -21,6 +22,7 @@ export interface TherapyJourneyEvent {
   triggerDays?: number;
   triggerType?: EmailTrigger;
   emailType?: 'welcome' | 'preparation' | 'followup' | 'final';
+  resources?: TherapyResource[];
 }
 
 // The complete couple therapy journey including sessions and emails
@@ -34,7 +36,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     emailType: 'welcome',
     triggerType: 'immediate',
     phase: 'initial',
-    partner: 'both'
+    partner: 'both',
+    resources: [
+      {
+        type: 'capsule',
+        title: 'Capsules Cœur à Corps',
+        description: 'Accès privilégié aux capsules pendant deux ans'
+      }
+    ]
   },
   {
     id: 'initial_session',
@@ -55,7 +64,29 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'initial_session',
     phase: 'initial',
-    partner: 'both'
+    partner: 'both',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire de Préparation',
+        description: 'Formulaire à remplir avant la séance individuelle'
+      },
+      {
+        type: 'test',
+        title: 'Test de l\'Amoureux',
+        description: 'Test pour éclairer votre rapport à l\'amour et à la relation'
+      },
+      {
+        type: 'capsule',
+        title: 'Capsules Cœur à Corps',
+        description: 'Ressources pour approfondir votre réflexion'
+      },
+      {
+        type: 'reflection',
+        title: 'L\'Observation Consciente',
+        description: 'Réflexion sur l\'autre comme révélateur de soi-même'
+      }
+    ]
   },
 
   // Individual Phase - Partner 1 Journey
@@ -69,7 +100,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 3,
     dependsOn: 'initial_session',
     phase: 'individual',
-    partner: 'partner1'
+    partner: 'partner1',
+    resources: [
+      {
+        type: 'reflection',
+        title: 'Réflexion sur les Premiers Modèles Relationnels',
+        description: 'Réflexion sur vos premières expériences d\'amour et d\'attachement'
+      }
+    ]
   },
   {
     id: 'partner1_session_1',
@@ -92,7 +130,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'partner1_session_1',
     phase: 'individual',
-    partner: 'partner1'
+    partner: 'partner1',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire d\'Introspection',
+        description: 'Formulaire structurant pour accompagner l\'intégration de la séance'
+      }
+    ]
   },
   {
     id: 'partner1_session_2_prep_email',
@@ -104,7 +149,19 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 3,
     dependsOn: 'partner1_session_1',
     phase: 'individual',
-    partner: 'partner1'
+    partner: 'partner1',
+    resources: [
+      {
+        type: 'test',
+        title: 'Test Dépendance Relationnelle',
+        description: 'Test pour identifier les zones de dépendance ou de rejet dans votre rapport aux autres'
+      },
+      {
+        type: 'reflection',
+        title: 'Réflexion sur les Schémas Relationnels',
+        description: 'Réflexion sur les schémas de dépendance et de rejet dans vos relations'
+      }
+    ]
   },
   {
     id: 'partner1_session_2',
@@ -114,7 +171,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual2_partner1',
     partner: 'partner1',
     dependsOn: 'partner1_session_1',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -127,7 +184,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'partner1_session_2',
     phase: 'individual',
-    partner: 'partner1'
+    partner: 'partner1',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire d\'Introspection',
+        description: 'Formulaire structurant pour accompagner l\'intégration de la séance'
+      }
+    ]
   },
   {
     id: 'partner1_session_3_prep_email',
@@ -139,7 +203,19 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 3,
     dependsOn: 'partner1_session_2',
     phase: 'individual',
-    partner: 'partner1'
+    partner: 'partner1',
+    resources: [
+      {
+        type: 'audio',
+        title: 'Capsule Audio "Désir de Soi"',
+        description: 'Audio pour explorer votre désir de vous-même'
+      },
+      {
+        type: 'reflection',
+        title: 'Réflexion sur le Désir de Soi',
+        description: 'Réflexion sur la question "Que pourrais-je trouver de plus merveilleux que le désir de moi-même ?"'
+      }
+    ]
   },
   {
     id: 'partner1_session_3',
@@ -149,7 +225,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual3_partner1',
     partner: 'partner1',
     dependsOn: 'partner1_session_2',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -162,7 +238,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'partner1_session_3',
     phase: 'individual',
-    partner: 'partner1'
+    partner: 'partner1',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire d\'Introspection',
+        description: 'Formulaire structurant pour accompagner l\'intégration de la séance'
+      }
+    ]
   },
 
   // Individual Phase - Partner 2 Journey
@@ -176,7 +259,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 3,
     dependsOn: 'initial_session',
     phase: 'individual',
-    partner: 'partner2'
+    partner: 'partner2',
+    resources: [
+      {
+        type: 'reflection',
+        title: 'Réflexion sur les Premiers Modèles Relationnels',
+        description: 'Réflexion sur vos premières expériences d\'amour et d\'attachement'
+      }
+    ]
   },
   {
     id: 'partner2_session_1',
@@ -186,7 +276,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual1_partner2',
     partner: 'partner2',
     dependsOn: 'initial_session',
-    daysOffset: 7,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -199,7 +289,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'partner2_session_1',
     phase: 'individual',
-    partner: 'partner2'
+    partner: 'partner2',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire d\'Introspection',
+        description: 'Formulaire structurant pour accompagner l\'intégration de la séance'
+      }
+    ]
   },
   {
     id: 'partner2_session_2_prep_email',
@@ -211,7 +308,19 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 3,
     dependsOn: 'partner2_session_1',
     phase: 'individual',
-    partner: 'partner2'
+    partner: 'partner2',
+    resources: [
+      {
+        type: 'test',
+        title: 'Test Dépendance Relationnelle',
+        description: 'Test pour identifier les zones de dépendance ou de rejet dans votre rapport aux autres'
+      },
+      {
+        type: 'reflection',
+        title: 'Réflexion sur les Schémas Relationnels',
+        description: 'Réflexion sur les schémas de dépendance et de rejet dans vos relations'
+      }
+    ]
   },
   {
     id: 'partner2_session_2',
@@ -221,7 +330,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual2_partner2',
     partner: 'partner2',
     dependsOn: 'partner2_session_1',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -234,7 +343,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'partner2_session_2',
     phase: 'individual',
-    partner: 'partner2'
+    partner: 'partner2',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire d\'Introspection',
+        description: 'Formulaire structurant pour accompagner l\'intégration de la séance'
+      }
+    ]
   },
   {
     id: 'partner2_session_3_prep_email',
@@ -246,7 +362,19 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 3,
     dependsOn: 'partner2_session_2',
     phase: 'individual',
-    partner: 'partner2'
+    partner: 'partner2',
+    resources: [
+      {
+        type: 'audio',
+        title: 'Capsule Audio "Désir de Soi"',
+        description: 'Audio pour explorer votre désir de vous-même'
+      },
+      {
+        type: 'reflection',
+        title: 'Réflexion sur le Désir de Soi',
+        description: 'Réflexion sur la question "Que pourrais-je trouver de plus merveilleux que le désir de moi-même ?"'
+      }
+    ]
   },
   {
     id: 'partner2_session_3',
@@ -256,7 +384,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'individual3_partner2',
     partner: 'partner2',
     dependsOn: 'partner2_session_2',
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'individual'
   },
   {
@@ -269,7 +397,14 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'partner2_session_3',
     phase: 'individual',
-    partner: 'partner2'
+    partner: 'partner2',
+    resources: [
+      {
+        type: 'form',
+        title: 'Formulaire d\'Introspection',
+        description: 'Formulaire structurant pour accompagner l\'intégration de la séance'
+      }
+    ]
   },
 
   // Final Phase - Couple
@@ -293,7 +428,7 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     sessionType: 'final',
     partner: 'both',
     dependsOn: ['partner1_session_3', 'partner2_session_3'],
-    daysOffset: 14,
+    daysOffset: 28,
     phase: 'final'
   },
   {
@@ -306,7 +441,29 @@ export const coupleTherapyJourney: TherapyJourneyEvent[] = [
     triggerDays: 1,
     dependsOn: 'final_session',
     phase: 'final',
-    partner: 'both'
+    partner: 'both',
+    resources: [
+      {
+        type: 'test',
+        title: 'Test du Moi en Nous',
+        description: 'Test pour évaluer votre rapport à l\'amour et à la relation'
+      },
+      {
+        type: 'test',
+        title: 'État des Lieux Érotiques et Sexuels',
+        description: 'Évaluation personnelle pour identifier vos forces et vos besoins dans votre vie érotique et sexuelle'
+      },
+      {
+        type: 'audio',
+        title: 'Capsule sur "Le Couple Conscient"',
+        description: 'Capsule audio sur le couple conscient'
+      },
+      {
+        type: 'audio',
+        title: 'Audio Guidé',
+        description: 'Audio guidé pour continuer votre cheminement ensemble'
+      }
+    ]
   }
 ];
 

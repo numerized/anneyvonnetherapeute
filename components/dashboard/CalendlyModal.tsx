@@ -17,7 +17,7 @@ export type SessionType =
 // Props interface
 export interface CalendlyModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (isScheduled?: boolean) => void;
   sessionType: SessionType;
   userEmail?: string;
   guestEmail?: string;
@@ -96,7 +96,7 @@ export function CalendlyModal({
             onAppointmentScheduled(e.data);
             
             // Close the modal
-            onClose();
+            onClose(true);
           } else {
             console.error('Missing event URI or onAppointmentScheduled handler', {
               eventUri,
@@ -196,7 +196,7 @@ export function CalendlyModal({
             </b></p>
           )}
           <button
-            onClick={onClose}
+            onClick={() => onClose()}
             className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-coral"
           >
             <X className="w-6 h-6" />
