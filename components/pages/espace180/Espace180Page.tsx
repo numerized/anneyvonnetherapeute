@@ -24,7 +24,7 @@ const capsules: Capsule[] = [
     description: 'Une capsule conçue pour libérer votre créativité et explorer votre potentiel d\'expression. Laissez-vous guider dans cet espace où l\'imagination se déploie sans contraintes.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/images/posters/CREATIVITE_CAPSULE-LIBRE-poster.jpg',
     gradient: 'from-transparent to-[rgb(146,71,127,0.62)]',
     tags: ['Créativité', 'Expression', 'Bien-être'],
     mediaType: 'video'
@@ -35,7 +35,7 @@ const capsules: Capsule[] = [
     description: 'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
-    posterUrl: '/images/cover0.webp',
+    posterUrl: '/images/posters/ZEN_CLIC_1-poster.jpg',
     gradient: 'from-transparent to-[rgb(41,53,49,0.62)]',
     tags: ['Méditation', 'Zen', 'Relaxation'],
     mediaType: 'video'
