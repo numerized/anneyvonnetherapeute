@@ -16,8 +16,13 @@ export default function Espace180Page() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [likedCapsules, setLikedCapsules] = useState<{ [key: number]: number }>({})
+  const [currentTime, setCurrentTime] = useState<{ [key: number]: number }>({})
+  const [duration, setDuration] = useState<{ [key: number]: number }>({})
+  const [isDragging, setIsDragging] = useState<{ [key: number]: boolean }>({})
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({})
   const audioRefs = useRef<{ [key: number]: HTMLAudioElement | null }>({})
+  const progressRefs = useRef<{ [key: number]: HTMLDivElement | null }>({})
+  const progressTrackRefs = useRef<{ [key: number]: HTMLDivElement | null }>({})
   const searchParams = useSearchParams()
   const params = useParams()
 
@@ -119,6 +124,60 @@ export default function Espace180Page() {
     const currentAudioRefs = audioRefs.current;
     const currentVideoRefs = videoRefs.current;
 
+    // Add document level mouse event listeners for scrubber dragging
+    const handleDocumentMouseMove = (e: MouseEvent) => {
+      Object.keys(isDragging).forEach(idStr => {
+        const id = parseInt(idStr);
+        if (isDragging[id] && progressTrackRefs.current[id]) {
+          const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
+          let position = (e.clientX - trackRect.left) / trackRect.width;
+          
+          // Clamp position between 0 and 1
+          position = Math.max(0, Math.min(1, position));
+          
+          const media = audioRefs.current[id] || videoRefs.current[id];
+          if (media) {
+            const newTime = position * media.duration;
+            media.currentTime = newTime;
+            setCurrentTime(prev => ({ ...prev, [id]: newTime }));
+          }
+        }
+      });
+    };
+    
+    const handleDocumentTouchMove = (e: TouchEvent) => {
+      Object.keys(isDragging).forEach(idStr => {
+        const id = parseInt(idStr);
+        if (isDragging[id] && progressTrackRefs.current[id]) {
+          const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
+          let position = (e.touches[0].clientX - trackRect.left) / trackRect.width;
+          
+          // Clamp position between 0 and 1
+          position = Math.max(0, Math.min(1, position));
+          
+          const media = audioRefs.current[id] || videoRefs.current[id];
+          if (media) {
+            const newTime = position * media.duration;
+            media.currentTime = newTime;
+            setCurrentTime(prev => ({ ...prev, [id]: newTime }));
+          }
+        }
+      });
+    };
+    
+    const handleDocumentMouseUp = () => {
+      setIsDragging({});
+    };
+    
+    const handleDocumentTouchEnd = () => {
+      setIsDragging({});
+    };
+    
+    document.addEventListener('mousemove', handleDocumentMouseMove);
+    document.addEventListener('mouseup', handleDocumentMouseUp);
+    document.addEventListener('touchmove', handleDocumentTouchMove);
+    document.addEventListener('touchend', handleDocumentTouchEnd);
+
     const handlePlay = (event: Event) => {
       const element = event.target as HTMLMediaElement;
 
@@ -181,6 +240,11 @@ export default function Espace180Page() {
           video.removeEventListener('pause', handlePause);
         }
       });
+
+      document.removeEventListener('mousemove', handleDocumentMouseMove);
+      document.removeEventListener('mouseup', handleDocumentMouseUp);
+      document.removeEventListener('touchmove', handleDocumentTouchMove);
+      document.removeEventListener('touchend', handleDocumentTouchEnd);
     };
   }, [isClient]);
 
@@ -305,6 +369,84 @@ export default function Espace180Page() {
     }
   };
 
+  // Function to handle time updates
+  const handleTimeUpdate = (id: number) => {
+    const media = videoRefs.current[id] || audioRefs.current[id];
+    if (media) {
+      setCurrentTime(prev => ({
+        ...prev,
+        [id]: media.currentTime
+      }));
+      
+      if (!duration[id] && media.duration && !isNaN(media.duration)) {
+        setDuration(prev => ({
+          ...prev,
+          [id]: media.duration
+        }));
+      }
+      
+      // Update progress bar width
+      const progressBar = progressRefs.current[id];
+      if (progressBar) {
+        const progress = (media.currentTime / (media.duration || 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+      }
+    }
+  };
+
+  // Function to handle seeking
+  const handleSeek = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const media = videoRefs.current[id] || audioRefs.current[id];
+    if (!media) return;
+    
+    const progressTrack = e.currentTarget;
+    const rect = progressTrack.getBoundingClientRect();
+    
+    // Get the x position based on mouse or touch event
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clickPosition = (clientX - rect.left) / rect.width;
+    
+    // Clamp the position between 0 and 1
+    const clampedPosition = Math.max(0, Math.min(1, clickPosition));
+    const seekTime = clampedPosition * (media.duration || 0);
+    
+    // Update media current time
+    media.currentTime = seekTime;
+    
+    // Update state
+    setCurrentTime(prev => ({
+      ...prev,
+      [id]: seekTime
+    }));
+  };
+
+  const handleMouseDown = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    // First seek to the clicked/touched position
+    handleSeek(id, e);
+    
+    // Then start the dragging mode
+    setIsDragging(prev => ({ ...prev, [id]: true }));
+  };
+
+  const handleMouseMove = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (isDragging[id]) {
+      handleSeek(id, e);
+    }
+  };
+
+  const handleMouseUp = (id: number) => {
+    setIsDragging(prev => ({ ...prev, [id]: false }));
+  };
+
+  // Format time in seconds to MM:SS format
+  const formatTime = (timeInSeconds: number): string => {
+    if (isNaN(timeInSeconds)) return '00:00';
+    
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   const renderCapsule = (capsule: Capsule, isLarge: boolean) => {
     return (
       <div key={capsule.id} className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}>
@@ -322,6 +464,16 @@ export default function Espace180Page() {
                     webkit-playsinline="true"
                     src={capsule.mediaUrl}
                     poster={capsule.posterUrl}
+                    onTimeUpdate={() => handleTimeUpdate(capsule.id)}
+                    onLoadedMetadata={(e) => {
+                      const video = e.currentTarget;
+                      if (video.duration && !isNaN(video.duration)) {
+                        setDuration(prev => ({
+                          ...prev,
+                          [capsule.id]: video.duration
+                        }));
+                      }
+                    }}
                   />
                 ) : (
                   <>
@@ -329,6 +481,16 @@ export default function Espace180Page() {
                       ref={(el) => setMediaRef(el, capsule.id)}
                       src={capsule.mediaUrl}
                       className="hidden"
+                      onTimeUpdate={() => handleTimeUpdate(capsule.id)}
+                      onLoadedMetadata={(e) => {
+                        const audio = e.currentTarget;
+                        if (audio.duration && !isNaN(audio.duration)) {
+                          setDuration(prev => ({
+                            ...prev,
+                            [capsule.id]: audio.duration
+                          }));
+                        }
+                      }}
                     />
                     <div className="absolute inset-0 w-full h-full rounded-[32px] shadow-2xl overflow-hidden">
                       <img
@@ -394,6 +556,52 @@ export default function Espace180Page() {
             )}
           </div>
         </div>
+
+        {/* Time scrubber */}
+        {isClient && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between text-xs text-white/70 mb-1">
+              <span>{formatTime(currentTime[capsule.id] || 0)}</span>
+              <span>{formatTime(duration[capsule.id] || 0)}</span>
+            </div>
+            <div 
+              ref={(el) => {
+                progressTrackRefs.current[capsule.id] = el;
+              }}
+              className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors"
+              onMouseDown={(e) => handleMouseDown(capsule.id, e)}
+              onTouchStart={(e) => handleMouseDown(capsule.id, e)}
+              onMouseMove={(e) => handleMouseMove(capsule.id, e)}
+              onTouchMove={(e) => handleMouseMove(capsule.id, e)}
+              onMouseUp={() => handleMouseUp(capsule.id)}
+              onTouchEnd={() => handleMouseUp(capsule.id)}
+              onClick={(e) => handleSeek(capsule.id, e)}
+            >
+              {/* Background track with gradient */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 rounded-full"></div>
+              
+              {/* Progress fill */}
+              <div 
+                ref={(el) => {
+                  progressRefs.current[capsule.id] = el;
+                }}
+                className="absolute left-0 top-0 h-full bg-white/60 rounded-full transition-all duration-100"
+                style={{ width: '0%' }}
+              />
+              
+              {/* Progress handle */}
+              <div 
+                className="h-5 w-5 bg-white rounded-full absolute top-1/2 -translate-y-1/2 -ml-2.5 shadow-md transition-transform duration-150 transform hover:scale-110"
+                style={{ 
+                  left: `${((currentTime[capsule.id] || 0) / (duration[capsule.id] || 1)) * 100}%`,
+                  display: duration[capsule.id] ? 'block' : 'none',
+                  opacity: isDragging[capsule.id] ? '1' : '0.7',
+                  transform: isDragging[capsule.id] ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%)'
+                }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Capsule Info */}
         <div className="flex-grow space-y-4 mt-6">
