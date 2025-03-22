@@ -495,6 +495,15 @@ export default function Espace180Page() {
             <div className="max-w-5xl mx-auto">
               {renderCapsule(filteredCapsules[0], true)}
             </div>
+          ) : filteredCapsules.length === 2 && !singleCapsule ? (
+            // Two capsules - display in two columns
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {filteredCapsules.map((capsule) => (
+                <div key={capsule.id}>
+                  {renderCapsule(capsule, false)}
+                </div>
+              ))}
+            </div>
           ) : singleCapsule ? (
             // Single capsule from URL parameter - already centered
             <div className="max-w-5xl mx-auto mt-12">
