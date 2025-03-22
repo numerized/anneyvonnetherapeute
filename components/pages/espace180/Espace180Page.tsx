@@ -126,6 +126,11 @@ export default function Espace180Page() {
 
     // Add document level mouse event listeners for scrubber dragging
     const handleDocumentMouseMove = (e: MouseEvent) => {
+      // Prevent text selection during dragging
+      if (Object.values(isDragging).some(value => value)) {
+        e.preventDefault();
+      }
+      
       Object.keys(isDragging).forEach(idStr => {
         const id = parseInt(idStr);
         if (isDragging[id] && progressTrackRefs.current[id]) {
@@ -146,6 +151,11 @@ export default function Espace180Page() {
     };
     
     const handleDocumentTouchMove = (e: TouchEvent) => {
+      // Prevent default behavior like scrolling during dragging
+      if (Object.values(isDragging).some(value => value)) {
+        e.preventDefault();
+      }
+      
       Object.keys(isDragging).forEach(idStr => {
         const id = parseInt(idStr);
         if (isDragging[id] && progressTrackRefs.current[id]) {
@@ -421,6 +431,9 @@ export default function Espace180Page() {
   };
 
   const handleMouseDown = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    // Prevent default browser behavior
+    e.preventDefault();
+    
     // First seek to the clicked/touched position
     handleSeek(id, e);
     
@@ -429,14 +442,35 @@ export default function Espace180Page() {
   };
 
   const handleMouseMove = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    // Prevent default browser behavior if dragging
     if (isDragging[id]) {
+      e.preventDefault();
       handleSeek(id, e);
     }
   };
 
-  const handleMouseUp = (id: number) => {
+  const handleMouseUp = (id: number, e?: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    // Prevent default browser behavior
+    if (e) e.preventDefault();
     setIsDragging(prev => ({ ...prev, [id]: false }));
   };
+
+  // Effect to handle global user-select style during dragging
+  useEffect(() => {
+    const isAnyDragging = Object.values(isDragging).some(value => value);
+    
+    if (isAnyDragging) {
+      // Disable text selection on the entire document while dragging
+      document.body.classList.add('user-select-none');
+    } else {
+      document.body.classList.remove('user-select-none');
+    }
+    
+    return () => {
+      // Clean up on unmount
+      document.body.classList.remove('user-select-none');
+    };
+  }, [isDragging]);
 
   // Format time in seconds to MM:SS format
   const formatTime = (timeInSeconds: number): string => {
@@ -559,7 +593,7 @@ export default function Espace180Page() {
 
         {/* Time scrubber */}
         {isClient && (
-          <div className="mt-4">
+          <div className="mt-4 select-none">
             <div className="flex items-center justify-between text-xs text-white/70 mb-1">
               <span>{formatTime(currentTime[capsule.id] || 0)}</span>
               <span>{formatTime(duration[capsule.id] || 0)}</span>
@@ -568,13 +602,13 @@ export default function Espace180Page() {
               ref={(el) => {
                 progressTrackRefs.current[capsule.id] = el;
               }}
-              className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors"
+              className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors select-none"
               onMouseDown={(e) => handleMouseDown(capsule.id, e)}
               onTouchStart={(e) => handleMouseDown(capsule.id, e)}
               onMouseMove={(e) => handleMouseMove(capsule.id, e)}
               onTouchMove={(e) => handleMouseMove(capsule.id, e)}
-              onMouseUp={() => handleMouseUp(capsule.id)}
-              onTouchEnd={() => handleMouseUp(capsule.id)}
+              onMouseUp={(e) => handleMouseUp(capsule.id, e)}
+              onTouchEnd={(e) => handleMouseUp(capsule.id, e)}
               onClick={(e) => handleSeek(capsule.id, e)}
             >
               {/* Background track with gradient */}

@@ -33,6 +33,14 @@
   font-style: normal;
 }
 
+/* Prevent text selection during drag operations */
+.user-select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
