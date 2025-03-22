@@ -15,7 +15,8 @@ interface Capsule {
   date: Date
   mediaUrl: string
   posterUrl: string
-  gradient: string
+  squarePosterUrl?: string
+  gradient?: string
   tags: string[]
   mediaType: 'audio' | 'video'
 }
@@ -28,7 +29,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/CREATIVITE_CAPSULE-LIBRE.mp4',
     posterUrl: '/images/posters/CREATIVITE_CAPSULE-LIBRE-poster.jpg',
-    gradient: 'from-transparent to-[rgb(146,71,127,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/anneyvonneracine1.png',
     tags: ['Créativité', 'Expression', 'Bien-être', 'Minute'],
     mediaType: 'video'
   },
@@ -39,7 +40,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MINUTES/ZEN_CLIC_1.mp4',
     posterUrl: '/images/posters/ZEN_CLIC_1-poster.jpg',
-    gradient: 'from-transparent to-[rgb(41,53,49,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/meditationerozen2.png',
     tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
     mediaType: 'video'
   },
@@ -50,7 +51,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Amour-passion.m4a',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir5.png',
-    gradient: 'from-transparent to-[rgb(146,71,71,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir5.png',
     tags: ['Amour', 'Passion', 'Relation', 'Couple', 'Miroir'],
     mediaType: 'audio'
   },
@@ -61,7 +62,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Capsule-connaitre---exploration-cac_Wind-Remover.mp3',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir6.png',
-    gradient: 'from-transparent to-[rgb(71,94,146,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir6.png',
     tags: ['Connaissance de soi', 'Exploration', 'Introspection', 'Miroir'],
     mediaType: 'audio'
   },
@@ -72,7 +73,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Et-si-la-relation-amoureuse-n_est-plus-faite-pour-durer.m4a',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir7.png',
-    gradient: 'from-transparent to-[rgb(95,71,146,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir7.png',
     tags: ['Relation', 'Couple', 'Évolution', 'Société', 'Miroir'],
     mediaType: 'audio'
   },
@@ -83,7 +84,7 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/La-pensee-orientee_Wind-Remover.mp3',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir8.png',
-    gradient: 'from-transparent to-[rgb(71,146,89,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir8.png',
     tags: ['Pensée', 'Orientation', 'Conscience', 'Liberté', 'Transformation', 'Tantra', 'Haut Potentiel', 'Hédonisme', 'Miroir'],
     mediaType: 'audio'
   },
@@ -94,10 +95,10 @@ const capsules: Capsule[] = [
     date: new Date('2025-03-22'),
     mediaUrl: '/CAPSULES_MIROIR/Les-uns-et-les-autres.m4a',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir9.png',
-    gradient: 'from-transparent to-[rgb(146,132,71,0.62)]',
+    squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir9.png',
     tags: ['Relations', 'Interactions sociales', 'Développement personnel', 'Miroir'],
     mediaType: 'audio'
-  }
+  },
 ]
 
 export default function Espace180Page() {
@@ -144,9 +145,9 @@ export default function Espace180Page() {
             album: 'Espace 180',
             artwork: [
               { 
-                src: activeCapsule.posterUrl,
+                src: activeCapsule.squarePosterUrl || activeCapsule.posterUrl,
                 sizes: '512x512',
-                type: 'image/jpeg'
+                type: 'image/png'
               }
             ]
           });
