@@ -15,7 +15,6 @@ interface TimeSimulationPanelProps {
 export function TimeSimulationPanel({ onDateChange, isEnabled }: TimeSimulationPanelProps) {
   const [currentSimDate, setCurrentSimDate] = useState<Date>(new Date());
   const [dateInputValue, setDateInputValue] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // Initialize with today's date formatted
   useEffect(() => {
@@ -63,74 +62,77 @@ export function TimeSimulationPanel({ onDateChange, isEnabled }: TimeSimulationP
   if (!isEnabled) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 p-4 bg-amber-100 border border-amber-300 rounded-lg shadow-lg">
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-amber-800">Mode Simulation Temporelle</h3>
+    <div style={{ backgroundColor: '#047857', backdropFilter: 'none' }} className="fixed bottom-4 right-4 z-50 p-4 border border-emerald-800 rounded-lg shadow-lg">
+      <div style={{ backgroundColor: '#047857' }} className="flex flex-col gap-3">
+        <h3 className="text-sm font-bold text-white">Mode Simulation Temporelle</h3>
+
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-white" />
+          <Input
+            type="text"
+            value={dateInputValue}
+            onChange={handleDateInputChange}
+            onBlur={handleDateInputBlur}
+            placeholder="jj/mm/aaaa"
+            style={{ backgroundColor: '#065f46', color: 'white' }}
+            className="w-32 h-7 text-xs border-emerald-300 focus:border-white"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
           <Button 
             variant="outline" 
-            size="sm" 
-            className="h-6 border-amber-800 text-amber-800 hover:bg-amber-200"
-            onClick={() => setIsOpen(!isOpen)}
+            size="sm"
+            className="h-7 text-xs border-white text-white hover:bg-emerald-800 flex items-center gap-1"
+            onClick={() => advanceTime(-1)}
           >
-            {isOpen ? 'Réduire' : 'Étendre'}
+            <Rewind className="h-3 w-3" /> -1 Jour
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-7 text-xs border-white text-white hover:bg-emerald-800 flex items-center gap-1"
+            onClick={() => advanceTime(1)}
+          >
+            +1 Jour <FastForward className="h-3 w-3" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-7 text-xs border-white text-white hover:bg-emerald-800 flex items-center gap-1"
+            onClick={() => advanceTime(-7)}
+          >
+            <Rewind className="h-3 w-3" /> -1 Semaine
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-7 text-xs border-white text-white hover:bg-emerald-800 flex items-center gap-1"
+            onClick={() => advanceTime(7)}
+          >
+            +1 Semaine <FastForward className="h-3 w-3" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-7 text-xs border-white text-white hover:bg-emerald-800 flex items-center gap-1"
+            onClick={() => advanceTime(-28)}
+          >
+            <Rewind className="h-3 w-3" /> -4 Semaines
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-7 text-xs border-white text-white hover:bg-emerald-800 flex items-center gap-1"
+            onClick={() => advanceTime(28)}
+          >
+            +4 Semaines <FastForward className="h-3 w-3" />
           </Button>
         </div>
 
-        {isOpen && (
-          <>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-amber-800" />
-              <Input
-                type="text"
-                value={dateInputValue}
-                onChange={handleDateInputChange}
-                onBlur={handleDateInputBlur}
-                placeholder="jj/mm/aaaa"
-                className="w-32 h-7 text-xs border-amber-300 focus:border-amber-500 text-amber-800 bg-amber-50"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="h-7 text-xs border-amber-400 text-amber-800 hover:bg-amber-200 flex items-center gap-1"
-                onClick={() => advanceTime(-7)}
-              >
-                <Rewind className="h-3 w-3" /> -1 Semaine
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="h-7 text-xs border-amber-400 text-amber-800 hover:bg-amber-200 flex items-center gap-1"
-                onClick={() => advanceTime(7)}
-              >
-                +1 Semaine <FastForward className="h-3 w-3" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="h-7 text-xs border-amber-400 text-amber-800 hover:bg-amber-200 flex items-center gap-1"
-                onClick={() => advanceTime(-28)}
-              >
-                <Rewind className="h-3 w-3" /> -4 Semaines
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="h-7 text-xs border-amber-400 text-amber-800 hover:bg-amber-200 flex items-center gap-1"
-                onClick={() => advanceTime(28)}
-              >
-                +4 Semaines <FastForward className="h-3 w-3" />
-              </Button>
-            </div>
-
-            <div className="text-xs mt-1 text-amber-700 border-t pt-2 border-amber-300">
-              Date actuelle simulée: <strong>{format(currentSimDate, 'dd MMMM yyyy', { locale: fr })}</strong>
-            </div>
-          </>
-        )}
+        <div className="text-xs mt-1 text-white border-t pt-2 border-emerald-800">
+          Date actuelle simulée: <strong>{format(currentSimDate, 'dd MMMM yyyy', { locale: fr })}</strong>
+        </div>
       </div>
     </div>
   );
