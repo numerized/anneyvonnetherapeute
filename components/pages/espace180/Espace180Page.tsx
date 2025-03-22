@@ -331,8 +331,7 @@ export default function Espace180Page() {
                           </div>
                         </>
                       )}
-                      {/* Gradient overlay */}
-                      <div className={`absolute inset-0 bg-gradient-to-r ${capsule.gradient} rounded-[32px]`} />
+                      {/* Gradient overlay - Removed as requested */}
                       {/* Frost bubbles */}
                       <div className="absolute top-4 right-4 flex gap-4 z-20">
                         {/* Capsule title bubble */}
