@@ -337,7 +337,7 @@ export default function Espace180Page() {
                       <div className="absolute top-4 right-4 flex gap-4 z-20">
                         {/* Capsule title bubble */}
                         <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                          <span className="text-white font-medium">Capsule #{capsule.id}</span>
+                          <span className="text-white font-medium">#{capsule.id}</span>
                         </div>
                       </div>
                       {/* Play button - Left side */}
