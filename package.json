@@ -58,6 +58,7 @@
     "sanity": "3.64.1",
     "sanity-plugin-asset-source-unsplash": "3.0.1",
     "server-only": "0.0.1",
+    "sharp": "^0.33.5",
     "sonner": "^1.7.2",
     "stripe": "^17.5.0",
     "styled-components": "6.1.13",
