@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useParams, useSearchParams } from 'next/navigation'
 import Masonry from 'react-masonry-css'
-import { useSearchParams, useParams } from 'next/navigation'
+
 import { Capsule, capsules } from './data/capsules'
 
 export default function Espace180Page() {
@@ -116,87 +117,77 @@ export default function Espace180Page() {
     }
   }, [isClient, activeMedia]);
 
-  // Handle media events
+  // Memoize document event handlers
+  const handleDocumentMouseMove = useCallback((e: MouseEvent) => {
+    // Prevent text selection during dragging
+    if (Object.values(isDragging).some(value => value)) {
+      e.preventDefault();
+    }
+    
+    Object.keys(isDragging).forEach(idStr => {
+      const id = parseInt(idStr);
+      if (isDragging[id] && progressTrackRefs.current[id]) {
+        const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
+        let position = (e.clientX - trackRect.left) / trackRect.width;
+        
+        // Clamp position between 0 and 1
+        position = Math.max(0, Math.min(1, position));
+        
+        const media = audioRefs.current[id] || videoRefs.current[id];
+        if (media) {
+          const newTime = position * media.duration;
+          media.currentTime = newTime;
+          setCurrentTime(prev => ({ ...prev, [id]: newTime }));
+        }
+      }
+    });
+  }, [isDragging]);
+
+  const handleDocumentMouseUp = useCallback(() => {
+    setIsDragging({});
+  }, []);
+
+  const handleDocumentTouchMove = useCallback((e: TouchEvent) => {
+    // Prevent default behavior like scrolling during dragging
+    if (Object.values(isDragging).some(value => value)) {
+      e.preventDefault();
+    }
+    
+    Object.keys(isDragging).forEach(idStr => {
+      const id = parseInt(idStr);
+      if (isDragging[id] && progressTrackRefs.current[id]) {
+        const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
+        let position = (e.touches[0].clientX - trackRect.left) / trackRect.width;
+        
+        // Clamp position between 0 and 1
+        position = Math.max(0, Math.min(1, position));
+        
+        const media = audioRefs.current[id] || videoRefs.current[id];
+        if (media) {
+          const newTime = position * media.duration;
+          media.currentTime = newTime;
+          setCurrentTime(prev => ({ ...prev, [id]: newTime }));
+        }
+      }
+    });
+  }, [isDragging]);
+
+  const handleDocumentTouchEnd = useCallback(() => {
+    setIsDragging({});
+  }, []);
+
   useEffect(() => {
     if (!isClient) return;
 
-    // Store refs to current values to use in cleanup function
-    const currentAudioRefs = audioRefs.current;
-    const currentVideoRefs = videoRefs.current;
-
-    // Add document level mouse event listeners for scrubber dragging
-    const handleDocumentMouseMove = (e: MouseEvent) => {
-      // Prevent text selection during dragging
-      if (Object.values(isDragging).some(value => value)) {
-        e.preventDefault();
-      }
-      
-      Object.keys(isDragging).forEach(idStr => {
-        const id = parseInt(idStr);
-        if (isDragging[id] && progressTrackRefs.current[id]) {
-          const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
-          let position = (e.clientX - trackRect.left) / trackRect.width;
-          
-          // Clamp position between 0 and 1
-          position = Math.max(0, Math.min(1, position));
-          
-          const media = audioRefs.current[id] || videoRefs.current[id];
-          if (media) {
-            const newTime = position * media.duration;
-            media.currentTime = newTime;
-            setCurrentTime(prev => ({ ...prev, [id]: newTime }));
-          }
-        }
-      });
-    };
-    
-    const handleDocumentTouchMove = (e: TouchEvent) => {
-      // Prevent default behavior like scrolling during dragging
-      if (Object.values(isDragging).some(value => value)) {
-        e.preventDefault();
-      }
-      
-      Object.keys(isDragging).forEach(idStr => {
-        const id = parseInt(idStr);
-        if (isDragging[id] && progressTrackRefs.current[id]) {
-          const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
-          let position = (e.touches[0].clientX - trackRect.left) / trackRect.width;
-          
-          // Clamp position between 0 and 1
-          position = Math.max(0, Math.min(1, position));
-          
-          const media = audioRefs.current[id] || videoRefs.current[id];
-          if (media) {
-            const newTime = position * media.duration;
-            media.currentTime = newTime;
-            setCurrentTime(prev => ({ ...prev, [id]: newTime }));
-          }
-        }
-      });
-    };
-    
-    const handleDocumentMouseUp = () => {
-      setIsDragging({});
-    };
-    
-    const handleDocumentTouchEnd = () => {
-      setIsDragging({});
-    };
-    
-    document.addEventListener('mousemove', handleDocumentMouseMove);
-    document.addEventListener('mouseup', handleDocumentMouseUp);
-    document.addEventListener('touchmove', handleDocumentTouchMove);
-    document.addEventListener('touchend', handleDocumentTouchEnd);
+    // Store current refs to avoid closure issues
+    const currentAudioRefs = { ...audioRefs.current };
+    const currentVideoRefs = { ...videoRefs.current };
 
     const handlePlay = (event: Event) => {
       const element = event.target as HTMLMediaElement;
 
-      // Find which capsule is playing
-      const capsuleId = Object.entries(currentAudioRefs).find(
-        ([_, ref]) => ref === element
-      )?.[0] || Object.entries(currentVideoRefs).find(
-        ([_, ref]) => ref === element
-      )?.[0];
+      const capsuleId = Object.keys(currentAudioRefs).find(key => currentAudioRefs[key] === element) ||
+        Object.keys(currentVideoRefs).find(key => currentVideoRefs[key] === element);
 
       if (capsuleId) {
         setActiveMedia(parseInt(capsuleId));
@@ -235,6 +226,12 @@ export default function Espace180Page() {
       }
     });
 
+    // Add document-level event listeners for dragging
+    document.addEventListener('mousemove', handleDocumentMouseMove);
+    document.addEventListener('mouseup', handleDocumentMouseUp);
+    document.addEventListener('touchmove', handleDocumentTouchMove);
+    document.addEventListener('touchend', handleDocumentTouchEnd);
+
     return () => {
       // Remove event listeners using the same refs from closure
       Object.values(currentAudioRefs).forEach(audio => {
@@ -256,7 +253,7 @@ export default function Espace180Page() {
       document.removeEventListener('touchmove', handleDocumentTouchMove);
       document.removeEventListener('touchend', handleDocumentTouchEnd);
     };
-  }, [isClient]);
+  }, [isClient, handleDocumentMouseMove, handleDocumentMouseUp, handleDocumentTouchMove, handleDocumentTouchEnd]);
 
   // Load liked capsules from localStorage
   useEffect(() => {
@@ -455,22 +452,23 @@ export default function Espace180Page() {
     setIsDragging(prev => ({ ...prev, [id]: false }));
   };
 
+  // Memoize the dragging state check
+  const isAnyDragging = useMemo(() => {
+    return Object.values(isDragging).some(value => value);
+  }, [isDragging]);
+
   // Effect to handle global user-select style during dragging
   useEffect(() => {
-    const isAnyDragging = Object.values(isDragging).some(value => value);
-    
     if (isAnyDragging) {
-      // Disable text selection on the entire document while dragging
       document.body.classList.add('user-select-none');
     } else {
       document.body.classList.remove('user-select-none');
     }
     
     return () => {
-      // Clean up on unmount
       document.body.classList.remove('user-select-none');
     };
-  }, [isDragging]);
+  }, [isAnyDragging]); // Now correctly depends on the memoized value
 
   // Format time in seconds to MM:SS format
   const formatTime = (timeInSeconds: number): string => {
