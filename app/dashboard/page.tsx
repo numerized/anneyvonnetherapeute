@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
 import { ResourceCheckboxes } from '@/components/dashboard/ResourceCheckboxes';
+import { TimeSimulationPanel } from '@/components/dashboard/TimeSimulationPanel';
 import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
@@ -27,6 +28,7 @@ import {
 import { Calendar, Check, Clock, LogOut, Mail, Square, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -50,6 +52,10 @@ export default function DashboardPage() {
   // Add state to track which partner is booking
   const [activePartner, setActivePartner] = useState<'partner1' | 'partner2' | 'both'>('both');
   const [bookingSession, setBookingSession] = useState<string | null>(null);
+
+  // Add state for time simulation
+  const [simulationEnabled, setSimulationEnabled] = useState(false);
+  const [simulatedDate, setSimulatedDate] = useState<Date | null>(null);
 
   // Helper function to get session date - defined after sessionDates declaration
   const getSessionDate = useCallback((sessionId: string): string | undefined => {
@@ -593,7 +599,7 @@ export default function DashboardPage() {
         sessionEndTime.setHours(sessionEndTime.getHours() + 1);
 
         // Compare with current time
-        const currentTime = new Date();
+        const currentTime = getCurrentDate();
 
         // If the session end time has passed, mark as completed
         if (sessionEndTime <= currentTime) {
@@ -606,6 +612,120 @@ export default function DashboardPage() {
     }
 
     return false;
+  };
+
+  // Function to handle simulated date changes
+  const handleSimulatedDateChange = (newDate: Date) => {
+    setSimulatedDate(newDate);
+    console.log('Simulated date changed to:', format(newDate, 'yyyy-MM-dd'));
+  };
+
+  // Function to toggle simulation mode
+  const toggleSimulationMode = () => {
+    // When enabling, set the simulated date to today as a starting point
+    if (!simulationEnabled) {
+      setSimulatedDate(new Date());
+    } else {
+      setSimulatedDate(null);
+    }
+    setSimulationEnabled(!simulationEnabled);
+  };
+
+  // Helper function to get the current date, respecting simulation if enabled
+  const getCurrentDate = useCallback((): Date => {
+    return simulationEnabled && simulatedDate ? simulatedDate : new Date();
+  }, [simulationEnabled, simulatedDate]);
+
+  // Function to check if a date is in the past (or simulated past)
+  const isDateInPast = useCallback((dateStr: string): boolean => {
+    const today = getCurrentDate();
+    const date = new Date(dateStr);
+    return date < today;
+  }, [getCurrentDate]);
+
+  // Function to format a date based on its relative position to today (or simulated today)
+  const getFormattedDate = useCallback((dateStr: string): string => {
+    try {
+      const date = parseISO(dateStr);
+      if (!isValid(date)) return 'Date invalide';
+      
+      const today = getCurrentDate();
+      
+      return format(date, 'dd MMMM yyyy', { locale: fr });
+    } catch (error) {
+      console.error('Error formatting date:', error, dateStr);
+      return 'Date invalide';
+    }
+  }, [getCurrentDate]);
+
+  // Function to mark a session as completed
+  const handleCompleteSession = async (sessionId: string) => {
+    if (!user) return;
+    
+    try {
+      // Update local state first for immediate UI feedback
+      const newCompletedSessions = new Set(completedSessions);
+      newCompletedSessions.add(sessionId);
+      setCompletedSessions(newCompletedSessions);
+      
+      // Update in Firestore
+      const db = getFirestore(app);
+      const userRef = doc(db, "users", user.uid);
+      
+      await updateDoc(userRef, {
+        completedSessions: Array.from(newCompletedSessions)
+      });
+      
+      console.log(`Session ${sessionId} marked as completed`);
+      
+      // Force UI refresh
+      setUiRefreshKey(prev => prev + 1);
+    } catch (error) {
+      console.error('Error marking session as completed:', error);
+    }
+  };
+
+  // Update function to handle setting a session date
+  const handleSetSessionDate = async (sessionId: string, dateStr: string) => {
+    if (!user) return;
+    
+    try {
+      // Validate the date first (must be at least 4 weeks after any dependent sessions)
+      if (!isDateValid(sessionId, dateStr)) {
+        toast.error('La date doit être au moins 4 semaines après la séance précédente.');
+        return;
+      }
+      
+      // Update local state first for immediate UI feedback
+      const newDates = { ...sessionDates, [sessionId]: dateStr };
+      setSessionDates(newDates);
+      
+      // Update in Firestore
+      const db = getFirestore(app);
+      const userRef = doc(db, "users", user.uid);
+      
+      await updateDoc(userRef, {
+        [`sessionDates.${sessionId}`]: dateStr
+      });
+      
+      console.log(`Session ${sessionId} date set to ${dateStr}`);
+      
+      // Special case: If this is today's date or in the past (simulated or real), mark as completed
+      const today = getCurrentDate();
+      const sessionDate = new Date(dateStr);
+      
+      if (sessionDate <= today) {
+        await handleCompleteSession(sessionId);
+      }
+      
+      toast.success('Date de séance enregistrée');
+      
+      // Force UI refresh
+      setUiRefreshKey(prev => prev + 1);
+    } catch (error) {
+      console.error('Error setting session date:', error);
+      toast.error('Erreur lors de l\'enregistrement de la date.');
+    }
   };
 
   // Render journey timeline by phase
@@ -649,7 +769,20 @@ export default function DashboardPage() {
                       <Mail className="w-5 h-5" />
                     </div>
                     <div className="text-primary-cream/70">
-                      <div className="font-medium">{event.title}</div>
+                      <div className="font-medium">
+                        {event.title}
+                        
+                        {/* Show email timing information in localhost development mode */}
+                        {process.env.NODE_ENV === 'development' && (
+                          <span className="ml-2 text-xs font-normal text-orange-400">
+                            {event.triggerType === 'immediate' && '(envoi immédiat)'}
+                            {event.triggerType === 'before' && event.triggerDays && 
+                              `(${event.triggerDays} jour${event.triggerDays > 1 ? 's' : ''} avant)`}
+                            {event.triggerType === 'after' && event.triggerDays && 
+                              `(${event.triggerDays} jour${event.triggerDays > 1 ? 's' : ''} après)`}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <ResourceCheckboxes resources={event.resources} />
@@ -863,6 +996,26 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Add time simulation panel */}
+        <TimeSimulationPanel 
+          onDateChange={handleSimulatedDateChange} 
+          isEnabled={simulationEnabled} 
+        />
+
+        {/* Add simulation control button - developers only  */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="fixed top-4 right-4 z-50">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`text-xs px-2 py-1 h-6 ${simulationEnabled ? 'bg-emerald-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+              onClick={toggleSimulationMode}
+            >
+              {simulationEnabled ? 'Désactiver Simulation' : 'Activer Simulation'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
