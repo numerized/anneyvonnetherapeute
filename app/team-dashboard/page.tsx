@@ -123,7 +123,7 @@ export default function TeamDashboardPage() {
     <div key={uiRefreshKey} className="min-h-screen bg-primary-forest text-primary-cream">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-coral text-center">Tableau de bord Équipe</h1>
+          <h1 className="text-3xl font-bold text-primary-coral text-center">Tableau de bord Thérapeute</h1>
           <div className="flex gap-4">
             <ZenClickButton />
             <Button
