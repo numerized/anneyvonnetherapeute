@@ -6,25 +6,27 @@ export interface Offer {
   title: string;
   description: string;
   price: number;
-  userId: string;
-  partnerId?: string;
-  status: 'active' | 'expired' | 'used';
+  customerEmail: string;
   createdAt: Date;
   expiresAt?: Date;
   offerName: string;
   features: string[];
+  metadata: {
+    title: string;
+    description?: string;
+  };
 }
 
-export async function getUserOffers(userId: string, partnerId?: string): Promise<Offer[]> {
-  console.log('Fetching offers for:', { userId, partnerId });
+export async function getUserOffers(userEmail: string, partnerEmail?: string): Promise<Offer[]> {
+  console.log('Fetching offers for:', { userEmail, partnerEmail });
   
   const db = getFirestore(app);
   const offersRef = collection(db, 'purchases');
   
   // Create a query to fetch offers for either the user or their partner
-  const conditions = [where('userId', '==', userId)];
-  if (partnerId) {
-    conditions.push(where('userId', '==', partnerId));
+  const conditions = [where('customerEmail', '==', userEmail)];
+  if (partnerEmail) {
+    conditions.push(where('customerEmail', '==', partnerEmail));
   }
   
   const offersQuery = query(offersRef, or(...conditions));
