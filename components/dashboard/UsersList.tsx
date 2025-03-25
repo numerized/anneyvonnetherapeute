@@ -1,12 +1,20 @@
 import { User } from '@/lib/userService';
 import { Offer } from '@/lib/offerService';
-import { format } from 'date-fns';
+import { format, parseISO, isFuture } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Timestamp } from 'firebase/firestore';
-import { Users } from 'lucide-react';
+import { Users, Calendar } from 'lucide-react';
 
 interface UserWithOffer extends User {
   currentOffer?: Offer | null;
+  sessionDates?: Record<string, string>;
+  partnerProfile?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string;
+    sessionDates?: Record<string, string>;
+  };
 }
 
 interface UsersListProps {
@@ -18,6 +26,36 @@ export function UsersList({ users }: UsersListProps) {
     if (!date) return '';
     const jsDate = date instanceof Timestamp ? date.toDate() : date;
     return format(jsDate, 'dd MMMM yyyy', { locale: fr });
+  };
+
+  const getNextAppointment = (sessionDates?: Record<string, string>) => {
+    if (!sessionDates) return null;
+
+    const now = new Date();
+    let nextDate: Date | null = null;
+
+    Object.values(sessionDates).forEach(dateStr => {
+      const date = parseISO(dateStr);
+      if (isFuture(date) && (!nextDate || date < nextDate)) {
+        nextDate = date;
+      }
+    });
+
+    return nextDate;
+  };
+
+  const renderNextAppointment = (sessionDates?: Record<string, string>) => {
+    const nextDate = getNextAppointment(sessionDates);
+    if (!nextDate) return null;
+
+    return (
+      <div className="flex items-center gap-1 text-primary-cream/60">
+        <Calendar className="w-3 h-3" />
+        <span className="text-xs">
+          Prochain RDV: {format(nextDate, 'dd MMM yyyy', { locale: fr })}
+        </span>
+      </div>
+    );
   };
 
   return (
@@ -45,6 +83,7 @@ export function UsersList({ users }: UsersListProps) {
                 {user.phone && (
                   <p className="text-sm text-primary-cream/60">{user.phone}</p>
                 )}
+                {renderNextAppointment(user.sessionDates)}
               </div>
 
               {/* Partner Column */}
@@ -60,6 +99,7 @@ export function UsersList({ users }: UsersListProps) {
                       {user.partnerProfile.phone && (
                         <p className="text-sm text-primary-cream/60">{user.partnerProfile.phone}</p>
                       )}
+                      {renderNextAppointment(user.partnerProfile.sessionDates)}
                     </div>
                   </div>
                 ) : (
