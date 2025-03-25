@@ -3,22 +3,20 @@ import { Offer } from '@/lib/offerService';
 import { format, parseISO, isFuture } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Timestamp } from 'firebase/firestore';
-import { Users, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
 interface UserWithOffer extends User {
   currentOffer?: Offer | null;
-  sessionDates?: Record<string, string>;
-  partnerProfile?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone?: string;
-    sessionDates?: Record<string, string>;
-  };
 }
 
 interface UsersListProps {
   users: UserWithOffer[];
+}
+
+interface NextSession {
+  date: Date;
+  type: string;
+  isSharedSession?: boolean;
 }
 
 export function UsersList({ users }: UsersListProps) {
@@ -28,31 +26,69 @@ export function UsersList({ users }: UsersListProps) {
     return format(jsDate, 'dd MMMM yyyy', { locale: fr });
   };
 
-  const getNextAppointment = (sessionDates?: Record<string, string>) => {
+  const getNextAppointment = (sessionDates?: Record<string, string>, includeShared = true) => {
     if (!sessionDates) return null;
 
     const now = new Date();
-    let nextDate: Date | null = null;
+    
+    // Filter out non-future dates and find the earliest one
+    const futureDates = Object.entries(sessionDates)
+      .map(([key, dateStr]) => ({
+        key,
+        date: parseISO(dateStr),
+        isSharedSession: key === 'initial_session' || key === 'final_session'
+      }))
+      .filter(({ date, isSharedSession }) => 
+        isFuture(date) && (includeShared || !isSharedSession)
+      )
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    Object.values(sessionDates).forEach(dateStr => {
-      const date = parseISO(dateStr);
-      if (isFuture(date) && (!nextDate || date < nextDate)) {
-        nextDate = date;
-      }
-    });
+    if (futureDates.length > 0) {
+      const nextSession = futureDates[0];
+      return {
+        date: nextSession.date,
+        type: nextSession.key,
+        isSharedSession: nextSession.isSharedSession
+      };
+    }
 
-    return nextDate;
+    return null;
   };
 
-  const renderNextAppointment = (sessionDates?: Record<string, string>) => {
-    const nextDate = getNextAppointment(sessionDates);
-    if (!nextDate) return null;
+  const getSessionType = (key: string) => {
+    if (key === 'initial_session') return 'Session initiale';
+    if (key === 'final_session') return 'Session finale';
+    if (key.startsWith('partner1_session_')) return `Session couple 1`;
+    if (key.startsWith('partner2_session_')) return `Session couple 2`;
+    return 'Session';
+  };
+
+  const renderNextAppointment = (mainUserDates?: Record<string, string>, partnerDates?: Record<string, string>, isPartner = false) => {
+    // For partner view, first check if there's a shared session (initial/final)
+    if (isPartner && mainUserDates) {
+      const sharedSession = getNextAppointment(mainUserDates);
+      if (sharedSession?.isSharedSession) {
+        return (
+          <div className="flex items-center gap-1 text-primary-cream/60">
+            <Calendar className="w-3 h-3" />
+            <span className="text-xs">
+              {getSessionType(sharedSession.type)}: {format(sharedSession.date, 'dd MMM yyyy à HH:mm', { locale: fr })}
+            </span>
+          </div>
+        );
+      }
+    }
+
+    // Get next non-shared session
+    const dates = isPartner ? partnerDates : mainUserDates;
+    const next = getNextAppointment(dates, !isPartner);
+    if (!next) return null;
 
     return (
       <div className="flex items-center gap-1 text-primary-cream/60">
         <Calendar className="w-3 h-3" />
         <span className="text-xs">
-          Prochain RDV: {format(nextDate, 'dd MMM yyyy', { locale: fr })}
+          {getSessionType(next.type)}: {format(next.date, 'dd MMM yyyy à HH:mm', { locale: fr })}
         </span>
       </div>
     );
@@ -89,18 +125,15 @@ export function UsersList({ users }: UsersListProps) {
               {/* Partner Column */}
               <div>
                 {user.partnerProfile ? (
-                  <div className="flex items-start gap-2">
-                    <Users className="w-4 h-4 mt-1 text-primary-cream/60 flex-shrink-0" />
-                    <div>
-                      <h4 className="text-md font-medium text-primary-cream">
-                        {user.partnerProfile.firstName} {user.partnerProfile.lastName}
-                      </h4>
-                      <p className="text-sm text-primary-cream/60">{user.partnerProfile.email}</p>
-                      {user.partnerProfile.phone && (
-                        <p className="text-sm text-primary-cream/60">{user.partnerProfile.phone}</p>
-                      )}
-                      {renderNextAppointment(user.partnerProfile.sessionDates)}
-                    </div>
+                  <div>
+                    <h4 className="text-md font-medium text-primary-cream">
+                      {user.partnerProfile.firstName} {user.partnerProfile.lastName}
+                    </h4>
+                    <p className="text-sm text-primary-cream/60">{user.partnerProfile.email}</p>
+                    {user.partnerProfile.phone && (
+                      <p className="text-sm text-primary-cream/60">{user.partnerProfile.phone}</p>
+                    )}
+                    {renderNextAppointment(user.sessionDates, user.partnerProfile.sessionDates, true)}
                   </div>
                 ) : (
                   <p className="text-primary-cream/40 italic">Pas de partenaire</p>
