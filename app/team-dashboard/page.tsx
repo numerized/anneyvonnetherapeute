@@ -1,9 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { CalendlyModal } from '@/components/dashboard/CalendlyModal';
-import { TimeSimulationPanel } from '@/components/dashboard/TimeSimulationPanel';
-import { UserProfileSection } from '@/components/dashboard/UserProfileSection';
+import { TeamProfileSection } from '@/components/dashboard/TeamProfileSection';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { app } from '@/lib/firebase';
 import { createOrUpdateUser, getUserById, UserProfile } from '@/lib/userService';
@@ -104,11 +102,9 @@ export default function TeamDashboardPage() {
 
   // Render user profile section
   const renderUserProfileSection = () => (
-    <UserProfileSection
+    <TeamProfileSection
       user={user}
-      partner={null}
       userProfile={userProfile}
-      partnerProfile={null}
       onProfileUpdate={handleProfileUpdate}
     />
   );
