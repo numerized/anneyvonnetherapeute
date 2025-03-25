@@ -22,6 +22,7 @@ export interface User {
   email?: string;
   firstName?: string;
   id?: string;
+  isTherapist?: boolean;
   lastName?: string;
   partnerProfile?: UserProfile;
   phone?: string;
