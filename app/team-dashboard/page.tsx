@@ -2,8 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { TeamProfileSection } from '@/components/dashboard/TeamProfileSection';
+import { UsersList } from '@/components/dashboard/UsersList';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { app } from '@/lib/firebase';
+import { getAllUsers } from '@/lib/adminService';
 import { createOrUpdateUser, getUserById, UserProfile } from '@/lib/userService';
 import { format, parseISO, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -19,6 +21,7 @@ export default function TeamDashboardPage() {
   // Authentication state
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // UI refresh counter
@@ -91,11 +94,17 @@ export default function TeamDashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  // Effect to load user profile
+  // Effect to load user profile and all users
   useEffect(() => {
     if (user?.uid) {
-      getUserProfile(user.uid).then(({ userProfile }) => {
+      Promise.all([
+        getUserProfile(user.uid),
+        getAllUsers()
+      ]).then(([{ userProfile }, allUsers]) => {
         setUserProfile(userProfile);
+        setUsers(allUsers);
+      }).catch(error => {
+        console.error('Error fetching data:', error);
       });
     }
   }, [user?.uid]);
@@ -138,6 +147,9 @@ export default function TeamDashboardPage() {
         </div>
 
         {renderUserProfileSection()}
+
+        {/* Users List Section */}
+        <UsersList users={users} />
 
         {/* Add any team-specific features here */}
       </div>
