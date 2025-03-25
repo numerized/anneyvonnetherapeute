@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { TeamProfileSection } from '@/components/dashboard/TeamProfileSection';
 import { UsersList } from '@/components/dashboard/UsersList';
+import { NextAppointments } from '@/components/dashboard/NextAppointments';
 import { ZenClickButton } from '@/components/ZenClickButton';
 import { app } from '@/lib/firebase';
 import { getAllUsers } from '@/lib/adminService';
@@ -149,11 +150,8 @@ export default function TeamDashboardPage() {
         <div className="mb-12">
           {renderUserProfileSection()}
         </div>
-
-        {/* Users List Section */}
+        <NextAppointments users={users} />
         <UsersList users={users} />
-
-        {/* Add any team-specific features here */}
       </div>
     </div>
   );
