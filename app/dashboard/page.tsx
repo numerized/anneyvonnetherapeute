@@ -9,6 +9,7 @@ import { ZenClickButton } from '@/components/ZenClickButton';
 import { coupleTherapyJourney, TherapyJourneyEvent } from '@/lib/coupleTherapyJourney';
 import { app } from '@/lib/firebase';
 import { createOrUpdateUser, getUserById, UserProfile, SessionDetails } from '@/lib/userService';
+import { getUserOffers, Offer } from '@/lib/offerService';
 import { format, parseISO, addDays, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { getAuth, signOut, User as FirebaseUser } from 'firebase/auth';
@@ -38,6 +39,7 @@ export default function DashboardPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [partnerProfile, setPartnerProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPlan, setCurrentPlan] = useState<Offer | null>(null);
 
   // Session state
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
@@ -102,9 +104,20 @@ export default function DashboardPage() {
   useEffect(() => {
     const auth = getAuth(app);
 
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);
+
+        // Check if user is a therapist
+        const db = getFirestore(app);
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        const userData = userDoc.data();
+        
+        if (userData?.isTherapist) {
+          // If therapist, redirect to team dashboard
+          router.push('/team-dashboard');
+          return;
+        }
 
         async function fetchUserProfile() {
           if (!user || !user.uid) return;
@@ -132,13 +145,27 @@ export default function DashboardPage() {
   // Effect to load user and partner profiles
   useEffect(() => {
     if (user?.uid) {
+      // Load user profiles
       getUserProfiles(user.uid).then(({ userProfile, partnerProfile }) => {
         setUserProfile(userProfile);
         setPartnerProfile(partnerProfile);
+
+        // Load user's plan from purchases using email addresses
+        if (userProfile?.email) {
+          getUserOffers(userProfile.email, partnerProfile?.email).then((offers) => {
+            // Get the most recent offer by creation date
+            const sortedOffers = offers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+            if (sortedOffers.length > 0) {
+              setCurrentPlan(sortedOffers[0]);
+            }
+          }).catch((error) => {
+            console.error('Error fetching user offers:', error);
+          });
+        }
       });
     }
   }, [user?.uid]);
-  
+
   // Effect to update session dates
   useEffect(() => {
     if (userProfile?.sessionDates !== undefined) {
@@ -961,6 +988,17 @@ export default function DashboardPage() {
         <div className="bg-[rgb(247_237_226_/0.1)] rounded-lg shadow-lg p-6 mt-6">
           <h2 className="text-2xl font-semibold mb-1 text-primary-coral">Votre parcours thérapeutique</h2>
           <p className="text-[rgb(247_237_226_)]/70 mb-6">Tous les rendez-vous, ici, les liens vers les appels vidéo s'afficheront ici 30min avant le rendez-vous.</p>
+
+          {/* Display current plan */}
+          {currentPlan && (
+            <div className="mb-6 p-4 bg-[rgb(247_237_226_/0.05)] rounded-lg">
+              <h3 className="text-lg font-medium text-primary-coral mb-2">Votre formule actuelle</h3>
+              <div className="text-[rgb(247_237_226_)]/90">
+                <p className="font-medium">{currentPlan.metadata.title}</p>
+                <p className="text-sm text-[rgb(247_237_226_)]/70 mt-1">{currentPlan.metadata.description || currentPlan.description}</p>
+              </div>
+            </div>
+          )}
 
           {/* Display therapy journey phases */}
           <div className="mt-8 space-y-8">
