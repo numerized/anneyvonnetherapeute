@@ -33,6 +33,20 @@ export async function getAllUsers(): Promise<UserWithOffer[]> {
       console.log('Skipping therapist:', userData.email);
       continue;
     }
+
+    // Get partner's session dates if partner exists
+    let partnerProfile = userData.partnerProfile;
+    if (partnerProfile && partnerProfile.email) {
+      const partnerQuery = query(usersRef, where('email', '==', partnerProfile.email));
+      const partnerSnapshot = await getDocs(partnerQuery);
+      if (!partnerSnapshot.empty) {
+        const partnerData = partnerSnapshot.docs[0].data();
+        partnerProfile = {
+          ...partnerProfile,
+          sessionDates: partnerData.sessionDates
+        };
+      }
+    }
     
     // Get user's latest offer
     const purchasesRef = collection(db, 'purchases');
@@ -59,6 +73,7 @@ export async function getAllUsers(): Promise<UserWithOffer[]> {
       ...userData,
       id: userDoc.id,
       currentOffer: latestOffer,
+      partnerProfile // Use the updated partnerProfile with sessionDates
     });
   }
   
