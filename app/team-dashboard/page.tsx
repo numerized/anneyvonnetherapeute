@@ -146,7 +146,9 @@ export default function TeamDashboardPage() {
           </div>
         </div>
 
-        {renderUserProfileSection()}
+        <div className="mb-12">
+          {renderUserProfileSection()}
+        </div>
 
         {/* Users List Section */}
         <UsersList users={users} />
