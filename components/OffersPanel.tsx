@@ -63,19 +63,15 @@ export function OffersPanel({ userId, partnerId, onOffersLoaded }: OffersPanelPr
           <div className="flex justify-between items-start mb-4">
             <div>
               <h3 className="text-xl font-medium text-primary-coral mb-1">
-                {offer.status === 'active' ? (offer.offerName || offer.title || 'COACHING RELATIONNEL 7/7') : offer.offerName || offer.title ||  'COACHING RELATIONNEL 7/7'}
+                {offer.offerName || offer.title || 'COACHING RELATIONNEL 7/7'}
               </h3>
               <p className="text-sm text-primary-cream/80">{offer.description}</p>
             </div>
-            <span className={`
-              px-3 py-1.5 rounded-full text-xs font-medium
-              ${offer.status === 'active' ? 'bg-green-500/20 text-green-300' :
-                offer.status === 'expired' ? 'bg-red-500/20 text-red-300' :
-                'bg-gray-500/20 text-gray-300'}
-            `}>
-              {offer.status === 'active' ? 'Active' :
-               offer.status === 'expired' ? 'Expirée' : 'Active'}
-            </span>
+            <div className="flex flex-col items-end">
+              <p className="text-primary-coral font-medium">
+                {offer.price} €
+              </p>
+            </div>
           </div>
           
           {offer.features && offer.features.length > 0 && (
