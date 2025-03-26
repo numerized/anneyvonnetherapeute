@@ -1,13 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { Modal } from '@/components/shared/Modal'
-import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
-import { Stats } from '@/components/shared/Stats'
 import TestDesirErosPage from '@/app/test-relation-desir-eros/page'
+import { Modal } from '@/components/shared/Modal'
+import { Stats } from '@/components/shared/Stats'
+import { WherebyEmbed } from '@/components/shared/WherebyEmbed'
 
 export default function LivePage() {
   const [isSubscribed, setIsSubscribed] = useState(false)
@@ -33,7 +33,9 @@ export default function LivePage() {
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      )
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
 
       const parts: string[] = []
@@ -63,7 +65,10 @@ export default function LivePage() {
               LE LIVE
             </h1>
             <h2>Sur le divan d'Anne Yvonne</h2>
-            <p className="text-primary-coral mt-2">Le 18 mars à 20h : Le live mensuel sur le thème « Oser nos désirs : amour, libido et renaissance du printemps ».</p>
+            <p className="text-primary-coral mt-2">
+              Le 18 mars à 20h : Le live mensuel sur le thème « Oser nos désirs
+              : amour, libido et renaissance du printemps ».
+            </p>
           </div>
 
           {/* Two Column Layout */}
@@ -96,39 +101,58 @@ export default function LivePage() {
                   <div className="mb-6">
                     {isSubscribed ? (
                       <div className="mt-4">
-                        <p className="text-primary-coral font-bold">Merci pour votre inscription !</p>
-                        <p className="text-primary-coral mt-2">Consultez votre email pour plus d'informations sur le live.</p>
+                        <p className="text-primary-coral font-bold">
+                          Merci pour votre inscription !
+                        </p>
+                        <p className="text-primary-coral mt-2">
+                          Consultez votre email pour plus d'informations sur le
+                          live.
+                        </p>
                       </div>
                     ) : (
-                      <form className="space-y-4" onSubmit={async (e) => {
-                        e.preventDefault();
-                        const form = e.target as HTMLFormElement;
-                        const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
-                        const email = emailInput.value;
+                      <form
+                        className="space-y-4"
+                        onSubmit={async (e) => {
+                          e.preventDefault()
+                          const form = e.target as HTMLFormElement
+                          const emailInput = form.querySelector(
+                            'input[type="email"]',
+                          ) as HTMLInputElement
+                          const email = emailInput.value
 
-                        try {
-                          const response = await fetch('/api/newsletter', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ email }),
-                          });
+                          try {
+                            const response = await fetch('/api/newsletter', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({ email }),
+                            })
 
-                          const data = await response.json();
+                            const data = await response.json()
 
-                          if (!response.ok) {
-                            throw new Error(data.error || 'Failed to subscribe');
+                            if (!response.ok) {
+                              throw new Error(
+                                data.error || 'Failed to subscribe',
+                              )
+                            }
+
+                            // Clear the form and show success message
+                            form.reset()
+                            setIsSubscribed(true)
+                          } catch (error) {
+                            console.error(
+                              'Newsletter subscription error:',
+                              error,
+                            )
+                            alert(
+                              error instanceof Error
+                                ? error.message
+                                : 'Une erreur est survenue. Veuillez réessayer.',
+                            )
                           }
-
-                          // Clear the form and show success message
-                          form.reset();
-                          setIsSubscribed(true);
-                        } catch (error) {
-                          console.error('Newsletter subscription error:', error);
-                          alert(error instanceof Error ? error.message : 'Une erreur est survenue. Veuillez réessayer.');
-                        }
-                      }}>
+                        }}
+                      >
                         <div>
                           <label htmlFor="email" className="sr-only">
                             Adresse email
@@ -156,11 +180,16 @@ export default function LivePage() {
                     <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
                       <li className="flex items-center gap-2 m-0">
                         <span className="text-primary-coral">♦</span>
-                        <span>Testez votre audio et vidéo avant de rejoindre la session</span>
+                        <span>
+                          Testez votre audio et vidéo avant de rejoindre la
+                          session
+                        </span>
                       </li>
                       <li className="flex items-center gap-2 m-0">
                         <span className="text-primary-coral">♦</span>
-                        <span>Utilisez un casque pour une meilleure qualité audio</span>
+                        <span>
+                          Utilisez un casque pour une meilleure qualité audio
+                        </span>
                       </li>
                       <li className="flex items-center gap-2 m-0">
                         <span className="text-primary-coral">♦</span>
@@ -168,7 +197,9 @@ export default function LivePage() {
                       </li>
                       <li className="flex items-center gap-2 m-0">
                         <span className="text-primary-coral">♦</span>
-                        <span>Assurez-vous d'avoir une connexion internet stable</span>
+                        <span>
+                          Assurez-vous d'avoir une connexion internet stable
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -185,7 +216,10 @@ export default function LivePage() {
               </div>
               <div className="prose prose-invert max-w-none text-primary-cream/80 flex-1">
                 <p>
-                  Explorez votre relation au désir et à la sensualité à travers notre test unique. Ce questionnaire vous permettra de mieux comprendre votre rapport à l'érotisme et d'identifier les chemins vers une vie intime plus épanouie.
+                  Explorez votre relation au désir et à la sensualité à travers
+                  notre test unique. Ce questionnaire vous permettra de mieux
+                  comprendre votre rapport à l'érotisme et d'identifier les
+                  chemins vers une vie intime plus épanouie.
                 </p>
               </div>
               <div className="flex justify-end mt-auto pt-4">
@@ -210,12 +244,15 @@ export default function LivePage() {
 
           {/* Header */}
           <div className="text-center mb-12">
-            <br/><br/>
+            <br />
+            <br />
             <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
               COACHING RELATIONNEL 7/7
             </h2>
             <div className="text-lg md:text-xl">
-              <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>OFFRE EXCLUSIVE LIMITÉE</p>
+              <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>
+                OFFRE EXCLUSIVE LIMITÉE
+              </p>
             </div>
           </div>
 
@@ -225,15 +262,23 @@ export default function LivePage() {
               <div className="h-full flex items-center justify-center">
                 <div className="text-center">
                   <div className="space-y-4">
-                    <div className="text-2xl line-through text-primary-cream/60">999 EUR</div>
-                    <div className="text-3xl text-primary-coral font-semibold">899 EUR</div>
+                    <div className="text-2xl line-through text-primary-cream/60">
+                      999 EUR
+                    </div>
+                    <div className="text-3xl text-primary-coral font-semibold">
+                      899 EUR
+                    </div>
                     <div className="bg-primary-coral/20 rounded-lg py-2 px-6 inline-block">
-                      <span className="text-primary-coral font-semibold">COEUR180</span>
+                      <span className="text-primary-coral font-semibold">
+                        COEUR180
+                      </span>
                       <span className="ml-2">-10%</span>
                     </div>
                   </div>
                   <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
-                    L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
+                    L'argent ne doit pas être un obstacle, contactez-moi si vous
+                    faites faces à des difficultés financières, nous trouverons
+                    une solution !
                   </p>
                   <Link
                     href="/prochainement?coupon=COEUR180"
@@ -266,7 +311,9 @@ export default function LivePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral">♦</span>
-                    <span>Trois séances de thérapie à la carte via Whereby</span>
+                    <span>
+                      Trois séances de thérapie à la carte via Whereby
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -279,19 +326,22 @@ export default function LivePage() {
             items={[
               { value: '95%', label: 'Taux de satisfaction client' },
               { value: '500+', label: 'Couples accompagnés' },
-              { value: '20', label: 'Années d\'expérience' },
-              { value: '85%', label: 'Amélioration des relations' }
+              { value: '20', label: "Années d'expérience" },
+              { value: '85%', label: 'Amélioration des relations' },
             ]}
           />
 
           {/* Group Coaching Offer */}
           <div className="text-center mb-12">
-            <br/><br/>
+            <br />
+            <br />
             <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
               COACHING RELATIONNEL EN GROUPE
             </h2>
             <div className="text-lg md:text-xl">
-              <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>DÉPASSEZ VOS SCHÉMAS, VIVEZ L'AMOUR AUTREMENT</p>
+              <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>
+                DÉPASSEZ VOS SCHÉMAS, VIVEZ L'AMOUR AUTREMENT
+              </p>
             </div>
           </div>
 
@@ -300,9 +350,13 @@ export default function LivePage() {
             <div className="flex-grow">
               <div className="h-full flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-3xl text-primary-coral font-semibold">333 EUR</div>
+                  <div className="text-3xl text-primary-coral font-semibold">
+                    333 EUR
+                  </div>
                   <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
-                    L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
+                    L'argent ne doit pas être un obstacle, contactez-moi si vous
+                    faites faces à des difficultés financières, nous trouverons
+                    une solution !
                   </p>
                   <Link
                     href="/coaching-relationnel-en-groupe"
@@ -335,7 +389,9 @@ export default function LivePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral">♦</span>
-                    <span>Transformation profonde de votre manière d'aimer</span>
+                    <span>
+                      Transformation profonde de votre manière d'aimer
+                    </span>
                   </li>
                 </ul>
               </div>

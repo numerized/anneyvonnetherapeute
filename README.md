@@ -122,6 +122,7 @@ This website uses the Calendly API V2 with OAuth2 authentication to manage sched
 
 1. Create a Calendly account if you don't already have one.
 2. Register a new OAuth2 application in your Calendly account:
+
    - Log in to Calendly
    - Go to "Integrations" → "API & Webhooks"
    - Click on "Create New App"
@@ -129,6 +130,7 @@ This website uses the Calendly API V2 with OAuth2 authentication to manage sched
    - Save the Client ID and Client Secret
 
 3. Create a `.env.local` file in the project root with the following variables:
+
    ```
    NEXT_PUBLIC_CALENDLY_CLIENT_ID=your_client_id_here
    CALENDLY_CLIENT_SECRET=your_client_secret_here
@@ -141,73 +143,82 @@ This website uses the Calendly API V2 with OAuth2 authentication to manage sched
 ## Liste des Emails et Contenus Associés
 
 1. **mail_0**
+
    - "Confirmation de votre inscription"
    - Contenu : Confirmation de la Thérapie
-   - Formulaires : 
-     * Inscription, 
-     * Paiement
-     * 1ere date agenda
+   - Formulaires :
+     - Inscription,
+     - Paiement
+     - 1ere date agenda
 
 2. **mail_1**
+
    - "Bienvenue chez Cœur à Corps – Un voyage inspirant pour votre couple"
-   - Formulaires : 
-     * AVC_1
-     * AGENDA COMPLET
-     * CONDITIONS GENERALES
-     * PROFIL DU COUPLE
-     * ESPACE CLIENT
+   - Formulaires :
+     - AVC_1
+     - AGENDA COMPLET
+     - CONDITIONS GENERALES
+     - PROFIL DU COUPLE
+     - ESPACE CLIENT
 
 3. **mail_2**
+
    - "Suite de notre première séance – instructions et préparation"
-   - Contenu : 
-     * APC_1 
-     * Test de l'amoureux
+   - Contenu :
+     - APC_1
+     - Test de l'amoureux
 
 4. **mail_3**
+
    - "Préparation à notre séance individuelle"
    - Contenu :
-     * Capsule enfance
-     * CAPSULE "INTERDICTIONS
-     * OBLIGATIONS : COMMENT SE CONSTRUISENT NOS SCHEMAS RELATIONNELS"
+     - Capsule enfance
+     - CAPSULE "INTERDICTIONS
+     - OBLIGATIONS : COMMENT SE CONSTRUISENT NOS SCHEMAS RELATIONNELS"
 
 5. **mail_4**
+
    - "Suite à votre séance individuelle"
-   - Contenu : 
-      * FORM_AS
-      * Vidéo "l'autorisation d'aimer"
+   - Contenu :
+     - FORM_AS
+     - Vidéo "l'autorisation d'aimer"
 
 6. **mail_5**
+
    - "Préparation pour votre deuxième séance individuelle"
    - Contenu :
-     * FORM_ENTRE2
-     * Test de dépendance relationnelle
-     * Capsule dépendance et rejet
+     - FORM_ENTRE2
+     - Test de dépendance relationnelle
+     - Capsule dépendance et rejet
 
 7. **mail_as2**
+
    - "Suite à votre deuxième séance individuelle"
    - Contenu :
-     * FORM_IAS - Test d'Estime de Soi
-     * CAPSULE DESIR DE SOI
+     - FORM_IAS - Test d'Estime de Soi
+     - CAPSULE DESIR DE SOI
 
 8. **mail_6**
+
    - "Préparation Séance 3 - Célébration de votre Odyssée Intérieure"
-   - Contenu : 
-      * FORM_AT 
-      * FORMULAIRE INTROSPECTION _Entre 2
+   - Contenu :
+     - FORM_AT
+     - FORMULAIRE INTROSPECTION \_Entre 2
 
 9. **mail_7**
+
    - "Préparation pour votre prochaine séance de couple"
-   - Contenu : 
-      * AVC_1_2
+   - Contenu :
+     - AVC_1_2
 
 10. **mail_8**
     - "Suite de votre Parcours 'Parenthèse Thérapeutique' – Prochaines Étapes"
     - Contenu :
-      * AUDIO PERSONNEL EN RETOUR
-      * TEST EQUILIBRE AMOUREUX
-      * Capsule "Le Couple Conscient"
-      * Test Etat des lieux sexuel
-      * Code promo sur Cycle 2 10%
+      - AUDIO PERSONNEL EN RETOUR
+      - TEST EQUILIBRE AMOUREUX
+      - Capsule "Le Couple Conscient"
+      - Test Etat des lieux sexuel
+      - Code promo sur Cycle 2 10%
 
 ## Next steps
 

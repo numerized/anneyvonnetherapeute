@@ -12,7 +12,15 @@ interface ModalProps {
   hideFooter?: boolean
 }
 
-export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen, hideFooter }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  subtitle,
+  children,
+  fullscreen,
+  hideFooter,
+}: ModalProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -39,7 +47,7 @@ export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen, 
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel 
+              <Dialog.Panel
                 className={`w-full transform bg-primary-forest/90 backdrop-blur-lg text-left align-middle shadow-xl transition-all overflow-hidden
                   ${fullscreen ? 'h-screen' : 'max-w-2xl rounded-[24px] h-[90vh]'}`}
               >
@@ -69,9 +77,7 @@ export function Modal({ isOpen, onClose, title, subtitle, children, fullscreen, 
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 overflow-y-auto">
-                    {children}
-                  </div>
+                  <div className="flex-1 overflow-y-auto">{children}</div>
 
                   {/* Footer */}
                   {!hideFooter && (

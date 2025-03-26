@@ -13,7 +13,12 @@ type EmailParams = {
   from?: string
 }
 
-export async function sendEmail({ to, subject, html, from = 'contact@coeur-a-corps.org' }: EmailParams) {
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  from = 'contact@coeur-a-corps.org',
+}: EmailParams) {
   const msg = {
     to,
     from,

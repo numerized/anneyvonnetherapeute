@@ -1,6 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
+
 import EvaluationHandicapRelationnelPage from '@/app/evaluation-handicap-relationnel/page'
 
 interface EvaluationModalProps {

@@ -1,35 +1,36 @@
-'use client';
+'use client'
 
-import { useCallback, useEffect, useState } from 'react';
-import { Modal } from '@/components/shared/Modal';
-import TherapyTimeline from '@/components/shared/TherapyTimeline';
-import { TherapyEmailType } from '@/functions/src/types/emails';
-import { emailTemplates } from '@/functions/src/templates/emails';
-import { therapyJourneyEvents } from '@/lib/therapyJourney';
+import { useCallback, useEffect, useState } from 'react'
 
-const TEST_PASSWORD = 'TEST180YYY';
+import { Modal } from '@/components/shared/Modal'
+import TherapyTimeline from '@/components/shared/TherapyTimeline'
+import { emailTemplates } from '@/functions/src/templates/emails'
+import { TherapyEmailType } from '@/functions/src/types/emails'
+import { therapyJourneyEvents } from '@/lib/therapyJourney'
+
+const TEST_PASSWORD = 'TEST180YYY'
 
 export default function AdminEmailsPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [recipientEmail, setRecipientEmail] = useState('numerized@gmail.com');
-  const [status, setStatus] = useState<string>('');
-  const [previewType, setPreviewType] = useState<TherapyEmailType | null>(null);
-  const [previewContent, setPreviewContent] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [password, setPassword] = useState('')
+  const [recipientEmail, setRecipientEmail] = useState('numerized@gmail.com')
+  const [status, setStatus] = useState<string>('')
+  const [previewType, setPreviewType] = useState<TherapyEmailType | null>(null)
+  const [previewContent, setPreviewContent] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (password === TEST_PASSWORD) {
-      setIsAuthenticated(true);
+      setIsAuthenticated(true)
     } else {
-      setStatus('Mot de passe invalide');
+      setStatus('Mot de passe invalide')
     }
-  };
+  }
 
   const handleSendEmail = async (emailType: TherapyEmailType) => {
     try {
-      setStatus(`Envoi de ${emailType}...`);
+      setStatus(`Envoi de ${emailType}...`)
       const response = await fetch('/api/admin/send-test-email', {
         method: 'POST',
         headers: {
@@ -38,91 +39,132 @@ export default function AdminEmailsPage() {
         body: JSON.stringify({
           emailType,
           recipientEmail,
-          password: TEST_PASSWORD
+          password: TEST_PASSWORD,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
       if (response.ok) {
-        setStatus(`Email ${emailType} envoyé avec succès!`);
+        setStatus(`Email ${emailType} envoyé avec succès!`)
       } else {
-        setStatus(`Erreur: ${data.error}`);
+        setStatus(`Erreur: ${data.error}`)
       }
     } catch (error) {
-      setStatus(`Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+      setStatus(
+        `Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`,
+      )
     }
-  };
+  }
 
   const handlePreview = (emailType: TherapyEmailType) => {
-    setPreviewType(emailType);
-  };
+    setPreviewType(emailType)
+  }
 
-  const getPreviewContent = useCallback((emailType: TherapyEmailType | null) => {
-    if (!emailType) return null;
+  const getPreviewContent = useCallback(
+    (emailType: TherapyEmailType | null) => {
+      if (!emailType) return null
 
-    const template = emailTemplates[emailType];
-    if (!template) return null;
+      const template = emailTemplates[emailType]
+      if (!template) return null
 
-    // Create test data
-    const testData = {
-      name: 'Test User',
-      partnerName: 'Test Partner',
-      sessionDate: new Date().toISOString(),
-      appointmentDate: new Date().toISOString(),
-      unsubscribeUrl: 'http://example.com/unsubscribe',
-      firstName1: 'Anne',
-      firstName2: 'Yves',
-      testUrl: 'http://example.com/test',
-      cycle2Url: 'http://example.com/cycle2',
-      promoCode: 'PROMO20',
-      audioCapsuleUrl: 'http://example.com/audio',
-      paymentAmount: '150 CHF',
-      sessionType: 'Première séance de couple',
-      individualSessionDate: new Date().toISOString(),
-      coupleSessionDate: new Date().toISOString(),
-      sessionNumber: '1'
-    };
+      // Create test data
+      const testData = {
+        name: 'Test User',
+        partnerName: 'Test Partner',
+        sessionDate: new Date().toISOString(),
+        appointmentDate: new Date().toISOString(),
+        unsubscribeUrl: 'http://example.com/unsubscribe',
+        firstName1: 'Anne',
+        firstName2: 'Yves',
+        testUrl: 'http://example.com/test',
+        cycle2Url: 'http://example.com/cycle2',
+        promoCode: 'PROMO20',
+        audioCapsuleUrl: 'http://example.com/audio',
+        paymentAmount: '150 CHF',
+        sessionType: 'Première séance de couple',
+        individualSessionDate: new Date().toISOString(),
+        coupleSessionDate: new Date().toISOString(),
+        sessionNumber: '1',
+      }
 
-    return template.getHtml(testData);
-  }, []);
+      return template.getHtml(testData)
+    },
+    [],
+  )
 
   useEffect(() => {
     if (previewType) {
-      setIsLoading(true);
-      setPreviewContent(null);
-      
+      setIsLoading(true)
+      setPreviewContent(null)
+
       // Use setTimeout to ensure the modal is rendered before loading content
       setTimeout(() => {
-        const content = getPreviewContent(previewType);
-        setPreviewContent(content);
-        setIsLoading(false);
-      }, 100);
+        const content = getPreviewContent(previewType)
+        setPreviewContent(content)
+        setIsLoading(false)
+      }, 100)
     } else {
-      setPreviewContent(null);
-      setIsLoading(false);
+      setPreviewContent(null)
+      setIsLoading(false)
     }
-  }, [previewType, getPreviewContent]);
+  }, [previewType, getPreviewContent])
 
   const emailButtons = [
-    { type: TherapyEmailType.RESERVATION, label: 'Confirmation de Réservation' },
-    { type: TherapyEmailType.BEFORE_COUPLE_1, label: 'Avant Première Séance de Couple' },
-    { type: TherapyEmailType.AFTER_COUPLE_1, label: 'Après Première Séance de Couple' },
-    { type: TherapyEmailType.BEFORE_INDIV_1, label: 'Avant Première Séance Individuelle' },
-    { type: TherapyEmailType.AFTER_INDIV_1, label: 'Après Première Séance Individuelle' },
-    { type: TherapyEmailType.BEFORE_INDIV_2, label: 'Avant Deuxième Séance Individuelle' },
-    { type: TherapyEmailType.AFTER_INDIV_2, label: 'Après Deuxième Séance Individuelle' },
-    { type: TherapyEmailType.BEFORE_INDIV_3, label: 'Avant Troisième Séance Individuelle' },
-    { type: TherapyEmailType.BEFORE_COUPLE_2, label: 'Avant Dernière Séance de Couple' },
-    { type: TherapyEmailType.AFTER_COUPLE_2, label: 'Après Dernière Séance de Couple' }];
+    {
+      type: TherapyEmailType.RESERVATION,
+      label: 'Confirmation de Réservation',
+    },
+    {
+      type: TherapyEmailType.BEFORE_COUPLE_1,
+      label: 'Avant Première Séance de Couple',
+    },
+    {
+      type: TherapyEmailType.AFTER_COUPLE_1,
+      label: 'Après Première Séance de Couple',
+    },
+    {
+      type: TherapyEmailType.BEFORE_INDIV_1,
+      label: 'Avant Première Séance Individuelle',
+    },
+    {
+      type: TherapyEmailType.AFTER_INDIV_1,
+      label: 'Après Première Séance Individuelle',
+    },
+    {
+      type: TherapyEmailType.BEFORE_INDIV_2,
+      label: 'Avant Deuxième Séance Individuelle',
+    },
+    {
+      type: TherapyEmailType.AFTER_INDIV_2,
+      label: 'Après Deuxième Séance Individuelle',
+    },
+    {
+      type: TherapyEmailType.BEFORE_INDIV_3,
+      label: 'Avant Troisième Séance Individuelle',
+    },
+    {
+      type: TherapyEmailType.BEFORE_COUPLE_2,
+      label: 'Avant Dernière Séance de Couple',
+    },
+    {
+      type: TherapyEmailType.AFTER_COUPLE_2,
+      label: 'Après Dernière Séance de Couple',
+    },
+  ]
 
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow">
-          <h2 className="text-2xl font-bold mb-8 text-center">Administration des Emails</h2>
+          <h2 className="text-2xl font-bold mb-8 text-center">
+            Administration des Emails
+          </h2>
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Mot de passe
               </label>
               <input
@@ -146,7 +188,7 @@ export default function AdminEmailsPage() {
           </form>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -154,16 +196,23 @@ export default function AdminEmailsPage() {
       <div className="max-w-5xl mx-auto space-y-8">
         {/* Timeline Section */}
         <div className="bg-white p-8 rounded-lg shadow">
-          <h2 className="text-2xl font-bold mb-8 text-center">Parcours Thérapeutique</h2>
+          <h2 className="text-2xl font-bold mb-8 text-center">
+            Parcours Thérapeutique
+          </h2>
           <TherapyTimeline events={therapyJourneyEvents} />
         </div>
 
         {/* Email Testing Section */}
         <div className="bg-white p-8 rounded-lg shadow">
-          <h2 className="text-2xl font-bold mb-8 text-center">Test des Emails</h2>
+          <h2 className="text-2xl font-bold mb-8 text-center">
+            Test des Emails
+          </h2>
 
           <div className="mb-6">
-            <label htmlFor="recipientEmail" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="recipientEmail"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Email du Destinataire
             </label>
             <input
@@ -197,7 +246,9 @@ export default function AdminEmailsPage() {
           </div>
 
           {status && (
-            <div className={`mt-6 p-4 rounded-md ${status.includes('Erreur') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+            <div
+              className={`mt-6 p-4 rounded-md ${status.includes('Erreur') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}
+            >
               {status}
             </div>
           )}
@@ -208,7 +259,7 @@ export default function AdminEmailsPage() {
       <Modal
         isOpen={previewType !== null}
         onClose={() => setPreviewType(null)}
-        title={`Aperçu: ${emailButtons.find(b => b.type === previewType)?.label || ''}`}
+        title={`Aperçu: ${emailButtons.find((b) => b.type === previewType)?.label || ''}`}
       >
         <div className="h-full">
           {isLoading ? (
@@ -216,7 +267,7 @@ export default function AdminEmailsPage() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-cream"></div>
             </div>
           ) : (
-            <div 
+            <div
               className="prose prose-sm max-w-none overflow-y-auto h-full prose-headings:text-primary-cream prose-p:text-primary-cream/90 prose-strong:text-primary-cream prose-li:text-primary-cream/90"
               dangerouslySetInnerHTML={{ __html: previewContent || '' }}
             />
@@ -224,5 +275,5 @@ export default function AdminEmailsPage() {
         </div>
       </Modal>
     </div>
-  );
+  )
 }

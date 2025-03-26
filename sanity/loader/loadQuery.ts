@@ -1,7 +1,7 @@
 import 'server-only'
 
 import * as queryStore from '@sanity/react-loader'
-import { draftMode, type UnsafeUnwrappedDraftMode } from 'next/headers';
+import { draftMode, type UnsafeUnwrappedDraftMode } from 'next/headers'
 
 import { client } from '@/sanity/lib/client'
 import {
@@ -10,11 +10,7 @@ import {
   settingsQuery,
 } from '@/sanity/lib/queries'
 import { token } from '@/sanity/lib/token'
-import {
-  HomePagePayload,
-  PagePayload,
-  SettingsPayload,
-} from '@/types'
+import { HomePagePayload, PagePayload, SettingsPayload } from '@/types'
 
 const serverClient = client.withConfig({
   token,
@@ -33,7 +29,7 @@ queryStore.setServerClient(serverClient)
 const usingCdn = serverClient.config().useCdn
 // Automatically handle draft mode
 export const loadQuery = (async (query, params = {}, options = {}) => {
-  const draftModeStatus = await draftMode();
+  const draftModeStatus = await draftMode()
   const {
     perspective = draftModeStatus.isEnabled ? 'previewDrafts' : 'published',
   } = options
@@ -54,7 +50,7 @@ export const loadQuery = (async (query, params = {}, options = {}) => {
     perspective,
     // Enable stega if in Draft Mode, to enable overlays when outside Sanity Studio
     stega: draftModeStatus.isEnabled,
-  });
+  })
 }) satisfies typeof queryStore.loadQuery
 
 /**
@@ -77,7 +73,7 @@ export function loadHomePage() {
       next: {
         tags: ['home', 'hero', 'settings'],
       },
-    }
+    },
   )
 }
 

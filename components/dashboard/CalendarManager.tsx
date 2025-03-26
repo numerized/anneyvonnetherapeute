@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { InlineWidget } from 'react-calendly';
+import { InlineWidget } from 'react-calendly'
 
 export function CalendarManager() {
   return (
@@ -11,10 +11,10 @@ export function CalendarManager() {
           styles={{
             height: '100%',
             width: '100%',
-            minHeight: '1100px'
+            minHeight: '1100px',
           }}
         />
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { sendEmail } from '@/lib/email'
 import { createLiveReminderEmailTemplate } from '@/lib/emailTemplates'
 
@@ -9,7 +10,7 @@ export async function POST(req: Request) {
     if (!Array.isArray(emails)) {
       return NextResponse.json(
         { error: 'Invalid request: emails must be an array' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
           subject: 'Le live commence dans 5 minutes ! 🎥',
           html: createLiveReminderEmailTemplate(),
         })
-      })
+      }),
     )
 
     return NextResponse.json({ success: true })
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
     console.error('Error sending live reminder emails:', error)
     return NextResponse.json(
       { error: 'Failed to send emails' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

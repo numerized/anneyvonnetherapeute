@@ -4,17 +4,20 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useState, useRef, useEffect } from 'react'
-import { toast } from 'sonner'
+import { useEffect, useRef, useState } from 'react'
 import { Suspense } from 'react'
+import { toast } from 'sonner'
 
 import { Stats } from '@/components/shared/Stats'
+
 import PaymentSuccess from './PaymentSuccess'
 import { PurchaseTicket } from './PurchaseTicket'
 
 function CoachingRelationelEnGroupeContent({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
-  const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip'>('standard')
+  const [selectedTicketType, setSelectedTicketType] = useState<
+    'standard' | 'vip'
+  >('standard')
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isPlaying2, setIsPlaying2] = useState(false)
@@ -49,7 +52,7 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
       }
     }
     window.addEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
-    
+
     return () => {
       window.removeEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
     }
@@ -65,7 +68,9 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement
+        const headerVideo = document.querySelector(
+          'video[data-header-video]',
+        ) as HTMLVideoElement
         if (headerVideo) {
           headerVideo.pause()
           window.dispatchEvent(new CustomEvent('headerVideoPause'))
@@ -85,7 +90,9 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
       if (isPlaying2) {
         videoRef2.current.pause()
       } else {
-        const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement
+        const headerVideo = document.querySelector(
+          'video[data-header-video]',
+        ) as HTMLVideoElement
         if (headerVideo) {
           headerVideo.pause()
           window.dispatchEvent(new CustomEvent('headerVideoPause'))
@@ -103,14 +110,12 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
   const statsItems = [
     { value: '95%', label: 'Taux de satisfaction client' },
     { value: '500+', label: 'Couples accompagnés' },
-    { value: '20', label: 'Années d\'expérience' },
-    { value: '85%', label: 'Amélioration des relations' }
+    { value: '20', label: "Années d'expérience" },
+    { value: '85%', label: 'Amélioration des relations' },
   ]
 
   if (success === 'true') {
-    return (
-      <PaymentSuccess />
-    )
+    return <PaymentSuccess />
   }
 
   return (
@@ -127,12 +132,15 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
         </div>
         <div className="max-w-4xl mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
-            <br/><br/>
+            <br />
+            <br />
             <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
               COACHING RELATIONNEL EN GROUPE
             </h2>
             <div className="text-lg md:text-xl">
-              <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>DÉPASSEZ VOS SCHÉMAS, VIVEZ L'AMOUR AUTREMENT</p>
+              <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>
+                DÉPASSEZ VOS SCHÉMAS, VIVEZ L'AMOUR AUTREMENT
+              </p>
             </div>
           </div>
 
@@ -140,9 +148,13 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
             <div className="flex-grow">
               <div className="h-full flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-3xl text-primary-coral font-semibold">333 {currency?.toUpperCase()}</div>
+                  <div className="text-3xl text-primary-coral font-semibold">
+                    333 {currency?.toUpperCase()}
+                  </div>
                   <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
-                    L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
+                    L'argent ne doit pas être un obstacle, contactez-moi si vous
+                    faites faces à des difficultés financières, nous trouverons
+                    une solution !
                   </p>
                   {showPurchaseModal && (
                     <PurchaseTicket
@@ -182,7 +194,9 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral">♦</span>
-                    <span>Transformation profonde de votre manière d'aimer</span>
+                    <span>
+                      Transformation profonde de votre manière d'aimer
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -196,44 +210,61 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
 
             <div className="space-y-6 text-primary-cream/80">
               <p>
-                Vous sentez que vos relations amoureuses rejouent toujours les mêmes scénarios ? Vous oscillez entre attirance et peur, 
-                entre espoir et déception ? Vous aspirez à un amour plus libre, plus conscient, qui ne repose plus sur l'attente ni la dépendance ?
+                Vous sentez que vos relations amoureuses rejouent toujours les
+                mêmes scénarios ? Vous oscillez entre attirance et peur, entre
+                espoir et déception ? Vous aspirez à un amour plus libre, plus
+                conscient, qui ne repose plus sur l'attente ni la dépendance ?
               </p>
 
-              <p className="font-medium mb-4">Au fil de trois séances intensives, vous découvrirez :</p>
+              <p className="font-medium mb-4">
+                Au fil de trois séances intensives, vous découvrirez :
+              </p>
               <ul className="space-y-4 text-primary-cream/80 m-0">
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>Pourquoi vous êtes attiré(e) par certains types de personnes et comment sortir des répétitions inconscientes</span>
+                  <span>
+                    Pourquoi vous êtes attiré(e) par certains types de personnes
+                    et comment sortir des répétitions inconscientes
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>Comment distinguer l'amour réel du fantasme ou du besoin de validation</span>
+                  <span>
+                    Comment distinguer l'amour réel du fantasme ou du besoin de
+                    validation
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>Comment aimer sans se perdre, sans s'accrocher ni exiger que l'autre nous comble</span>
+                  <span>
+                    Comment aimer sans se perdre, sans s'accrocher ni exiger que
+                    l'autre nous comble
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary-coral">♦</span>
-                  <span>Comment ancrer un amour qui part de soi, sans attente, sans contrôle</span>
+                  <span>
+                    Comment ancrer un amour qui part de soi, sans attente, sans
+                    contrôle
+                  </span>
                 </li>
               </ul>
 
               <p className="italic font-medium" style={{ color: '#D9B70D' }}>
-                Prêt(e) à transformer votre manière d'aimer et à vivre des relations plus authentiques ?
+                Prêt(e) à transformer votre manière d'aimer et à vivre des
+                relations plus authentiques ?
               </p>
             </div>
           </div>
         </div>
       </section>
       <div className="relative z-10">
-          <div className="max-w-7xl mx-auto px-6">
-            <Stats 
-              title="Une approche unique de la thérapie relationnelle"
-              items={statsItems}
-            />
-          </div>
+        <div className="max-w-7xl mx-auto px-6">
+          <Stats
+            title="Une approche unique de la thérapie relationnelle"
+            items={statsItems}
+          />
+        </div>
       </div>
     </main>
   )
@@ -241,11 +272,13 @@ function CoachingRelationelEnGroupeContent({ data, settings }: any) {
 
 export function CoachingRelationelEnGroupePage(props: any) {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+        </div>
+      }
+    >
       <CoachingRelationelEnGroupeContent {...props} />
     </Suspense>
   )

@@ -13,6 +13,7 @@ import { app } from '@/lib/firebase'
 import { urlFor } from '@/sanity/lib/image'
 import { resolveHref } from '@/sanity/lib/utils'
 import { SettingsPayload } from '@/types'
+
 import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
 interface NavbarProps {
@@ -25,26 +26,28 @@ export default function NavbarLayout({ data }: NavbarProps) {
   const isProchainement = pathname === '/prochainement'
   const isCoachingGroupe = pathname === '/coaching-relationnel-en-groupe'
   const isLive = pathname === '/live'
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined)
 
   const logoAsset = data?.logo?.asset
-  const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
+  const logoUrl = logoAsset?.path
+    ? `https://cdn.sanity.io/${logoAsset.path}`
+    : null
 
   useEffect(() => {
-    const auth = getAuth(app);
-    
-    // Set initial auth state
-    setIsLoggedIn(!!auth.currentUser);
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-    });
+    const auth = getAuth(app)
 
-    return () => unsubscribe();
-  }, []);
+    // Set initial auth state
+    setIsLoggedIn(!!auth.currentUser)
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user)
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   // Don't render navbar on live or coaching-relationnel-en-groupe routes
   if (isLive || isCoachingGroupe) {
@@ -53,7 +56,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
 
   // Don't render anything until we know the auth state
   if (isLoggedIn === undefined) {
-    return null;
+    return null
   }
 
   const renderMenuItem = (item: any, index: number) => {
@@ -62,9 +65,10 @@ export default function NavbarLayout({ data }: NavbarProps) {
     const isLastItem = data.menuItems && index === data.menuItems.length - 1
 
     if (isLastItem) {
-      const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200 flex items-center justify-center";
-      const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`;
-      
+      const buttonBaseClasses =
+        'px-4 py-2 rounded-full transition-all duration-200 flex items-center justify-center'
+      const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`
+
       return (
         <Link
           key={item._key}
@@ -91,20 +95,23 @@ export default function NavbarLayout({ data }: NavbarProps) {
         >
           {item.title}
         </Link>
-      );
+      )
     }
 
     // Clean up the style value by removing hidden Unicode characters
-    const baseClasses = "text-white hover:text-white/80 transition-colors duration-200";
-    const buttonBaseClasses = "px-4 py-2 rounded-full transition-all duration-200";
-    const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`;
-    const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`;
-    
-    const classes = cleanStyle === 'button-plain' 
-      ? buttonPlainClasses 
-      : cleanStyle === 'button-clear'
-        ? buttonClearClasses
-        : baseClasses;
+    const baseClasses =
+      'text-white hover:text-white/80 transition-colors duration-200'
+    const buttonBaseClasses =
+      'px-4 py-2 rounded-full transition-all duration-200'
+    const buttonPlainClasses = `${buttonBaseClasses} bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105`
+    const buttonClearClasses = `${buttonBaseClasses} border-2 border-white text-white hover:bg-white/10`
+
+    const classes =
+      cleanStyle === 'button-plain'
+        ? buttonPlainClasses
+        : cleanStyle === 'button-clear'
+          ? buttonClearClasses
+          : baseClasses
 
     if (item.linkType === 'reference' && item.reference?.slug) {
       return (
@@ -115,7 +122,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
         >
           {item.title}
         </Link>
-      );
+      )
     }
 
     if (item.linkType === 'anchor' && item.anchor) {
@@ -125,43 +132,52 @@ export default function NavbarLayout({ data }: NavbarProps) {
           href={`#${item.anchor}`}
           className={classes}
           onClick={(e) => {
-            e.preventDefault();
-            const element = document.getElementById(item.anchor);
+            e.preventDefault()
+            const element = document.getElementById(item.anchor)
             if (element) {
-              element.scrollIntoView({ behavior: 'smooth' });
+              element.scrollIntoView({ behavior: 'smooth' })
             }
           }}
         >
           {item.title}
         </a>
-      );
+      )
     }
 
-    return null;
-  };
+    return null
+  }
 
   return (
     <>
       {/* Desktop Header */}
-      <header className="relative bg-primary-dark hidden md:block" role="banner">
+      <header
+        className="relative bg-primary-dark hidden md:block"
+        role="banner"
+      >
         {isProchainement ? (
           <NotificationBanner message="Lancement en 2025" />
-        ) : data.notificationMessage && (
-          <NotificationBanner message={data.notificationMessage} />
+        ) : (
+          data.notificationMessage && (
+            <NotificationBanner message={data.notificationMessage} />
+          )
         )}
         <div className="max-w-7xl mx-auto px-6">
-          <nav 
-            className="relative py-4" 
-            role="navigation" 
+          <nav
+            className="relative py-4"
+            role="navigation"
             aria-label="Main navigation"
           >
             <div className="flex justify-end items-center relative">
               {logoUrl && (
                 <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
                   <Link href="/" className="flex-shrink-0">
-                    <Image 
+                    <Image
                       src={logoUrl}
-                      alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+                      alt={
+                        data.logo?.alt
+                          ?.replace(/[\u200B-\u200D\uFEFF]/g, '')
+                          .trim() || 'Logo'
+                      }
                       className="h-[172px] w-auto"
                       width={500}
                       height={500}

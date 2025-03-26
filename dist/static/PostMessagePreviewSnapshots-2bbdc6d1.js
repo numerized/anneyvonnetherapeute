@@ -1,1 +1,91 @@
-import{$ as w,a0 as g,r as o,br as P,be as _,ck as S,b_ as k,cl as x,cm as E,cn as M,c0 as $,bc as v,cj as j,ai as y,ad as D,ab as R,co as U}from"./sanity-033f6ba9.js";function F(u){return w(function(p,t){var a=!1,r=0;p.subscribe(g(t,function(e){return(a||(a=!u(e,r++)))&&t.next(e)}))})}const I=u=>{const{comlink:p,refs:t,perspective:a}=u,r=P(),e=_(),c=o.useMemo(()=>new S,[]),d=o.useMemo(()=>c.asObservable().pipe(k(b=>x(b.map(s=>{const l={...s,_id:E(s._id)},m=a==="previewDrafts"?r.observeForPreview(l,e.get(l._type)).pipe(M(),F(i=>i.snapshot===null)):$,f={...s,_id:v(s._id)},h=r.observeForPreview(f,e.get(f._type));return j(h.pipe(y(m)),m).pipe(D(i=>!!i.snapshot),R(i=>{const n=i.snapshot;return{_id:v(n._id),title:n.title,subtitle:n.subtitle,description:n.description,imageUrl:n.imageUrl}}))}))),U(0)),[r,c,e,a]);return o.useEffect(()=>{const b=d.subscribe(s=>{p.post({type:"presentation/preview-snapshots",data:{snapshots:s}})});return()=>{b.unsubscribe()}},[p,d]),o.useEffect(()=>{c.next(t)},[t,c]),null};var L=o.memo(I);export{L as default};
+import {
+  $ as w,
+  a0 as g,
+  r as o,
+  br as P,
+  be as _,
+  ck as S,
+  b_ as k,
+  cl as x,
+  cm as E,
+  cn as M,
+  c0 as $,
+  bc as v,
+  cj as j,
+  ai as y,
+  ad as D,
+  ab as R,
+  co as U,
+} from './sanity-033f6ba9.js'
+function F(u) {
+  return w(function (p, t) {
+    var a = !1,
+      r = 0
+    p.subscribe(
+      g(t, function (e) {
+        return (a || (a = !u(e, r++))) && t.next(e)
+      }),
+    )
+  })
+}
+const I = (u) => {
+  const { comlink: p, refs: t, perspective: a } = u,
+    r = P(),
+    e = _(),
+    c = o.useMemo(() => new S(), []),
+    d = o.useMemo(
+      () =>
+        c.asObservable().pipe(
+          k((b) =>
+            x(
+              b.map((s) => {
+                const l = { ...s, _id: E(s._id) },
+                  m =
+                    a === 'previewDrafts'
+                      ? r.observeForPreview(l, e.get(l._type)).pipe(
+                          M(),
+                          F((i) => i.snapshot === null),
+                        )
+                      : $,
+                  f = { ...s, _id: v(s._id) },
+                  h = r.observeForPreview(f, e.get(f._type))
+                return j(h.pipe(y(m)), m).pipe(
+                  D((i) => !!i.snapshot),
+                  R((i) => {
+                    const n = i.snapshot
+                    return {
+                      _id: v(n._id),
+                      title: n.title,
+                      subtitle: n.subtitle,
+                      description: n.description,
+                      imageUrl: n.imageUrl,
+                    }
+                  }),
+                )
+              }),
+            ),
+          ),
+          U(0),
+        ),
+      [r, c, e, a],
+    )
+  return (
+    o.useEffect(() => {
+      const b = d.subscribe((s) => {
+        p.post({
+          type: 'presentation/preview-snapshots',
+          data: { snapshots: s },
+        })
+      })
+      return () => {
+        b.unsubscribe()
+      }
+    }, [p, d]),
+    o.useEffect(() => {
+      c.next(t)
+    }, [t, c]),
+    null
+  )
+}
+var L = o.memo(I)
+export { L as default }

@@ -1,11 +1,12 @@
-import { EmailTemplate } from '../types';
-import { baseTemplate } from '../base';
+import { EmailTemplate } from '../types'
+import { baseTemplate } from '../base'
 
 export const beforeIndiv1Email: EmailTemplate = {
   subject: 'Invitation à explorer vos premiers modèles relationnels',
   triggerType: 'beforeSession',
   delayDays: 3,
-  getHtml: (data) => baseTemplate(`
+  getHtml: (data) =>
+    baseTemplate(`
     <h2 style="color: #E8927C; margin-bottom: 20px;">Bonjour ${data.name},</h2>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
@@ -27,5 +28,5 @@ export const beforeIndiv1Email: EmailTemplate = {
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       Anne-Yvonne
     </p>
-  `)
-};
+  `),
+}

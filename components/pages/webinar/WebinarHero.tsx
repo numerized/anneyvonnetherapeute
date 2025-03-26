@@ -1,11 +1,12 @@
 'use client'
 
-import { urlFor } from '@/sanity/lib/image'
-import type { HomePagePayload } from '@/types'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+
+import { urlFor } from '@/sanity/lib/image'
+import type { HomePagePayload } from '@/types'
 
 interface HeroProps {
   hero: HomePagePayload['hero']
@@ -21,25 +22,27 @@ export function WebinarHero({ hero, data }: HeroProps) {
 
   // Type guard function
   const isValidImage = (img: any): img is { asset: { _ref: string } } => {
-    return img && typeof img === 'object' && img.asset && '_ref' in img.asset;
+    return img && typeof img === 'object' && img.asset && '_ref' in img.asset
   }
 
   const logoAsset = data?.logo?.asset
-  const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
+  const logoUrl = logoAsset?.path
+    ? `https://cdn.sanity.io/${logoAsset.path}`
+    : null
 
   return (
-    <section 
+    <section
       className="relative min-h-[600px] grid place-items-center pt-24 md:pt-0"
       id="webinar"
       role="main"
       aria-labelledby="hero-title"
     >
       <div className="absolute inset-0">
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10" 
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10"
           aria-hidden="true"
         />
-        <Image 
+        <Image
           src="/images/soon-back.jpg"
           alt="Webinar background"
           fill
@@ -52,9 +55,12 @@ export function WebinarHero({ hero, data }: HeroProps) {
       {/* Mobile Logo and Login */}
       <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
-          <Image 
+          <Image
             src={logoUrl}
-            alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+            alt={
+              data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() ||
+              'Logo'
+            }
             className="h-20 w-auto"
             width={300}
             height={300}
@@ -70,7 +76,7 @@ export function WebinarHero({ hero, data }: HeroProps) {
             <div className="w-full text-center">
               {hero?.badge && (
                 <div className="flex justify-center">
-                  <div 
+                  <div
                     className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4"
                     role="presentation"
                     aria-label={hero.badge.ariaLabel}
@@ -80,7 +86,7 @@ export function WebinarHero({ hero, data }: HeroProps) {
                 </div>
               )}
               {hero?.title && (
-                <motion.h1 
+                <motion.h1
                   id="hero-title"
                   className="text-4xl md:text-5xl lg:text-6xl text-primary-cream font-black mb-2"
                   initial={{ opacity: 0, y: 20 }}
@@ -91,7 +97,7 @@ export function WebinarHero({ hero, data }: HeroProps) {
                 </motion.h1>
               )}
               {hero?.subtitle && (
-                <motion.p 
+                <motion.p
                   className="text-xl text-primary-cream/80 mb-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -101,15 +107,13 @@ export function WebinarHero({ hero, data }: HeroProps) {
                 </motion.p>
               )}
               {hero?.ctaButton && (
-                <motion.div 
+                <motion.div
                   className="mt-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <div
-                    className="inline-block bg-primary-coral text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold text-sm md:text-base cursor-default"
-                  >
+                  <div className="inline-block bg-primary-coral text-primary-cream px-4 py-1.5 md:px-8 md:py-3 rounded-[24px] font-bold text-sm md:text-base cursor-default">
                     RÉSERVER MA PLACE
                   </div>
                 </motion.div>

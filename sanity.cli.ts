@@ -11,12 +11,12 @@ const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'rvsii5is'
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 
 export default defineCliConfig({
-  api: { 
-    projectId, 
-    dataset 
+  api: {
+    projectId,
+    dataset,
   },
   project: {
-    basePath: './sanity'
+    basePath: './sanity',
   },
-  studioHost: 'anneyvonnelanding'
+  studioHost: 'anneyvonnelanding',
 } as any)

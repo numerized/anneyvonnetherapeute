@@ -53,4 +53,4 @@ export const partnerInviteEmail = (inviterName: string, inviteLink: string) => `
   </div>
 </body>
 </html>
-`;
+`

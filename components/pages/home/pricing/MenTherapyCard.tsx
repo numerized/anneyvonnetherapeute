@@ -1,4 +1,11 @@
-import { BookOpen, Heart, MessageSquare, ArrowUpRight, Clock, Users2 } from 'lucide-react'
+import {
+  ArrowUpRight,
+  BookOpen,
+  Clock,
+  Heart,
+  MessageSquare,
+  Users2,
+} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 interface MenTherapyCardProps {
@@ -56,12 +63,30 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
               >
                 <div className="w-6 h-6 flex items-center justify-center">
                   {isPlaying ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                      <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                      <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-6 h-6 text-white"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   )}
                 </div>
@@ -71,12 +96,14 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
         </div>
       </div>
       <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors h-full">
-
-
         <div className="space-y-12">
           <div className="text-right">
-            <h3 className="text-2xl font-light text-primary-cream mb-2">FORFAIT HOMME</h3>
-            <p className="text-primary-coral italic">Programme de transformation sexuelle pour hommes</p>
+            <h3 className="text-2xl font-light text-primary-cream mb-2">
+              FORFAIT HOMME
+            </h3>
+            <p className="text-primary-coral italic">
+              Programme de transformation sexuelle pour hommes
+            </p>
             <blockquote className="mt-6 border-l-4 border-primary-coral pl-4 text-primary-cream/80 text-left">
               "Développez une sexualité épanouie et harmonieuse"
             </blockquote>
@@ -87,33 +114,49 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-primary-coral mt-1">♦</span>
-                <span className="text-primary-cream/80">6 séances individuelles de 75 minutes sur 3 mois</span>
+                <span className="text-primary-cream/80">
+                  6 séances individuelles de 75 minutes sur 3 mois
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary-coral mt-1">♦</span>
-                <span className="text-primary-cream/80">2 rendez-vous par mois pour un suivi optimal</span>
+                <span className="text-primary-cream/80">
+                  2 rendez-vous par mois pour un suivi optimal
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary-coral mt-1">♦</span>
-                <span className="text-primary-cream/80">Accès à la plateforme Eros Inspiration pour des ressources complémentaires</span>
+                <span className="text-primary-cream/80">
+                  Accès à la plateforme Eros Inspiration pour des ressources
+                  complémentaires
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary-coral mt-1">♦</span>
-                <span className="text-primary-cream/80">Outils personnalisés pour pratiquer entre les séances</span>
+                <span className="text-primary-cream/80">
+                  Outils personnalisés pour pratiquer entre les séances
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-primary-coral mt-1">♦</span>
-                <span className="text-primary-cream/80">Option : séances d'hypnose thérapeutique pour un déblocage en profondeur</span>
+                <span className="text-primary-cream/80">
+                  Option : séances d'hypnose thérapeutique pour un déblocage en
+                  profondeur
+                </span>
               </li>
             </ul>
           </div>
 
           <div className="bg-primary-forest/30 rounded-3xl p-6">
             <div className="flex flex-col gap-2">
-              <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE INDIVIDUELLE</h3>
+              <h3 className="text-2xl text-primary-coral font-light text-left">
+                VOTRE THÉRAPIE INDIVIDUELLE
+              </h3>
               <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">1590 €</p>
-                <p className="text-primary-cream/70 pb-1">(ou 3 x 540€ mensuel)</p>
+                <p className="text-primary-cream/70 pb-1">
+                  (ou 3 x 540€ mensuel)
+                </p>
               </div>
               <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
                 <li className="flex items-center gap-2 m-0">
@@ -136,26 +179,42 @@ export function MenTherapyCard({ onShowPromo }: MenTherapyCardProps) {
             <div className="flex items-start gap-4">
               <MessageSquare className="h-6 w-6 flex-shrink-0 text-primary-coral" />
               <div>
-                <h4 className="font-medium text-primary-cream mb-1">Support WhatsApp hebdomadaire</h4>
-                <p className="text-primary-cream/70">Posez une question, recevez une réponse audio personnalisée</p>
+                <h4 className="font-medium text-primary-cream mb-1">
+                  Support WhatsApp hebdomadaire
+                </h4>
+                <p className="text-primary-cream/70">
+                  Posez une question, recevez une réponse audio personnalisée
+                </p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
               <BookOpen className="h-6 w-6 flex-shrink-0 text-primary-coral" />
               <div>
-                <h4 className="font-medium text-primary-cream mb-1">Accès à la plateforme Eros Inspiration</h4>
-                <p className="text-primary-cream/70">Ressources exclusives et exercices pratiques pour votre intimité</p>
+                <h4 className="font-medium text-primary-cream mb-1">
+                  Accès à la plateforme Eros Inspiration
+                </h4>
+                <p className="text-primary-cream/70">
+                  Ressources exclusives et exercices pratiques pour votre
+                  intimité
+                </p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
               <Heart className="h-6 w-6 flex-shrink-0 text-primary-coral" />
               <div>
-                <h4 className="font-medium text-primary-cream mb-1">Bénéfices</h4>
+                <h4 className="font-medium text-primary-cream mb-1">
+                  Bénéfices
+                </h4>
                 <ul className="text-primary-cream/70 space-y-1 list-none m-0 p-0">
-                  <li>• Surmonter l'impuissance et retrouver confiance en soi</li>
-                  <li>• Maîtriser l'éjaculation précoce pour des rapports plus satisfaisants</li>
+                  <li>
+                    • Surmonter l'impuissance et retrouver confiance en soi
+                  </li>
+                  <li>
+                    • Maîtriser l'éjaculation précoce pour des rapports plus
+                    satisfaisants
+                  </li>
                   <li>• Explorer sereinement son orientation sexuelle</li>
                   <li>• Développer une sexualité épanouie et harmonieuse</li>
                 </ul>

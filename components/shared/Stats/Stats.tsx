@@ -21,11 +21,7 @@ export function Stats({ title, items }: StatsProps) {
           aria-label="Statistiques de réussite"
         >
           {items.map((item, index) => (
-            <StatItem
-              key={index}
-              value={item.value}
-              label={item.label}
-            />
+            <StatItem key={index} value={item.value} label={item.label} />
           ))}
         </div>
       </div>

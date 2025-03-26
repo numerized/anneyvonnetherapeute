@@ -1,7 +1,7 @@
 'use server'
 
-import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
+import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
 interface PriceConfig {
@@ -40,33 +40,33 @@ const TICKET_PRICES: TicketPrices = {
     prochainement: {
       amount: {
         chf: 99900, // 999 CHF in centimes
-        eur: 99900  // 999 EUR in cents
+        eur: 99900, // 999 EUR in cents
       },
       discountedAmount: {
         chf: 89900, // 899 CHF in centimes
-        eur: 89900  // 899 EUR in cents
+        eur: 89900, // 899 EUR in cents
       },
-      name: 'Formation - Mieux vivre l\'autre | Anne Yvonne Racine (coeur-a-corps.org)'
+      name: "Formation - Mieux vivre l'autre | Anne Yvonne Racine (coeur-a-corps.org)",
     },
     'coaching-relationnel-en-groupe': {
       amount: {
         chf: 33300, // 333 CHF in centimes
-        eur: 33300  // 333 EUR in cents
+        eur: 33300, // 333 EUR in cents
       },
       discountedAmount: {
         chf: 30000, // 300 CHF in centimes
-        eur: 30000  // 300 EUR in cents
+        eur: 30000, // 300 EUR in cents
       },
-      name: 'Coaching Relationnel en Groupe | Anne Yvonne Racine (coeur-a-corps.org)'
+      name: 'Coaching Relationnel en Groupe | Anne Yvonne Racine (coeur-a-corps.org)',
     },
     webinar: {
       amount: {
         chf: 100, // 1 CHF in centimes
-        eur: 100  // 1 EUR in cents
+        eur: 100, // 1 EUR in cents
       },
-      name: 'Webinar - Mieux vivre l\'autre | Anne Yvonne Racine (coeur-a-corps.org)'
-    }
-  }
+      name: "Webinar - Mieux vivre l'autre | Anne Yvonne Racine (coeur-a-corps.org)",
+    },
+  },
 }
 
 // Test coupon code for 99% discount
@@ -81,8 +81,22 @@ export async function POST(req: Request) {
     })
 
     const body = await req.json()
-    const { ticketType, email, currency, hasDiscount, couponCode, productType = 'prochainement' } = body
-    console.log('Request data:', { ticketType, email, currency, hasDiscount, couponCode, productType })
+    const {
+      ticketType,
+      email,
+      currency,
+      hasDiscount,
+      couponCode,
+      productType = 'prochainement',
+    } = body
+    console.log('Request data:', {
+      ticketType,
+      email,
+      currency,
+      hasDiscount,
+      couponCode,
+      productType,
+    })
 
     const headersList = await headers()
     const origin = headersList.get('origin')
@@ -91,7 +105,7 @@ export async function POST(req: Request) {
     if (!ticketType || !email || !currency) {
       return NextResponse.json(
         { error: 'Ticket type, email, and currency are required' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -104,24 +118,35 @@ export async function POST(req: Request) {
       apiVersion: '2024-12-18.acacia',
     })
 
-    const priceData = TICKET_PRICES[ticketType as keyof typeof TICKET_PRICES]?.[productType as keyof (typeof TICKET_PRICES)['standard']]
+    const priceData =
+      TICKET_PRICES[ticketType as keyof typeof TICKET_PRICES]?.[
+        productType as keyof (typeof TICKET_PRICES)['standard']
+      ]
     if (!priceData) {
       return NextResponse.json(
         { error: 'Invalid ticket type or product type' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
     // Get base amount first
-    const baseAmount = priceData.amount[currency.toLowerCase() as keyof typeof priceData.amount]
-    
+    const baseAmount =
+      priceData.amount[currency.toLowerCase() as keyof typeof priceData.amount]
+
     // Calculate amount with discount if applicable
     let amount = baseAmount
-    if (hasDiscount && 'discountedAmount' in priceData && priceData.discountedAmount) {
-      const discountedAmount = priceData.discountedAmount[currency.toLowerCase() as keyof typeof priceData.amount]
+    if (
+      hasDiscount &&
+      'discountedAmount' in priceData &&
+      priceData.discountedAmount
+    ) {
+      const discountedAmount =
+        priceData.discountedAmount[
+          currency.toLowerCase() as keyof typeof priceData.amount
+        ]
       amount = discountedAmount ?? baseAmount // Fallback to base amount if discounted amount is undefined
     }
-    
+
     let finalAmount = amount
     let discountMessage = hasDiscount ? 'Discount applied' : ''
 
@@ -132,16 +157,17 @@ export async function POST(req: Request) {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: currency.toLowerCase() === 'chf' 
-        ? ['card', 'paypal', 'twint']
-        : ['card', 'paypal'],
+      payment_method_types:
+        currency.toLowerCase() === 'chf'
+          ? ['card', 'paypal', 'twint']
+          : ['card', 'paypal'],
       line_items: [
         {
           price_data: {
             currency: currency.toLowerCase(),
             product_data: {
               name: priceData.name,
-              ...(discountMessage && { description: discountMessage })
+              ...(discountMessage && { description: discountMessage }),
             },
             unit_amount: finalAmount,
           },
@@ -156,8 +182,8 @@ export async function POST(req: Request) {
         ticketType,
         productType,
         hasDiscount: hasDiscount ? 'true' : 'false',
-        testCoupon: couponCode === TEST_COUPON ? 'true' : 'false'
-      }
+        testCoupon: couponCode === TEST_COUPON ? 'true' : 'false',
+      },
     })
 
     return NextResponse.json({ sessionId: session.id })
@@ -165,7 +191,7 @@ export async function POST(req: Request) {
     console.error('Checkout session error:', error)
     return NextResponse.json(
       { error: 'Error creating checkout session' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

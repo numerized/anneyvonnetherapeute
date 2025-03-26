@@ -35,7 +35,8 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                   COACHING DE DÉBUT DE RELATION
                 </h3>
                 <p className="text-lg mb-4">
-                  L&apos;amour commence par soi. Explorez vos schémas relationnels.
+                  L&apos;amour commence par soi. Explorez vos schémas
+                  relationnels.
                 </p>
               </div>
 
@@ -73,9 +74,7 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                 </div>
               </div>
 
-              <button
-                className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
-              >
+              <button className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold">
                 En savoir plus
               </button>
             </div>
@@ -89,7 +88,8 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                   CHECK UP RELATIONNEL
                 </h3>
                 <p className="text-lg mb-4">
-                  L&apos;amour s&apos;épanouit dans la conscience. Transformez vos relations.
+                  L&apos;amour s&apos;épanouit dans la conscience. Transformez
+                  vos relations.
                 </p>
               </div>
 
@@ -127,9 +127,7 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                 </div>
               </div>
 
-              <button
-                className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
-              >
+              <button className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold">
                 En savoir plus
               </button>
             </div>
@@ -143,7 +141,8 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                   RESTER OU PARTIR, COMMENT DECIDER ?
                 </h3>
                 <p className="text-lg mb-4">
-                  L&apos;amour rayonne naturellement. Vivez des relations authentiques.
+                  L&apos;amour rayonne naturellement. Vivez des relations
+                  authentiques.
                 </p>
               </div>
 
@@ -181,9 +180,7 @@ export function RelationshipStages({ className }: RelationshipStagesProps) {
                 </div>
               </div>
 
-              <button
-                className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold"
-              >
+              <button className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-md py-3 font-bold">
                 En savoir plus
               </button>
             </div>

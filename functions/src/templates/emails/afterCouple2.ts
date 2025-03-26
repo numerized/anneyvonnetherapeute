@@ -1,11 +1,13 @@
-import { EmailTemplate } from '../types';
-import { baseTemplate, createButton } from '../base';
+import { EmailTemplate } from '../types'
+import { baseTemplate, createButton } from '../base'
 
 export const afterCouple2Email: EmailTemplate = {
-  subject: 'Suite de votre Parcours "Parenthèse Thérapeutique" – Prochaines Étapes',
+  subject:
+    'Suite de votre Parcours "Parenthèse Thérapeutique" – Prochaines Étapes',
   triggerType: 'afterSession',
   delayDays: 1,
-  getHtml: (data) => baseTemplate(`
+  getHtml: (data) =>
+    baseTemplate(`
     <h2 style="color: #E8927C; margin-bottom: 20px;">Chers ${data.firstName1 || ''} et ${data.firstName2 || ''},</h2>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
@@ -40,11 +42,15 @@ export const afterCouple2Email: EmailTemplate = {
       Cette évaluation personnelle vous permettra d'identifier vos forces et vos besoins, et d'ouvrir un dialogue constructif sur ce pilier essentiel de votre relation.
     </p>
 
-    ${data.promoCode ? `
+    ${
+      data.promoCode
+        ? `
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       En vous inscrivant dans les 6 prochains mois, bénéficiez d'une réduction exclusive grâce au code promo <strong>${data.promoCode}</strong>.
     </p>
-    ` : ''}
+    `
+        : ''
+    }
 
     ${data.cycle2Url ? createButton(data.cycle2Url, "S'inscrire au Cycle 2") : ''}
 
@@ -52,14 +58,18 @@ export const afterCouple2Email: EmailTemplate = {
       Nous vous souhaitons le meilleur dans votre cheminement amoureux et serions ravis de continuer à vous accompagner. Découvrez nos capsules, événements et coachings dédiés à nourrir et renforcer votre relation.
     </p>
 
-    ${data.audioCapsuleUrl ? `
+    ${
+      data.audioCapsuleUrl
+        ? `
     <h3 style="color: #E8927C; margin: 30px 0 15px;">Ressources Complémentaires</h3>
 
     <ul style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       <li>TEST DU MOI EN NOUS ${data.testUrl ? createButton(data.testUrl, 'Accéder au test') : ''}</li>
       <li>CAPSULE SUR "LE COUPLE CONSCIENT" ${data.audioCapsuleUrl ? createButton(data.audioCapsuleUrl, 'Écouter la capsule') : ''}</li>
-      <li>AUDIO GUIDÉ ${data.audioCapsuleUrl ? createButton(data.audioCapsuleUrl, 'Écouter l\'audio') : ''}</li>
+      <li>AUDIO GUIDÉ ${data.audioCapsuleUrl ? createButton(data.audioCapsuleUrl, "Écouter l'audio") : ''}</li>
     </ul>
-    ` : ''}
-  `)
-};
+    `
+        : ''
+    }
+  `),
+}
