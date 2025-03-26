@@ -1,11 +1,11 @@
-import { Dialog } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Dialog } from '@headlessui/react'
+import { Fragment } from 'react'
 
 interface EmailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  emailTitle: string;
-  emailContent: string;
+  isOpen: boolean
+  onClose: () => void
+  emailTitle: string
+  emailContent: string
 }
 
 export const EmailModal: React.FC<EmailModalProps> = ({
@@ -14,7 +14,12 @@ export const EmailModal: React.FC<EmailModalProps> = ({
   emailTitle,
   emailContent,
 }) => {
-  console.log('EmailModal props:', { isOpen, onClose, emailTitle, emailContent });
+  console.log('EmailModal props:', {
+    isOpen,
+    onClose,
+    emailTitle,
+    emailContent,
+  })
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -27,7 +32,7 @@ export const EmailModal: React.FC<EmailModalProps> = ({
           </Dialog.Title>
 
           <div className="mt-4 border rounded-lg p-4 bg-gray-50">
-            <div 
+            <div
               className="prose prose-sm max-w-none"
               dangerouslySetInnerHTML={{ __html: emailContent }}
             />
@@ -45,5 +50,5 @@ export const EmailModal: React.FC<EmailModalProps> = ({
         </Dialog.Panel>
       </div>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,54 +1,58 @@
-import { useState } from 'react';
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import { toast } from 'sonner';
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { app } from '@/lib/firebase';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { app } from '@/lib/firebase'
 
 interface InvitePartnerFormProps {
-  onClose: () => void;
-  onSubmit?: (email: string) => void;
+  onClose: () => void
+  onSubmit?: (email: string) => void
 }
 
-export function InvitePartnerForm({ onClose, onSubmit }: InvitePartnerFormProps) {
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+export function InvitePartnerForm({
+  onClose,
+  onSubmit,
+}: InvitePartnerFormProps) {
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
       if (onSubmit) {
         // If onSubmit is provided, use it
-        await onSubmit(email);
+        await onSubmit(email)
       } else {
         // Default behavior - call cloud function
-        const functions = getFunctions(app, 'europe-west1');
-        const sendPartnerInvite = httpsCallable<{ partnerEmail: string }, { success: boolean }>(
-          functions,
-          'sendPartnerInvite'
-        );
-        
-        const result = await sendPartnerInvite({ partnerEmail: email });
-        
+        const functions = getFunctions(app, 'europe-west1')
+        const sendPartnerInvite = httpsCallable<
+          { partnerEmail: string },
+          { success: boolean }
+        >(functions, 'sendPartnerInvite')
+
+        const result = await sendPartnerInvite({ partnerEmail: email })
+
         if (result.data.success) {
-          toast.success('Invitation envoyée avec succès');
-          onClose();
+          toast.success('Invitation envoyée avec succès')
+          onClose()
         } else {
-          throw new Error('Échec de l\'envoi de l\'invitation');
+          throw new Error("Échec de l'envoi de l'invitation")
         }
       }
-      onClose();
+      onClose()
     } catch (error: any) {
-      console.error('Error sending invitation:', error);
-      const errorMessage = error.message || 'Erreur lors de l\'envoi de l\'invitation';
-      toast.error(errorMessage);
+      console.error('Error sending invitation:', error)
+      const errorMessage =
+        error.message || "Erreur lors de l'envoi de l'invitation"
+      toast.error(errorMessage)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,9 +83,9 @@ export function InvitePartnerForm({ onClose, onSubmit }: InvitePartnerFormProps)
           disabled={isLoading}
           className="bg-primary-coral hover:bg-primary-coral/90 text-white"
         >
-          {isLoading ? 'Envoi...' : 'Envoyer l\'invitation'}
+          {isLoading ? 'Envoi...' : "Envoyer l'invitation"}
         </Button>
       </div>
     </form>
-  );
+  )
 }

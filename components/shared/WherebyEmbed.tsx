@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 interface WherebyEmbedProps {
   className?: string
@@ -43,20 +43,20 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
               priority
             />
           </div>
-          
+
           {/* Content Overlay */}
           <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center p-4 sm:p-6">
-            <svg 
-              className="w-16 h-16 sm:w-24 sm:h-24 text-primary-coral mb-4 sm:mb-6" 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="w-16 h-16 sm:w-24 sm:h-24 text-primary-coral mb-4 sm:mb-6"
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={1.5} 
-                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
               />
             </svg>
             {isLiveFinished ? (
@@ -65,7 +65,10 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
                   Le live est terminé
                 </h3>
                 <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
-                  Merci d'avoir participé au live sur le thème "« Oser nos désirs : amour, libido et renaissance du printemps »". N'oubliez pas de vous inscrire à la newsletter pour être informé(e) des prochains lives.
+                  Merci d'avoir participé au live sur le thème "« Oser nos
+                  désirs : amour, libido et renaissance du printemps »".
+                  N'oubliez pas de vous inscrire à la newsletter pour être
+                  informé(e) des prochains lives.
                 </p>
               </>
             ) : (
@@ -74,10 +77,13 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
                   Le live commencera le 18 mars à 20h
                 </h3>
                 <h2 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
-                  "« Oser nos désirs : amour, libido et renaissance du printemps »"
+                  "« Oser nos désirs : amour, libido et renaissance du printemps
+                  »"
                 </h2>
                 <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
-                  En attendant, n'oubliez pas de vous inscrire à la newsletter ci-dessus pour recevoir un rappel et toutes les informations nécessaires.
+                  En attendant, n'oubliez pas de vous inscrire à la newsletter
+                  ci-dessus pour recevoir un rappel et toutes les informations
+                  nécessaires.
                 </p>
               </>
             )}
@@ -90,9 +96,12 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
   return (
     <div className={`relative w-full h-full flex flex-col ${className}`}>
       <iframe
-        src={typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-          ? "https://whereby.com/rezokev"
-          : "https://whereby.com/coeur-a-corps?minimal=1"}
+        src={
+          typeof window !== 'undefined' &&
+          window.location.hostname === 'localhost'
+            ? 'https://whereby.com/rezokev'
+            : 'https://whereby.com/coeur-a-corps?minimal=1'
+        }
         allow="camera; microphone; fullscreen; speaker; display-capture"
         className="w-full h-full rounded-2xl"
       ></iframe>

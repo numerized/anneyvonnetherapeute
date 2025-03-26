@@ -1,10 +1,12 @@
-import { EmailTemplate } from '../types';
-import { baseTemplate } from '../base';
+import { EmailTemplate } from '../types'
+import { baseTemplate } from '../base'
 
 export const beforeCouple1Email: EmailTemplate = {
-  subject: 'Bienvenue chez Cœur à Corps – Un voyage inspirant pour votre couple',
+  subject:
+    'Bienvenue chez Cœur à Corps – Un voyage inspirant pour votre couple',
   triggerType: 'immediate',
-  getHtml: (data) => baseTemplate(`
+  getHtml: (data) =>
+    baseTemplate(`
     <h2 style="color: #E8927C; margin-bottom: 20px;">Bonjour ${data.name},</h2>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
@@ -38,5 +40,5 @@ export const beforeCouple1Email: EmailTemplate = {
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       <a href="https://www.coeur-a-corps.org" style="color: #E8927C; text-decoration: none;">www.coeur-a-corps.org</a>
     </p>
-  `)
-};
+  `),
+}

@@ -1,8 +1,8 @@
-import { Toaster } from "sonner"
+import { Toaster } from 'sonner'
 
 export function Toast() {
   return (
-    <Toaster 
+    <Toaster
       position="top-center"
       toastOptions={{
         style: {

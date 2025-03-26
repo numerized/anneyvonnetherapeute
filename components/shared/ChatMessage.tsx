@@ -1,7 +1,7 @@
 interface ChatMessageProps {
-  isAI: boolean;
-  message: string;
-  initials: string;
+  isAI: boolean
+  message: string
+  initials: string
 }
 
 export function ChatMessage({ isAI, message, initials }: ChatMessageProps) {
@@ -12,10 +12,15 @@ export function ChatMessage({ isAI, message, initials }: ChatMessageProps) {
           <span className="text-primary-teal text-sm">{initials}</span>
         </div>
       )}
-      <div className={`max-w-[80%] group relative ${isAI ? 'bg-primary-forest/40' : 'bg-[#6BA5A5]'} rounded-[18px] p-4 shadow-md`}>
+      <div
+        className={`max-w-[80%] group relative ${isAI ? 'bg-primary-forest/40' : 'bg-[#6BA5A5]'} rounded-[18px] p-4 shadow-md`}
+      >
         <p className="text-primary-cream text-sm">{message}</p>
         <span className="text-[10px] text-primary-cream/60 absolute bottom-1 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          {new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+          {new Date().toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
         </span>
       </div>
       {!isAI && (
@@ -24,5 +29,5 @@ export function ChatMessage({ isAI, message, initials }: ChatMessageProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,14 +1,27 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
 import { X } from 'lucide-react'
+import { Fragment } from 'react'
 
 interface TherapyPromoModalProps {
   isOpen: boolean
   onClose: () => void
-  type: 'couple' | 'individual' | 'vit' | 'beginning' | 'checkup' | 'decision' | 'sexology' | 'men' | 'women'
+  type:
+    | 'couple'
+    | 'individual'
+    | 'vit'
+    | 'beginning'
+    | 'checkup'
+    | 'decision'
+    | 'sexology'
+    | 'men'
+    | 'women'
 }
 
-export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalProps) {
+export function TherapyPromoModal({
+  isOpen,
+  onClose,
+  type,
+}: TherapyPromoModalProps) {
   const getContent = () => {
     switch (type) {
       case 'couple':
@@ -36,9 +49,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   <span>Retrouver l'harmonie dans votre relation</span>
                 </li>
               </ul>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'individual':
         return {
@@ -65,9 +81,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   <span>Vous reconnecter à vous-même</span>
                 </li>
               </ul>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'vit':
         return {
@@ -94,9 +113,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   <span>Des ressources exclusives</span>
                 </li>
               </ul>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'beginning':
         return {
@@ -123,9 +145,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   <span>Construire une relation durable</span>
                 </li>
               </ul>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'checkup':
         return {
@@ -152,9 +177,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   <span>Maintenir une relation saine</span>
                 </li>
               </ul>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'decision':
         return {
@@ -181,9 +209,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   <span>Planifier les prochaines étapes</span>
                 </li>
               </ul>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'sexology':
         return {
@@ -196,28 +227,40 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                 <ul className="space-y-2 list-none">
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Raviver la flamme et renforcer l'intimité émotionnelle</span>
+                    <span>
+                      Raviver la flamme et renforcer l'intimité émotionnelle
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Améliorer la communication autour de la sexualité</span>
+                    <span>
+                      Améliorer la communication autour de la sexualité
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Surmonter ensemble les difficultés (libido, blocages, dysfonctions)</span>
+                    <span>
+                      Surmonter ensemble les difficultés (libido, blocages,
+                      dysfonctions)
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Explorer de nouvelles dimensions de votre sexualité à deux</span>
+                    <span>
+                      Explorer de nouvelles dimensions de votre sexualité à deux
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Construire une vision commune de votre épanouissement sexuel</span>
+                    <span>
+                      Construire une vision commune de votre épanouissement
+                      sexuel
+                    </span>
                   </li>
                 </ul>
               </div>
             </div>
-          )
+          ),
         }
       case 'men':
         return {
@@ -234,7 +277,9 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Comprendre et gérer les dysfonctionnements érectiles</span>
+                    <span>
+                      Comprendre et gérer les dysfonctionnements érectiles
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
@@ -246,9 +291,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   </li>
                 </ul>
               </div>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       case 'women':
         return {
@@ -265,7 +313,9 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
-                    <span>Comprendre et gérer les dysfonctionnements sexuels</span>
+                    <span>
+                      Comprendre et gérer les dysfonctionnements sexuels
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary-coral mt-1">♦</span>
@@ -277,15 +327,18 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                   </li>
                 </ul>
               </div>
-              <p className="mt-6">Pour plus d'informations sur les tarifs et la prise de rendez-vous, contactez-nous.</p>
+              <p className="mt-6">
+                Pour plus d'informations sur les tarifs et la prise de
+                rendez-vous, contactez-nous.
+              </p>
             </div>
-          )
+          ),
         }
       default:
         return {
           title: '',
           subtitle: '',
-          content: null
+          content: null,
         }
     }
   }
@@ -331,8 +384,12 @@ export function TherapyPromoModal({ isOpen, onClose, type }: TherapyPromoModalPr
                 <div className="p-8 md:p-12">
                   <div className="space-y-8">
                     <div className="space-y-2">
-                      <h2 className="text-3xl text-primary-cream font-light">{title}</h2>
-                      <p className="text-xl text-primary-coral/90">{subtitle}</p>
+                      <h2 className="text-3xl text-primary-cream font-light">
+                        {title}
+                      </h2>
+                      <p className="text-xl text-primary-coral/90">
+                        {subtitle}
+                      </p>
                     </div>
                     {content}
                   </div>

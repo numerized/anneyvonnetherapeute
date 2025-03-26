@@ -1,6 +1,7 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
+
 import { Benefit } from '../Benefit'
 
 interface CoupleTherapyCardProps {
@@ -52,10 +53,14 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
 
         <div className="bg-primary-forest/30 rounded-[24px] p-6">
           <div className="flex flex-col gap-2">
-            <h3 className="text-2xl text-primary-coral font-light text-left">VOTRE THÉRAPIE DE COUPLE</h3>
+            <h3 className="text-2xl text-primary-coral font-light text-left">
+              VOTRE THÉRAPIE DE COUPLE
+            </h3>
             <div className="flex items-end gap-1 justify-start">
               <p className="text-4xl text-primary-cream font-light">2590 €</p>
-              <p className="text-primary-cream/70 pb-1">(ou 3 x 880€ mensuel)</p>
+              <p className="text-primary-cream/70 pb-1">
+                (ou 3 x 880€ mensuel)
+              </p>
             </div>
             <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
               <li className="flex items-center gap-2 m-0">
@@ -102,7 +107,8 @@ export function CoupleTherapyCard({ onShowPromo }: CoupleTherapyCardProps) {
             <div>
               <h4 className="text-primary-cream font-bold mb-2">Idéal pour</h4>
               <p className="text-primary-cream/90">
-                Les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre.
+                Les couples en désir d'harmonie, qui ont le désir de mieux
+                s'entendre et de mieux se comprendre.
               </p>
             </div>
           </div>

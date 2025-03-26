@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+
 import { Button } from '@/components/ui/button'
 
 interface HeroProps {
@@ -9,7 +10,11 @@ interface HeroProps {
   onShowPurchase: () => void
 }
 
-export function CoachingRelationelEnGroupeHero({ hero, data, onShowPurchase }: HeroProps) {
+export function CoachingRelationelEnGroupeHero({
+  hero,
+  data,
+  onShowPurchase,
+}: HeroProps) {
   return (
     <section
       id="coaching-relationnel-en-groupe"
@@ -39,8 +44,9 @@ export function CoachingRelationelEnGroupeHero({ hero, data, onShowPurchase }: H
             <span className="block text-pink-500">En Groupe</span>
           </h1>
           <p className="mx-auto mt-6 max-w-lg text-xl text-gray-300 sm:max-w-3xl">
-            Découvrez une nouvelle approche du coaching relationnel en groupe. Partagez, apprenez et
-            évoluez ensemble dans un cadre bienveillant et professionnel.
+            Découvrez une nouvelle approche du coaching relationnel en groupe.
+            Partagez, apprenez et évoluez ensemble dans un cadre bienveillant et
+            professionnel.
           </p>
           <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
             <Button
@@ -57,8 +63,16 @@ export function CoachingRelationelEnGroupeHero({ hero, data, onShowPurchase }: H
   )
 }
 
-export function CoachingRelationelEnGroupeHeroWrapper({ hero, data, onShowPurchase }: HeroProps) {
+export function CoachingRelationelEnGroupeHeroWrapper({
+  hero,
+  data,
+  onShowPurchase,
+}: HeroProps) {
   return (
-    <CoachingRelationelEnGroupeHero hero={hero} data={data} onShowPurchase={onShowPurchase} />
+    <CoachingRelationelEnGroupeHero
+      hero={hero}
+      data={data}
+      onShowPurchase={onShowPurchase}
+    />
   )
 }

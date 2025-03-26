@@ -17,9 +17,10 @@ export default function PaymentSuccess() {
               Paiement réussi !
             </h1>
             <p className="text-lg text-primary-cream/80 mb-8">
-              Merci pour votre inscription au webinar. Vous recevrez bientôt un email avec tous les détails d'accès.
+              Merci pour votre inscription au webinar. Vous recevrez bientôt un
+              email avec tous les détails d'accès.
             </p>
-            <Link 
+            <Link
               href="/prochainement"
               className="inline-flex items-center px-6 py-3 rounded-full bg-primary-coral hover:bg-primary-rust transition-colors duration-200 text-primary-cream font-medium"
             >

@@ -1,12 +1,13 @@
 'use client'
 
-import { Suspense } from 'react'
-import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { RadioGroup } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
-import { questions, options, Question, Option } from '@/lib/questionnaire'
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
+import { useState } from 'react'
+
+import { Option, options, Question, questions } from '@/lib/questionnaire'
 
 function QuelAmoureuxContent() {
   const searchParams = useSearchParams()
@@ -17,7 +18,7 @@ function QuelAmoureuxContent() {
     return today.toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   })
 
@@ -25,7 +26,7 @@ function QuelAmoureuxContent() {
   const [showResults, setShowResults] = useState(false)
 
   const handleAnswerChange = (questionId: string, value: string) => {
-    setAnswers(prev => ({ ...prev, [questionId]: value }))
+    setAnswers((prev) => ({ ...prev, [questionId]: value }))
   }
 
   return (
@@ -53,19 +54,24 @@ function QuelAmoureuxContent() {
 
             <div className="space-y-8">
               {questions.map((question, index) => (
-                <div key={question.id} className="bg-gray-50 rounded-2xl p-6 shadow-sm">
+                <div
+                  key={question.id}
+                  className="bg-gray-50 rounded-2xl p-6 shadow-sm"
+                >
                   <div className="flex items-start gap-4 mb-4">
                     <span className="text-primary-coral font-medium">
                       {index + 1}/{questions.length}
                     </span>
                     <h3 className="text-lg text-gray-800">
                       {question.text}
-                      {question.required && <span className="text-primary-coral ml-1">*</span>}
+                      {question.required && (
+                        <span className="text-primary-coral ml-1">*</span>
+                      )}
                     </h3>
                   </div>
 
-                  <RadioGroup 
-                    value={answers[question.id] || ''} 
+                  <RadioGroup
+                    value={answers[question.id] || ''}
                     onChange={(value) => handleAnswerChange(question.id, value)}
                     className="mt-4"
                   >
@@ -87,7 +93,9 @@ function QuelAmoureuxContent() {
                                   <RadioGroup.Label
                                     as="p"
                                     className={`font-medium ${
-                                      checked ? 'text-primary-coral' : 'text-gray-900'
+                                      checked
+                                        ? 'text-primary-coral'
+                                        : 'text-gray-900'
                                     }`}
                                   >
                                     {option.label}
@@ -126,11 +134,13 @@ function QuelAmoureuxContent() {
 
 export default function QuelAmoureuxPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+        </div>
+      }
+    >
       <QuelAmoureuxContent />
     </Suspense>
   )

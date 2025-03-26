@@ -1,9 +1,10 @@
-import type { Metadata } from 'next'
-import { IBM_Plex_Mono, PT_Serif, Montserrat, Aleo } from 'next/font/google'
+import './globals.css'
+
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Toaster } from "sonner"
-import './globals.css'
+import type { Metadata } from 'next'
+import { Aleo, IBM_Plex_Mono, Montserrat, PT_Serif } from 'next/font/google'
+import { Toaster } from 'sonner'
 
 const aleo = Aleo({
   subsets: ['latin'],
@@ -33,8 +34,8 @@ export const metadata: Metadata = {
   title: 'Anne Yvonne Relations',
   description: 'Anne Yvonne Relations - Psychothérapie & Hypnose',
   icons: {
-    icon: '/images/logo.png'
-  }
+    icon: '/images/logo.png',
+  },
 }
 
 export default function RootLayout({

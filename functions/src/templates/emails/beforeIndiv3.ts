@@ -1,11 +1,12 @@
-import { EmailTemplate } from '../types';
-import { baseTemplate, createButton } from '../base';
+import { EmailTemplate } from '../types'
+import { baseTemplate, createButton } from '../base'
 
 export const beforeIndiv3Email: EmailTemplate = {
   subject: 'Préparation Séance 3 - Célébration de votre Odyssée Intérieure',
   triggerType: 'beforeSession',
   delayDays: 3,
-  getHtml: (data) => baseTemplate(`
+  getHtml: (data) =>
+    baseTemplate(`
     <h2 style="color: #E8927C; margin-bottom: 20px;">Bonjour ${data.name},</h2>
 
     <h3 style="color: #E8927C; margin: 20px 0 15px;">Bilan et Approfondissement de votre Parcours Introspectif</h3>
@@ -35,5 +36,5 @@ export const beforeIndiv3Email: EmailTemplate = {
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       Je vous invite à écouter la capsule audio disponible ici : ${data.audioCapsuleUrl ? createButton(data.audioCapsuleUrl, 'Écouter la capsule audio') : ''}
     </p>
-  `)
-};
+  `),
+}

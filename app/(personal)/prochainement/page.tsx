@@ -4,7 +4,7 @@ import { loadHomePage, loadSettings } from '@/sanity/loader/loadQuery'
 export default async function ProchainementRoute() {
   const [initial, settings] = await Promise.all([
     loadHomePage(),
-    loadSettings()
+    loadSettings(),
   ])
 
   if (!initial.data) {
