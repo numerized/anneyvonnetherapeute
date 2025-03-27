@@ -84,7 +84,8 @@ export default function DashboardPage() {
   // Helper function to get session date - defined after sessionDates declaration
   const getSessionDate = useCallback(
     (sessionId: string): string | undefined => {
-      return sessionDates[sessionId]
+      // Always use the exact session ID provided
+      return sessionDates[sessionId];
     },
     [sessionDates],
   )
@@ -461,6 +462,10 @@ export default function DashboardPage() {
       return
     }
 
+    // Store the session ID in localStorage to ensure we only update this specific session
+    localStorage.setItem('currentBookingSessionId', event.id)
+    console.log(`Starting booking for session: ${event.id} - saved to localStorage`)
+
     // Set the booking session to show loading state
     setBookingSession(event.id)
     setSelectedEvent(event)
@@ -471,11 +476,28 @@ export default function DashboardPage() {
 
   const handleAppointmentScheduled = async (eventData: any) => {
     try {
-      if (!user || !selectedEvent) return
-
-      // Create a local variable to track which session we'll actually use
-      // This allows us to modify which session we're setting without waiting for React state to update
-      let sessionToUse = selectedEvent
+      if (!user) {
+        console.error('No user found')
+        return
+      }
+      
+      // Get the current booking session ID from localStorage
+      const currentBookingSessionId = localStorage.getItem('currentBookingSessionId')
+      
+      if (!currentBookingSessionId) {
+        console.error('No session ID found in localStorage')
+        return
+      }
+      
+      console.log(`Processing appointment for session ID from localStorage: ${currentBookingSessionId}`)
+      
+      // Find the session from the journey based on the ID from localStorage
+      const sessionToUse = coupleTherapyJourney.find(event => event.id === currentBookingSessionId)
+      
+      if (!sessionToUse) {
+        console.error(`Session not found with ID: ${currentBookingSessionId}`)
+        return
+      }
 
       // Validate that we have the expected event data structure
       if (
@@ -572,10 +594,6 @@ export default function DashboardPage() {
           // Get current data
           const userData = userDocSnap.data()
 
-          // Get existing session details and dates or initialize if not present
-          const existingSessionDetails = userData.sessionDetails || {}
-          const existingSessionDates = userData.sessionDates || {}
-
           // Create the new session detail
           const newSessionDetail: SessionDetails = {
             date: formattedDate,
@@ -584,7 +602,7 @@ export default function DashboardPage() {
             startTime: startTime,
             endTime: endTime,
             lastUpdated: Timestamp.now(),
-            sessionType: sessionToUse.id, // Using the determined session ID as the session type
+            sessionType: sessionToUse.id, // Always use the event id as sessionType
             status: 'scheduled', // Default status for new appointments
             calendlyData: {
               eventUri: eventUri,
@@ -618,19 +636,18 @@ export default function DashboardPage() {
             }
           }
 
-          // Create new objects with the updated data
-          const updatedSessionDetails = { ...existingSessionDetails }
-          updatedSessionDetails[sessionToUse.id] = newSessionDetail
-
-          const updatedSessionDates = { ...existingSessionDates }
-          updatedSessionDates[sessionToUse.id] = startTime
-
-          // Update the document with direct update (no transaction)
-          await updateDoc(userDocRef, {
-            sessionDetails: updatedSessionDetails,
-            sessionDates: updatedSessionDates,
+          // Just update the specific session data by session ID from localStorage
+          // This ensures we're only updating the exact session that was clicked
+          const updateObject = {
+            [`sessionDetails.${currentBookingSessionId}`]: newSessionDetail,
+            [`sessionDates.${currentBookingSessionId}`]: startTime,
             updatedAt: Timestamp.now(),
-          })
+          };
+
+          console.log(`Updating session from localStorage: ${currentBookingSessionId}`)
+
+          // Update the document with direct update
+          await updateDoc(userDocRef, updateObject)
 
           // Verify data after update
           const verifyDocSnap = await getDoc(userDocRef)
@@ -644,15 +661,21 @@ export default function DashboardPage() {
           // Update session dates in state to reflect the new date
           setSessionDates((prev) => {
             const newDates = { ...prev }
-            newDates[sessionToUse.id] = startTime
+            newDates[currentBookingSessionId] = startTime
             return newDates
           })
 
           // Reset selected session
           setSelectedEvent(null)
 
-          // Note: We don't reset bookingSession here to keep the button disabled
-          // until the next Firestore update is detected by the useEffect
+          // Reset booking session to remove the loading state
+          setBookingSession(null)
+          
+          // Hide the Calendly modal
+          setShowCalendlyModal(false)
+
+          // Clear localStorage after successful booking
+          localStorage.removeItem('currentBookingSessionId')
 
           // Force UI refresh
           setUiRefreshKey((prev) => prev + 1)
@@ -1170,10 +1193,14 @@ export default function DashboardPage() {
               {/* Partner 2 Journey */}
               <div>
                 <h3 className="text-xl font-semibold text-primary-coral mb-4">
-                  Parcours Individuel de{' '}
+                  Parcours Individuel de{' '
+                  /* eslint-disable-next-line no-nested-ternary */
+                  }
                   {partnerProfile?.firstName
                     ? `${partnerProfile.firstName}`
-                    : '- Partenaire 2'}
+                    : userProfile?.firstName
+                      ? '- Partenaire 2'
+                      : '- Partenaire 2'}
                 </h3>
                 {renderJourneyPhase('individual', 'partner2')}
               </div>
