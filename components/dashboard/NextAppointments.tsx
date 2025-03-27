@@ -1,11 +1,11 @@
 import { format, isFuture, parseISO } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Calendar, Users } from 'lucide-react'
+import { Calendar, User, Users } from 'lucide-react'
 
 import { Offer } from '@/lib/offerService'
-import { User } from '@/lib/userService'
+import { User as UserType } from '@/lib/userService'
 
-interface UserWithOffer extends User {
+interface UserWithOffer extends UserType {
   currentOffer?: Offer | null
 }
 
@@ -137,10 +137,10 @@ export function NextAppointments({ users }: NextAppointmentsProps) {
       <div className="space-y-4">
         {nextAppointments.map((appointment, index) => (
           <div key={index} className="flex items-start gap-4">
-            {!isCoupleSession(appointment.type) ? (
-              <Users className="w-5 h-5 text-primary-cream/60 mt-1" />
+            {isCoupleSession(appointment.type) ? (
+              <User className="w-5 h-5 text-primary-cream/60 mt-1" />
             ) : (
-              <Calendar className="w-5 h-5 text-primary-cream/60 mt-1" />
+              <Users className="w-5 h-5 text-primary-cream/60 mt-1" />
             )}
             <div>
               {!isCoupleSession(appointment.type) &&
