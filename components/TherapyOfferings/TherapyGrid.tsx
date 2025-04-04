@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { TherapyCard } from './TherapyCard';
-import { getAllTherapyTypes } from '@/data/therapyOfferings/utils';
+import { getAllTherapyTypes, getTherapyOfferings } from '@/data/therapyOfferings/utils';
 import { TherapyType } from '@/data/therapyOfferings/types';
 import { TherapyModal } from './TherapyModal';
 
@@ -24,6 +24,9 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
 
   // Get therapies from props or fetch all if not provided
   const therapyList = therapies || getAllTherapyTypes();
+  
+  // Get common benefits from the offerings data
+  const { commonBenefits = [] } = getTherapyOfferings();
   
   // Filter therapies if displayAll is false and displayIds is provided
   const filteredTherapies = displayAll 
@@ -50,6 +53,7 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
               therapy={therapy} 
               index={index} 
               onShowPromo={handleShowPromo}
+              commonBenefits={commonBenefits}
             />
           </div>
         ))}

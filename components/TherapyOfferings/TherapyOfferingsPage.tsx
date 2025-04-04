@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { TherapyGrid } from './TherapyGrid';
+import { CommonBenefits } from './CommonBenefits';
 import { getAllTherapyTypes, getTherapyOfferings } from '@/data/therapyOfferings/utils';
 
 interface TherapyOfferingsPageProps {
@@ -38,6 +39,11 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           displayAll={displayAll}
           displayIds={displayIds}
         />
+        
+        {/* Common Benefits Section */}
+        {offerings.commonBenefits && offerings.commonBenefits.length > 0 && (
+          <CommonBenefits benefits={offerings.commonBenefits} />
+        )}
       </div>
     </div>
   );

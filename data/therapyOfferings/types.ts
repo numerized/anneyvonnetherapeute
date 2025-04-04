@@ -53,7 +53,7 @@ export interface TherapyMainOffering {
     title: string;
     details: string[];
   };
-  benefits?: string[] | {
+  uniqueBenefits?: string[] | {
     title: string;
     intro: string;
     list: string[];
@@ -98,5 +98,6 @@ export interface TherapyType {
 
 export interface TherapyOfferings {
   title: string;
+  commonBenefits: string[];
   therapyTypes: TherapyType[];
 }
