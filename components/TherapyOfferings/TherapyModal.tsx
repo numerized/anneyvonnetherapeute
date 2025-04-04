@@ -79,105 +79,23 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
     return 0;
   };
 
-  // Helper function to render options section
-  const renderOptions = () => {
-    if (!hasOptions) return null;
+  // Helper function to format pricing display with details
+  const formatPriceDisplay = (price: number, priceSuffix?: string, note?: string, priceDetails?: string) => {
+    let priceText = `${price}€`;
     
-    return (
-      <div className="mb-8">
-        <h3 className="text-xl font-medium mb-4 text-primary-coral">Options</h3>
-        <div className="space-y-4">
-          {therapy.options?.map((option) => (
-            <div 
-              key={option.id}
-              className="border border-primary-coral/30 rounded-[16px] overflow-hidden"
-            >
-              <div 
-                className="p-4 bg-primary-dark/30 flex justify-between items-center cursor-pointer"
-                onClick={() => handleSectionToggle(option.id)}
-              >
-                <h4 className="font-bold text-primary-cream">{option.title}</h4>
-                {activeSection === option.id ? 
-                  <ChevronUp className="text-primary-coral" /> : 
-                  <ChevronDown className="text-primary-coral" />
-                }
-              </div>
-              {activeSection === option.id && (
-                <div className="p-4 bg-primary-forest/30">
-                  <p className="text-primary-cream/90 mb-4">{option.description}</p>
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                      {option.pricing && typeof option.pricing !== 'string' && (
-                        <p className="text-primary-cream font-bold">
-                          Prix: {option.pricing?.couple?.price || option.pricing?.individual?.price || 0}€
-                        </p>
-                      )}
-                    </div>
-                    <button 
-                      className="bg-primary-coral hover:bg-primary-rust text-primary-cream px-6 py-2 rounded-[16px] transition-colors"
-                    >
-                      Choisir cette option
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  // Helper function to render formulas section
-  const renderFormulas = () => {
-    if (!hasFormulas) return null;
+    if (priceSuffix) {
+      priceText += priceSuffix;
+    }
     
-    return (
-      <div className="mb-8">
-        <h3 className="text-xl font-medium mb-4 text-primary-coral">Formules</h3>
-        <div className="space-y-4">
-          {therapy.mainOffering.formulas?.map((formula) => (
-            <div 
-              key={formula.id}
-              className="border border-primary-coral/30 rounded-[16px] overflow-hidden"
-            >
-              <div 
-                className="p-4 bg-primary-dark/30 flex justify-between items-center cursor-pointer"
-                onClick={() => handleFormulaToggle(formula.id)}
-              >
-                <h4 className="font-bold text-primary-cream">{formula.title}</h4>
-                {activeFormula === formula.id ? 
-                  <ChevronUp className="text-primary-coral" /> : 
-                  <ChevronDown className="text-primary-coral" />
-                }
-              </div>
-              {activeFormula === formula.id && (
-                <div className="p-4 bg-primary-forest/30">
-                  <p className="text-primary-cream/90 mb-4">{formula.features.join(' • ')}</p>
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                      <p className="text-primary-cream font-bold">
-                        Prix: {formula.price}€
-                      </p>
-                      {formula.priceDetails && (
-                        <p className="text-primary-cream/70 text-sm">
-                          {formula.priceDetails}
-                        </p>
-                      )}
-                    </div>
-                    <button 
-                      className="bg-primary-coral hover:bg-primary-rust text-primary-cream px-6 py-2 rounded-[16px] transition-colors"
-                    >
-                      Choisir cette formule
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    if (note) {
+      return `${priceText} (${note})`;
+    }
+    
+    if (priceDetails) {
+      return `${priceText} ${priceDetails}`;
+    }
+    
+    return priceText;
   };
 
   // Helper function to render process section
@@ -205,36 +123,90 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
 
   // Helper function to render benefits section
   const renderBenefits = () => {
-    if (!therapy.mainOffering.benefits) return null;
+    if (!therapy.mainOffering) return null;
     
-    let benefitsList: string[] = [];
-    let benefitsIntro = "";
+    if (!therapy.mainOffering.uniqueBenefits) return null;
     
-    // Handle different format of benefits
-    if (Array.isArray(therapy.mainOffering.benefits)) {
-      benefitsList = therapy.mainOffering.benefits;
-    } else if (typeof therapy.mainOffering.benefits === 'object') {
-      benefitsList = therapy.mainOffering.benefits.list || [];
-      benefitsIntro = therapy.mainOffering.benefits.intro || "";
+    if (Array.isArray(therapy.mainOffering.uniqueBenefits)) {
+      return (
+        <div className="space-y-8 mt-12">
+          <h3 className="text-primary-cream text-xl font-bold">Les avantages</h3>
+          <div className="space-y-6">
+            {therapy.mainOffering.uniqueBenefits.map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <div className="text-primary-coral mt-1">
+                  {getBenefitIcon(benefit)}
+                </div>
+                <div>
+                  <p className="text-primary-cream/90">{benefit}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    } else {
+      // Handle object-style benefits
+      return (
+        <div className="space-y-8 mt-12">
+          <h3 className="text-primary-cream text-xl font-bold">{therapy.mainOffering.uniqueBenefits.title}</h3>
+          {therapy.mainOffering.uniqueBenefits.intro && (
+            <p className="text-primary-cream/70">{therapy.mainOffering.uniqueBenefits.intro}</p>
+          )}
+          <div className="space-y-6">
+            {therapy.mainOffering.uniqueBenefits.list.map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <div className="text-primary-coral mt-1">
+                  {getBenefitIcon(benefit)}
+                </div>
+                <div>
+                  <p className="text-primary-cream/90">{benefit}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
     }
-    
-    if (benefitsList.length === 0) return null;
+  };
+
+  // Helper function to get benefit icon
+  const getBenefitIcon = (benefit: string) => {
+    // Add logic to return the correct icon based on the benefit
+    // For now, just return a placeholder icon
+    return <span>✓</span>;
+  };
+
+  // Helper function to render main offering details
+  const renderMainOfferingDetails = () => {
+    if (!therapy.mainOffering.details) return null;
+    const details = therapy.mainOffering.details;
     
     return (
       <div className="mb-8">
-        <h3 className="text-xl font-medium mb-4 text-primary-coral">Bénéfices</h3>
-        {benefitsIntro && (
-          <p className="text-primary-cream/90 mb-4">{benefitsIntro}</p>
-        )}
+        <h3 className="text-xl font-medium mb-4 text-primary-coral">{details.title || "Détails"}</h3>
         <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
-          <ul className="space-y-3">
-            {benefitsList.map((benefit, index) => (
-              <li key={index} className="flex items-start">
-                <span className="text-primary-coral mr-2 mt-1">♦</span>
-                <span className="text-primary-cream/90">{benefit}</span>
-              </li>
-            ))}
-          </ul>
+          <p className="text-primary-cream mb-2">{details.duration}</p>
+          <p className="text-primary-cream mb-2">{details.schedule}</p>
+          <p className="text-primary-cream mb-4">{details.sessionLength}</p>
+          
+          <div className="flex items-center gap-2 mb-4">
+            <p className="text-3xl font-light text-primary-coral">{formatPriceDisplay(details.price, '', '', 'pour le programme complet')}</p>
+          </div>
+          
+          {details.inclusions && (
+            <div>
+              <p className="text-primary-cream font-bold mb-2">Inclus:</p>
+              <ul className="space-y-1">
+                {details.inclusions.map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-primary-coral mr-2">✓</span>
+                    <span className="text-primary-cream/90">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -246,30 +218,29 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-primary-cream hover:text-primary-coral transition-colors"
+          aria-label="Close modal"
         >
           <X size={24} />
         </button>
         
+        <div className="mb-6">
+          <h2 className="text-3xl font-light text-primary-cream mb-2">
+            {therapy.title}
+          </h2>
+          <p className="text-xl text-primary-coral mb-2">{therapy.subtitle}</p>
+          <p className="text-primary-cream/80">{therapy.headline}</p>
+        </div>
+        
         <div className="mb-8">
-          <div className="flex justify-between items-start gap-4 mb-4">
-            <h2 className="text-2xl md:text-3xl font-light text-primary-cream">
-              {therapy.title}
-            </h2>
-            <div className="bg-primary-coral text-primary-cream px-3 py-1 rounded-[12px] text-sm uppercase">
-              {therapy.category || "Thérapie"}
-            </div>
-          </div>
-          {therapy.subtitle && (
-            <p className="text-primary-coral italic">{therapy.subtitle}</p>
-          )}
+          <p className="text-primary-cream/90 leading-relaxed">
+            {therapy.description}
+          </p>
         </div>
         
         {renderProverbs()}
+        {renderThemes()}
         {renderProcess()}
         {renderBenefits()}
-        {renderThemes()}
-        {renderFormulas()}
-        {renderOptions()}
         
         <div className="flex justify-end">
           <button 

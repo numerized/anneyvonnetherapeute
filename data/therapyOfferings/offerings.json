@@ -1,5 +1,12 @@
 {
   "title": "THÉRAPIES EXPLORATION - COEUR À CORPS",
+  "commonBenefits": [
+    "SMS WhatsApp chaque semaine : Vous posez une question, vous obtenez une réponse audio personnalisée.",
+    "Accès gratuit à la plateforme pendant 2 ans : Accédez à des ressources exclusives et des événements en ligne pour soutenir votre transformation.",
+    "Délocalisation des thérapies : Profitez de l'accompagnement, peu importe où vous vous trouvez, avec des sessions délocalisées accessibles partout",
+    "Accès pendant 2 ans à l'espace 180 Conversion d'Amour (capsules, lives, interactions)",
+    "Bénéficiez d'une première SÉANCE GRATUITE de 20 minutes"
+  ],
   "therapyTypes": [
     {
       "id": "couple",
@@ -37,11 +44,8 @@
             "Bilans et introspections avant et après chaque séance."
           ]
         },
-        "benefits": [
-          "SMS WhatsApp chaque semaine : Vous posez une question, vous obtenez une réponse audio personnalisée.",
-          "Accès gratuit à la plateforme : Accédez à des ressources exclusives et des événements en ligne pour soutenir votre transformation.",
-          "Accompagnement et support avec des modules spécifiques à thèmes",
-          "Délocalisation des thérapies : Profitez de l'accompagnement, peu importe où vous vous trouvez, avec des sessions délocalisées accessibles partout"
+        "uniqueBenefits": [
+          "Accompagnement et support avec des modules spécifiques à thèmes"
         ],
         "motto": "Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !",
         "idealFor": "Parcours idéal pour les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre.",
@@ -60,9 +64,7 @@
           "price": 2250,
           "inclusions": [
             "un entretien préalable 20'",
-            "un audio \"à l'avenir\" de fin de cycle thérapie",
-            "2 ANS ACCES A L'ESPACE 180 CONVERSION D'AMOUR",
-            "CAPSULES, LIVES ET INTERACTIONS"
+            "un audio \"à l'avenir\" de fin de cycle thérapie"
           ]
         }
       },
@@ -171,7 +173,8 @@
               "Agenda fixe (fixer les 4 séances)"
             ],
             "duration": "1 mois - 4 x 60'",
-            "price": 720.00
+            "price": 720.00,
+            "priceDetails": "pour le programme complet"
           },
           {
             "id": "compact",
@@ -182,7 +185,7 @@
             ],
             "duration": "3 MOIS - 12 x 60'",
             "price": 2160.00,
-            "priceDetails": "(3 X 720)"
+            "priceDetails": "(3 X 720) pour le programme complet"
           },
           {
             "id": "relax",
@@ -193,7 +196,7 @@
             ],
             "duration": "6 MOIS - 12 x 60'",
             "price": 2160.00,
-            "priceDetails": "(3 X 720)"
+            "priceDetails": "(3 X 720) pour le programme complet"
           },
           {
             "id": "vit-luxus",
@@ -205,21 +208,14 @@
             ],
             "price": 210.00,
             "priceSuffix": "/60'",
-            "note": "UNIQUEMENT RELAX"
+            "note": "par séance"
           }
         ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "benefits": {
-          "title": "LES AVANTAGES DU FORFAIT INDIVIDUEL",
-          "intro": "Choissiez votre FORMULE",
-          "list": [
-            "Bénéficiez d'une première SÉANCE GRATUITE de 20 minutes",
-            "SMS WhatsApp chaque semaine : Vous posez une question, vous obtenez une réponse audio personnalisée.",
-            "Accès gratuit à la plateforme pendant 2 ans : Accédez à des ressources exclusives et des événements en ligne pour soutenir votre transformation.",
-            "Accompagnement et support avec des modules spécifiques à thèmes",
-            "Délocalisation des thérapies : Profitez de l'accompagnement, peu importe où vous vous trouvez, avec des sessions délocalisées accessibles partout"
-          ]
-        },
+        "uniqueBenefits": [
+          "Outil d'introspection et de transformation personnelle",
+          "Modules d'accompagnement personnalisés selon vos besoins"
+        ],
         "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
       "hasAudioPresentation": true
@@ -260,20 +256,12 @@
         ],
         "price": 210.00,
         "priceSuffix": "/60'",
-        "note": "UNIQUEMENT RELAX",
+        "note": "par séance",
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "benefits": {
-          "title": "LES AVANTAGES DU FORFAIT INDIVIDUEL",
-          "intro": "Choissiez votre FORMULE",
-          "list": [
-            "Identifier votre THEME thérapeutique (formulaire en ligne)",
-            "Bénéficiez d'une première SÉANCE GRATUITE de 20 minutes",
-            "SMS WhatsApp chaque semaine : Vous posez une question, vous obtenez une réponse audio personnalisée.",
-            "Accès gratuit à la plateforme pendant 2 ans : Accédez à des ressources exclusives et des événements en ligne pour soutenir votre transformation.",
-            "Accompagnement et support avec des modules spécifiques à thèmes",
-            "Délocalisation des thérapies : Profitez de l'accompagnement, peu importe où vous vous trouvez, avec des sessions délocalisées accessibles partout"
-          ]
-        },
+        "uniqueBenefits": [
+          "Approche entièrement personnalisée",
+          "Flexibilité dans le rythme des séances"
+        ],
         "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
       "hasTest": true,
