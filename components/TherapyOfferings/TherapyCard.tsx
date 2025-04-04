@@ -2,277 +2,213 @@
 
 import React from 'react';
 import { TherapyType } from '@/data/therapyOfferings/types';
-import Link from 'next/link';
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react';
-import { ChevronRight } from 'lucide-react';
 
 interface TherapyCardProps {
   therapy: TherapyType;
   index: number;
-  onShowPromo?: (therapyId: string) => void;
-}
-
-// Define interfaces for optional properties that might not be in the main types
-interface TherapyResource {
-  type: string;
-  title: string;
-  description: string;
+  onShowPromo: (therapyId: string) => void;
 }
 
 export const TherapyCard: React.FC<TherapyCardProps> = ({ therapy, index, onShowPromo }) => {
-  // Extract pricing information
+  
+  // Get price display
   const getPriceDisplay = () => {
-    if (therapy.pricing) {
-      return `${therapy.pricing.couple} €`;
-    } else if (therapy.mainOffering && therapy.mainOffering.details && therapy.mainOffering.details.price) {
+    if ('price' in therapy.mainOffering) {
+      return `${therapy.mainOffering.price} €`;
+    } else if (therapy.mainOffering.details?.price) {
       return `${therapy.mainOffering.details.price} €`;
-    } else if (therapy.mainOffering && therapy.mainOffering.formulas && therapy.mainOffering.formulas[0] && therapy.mainOffering.formulas[0].price) {
-      const formula = therapy.mainOffering.formulas[0];
-      return `${formula.price} €`;
+    } else if (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0) {
+      const minPrice = Math.min(...therapy.mainOffering.formulas.map(f => f.price));
+      return `à partir de ${minPrice} €`;
+    } else {
+      return "Prix sur demande";
     }
-    return null;
   };
-
-  // Get organization points for the card
+  
+  // Get organization points
   const getOrganizationPoints = () => {
-    if (therapy.id === 'couple' && therapy.mainOffering && therapy.mainOffering.process && therapy.mainOffering.process.details) {
-      return therapy.mainOffering.process.details;
-    } else if (therapy.id === 'individual' && therapy.mainOffering && therapy.mainOffering.formulas) {
-      const formula = therapy.mainOffering.formulas.find(f => f.id === 'compact');
-      return formula?.features || [];
-    } else {
-      return therapy.mainOffering && therapy.mainOffering.features ? therapy.mainOffering.features : [];
-    }
-  };
-
-  // Get benefits points for the card
-  const getBenefits = () => {
-    if (therapy.mainOffering && typeof therapy.mainOffering.benefits === 'object' && 'list' in therapy.mainOffering.benefits) {
-      return therapy.mainOffering.benefits.list.slice(0, 3);
-    } else if (therapy.mainOffering && Array.isArray(therapy.mainOffering.benefits)) {
-      return therapy.mainOffering.benefits.slice(0, 3);
-    }
-    return [];
-  };
-
-  // Get payment options if available
-  const getPaymentOption = () => {
-    // Check if therapy details or formulas have paymentOptions as a custom property
-    if (therapy.id === 'couple' && therapy.mainOffering && therapy.mainOffering.details) {
-      // Use type assertion to access potential paymentOptions
-      const details = therapy.mainOffering.details as any;
-      return details.paymentOptions || null;
-    } else if (therapy.id === 'individual' && therapy.mainOffering && therapy.mainOffering.formulas && therapy.mainOffering.formulas[0]) {
-      // Use type assertion to access potential paymentOptions
-      const formula = therapy.mainOffering.formulas[0] as any;
-      return formula.paymentOptions || null;
-    }
-    return null;
-  };
-
-  const handleClick = () => {
-    if (onShowPromo) {
-      onShowPromo(therapy.id);
-    }
-  };
-
-  // Get additional benefits
-  const getAdditionalBenefits = () => {
-    // Use type assertion to access these potentially undefined properties
-    const mainOffering = therapy.mainOffering as any;
+    const points: string[] = [];
     
-    if (therapy.id === 'couple' && mainOffering.additionalFeatures) {
-      return mainOffering.additionalFeatures as string[];
-    } else if (mainOffering.additionalIncludes) {
-      return mainOffering.additionalIncludes as string[];
+    if (therapy.mainOffering.details?.duration) {
+      points.push(therapy.mainOffering.details.duration);
+    }
+    
+    if (therapy.mainOffering.details?.schedule) {
+      points.push(therapy.mainOffering.details.schedule);
+    }
+    
+    if (therapy.mainOffering.details?.sessionLength) {
+      points.push(therapy.mainOffering.details.sessionLength);
+    }
+    
+    if (therapy.mainOffering.process?.details) {
+      points.push(...therapy.mainOffering.process.details);
+    }
+    
+    return points;
+  };
+  
+  // Get benefits/features
+  const getBenefits = () => {
+    if (Array.isArray(therapy.mainOffering.benefits)) {
+      return therapy.mainOffering.benefits;
+    } else if (therapy.mainOffering.benefits && typeof therapy.mainOffering.benefits === 'object' && 'list' in therapy.mainOffering.benefits) {
+      return therapy.mainOffering.benefits.list;
     }
     return [];
   };
-
-  // Get therapy title for pricing section
-  const getTherapyTitle = () => {
-    if (therapy.id === 'couple') {
-      return "VOTRE THÉRAPIE DE COUPLE";
-    } else if (therapy.id === 'individual') {
-      return "VOTRE THÉRAPIE INDIVIDUELLE";
+  
+  // Get quote or proverb
+  const getQuote = () => {
+    if (therapy.mainOffering.quote) {
+      return therapy.mainOffering.quote;
+    } else if (therapy.proverbs && therapy.proverbs.length > 0) {
+      return therapy.proverbs[0];
+    }
+    return "";
+  };
+  
+  // Get subtitle (either from therapy subtitle or category)
+  const getSubtitle = () => {
+    if (therapy.subtitle) {
+      return therapy.subtitle;
+    } else if (therapy.category) {
+      return therapy.category;
+    }
+    return "";
+  };
+  
+  // Get organization sections
+  const organizationPoints = getOrganizationPoints();
+  const benefits = getBenefits();
+  
+  // Get resources/inclusions
+  const getResources = () => {
+    if (therapy.mainOffering.details?.inclusions) {
+      return therapy.mainOffering.details.inclusions;
+    }
+    return [];
+  };
+  
+  // Get appropriate icon for different benefit types
+  const getBenefitIcon = (benefit: string) => {
+    const lowerBenefit = benefit.toLowerCase();
+    if (lowerBenefit.includes('whatsapp') || lowerBenefit.includes('support') || lowerBenefit.includes('message')) {
+      return <MessageSquare size={24} />;
+    } else if (lowerBenefit.includes('plateforme') || lowerBenefit.includes('ressource') || lowerBenefit.includes('accès')) {
+      return <BookOpen size={24} />;
+    } else if (lowerBenefit.includes('amour') || lowerBenefit.includes('relation') || lowerBenefit.includes('couple')) {
+      return <Heart size={24} />;
     } else {
-      return `VOTRE THÉRAPIE ${therapy.title.toUpperCase()}`;
+      return <Calendar size={24} />;
     }
   };
-
-  // Get resources if they exist
-  const getResources = (): TherapyResource[] => {
-    // Use type assertion to access potentially undefined resources
-    const mainOffering = therapy.mainOffering as any;
-    return mainOffering.resources || [];
-  };
-
+  
   return (
-    <div 
-      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors h-full"
-    >
+    <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
-        {/* Header */}
+        {/* Title and Subtitle */}
         <div className="text-right">
           <h3 className="text-2xl text-primary-cream font-light mb-2">
-            {therapy.title}
+            {therapy.title.toUpperCase()}
           </h3>
-          {therapy.subtitle && (
-            <p className="text-primary-coral italic">
-              {therapy.subtitle}
-            </p>
+          {getSubtitle() && (
+            <p className="text-primary-coral italic">{getSubtitle()}</p>
           )}
         </div>
-
+        
         {/* Quote */}
-        <blockquote className="border-l-4 border-primary-coral pl-4 my-4 text-left">
-          <p className="text-primary-cream/90 italic">
-            "{therapy.mainOffering && therapy.mainOffering.quote || (therapy.proverbs && therapy.proverbs.length > 0 ? therapy.proverbs[0] : "")}"
-          </p>
-        </blockquote>
-
-        {/* Organization Section */}
-        <div className="space-y-6">
-          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
-            <p className="text-primary-cream/90 mb-2">
-              <strong>Organisation</strong>
-            </p>
-            <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
-              {getOrganizationPoints().map((point, i) => (
-                <li key={i} className="flex items-center gap-2 m-0">
-                  <span className="text-primary-coral">♦</span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
+        {getQuote() && (
+          <blockquote className="border-l-4 border-primary-coral pl-4 my-4 text-left">
+            <p className="text-primary-cream/90 italic">"{getQuote()}"</p>
+          </blockquote>
+        )}
+        
+        {/* Organization */}
+        {organizationPoints.length > 0 && (
+          <div className="space-y-6">
+            <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+              <p className="text-primary-cream/90 mb-2">
+                <strong>Organisation</strong>
+              </p>
+              <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
+                {organizationPoints.map((point, idx) => (
+                  <li key={idx} className="flex items-center gap-2 m-0">
+                    <span className="text-primary-coral">♦</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-
-        {/* Price Section */}
-        {getPriceDisplay() && (
+        )}
+        
+        {/* Price Section (only for couple therapy) */}
+        {therapy.id === 'couple' && (
           <div className="bg-primary-forest/30 rounded-[24px] p-6">
             <div className="flex flex-col gap-2">
               <h3 className="text-2xl text-primary-coral font-light text-left">
-                {getTherapyTitle()}
+                VOTRE THÉRAPIE DE COUPLE
               </h3>
               <div className="flex items-end gap-1 justify-start">
                 <p className="text-4xl text-primary-cream font-light">{getPriceDisplay()}</p>
-                {getPaymentOption() && (
-                  <p className="text-primary-cream/70 pb-1">
-                    {getPaymentOption()}
-                  </p>
-                )}
+                <p className="text-primary-cream/70 pb-1">
+                  {therapy.mainOffering.details?.price ? "(ou 3 x 880€ mensuel)" : ""}
+                </p>
               </div>
-              
-              {/* Additional benefits */}
-              {getAdditionalBenefits().length > 0 && (
-                <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
-                  {getAdditionalBenefits().slice(0, 3).map((benefit, i) => (
-                    <li key={i} className="flex items-center gap-2 m-0">
-                      <span className="text-primary-coral">♦</span>
-                      <span>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul className="text-sm text-primary-cream/70 space-y-2 mt-2 list-none m-0 p-0">
+                {getResources().slice(0, 3).map((resource, idx) => (
+                  <li key={idx} className="flex items-center gap-2 m-0">
+                    <span className="text-primary-coral">♦</span>
+                    <span>{resource}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
-
-        {/* Benefits Section */}
-        <div className="space-y-6">
+        
+        {/* Benefits */}
+        {benefits.length > 0 && (
           <div className="space-y-6">
-            {getResources().length > 0 && getResources().map((resource, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="text-primary-coral">
-                  {resource.type === 'message' ? (
-                    <MessageSquare size={24} />
-                  ) : resource.type === 'book' ? (
-                    <BookOpen size={24} />
-                  ) : (
-                    <Heart size={24} />
-                  )}
+            {benefits.slice(0, 3).map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <div className="text-primary-coral mt-1">
+                  {getBenefitIcon(benefit)}
                 </div>
                 <div>
-                  <h4 className="text-primary-cream font-bold mb-1">{resource.title}</h4>
-                  <p className="text-primary-cream/70 text-sm">{resource.description}</p>
+                  <p className="text-primary-cream/90">{benefit}</p>
                 </div>
               </div>
             ))}
-            
-            {getResources().length === 0 && (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="text-primary-coral">
-                    <MessageSquare size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-primary-cream font-bold mb-1">Support WhatsApp hebdomadaire</h4>
-                    <p className="text-primary-cream/70 text-sm">Posez une question, recevez une réponse audio personnalisée</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="text-primary-coral">
-                    <BookOpen size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-primary-cream font-bold mb-1">Accès à la plateforme</h4>
-                    <p className="text-primary-cream/70 text-sm">Ressources exclusives et exercices pour votre relation</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="text-primary-coral">
-                    <Heart size={24} />
-                  </div>
-                  <div>
-                    <h4 className="text-primary-cream font-bold mb-1">Investissement dans l'amour</h4>
-                    <p className="text-primary-cream/70 text-sm">Transformez votre relation et construisez une connexion durable</p>
-                  </div>
-                </div>
-              </>
-            )}
           </div>
-        </div>
-
-        {/* Target audience */}
-        <div className="bg-primary-forest/30 rounded-[24px] p-6">
-          <div className="flex items-start gap-4">
-            <div className="text-primary-coral mt-1">
-              <Users size={24} />
-            </div>
-            <div>
-              <h4 className="text-primary-cream font-bold mb-2">Idéal pour</h4>
-              <p className="text-primary-cream/90">
-                {therapy.mainOffering && therapy.mainOffering.idealFor || 
-                (therapy.id === 'couple' 
-                  ? "Les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre."
-                  : "Celles et ceux qui aspirent à une compréhension authentique d'eux-mêmes et à un alignement véritable.")}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Button */}
-        {onShowPromo ? (
-          <button
-            onClick={handleClick}
-            className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold flex items-center justify-center"
-          >
-            <span>En savoir plus</span>
-            <ChevronRight className="ml-1 h-4 w-4" />
-          </button>
-        ) : (
-          <Link href={`/therapies/${therapy.id}`} className="block">
-            <button
-              className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold flex items-center justify-center"
-            >
-              <span>En savoir plus</span>
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </button>
-          </Link>
         )}
+        
+        {/* Ideal For */}
+        {therapy.mainOffering.idealFor && (
+          <div className="bg-primary-forest/30 rounded-[24px] p-6">
+            <div className="flex items-start gap-4">
+              <div className="text-primary-coral mt-1">
+                <Users size={24} />
+              </div>
+              <div>
+                <h4 className="text-primary-cream font-bold mb-2">Idéal pour</h4>
+                <p className="text-primary-cream/90">
+                  {therapy.mainOffering.idealFor}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* CTA Button */}
+        <button
+          onClick={() => onShowPromo(therapy.id)}
+          className="w-full bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 font-bold"
+        >
+          En savoir plus
+        </button>
       </div>
     </div>
   );
