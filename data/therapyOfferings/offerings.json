@@ -40,7 +40,7 @@
         "process": {
           "title": "Processus complet",
           "details": [
-            "8 séances MIX couple/individuel",
+            "8 séances : 2 séances de couple et 6 séances individuelles",
             "Bilans et introspections avant et après chaque séance."
           ]
         },
@@ -109,29 +109,6 @@
           "reservation": "Réservez avec l'option « Neurodivers » sur notre site",
           "audio": "Audio de présentation disponible bientôt",
           "pricing": "TARIF IDENTIQUES POUR LES THERAPIES NEUROTRIBU"
-        },
-        {
-          "id": "vit",
-          "title": "Option VIT – Séance de Couple à la Carte",
-          "headline": "Very Important Therapy : flexibilité & excellence",
-          "description": "La formule VIT est pensée pour celles et ceux qui souhaitent un accompagnement ciblé, souple et premium.",
-          "features": [
-            "Séances uniques ou ponctuelles, sans engagement de durée",
-            "À choisir selon les thématiques, le besoin du moment ou le calendrier",
-            "Disponible en présentiel à Neuchâtel ou à Can Xesc Thérapie (Ibiza), ou en visio"
-          ],
-          "pricing": {
-            "couple": {
-              "price": 250,
-              "duration": "60 minutes"
-            },
-            "individual": {
-              "price": 210,
-              "duration": "60 minutes"
-            }
-          },
-          "inclusions": ["accès pendant 2 ans à l'espace 180 Conversion d'Amour (capsules, lives, interactions)"],
-          "tagline": "Une manière de vivre la thérapie de couple avec autonomie, qualité et intensité."
         }
       ],
       "hasAudioPresentation": true
@@ -183,7 +160,7 @@
               "Définissez votre thème thérapeutique en ligne (check list + notes préalables et objectifs) - à faire",
               "Agenda fixe : 2 séances par mois"
             ],
-            "duration": "3 MOIS - 12 x 60'",
+            "duration": "3 mois - 12 x 60'",
             "price": 2160.00,
             "priceDetails": "(3 X 720) pour le programme complet"
           },
@@ -194,21 +171,9 @@
               "Définissez votre thème thérapeutique en ligne",
               "Agenda fixe : 1 séance par mois"
             ],
-            "duration": "6 MOIS - 12 x 60'",
+            "duration": "6 mois - 12 x 60'",
             "price": 2160.00,
             "priceDetails": "(3 X 720) pour le programme complet"
-          },
-          {
-            "id": "vit-luxus",
-            "title": "VIT LUXUS INDIVIDUEL",
-            "features": [
-              "Séances à l'unité et à choix selon calendrier",
-              "Visuel et/ou Présentiel au Cabinet de Neuchâtel ou Can Xesc Therapie à Ibiza",
-              "Flexible pour Very Important Therapy"
-            ],
-            "price": 210.00,
-            "priceSuffix": "/60'",
-            "note": "par séance"
           }
         ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
