@@ -10,6 +10,7 @@
   "therapyTypes": [
     {
       "id": "couple",
+      "type": "therapy",
       "title": "THÉRAPIE RELATIONNELLE DE COUPLE",
       "subtitle": "de cœur et de corps",
       "category": "THERAPIES DE LA RELATION AMOUREUSE ET SEXUELLE",
@@ -115,6 +116,7 @@
     },
     {
       "id": "individual",
+      "type": "therapy",
       "title": "THÉRAPIE RELATIONNELLE INDIVIDUELLE",
       "subtitle": "Accords à corps",
       "category": "THÉRAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
@@ -190,6 +192,7 @@
     },
     {
       "id": "vit-a-la-carte",
+      "type": "therapy",
       "title": "THÉRAPIE VIT À LA CARTE - POUR LES AMOUREUX DE L'AMOUR",
       "pricing": {
         "couple": 260,
