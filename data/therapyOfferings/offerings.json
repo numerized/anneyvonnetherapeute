@@ -226,7 +226,7 @@
           "Flexible pour Very Important Therapy"
         ],
         "price": 210.00,
-        "priceSuffix": "/60'",
+        // "priceSuffix": "/60'",
         "note": "par séance",
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
         "uniqueBenefits": [

@@ -2,31 +2,35 @@
 
 import React, { useState } from 'react';
 import { TherapyCard } from './TherapyCard';
-import { getAllTherapyTypes, getTherapyOfferings } from '@/data/therapyOfferings/utils';
-import { TherapyType } from '@/data/therapyOfferings/types';
+import { getAllTherapyTypes, getTherapyOfferings, getCoachingOfferings, getOfferingsByType } from '@/data/therapyOfferings/utils';
+import { BaseOffering, TherapyType } from '@/data/therapyOfferings/types';
 import { TherapyModal } from './TherapyModal';
 
 interface TherapyGridProps {
-  therapies?: TherapyType[];
+  therapies?: BaseOffering[];
   className?: string;
   displayAll?: boolean;
   displayIds?: string[];
+  offeringType?: 'therapy' | 'coaching';
 }
 
 export const TherapyGrid: React.FC<TherapyGridProps> = ({ 
   therapies, 
   className = '',
   displayAll = true,
-  displayIds = []
+  displayIds = [],
+  offeringType = 'therapy'
 }) => {
   const [showPromoModal, setShowPromoModal] = useState(false);
   const [selectedTherapy, setSelectedTherapy] = useState<string | null>(null);
 
   // Get therapies from props or fetch all if not provided
-  const therapyList = therapies || getAllTherapyTypes();
+  const therapyList = therapies || getOfferingsByType(offeringType);
   
   // Get common benefits from the offerings data
-  const { commonBenefits = [] } = getTherapyOfferings();
+  const { commonBenefits = [] } = offeringType === 'therapy' 
+    ? getTherapyOfferings() 
+    : getCoachingOfferings();
   
   // Filter therapies if displayAll is false and displayIds is provided
   const filteredTherapies = displayAll 

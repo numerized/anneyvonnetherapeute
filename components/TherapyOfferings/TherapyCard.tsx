@@ -1,11 +1,11 @@
 "use client";
 
 import React from 'react';
-import { TherapyType } from '@/data/therapyOfferings/types';
+import { BaseOffering, CoachingType, TherapyType } from '@/data/therapyOfferings/types';
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react';
 
 interface TherapyCardProps {
-  therapy: TherapyType;
+  therapy: BaseOffering;
   index: number;
   onShowPromo: (therapyId: string) => void;
   commonBenefits?: string[];
@@ -39,6 +39,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     }
   };
   
+  // Get proverbs or other quotes based on offering type
+  const getQuotes = () => {
+    if ((therapy as TherapyType).proverbs) {
+      return (therapy as TherapyType).proverbs;
+    } else if ((therapy as CoachingType).promises) {
+      return (therapy as CoachingType).promises;
+    }
+    return [];
+  };
+  
   // Get price details text
   const getPriceDetails = () => {
     if (therapy.mainOffering.priceSuffix) {
@@ -55,9 +65,6 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   
   // Get organization points
   const getOrganizationPoints = () => {
-    const points: string[] = [];
-    
-    // For individual therapy, return specific points
     if (therapy.id === 'individual') {
       return [
         "Définissez votre thème thérapeutique",
@@ -65,47 +72,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       ];
     }
     
-    // For other therapy types (like couple)
-    if (therapy.mainOffering.details?.schedule) {
-      points.push(therapy.mainOffering.details.schedule);
-    }
-    
-    if (therapy.mainOffering.details?.sessionLength) {
-      points.push(therapy.mainOffering.details.sessionLength);
-    }
-    
-    if (therapy.mainOffering.process?.details) {
-      points.push(...therapy.mainOffering.process.details);
-    }
-    
-    // For individual therapy with formulas
-    if (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0) {
-      // Add duration from formulas
-      const formulas = therapy.mainOffering.formulas;
-      const durations = formulas
-        .map(f => f.duration)
-        .filter((duration): duration is string => duration !== undefined && duration !== null);
-      
-      if (durations.length > 0) {
-        points.push(...durations);
-      }
-      
-      // Add features from formulas
-      const allFeatures: string[] = [];
-      formulas.forEach(formula => {
-        if (formula.features && formula.features.length > 0) {
-          allFeatures.push(...formula.features);
-        }
-      });
-      
-      // Add unique features to points
-      if (allFeatures.length > 0) {
-        const uniqueFeatures = [...new Set(allFeatures)];
-        points.push(...uniqueFeatures);
-      }
-    }
-    
-    return points;
+    return therapy.options && therapy.options.length > 0
+      ? ["Option personnalisée", "Objectifs prédéfinis"]
+      : ["Programme détaillé", "Organisation flexible"];
   };
   
   // Get unique benefits/features specific to this therapy
@@ -150,10 +119,13 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   
   // Get quote or proverb
   const getQuote = () => {
+    const quotes = getQuotes();
+    if (quotes && quotes.length > 0) {
+      return quotes[0];
+    }
+    // Fallback to mainOffering.quote if available
     if (therapy.mainOffering.quote) {
       return therapy.mainOffering.quote;
-    } else if (therapy.proverbs && therapy.proverbs.length > 0) {
-      return therapy.proverbs[0];
     }
     return "";
   };

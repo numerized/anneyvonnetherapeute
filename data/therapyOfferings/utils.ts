@@ -1,11 +1,40 @@
-import { TherapyOfferings, TherapyType } from './types';
+import { AllOfferings, BaseOffering, CoachingOfferings, CoachingType, TherapyOfferings, TherapyType } from './types';
 import offeringsData from './offerings.json';
+import coachingData from './coachingOfferings.json';
 
 /**
  * Returns the full therapy offerings data structure
  */
 export function getTherapyOfferings(): TherapyOfferings {
   return offeringsData as TherapyOfferings;
+}
+
+/**
+ * Returns the full coaching offerings data structure
+ */
+export function getCoachingOfferings(): CoachingOfferings {
+  return coachingData as unknown as CoachingOfferings;
+}
+
+/**
+ * Returns all offerings combined in a unified structure
+ */
+export function getAllOfferings(): AllOfferings {
+  const therapyOfferings = getTherapyOfferings();
+  const coachingOfferings = getCoachingOfferings();
+  
+  return {
+    therapies: therapyOfferings.therapyTypes,
+    coaching: coachingOfferings.coachingTypes,
+    commonBenefits: {
+      therapy: therapyOfferings.commonBenefits,
+      coaching: coachingOfferings.commonBenefits
+    },
+    titles: {
+      therapy: therapyOfferings.title,
+      coaching: coachingOfferings.title
+    }
+  };
 }
 
 /**
@@ -18,11 +47,49 @@ export function getTherapyTypeById(id: string): TherapyType | undefined {
 }
 
 /**
+ * Returns a specific coaching type by ID
+ * @param id The ID of the coaching type to retrieve
+ */
+export function getCoachingTypeById(id: string): CoachingType | undefined {
+  const offerings = getCoachingOfferings();
+  return offerings.coachingTypes.find(coaching => coaching.id === id);
+}
+
+/**
+ * Returns an offering (therapy or coaching) by ID
+ * @param id The ID of the offering to retrieve
+ */
+export function getOfferingById(id: string): BaseOffering | undefined {
+  // First try to find it in therapy offerings
+  const therapyType = getTherapyTypeById(id);
+  if (therapyType) return therapyType;
+  
+  // Then try coaching offerings
+  return getCoachingTypeById(id);
+}
+
+/**
  * Returns all therapy types
  */
 export function getAllTherapyTypes(): TherapyType[] {
   const offerings = getTherapyOfferings();
   return offerings.therapyTypes;
+}
+
+/**
+ * Returns all coaching types
+ */
+export function getAllCoachingTypes(): CoachingType[] {
+  const offerings = getCoachingOfferings();
+  return offerings.coachingTypes;
+}
+
+/**
+ * Returns all offerings of a specific type
+ * @param type The type of offerings to retrieve ("therapy" or "coaching")
+ */
+export function getOfferingsByType(type: "therapy" | "coaching"): BaseOffering[] {
+  return type === "therapy" ? getAllTherapyTypes() : getAllCoachingTypes();
 }
 
 /**

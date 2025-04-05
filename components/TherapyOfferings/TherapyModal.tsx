@@ -83,9 +83,9 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
   const formatPriceDisplay = (price: number, priceSuffix?: string, note?: string, priceDetails?: string) => {
     let priceText = `${price}€`;
     
-    if (priceSuffix) {
-      priceText += priceSuffix;
-    }
+    // if (priceSuffix) {
+    //   priceText += priceSuffix;
+    // }
     
     if (note) {
       return `${priceText} (${note})`;
