@@ -197,23 +197,41 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           </blockquote>
         )}
         
-        {/* Organization */}
-        {organizationPoints.length > 0 && (
+        {/* Organization for therapy offers OR Promises for coaching offers */}
+        {therapy.type === 'coaching' ? (
           <div className="space-y-6">
             <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
               <p className="text-primary-cream/90 mb-2">
-                <strong>Organisation</strong>
+                <strong>Promesses</strong>
               </p>
-              <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
-                {organizationPoints.map((point, idx) => (
-                  <li key={idx} className="flex items-center gap-2 m-0">
-                    <span className="text-primary-coral">♦</span>
-                    <span>{point}</span>
+              <ul className="text-sm text-primary-cream/80 space-y-2 list-none m-0 p-0">
+                {((therapy as CoachingType).mainOffering.promises || []).map((promise, idx) => (
+                  <li key={idx} className="flex items-start gap-2 m-0">
+                    <span className="text-primary-coral mt-1 flex-shrink-0">✓</span>
+                    <span>{promise}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
+        ) : (
+          organizationPoints.length > 0 && (
+            <div className="space-y-6">
+              <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+                <p className="text-primary-cream/90 mb-2">
+                  <strong>Organisation</strong>
+                </p>
+                <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
+                  {organizationPoints.map((point, idx) => (
+                    <li key={idx} className="flex items-center gap-2 m-0">
+                      <span className="text-primary-coral">♦</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )
         )}
         
         {/* Price Section */}
