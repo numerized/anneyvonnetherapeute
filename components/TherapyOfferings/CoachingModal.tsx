@@ -184,7 +184,9 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({ isOpen, onClose, c
           <p className="text-primary-cream mb-4">{details.sessionLength}</p>
           
           <div className="flex items-center gap-2 mb-4">
-            <p className="text-3xl font-light text-primary-coral">{formatPriceDisplay(details.price, '', 'pour le programme complet')}</p>
+            <p className="text-3xl font-light text-primary-coral">
+              {formatPriceDisplay(coaching.mainOffering.price || 0, '', 'pour le programme complet')}
+            </p>
           </div>
           
           {details.inclusions && (
