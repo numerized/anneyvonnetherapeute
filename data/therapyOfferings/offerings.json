@@ -146,8 +146,9 @@
             "id": "mini-compact",
             "title": "MINI COMPACT",
             "features": [
-              "Définissez votre thème thérapeutique en ligne",
-              "Agenda fixe (fixer les 4 séances)"
+              "Définissez votre thème thérapeutique",
+              "Check-list + notes préalables et objectifs - à faire",
+              "Agenda fixe 4 séances sur 1 mois"
             ],
             "duration": "1 mois - 4 x 60'",
             "price": 720.00,
@@ -157,7 +158,8 @@
             "id": "compact",
             "title": "COMPACT",
             "features": [
-              "Définissez votre thème thérapeutique en ligne (check list + notes préalables et objectifs) - à faire",
+              "Définissez votre thème thérapeutique",
+              "Check-list + notes préalables et objectifs - à faire",
               "Agenda fixe : 2 séances par mois"
             ],
             "duration": "3 mois - 12 x 60'",
@@ -168,7 +170,8 @@
             "id": "relax",
             "title": "RELAX",
             "features": [
-              "Définissez votre thème thérapeutique en ligne",
+              "Définissez votre thème thérapeutique",
+              "Check-list + notes préalables et objectifs - à faire",
               "Agenda fixe : 1 séance par mois"
             ],
             "duration": "6 mois - 12 x 60'",
