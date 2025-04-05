@@ -21,9 +21,8 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   // Get price display
   const getPriceDisplay = () => {
     if ('price' in therapy.mainOffering) {
-      // Include suffix if it exists (e.g., "/60'")
-      const suffix = therapy.mainOffering.priceSuffix || '';
-      return `${therapy.mainOffering.price}€${suffix}`;
+      // No longer need to include suffix since it's been removed
+      return `${therapy.mainOffering.price}€`;
     } else if (therapy.mainOffering.details?.price) {
       return `${therapy.mainOffering.details.price}€`;
     } else if (therapy.pricing) {
@@ -51,12 +50,10 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   
   // Get price details text
   const getPriceDetails = () => {
-    if (therapy.mainOffering.priceSuffix) {
-      return `par séance de ${therapy.mainOffering.priceSuffix.replace('/', '')}`;
+    if (therapy.mainOffering.note) {
+      return therapy.mainOffering.note;
     } else if (therapy.mainOffering.details?.price) {
       return "pour le programme complet";
-    } else if (therapy.mainOffering.note) {
-      return therapy.mainOffering.note;
     } else if (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0 && therapy.mainOffering.formulas[0].priceDetails) {
       return therapy.mainOffering.formulas[0].priceDetails;
     }
@@ -251,8 +248,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 <p className="text-xl text-primary-cream font-light">Formules disponibles:</p>
                 {getFormulas().map((formula, idx) => (
                   <div key={idx} className="bg-primary-dark/30 p-3 rounded-[16px]">
-                    <p className="text-primary-cream font-bold">{formula.title}</p>
-                    <p className="text-primary-cream">{formula.price}€ {formula.priceSuffix || ''}</p>
+                    <div className="text-primary-cream font-bold">
+                      <h4 className="font-bold">{formula.title}</h4>
+                    </div>
+                    <p className="text-primary-cream">{formula.price}€</p>
+
                     {formula.priceDetails && <p className="text-primary-cream/70 text-sm">{formula.priceDetails}</p>}
                     {formula.duration && <p className="text-primary-cream/70 text-sm">{formula.duration}</p>}
                   </div>

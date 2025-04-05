@@ -80,12 +80,8 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
   };
 
   // Helper function to format pricing display with details
-  const formatPriceDisplay = (price: number, priceSuffix?: string, note?: string, priceDetails?: string) => {
+  const formatPriceDisplay = (price: number, note?: string, priceDetails?: string) => {
     let priceText = `${price}€`;
-    
-    // if (priceSuffix) {
-    //   priceText += priceSuffix;
-    // }
     
     if (note) {
       return `${priceText} (${note})`;
@@ -191,7 +187,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
           <p className="text-primary-cream mb-4">{details.sessionLength}</p>
           
           <div className="flex items-center gap-2 mb-4">
-            <p className="text-3xl font-light text-primary-coral">{formatPriceDisplay(details.price, '', '', 'pour le programme complet')}</p>
+            <p className="text-3xl font-light text-primary-coral">{formatPriceDisplay(details.price, '', 'pour le programme complet')}</p>
           </div>
           
           {details.inclusions && (
