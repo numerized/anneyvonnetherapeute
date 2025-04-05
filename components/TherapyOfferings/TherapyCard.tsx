@@ -57,10 +57,15 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   const getOrganizationPoints = () => {
     const points: string[] = [];
     
-    if (therapy.mainOffering.details?.duration) {
-      points.push(therapy.mainOffering.details.duration);
+    // For individual therapy, return specific points
+    if (therapy.id === 'individual') {
+      return [
+        "Définissez votre thème thérapeutique",
+        "Check-list + notes préalables et objectifs - à faire"
+      ];
     }
     
+    // For other therapy types (like couple)
     if (therapy.mainOffering.details?.schedule) {
       points.push(therapy.mainOffering.details.schedule);
     }
@@ -71,6 +76,33 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     
     if (therapy.mainOffering.process?.details) {
       points.push(...therapy.mainOffering.process.details);
+    }
+    
+    // For individual therapy with formulas
+    if (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0) {
+      // Add duration from formulas
+      const formulas = therapy.mainOffering.formulas;
+      const durations = formulas
+        .map(f => f.duration)
+        .filter((duration): duration is string => duration !== undefined && duration !== null);
+      
+      if (durations.length > 0) {
+        points.push(...durations);
+      }
+      
+      // Add features from formulas
+      const allFeatures: string[] = [];
+      formulas.forEach(formula => {
+        if (formula.features && formula.features.length > 0) {
+          allFeatures.push(...formula.features);
+        }
+      });
+      
+      // Add unique features to points
+      if (allFeatures.length > 0) {
+        const uniqueFeatures = [...new Set(allFeatures)];
+        points.push(...uniqueFeatures);
+      }
     }
     
     return points;
@@ -234,10 +266,10 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
             {/* Pricing for VIT à la carte */}
             {therapy.pricing && typeof therapy.pricing === 'object' && (
-              <div className="space-y-2 mt-2">
-                <p className="text-xl text-primary-cream font-light">Prix à la séance:</p>
-                <p className="text-lg text-primary-cream/90">Couple: {therapy.pricing.couple}€</p>
-                <p className="text-lg text-primary-cream/90">Individuel: {therapy.pricing.individual}€</p>
+              <div className="space-y-1 mt-2 text-right">
+                <p className="text-base text-primary-cream font-light">Prix à la séance:</p>
+                <p className="text-sm text-primary-cream/90">Couple: {therapy.pricing.couple}€</p>
+                <p className="text-sm text-primary-cream/90">Individuel: {therapy.pricing.individual}€</p>
               </div>
             )}
             
