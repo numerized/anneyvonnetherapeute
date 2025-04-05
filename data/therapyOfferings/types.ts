@@ -77,15 +77,15 @@ export interface TherapyMainOffering {
   targetAudience?: string;
 }
 
-export interface TherapyType {
+export interface BaseOffering {
   id: string;
+  type?: string;
   title: string;
   subtitle?: string;
   category: string;
   headline: string;
   description: string;
   themes: TherapyTheme[];
-  proverbs: string[];
   mainOffering: TherapyMainOffering;
   options?: TherapyOption[];
   hasAudioPresentation: boolean;
@@ -96,8 +96,36 @@ export interface TherapyType {
   };
 }
 
+export interface TherapyType extends BaseOffering {
+  proverbs: string[];
+}
+
+export interface CoachingType extends BaseOffering {
+  promises?: string[];
+}
+
 export interface TherapyOfferings {
   title: string;
   commonBenefits: string[];
   therapyTypes: TherapyType[];
+}
+
+export interface CoachingOfferings {
+  title: string;
+  commonBenefits: string[];
+  coachingTypes: CoachingType[];
+}
+
+// Combined interface to handle all offering types
+export interface AllOfferings {
+  therapies: TherapyType[];
+  coaching: CoachingType[];
+  commonBenefits: {
+    therapy: string[];
+    coaching: string[];
+  };
+  titles: {
+    therapy: string;
+    coaching: string;
+  }
 }
