@@ -225,11 +225,23 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
             
             {/* Main offering price */}
             {('price' in therapy.mainOffering || therapy.mainOffering.details?.price) && (
-              <div className="flex items-end gap-1 justify-start">
-                <p className="text-4xl text-primary-cream font-light">{getPriceDisplay()}</p>
-                <p className="text-primary-cream/70 pb-1">
-                  {getPriceDetails()}
-                </p>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-end gap-1 justify-start">
+                  <p className="text-4xl text-primary-cream font-light">{getPriceDisplay()}</p>
+                  <p className="text-primary-cream/70 pb-1">
+                    {getPriceDetails()}
+                  </p>
+                </div>
+                {therapy.type === 'coaching' && therapy.mainOffering.details && (
+                  <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
+                    {therapy.mainOffering.details.duration && (
+                      <p>{therapy.mainOffering.details.duration}</p>
+                    )}
+                    {therapy.mainOffering.details.sessionLength && (
+                      <p>{therapy.mainOffering.details.sessionLength}</p>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
