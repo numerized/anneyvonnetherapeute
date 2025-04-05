@@ -209,42 +209,186 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({ isOpen, onClose, the
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-auto">
-      <div className="bg-primary-forest max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-[24px] shadow-lg p-6 relative">
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 text-primary-cream hover:text-primary-coral transition-colors"
-          aria-label="Close modal"
-        >
-          <X size={24} />
-        </button>
-        
-        <div className="mb-6">
-          <h2 className="text-3xl font-light text-primary-cream mb-2">
-            {therapy.title}
-          </h2>
-          <p className="text-xl text-primary-coral mb-2">{therapy.subtitle}</p>
-          <p className="text-primary-cream/80">{therapy.headline}</p>
+    <div className="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+      <div className="bg-primary-forest/90 backdrop-blur-sm rounded-[24px] w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-primary-forest z-10 p-6 pb-0">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl text-primary-coral font-light">{therapy.title}</h2>
+              <p className="text-primary-cream/70">{therapy.subtitle}</p>
+            </div>
+            <button 
+              onClick={onClose} 
+              className="bg-primary-dark/40 hover:bg-primary-dark/60 p-2 rounded-full transition-colors"
+              aria-label="Fermer"
+            >
+              <X className="text-primary-cream w-5 h-5" />
+            </button>
+          </div>
         </div>
         
-        <div className="mb-8">
-          <p className="text-primary-cream/90 leading-relaxed">
-            {therapy.description}
-          </p>
-        </div>
-        
-        {renderProverbs()}
-        {renderThemes()}
-        {renderProcess()}
-        {renderBenefits()}
-        
-        <div className="flex justify-end">
-          <button 
-            onClick={onClose}
-            className="bg-primary-coral hover:bg-primary-rust text-primary-cream px-6 py-2 rounded-[16px] transition-colors"
-          >
-            Fermer
-          </button>
+        <div className="p-6 pt-4">
+          {/* Main content section */}
+          {activeSection === 'main' && (
+            <div className="space-y-8">
+              <p className="text-primary-cream text-lg">{therapy.description}</p>
+              
+              {/* Render all the content sections */}
+              {renderProverbs()}
+              {renderThemes()}
+              {renderProcess()}
+              {renderBenefits()}
+              
+              {/* Options toggle if available */}
+              {hasOptions && (
+                <div className="mt-8 mb-4">
+                  <button
+                    onClick={() => handleSectionToggle('options')}
+                    className="w-full bg-primary-dark/40 hover:bg-primary-dark/60 p-4 rounded-[16px] flex items-center justify-between"
+                  >
+                    <span className="text-xl font-medium text-primary-coral">Options supplémentaires</span>
+                    <ChevronDown className="text-primary-coral w-6 h-6" />
+                  </button>
+                </div>
+              )}
+              
+              {/* Formulas toggle if available */}
+              {hasFormulas && (
+                <div className="mt-8 mb-4">
+                  <button
+                    onClick={() => handleSectionToggle('formulas')}
+                    className="w-full bg-primary-dark/40 hover:bg-primary-dark/60 p-4 rounded-[16px] flex items-center justify-between"
+                  >
+                    <span className="text-xl font-medium text-primary-coral">Formules disponibles</span>
+                    <ChevronDown className="text-primary-coral w-6 h-6" />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* Options section */}
+          {activeSection === 'options' && therapy.options && (
+            <div className="space-y-8">
+              {/* Back to main button */}
+              <button
+                onClick={() => setActiveSection('main')}
+                className="w-full bg-primary-dark/40 hover:bg-primary-dark/60 p-4 rounded-[16px] flex items-center justify-between"
+              >
+                <span className="text-xl font-medium text-primary-coral">Retour à la thérapie principale</span>
+                <ChevronUp className="text-primary-coral w-6 h-6" />
+              </button>
+              
+              {/* Options list */}
+              <h3 className="text-2xl font-medium text-primary-coral">Options disponibles</h3>
+              
+              <div className="space-y-8">
+                {therapy.options.map((option, index) => (
+                  <div key={index} className="bg-primary-dark/30 backdrop-blur-sm p-6 rounded-[16px]">
+                    <h4 className="text-xl font-bold text-primary-cream mb-4">{option.title}</h4>
+                    <p className="text-primary-cream/80 mb-4">{option.description}</p>
+                    
+                    {option.sections && option.sections.map((section, idx) => (
+                      <div key={idx} className="mb-4">
+                        <h5 className="text-lg font-medium text-primary-coral mb-2">{section.title}</h5>
+                        {section.content && <p className="text-primary-cream/90 mb-2">{section.content}</p>}
+                        
+                        {section.bulletPoints && section.bulletPoints.length > 0 && (
+                          <ul className="space-y-1 ml-4">
+                            {section.bulletPoints.map((point, bulletIdx) => (
+                              <li key={bulletIdx} className="text-primary-cream/80 flex items-start gap-2">
+                                <span className="text-primary-coral">•</span>
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Formulas section */}
+          {activeSection === 'formulas' && therapy.mainOffering.formulas && (
+            <div className="space-y-8">
+              {/* Back to main button */}
+              <button
+                onClick={() => setActiveSection('main')}
+                className="w-full bg-primary-dark/40 hover:bg-primary-dark/60 p-4 rounded-[16px] flex items-center justify-between"
+              >
+                <span className="text-xl font-medium text-primary-coral">Retour à la thérapie principale</span>
+                <ChevronUp className="text-primary-coral w-6 h-6" />
+              </button>
+              
+              {/* Formulas list */}
+              <h3 className="text-2xl font-medium text-primary-coral">Formules disponibles</h3>
+              
+              <div className="space-y-6">
+                {therapy.mainOffering.formulas.map((formula) => (
+                  <div key={formula.id} className="bg-primary-dark/30 backdrop-blur-sm rounded-[16px] overflow-hidden">
+                    <button 
+                      onClick={() => handleFormulaToggle(formula.id)}
+                      className="w-full p-6 flex justify-between items-center"
+                    >
+                      <div className="text-left">
+                        <h4 className="text-xl font-bold text-primary-cream">{formula.title}</h4>
+                        {formula.price && (
+                          <p className="text-primary-cream/70">{formula.price}€</p>
+                        )}
+                      </div>
+                      {activeFormula === formula.id ? (
+                        <ChevronUp className="text-primary-coral w-6 h-6" />
+                      ) : (
+                        <ChevronDown className="text-primary-coral w-6 h-6" />
+                      )}
+                    </button>
+                    
+                    {activeFormula === formula.id && (
+                      <div className="p-6 pt-0 border-t border-primary-cream/20">
+                        {formula.priceDetails && (
+                          <div className="mb-4">
+                            <h5 className="text-lg font-medium text-primary-coral mb-1">Détails du prix</h5>
+                            <p className="text-primary-cream">{formula.priceDetails}</p>
+                          </div>
+                        )}
+                        
+                        {formula.duration && (
+                          <div className="mb-4">
+                            <h5 className="text-lg font-medium text-primary-coral mb-1">Durée</h5>
+                            <p className="text-primary-cream">{formula.duration}</p>
+                          </div>
+                        )}
+                        
+                        {formula.note && (
+                          <div className="mb-4">
+                            <h5 className="text-lg font-medium text-primary-coral mb-1">Note</h5>
+                            <p className="text-primary-cream">{formula.note}</p>
+                          </div>
+                        )}
+                        
+                        {formula.features && formula.features.length > 0 && (
+                          <div>
+                            <h5 className="text-lg font-medium text-primary-coral mb-2">Caractéristiques</h5>
+                            <ul className="space-y-1">
+                              {formula.features.map((feature, idx) => (
+                                <li key={idx} className="text-primary-cream/80 flex items-start gap-2">
+                                  <span className="text-primary-coral">✓</span>
+                                  <span>{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
