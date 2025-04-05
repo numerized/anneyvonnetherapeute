@@ -39,11 +39,14 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
     : therapyList.filter(therapy => displayIds.includes(therapy.id));
 
   const handleShowPromo = (therapyId: string) => {
+    console.log('handleShowPromo called with ID:', therapyId);
+    console.log('Current offering type:', offeringType);
     setSelectedTherapy(therapyId);
     setShowPromoModal(true);
   };
 
   const handleCloseModal = () => {
+    console.log('handleCloseModal called');
     setShowPromoModal(false);
     setSelectedTherapy(null);
   };
@@ -64,22 +67,23 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
         ))}
       </div>
 
-      {/* Modal for displaying additional information - conditional based on offering type */}
-      {showPromoModal && selectedTherapy && offeringType === 'therapy' && (
-        <TherapyModal
-          isOpen={showPromoModal}
-          onClose={handleCloseModal}
-          therapyId={selectedTherapy}
-        />
-      )}
-      
-      {/* CoachingModal for displaying coaching information */}
-      {showPromoModal && selectedTherapy && offeringType === 'coaching' && (
-        <CoachingModal
-          isOpen={showPromoModal}
-          onClose={handleCloseModal}
-          coachingId={selectedTherapy}
-        />
+      {/* Modal for displaying additional information */}
+      {showPromoModal && selectedTherapy && (
+        <>
+          {offeringType === 'therapy' ? (
+            <TherapyModal
+              isOpen={showPromoModal}
+              onClose={handleCloseModal}
+              therapyId={selectedTherapy}
+            />
+          ) : (
+            <CoachingModal
+              isOpen={showPromoModal}
+              onClose={handleCloseModal}
+              coachingId={selectedTherapy}
+            />
+          )}
+        </>
       )}
     </div>
   );

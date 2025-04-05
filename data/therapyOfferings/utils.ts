@@ -13,7 +13,8 @@ export function getTherapyOfferings(): TherapyOfferings {
  * Returns the full coaching offerings data structure
  */
 export function getCoachingOfferings(): CoachingOfferings {
-  return coachingData as unknown as CoachingOfferings;
+  console.log('Raw coaching data:', coachingData);
+  return coachingData as CoachingOfferings;
 }
 
 /**
@@ -52,7 +53,11 @@ export function getTherapyTypeById(id: string): TherapyType | undefined {
  */
 export function getCoachingTypeById(id: string): CoachingType | undefined {
   const offerings = getCoachingOfferings();
-  return offerings.coachingTypes.find(coaching => coaching.id === id);
+  console.log('getCoachingTypeById called with ID:', id);
+  console.log('Available coaching types:', offerings.coachingTypes.map(c => c.id));
+  const result = offerings.coachingTypes.find(coaching => coaching.id === id);
+  console.log('Coaching type found:', !!result);
+  return result;
 }
 
 /**

@@ -65,6 +65,7 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           therapies={offeringTypes as BaseOffering[]} 
           displayAll={displayAll}
           displayIds={displayIds}
+          offeringType={offeringType}
         />
         
         {/* Common Benefits Section */}
