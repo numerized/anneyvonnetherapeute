@@ -12,7 +12,6 @@ interface CoachingModalProps {
 }
 
 export const CoachingModal: React.FC<CoachingModalProps> = ({ isOpen, onClose, coachingId }) => {
-  const [activeSection, setActiveSection] = React.useState<string>('main');
   const coaching = getCoachingTypeById(coachingId);
   
   console.log('CoachingModal rendering with ID:', coachingId);
@@ -22,10 +21,6 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({ isOpen, onClose, c
     console.log('CoachingModal not rendering - isOpen:', isOpen, 'coaching found:', !!coaching);
     return null;
   }
-
-  const handleSectionToggle = (section: string) => {
-    setActiveSection(activeSection === section ? 'main' : section);
-  };
 
   // Helper function to determine if the coaching has options
   const hasOptions = coaching.options && coaching.options.length > 0;
@@ -179,14 +174,16 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({ isOpen, onClose, c
       <div className="mb-8">
         <h3 className="text-xl font-medium mb-4 text-primary-coral">{details.title || "Détails"}</h3>
         <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
-          <p className="text-primary-cream mb-2">{details.duration}</p>
-          <p className="text-primary-cream mb-2">{details.schedule}</p>
-          <p className="text-primary-cream mb-4">{details.sessionLength}</p>
+          {details.schedule && (
+            <p className="text-primary-cream mb-2">{details.schedule}</p>
+          )}
           
-          <div className="flex items-center gap-2 mb-4">
-            <p className="text-3xl font-light text-primary-coral">
+          <div className="flex flex-col mb-4">
+            <p className="text-3xl font-light text-primary-coral mb-2">
               {formatPriceDisplay(coaching.mainOffering.price || 0, '', 'pour le programme complet')}
             </p>
+            <p className="text-primary-cream/90">{details.duration}</p>
+            <p className="text-primary-cream/90">{details.sessionLength}</p>
           </div>
           
           {details.inclusions && (
@@ -227,124 +224,98 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({ isOpen, onClose, c
         </div>
         
         <div className="p-6 pt-4">
-          {/* Main content section */}
-          {activeSection === 'main' && (
-            <div className="space-y-8">
-              <p className="text-primary-cream text-lg">{coaching.description}</p>
-              
-              {/* Benefits */}
-              {renderBenefits()}
-              
-              {/* Promises */}
-              {renderPromises()}
-              
-              {/* Process */}
-              {renderProcess()}
-              
-              {/* Main offering details */}
-              {renderMainOfferingDetails()}
-              
-              {/* Themes */}
-              {renderThemes()}
-              
-              {/* Options toggle if available */}
-              {hasOptions && (
-                <div className="mt-8 mb-4">
-                  <button
-                    onClick={() => handleSectionToggle('options')}
-                    className="w-full bg-primary-dark/40 hover:bg-primary-dark/60 p-4 rounded-[16px] flex items-center justify-between"
-                  >
-                    <span className="text-xl font-medium text-primary-coral">Options supplémentaires</span>
-                    <ChevronDown className="text-primary-coral w-6 h-6" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Options section */}
-          {activeSection === 'options' && coaching.options && (
-            <div className="space-y-8">
-              {/* Back to main button */}
-              <button
-                onClick={() => setActiveSection('main')}
-                className="w-full bg-primary-dark/40 hover:bg-primary-dark/60 p-4 rounded-[16px] flex items-center justify-between"
-              >
-                <span className="text-xl font-medium text-primary-coral">Retour au coaching principal</span>
-                <ChevronUp className="text-primary-coral w-6 h-6" />
-              </button>
-              
-              {/* Options list */}
-              <h3 className="text-2xl font-medium text-primary-coral">Options disponibles</h3>
-              
-              <div className="space-y-8">
-                {coaching.options.map((option, index) => (
-                  <div key={index} className="bg-primary-dark/30 backdrop-blur-sm p-6 rounded-[16px]">
-                    <h4 className="text-xl font-bold text-primary-cream mb-4">{option.title}</h4>
-                    <p className="text-primary-cream/80 mb-4">{option.description}</p>
-                    
-                    {option.sections && option.sections.map((section, idx) => (
-                      <div key={idx} className="mb-4">
-                        <h5 className="text-lg font-medium text-primary-coral mb-2">{section.title}</h5>
-                        {section.content && <p className="text-primary-cream/90 mb-2">{section.content}</p>}
-                        
-                        {section.bulletPoints && section.bulletPoints.length > 0 && (
-                          <ul className="space-y-1 ml-4">
-                            {section.bulletPoints.map((point, bulletIdx) => (
-                              <li key={bulletIdx} className="flex items-start">
-                                <span className="text-primary-coral mr-2">•</span>
-                                <span className="text-primary-cream/80">{point}</span>
+          <div className="space-y-8">
+            <p className="text-primary-cream text-lg">{coaching.description}</p>
+            
+            {/* Benefits */}
+            {renderBenefits()}
+            
+            {/* Promises */}
+            {renderPromises()}
+            
+            {/* Process */}
+            {renderProcess()}
+            
+            {/* Main offering details */}
+            {renderMainOfferingDetails()}
+            
+            {/* Themes */}
+            {renderThemes()}
+            
+            {/* Options section if available */}
+            {hasOptions && coaching.options && (
+              <div className="space-y-8 mt-8">
+                <h3 className="text-2xl font-medium text-primary-coral">Options supplémentaires</h3>
+                
+                <div className="space-y-8">
+                  {coaching.options.map((option, index) => (
+                    <div key={index} className="bg-primary-dark/30 backdrop-blur-sm p-6 rounded-[16px]">
+                      <h4 className="text-xl font-bold text-primary-cream mb-4">{option.title}</h4>
+                      <p className="text-primary-cream/80 mb-4">{option.description}</p>
+                      
+                      {option.sections && option.sections.map((section, idx) => (
+                        <div key={idx} className="mb-4">
+                          <h5 className="text-lg font-medium text-primary-coral mb-2">{section.title}</h5>
+                          {section.content && <p className="text-primary-cream/90 mb-2">{section.content}</p>}
+                          
+                          {section.bulletPoints && section.bulletPoints.length > 0 && (
+                            <ul className="space-y-1 ml-4">
+                              {section.bulletPoints.map((point, bulletIdx) => (
+                                <li key={bulletIdx} className="flex items-start">
+                                  <span className="text-primary-coral mr-2">•</span>
+                                  <span className="text-primary-cream/80">{point}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                      
+                      {/* Features */}
+                      {option.features && option.features.length > 0 && (
+                        <div className="mt-4">
+                          <h5 className="text-lg font-medium text-primary-coral mb-2">Caractéristiques</h5>
+                          <ul className="space-y-1">
+                            {option.features.map((feature, idx) => (
+                              <li key={idx} className="flex items-start">
+                                <span className="text-primary-coral mr-2">✓</span>
+                                <span className="text-primary-cream/90">{feature}</span>
                               </li>
                             ))}
                           </ul>
-                        )}
-                      </div>
-                    ))}
-                    
-                    {/* Features */}
-                    {option.features && option.features.length > 0 && (
-                      <div className="mt-4">
-                        <h5 className="text-lg font-medium text-primary-coral mb-2">Caractéristiques</h5>
-                        <ul className="space-y-1">
-                          {option.features.map((feature, idx) => (
-                            <li key={idx} className="flex items-start">
-                              <span className="text-primary-coral mr-2">✓</span>
-                              <span className="text-primary-cream/90">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    
-                    {/* Pricing */}
-                    {option.pricing && (
-                      <div className="mt-4 bg-primary-dark/40 p-4 rounded-[16px]">
-                        <h5 className="text-lg font-medium text-primary-coral mb-2">Tarif</h5>
-                        {typeof option.pricing === 'string' ? (
-                          <p className="text-primary-cream">{option.pricing}</p>
-                        ) : (
-                          <div className="space-y-2">
-                            {option.pricing.individual && (
-                              <div>
-                                <p className="text-primary-cream font-bold">Individuel:</p>
-                                <p className="text-primary-cream">{option.pricing.individual.price}€ - {option.pricing.individual.duration}</p>
-                              </div>
-                            )}
-                            {option.pricing.couple && (
-                              <div>
-                                <p className="text-primary-cream font-bold">Couple:</p>
-                                <p className="text-primary-cream">{option.pricing.couple.price}€ - {option.pricing.couple.duration}</p>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                        </div>
+                      )}
+                      
+                      {/* Pricing */}
+                      {option.pricing && (
+                        <div className="mt-4 bg-primary-dark/40 p-4 rounded-[16px]">
+                          <h5 className="text-lg font-medium text-primary-coral mb-2">Tarif</h5>
+                          {typeof option.pricing === 'string' ? (
+                            <p className="text-primary-cream">{option.pricing}</p>
+                          ) : (
+                            <div className="space-y-2">
+                              {option.pricing.individual && (
+                                <div>
+                                  <p className="text-primary-cream font-bold">Individuel:</p>
+                                  <p className="text-primary-cream">{option.pricing.individual.price}€ - {option.pricing.individual.duration}</p>
+                                </div>
+                              )}
+                              {option.pricing.couple && (
+                                <div>
+                                  <p className="text-primary-cream font-bold">Couple:</p>
+                                  <p className="text-primary-cream">{option.pricing.couple.price}€ - {option.pricing.couple.duration}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
