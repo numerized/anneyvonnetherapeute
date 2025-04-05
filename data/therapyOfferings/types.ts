@@ -41,7 +41,6 @@ export interface TherapyFormula {
   duration?: string;
   price: number;
   priceDetails?: string;
-  priceSuffix?: string;
   note?: string;
 }
 
@@ -72,7 +71,6 @@ export interface TherapyMainOffering {
   formulas?: TherapyFormula[];
   features?: string[];
   price?: number;
-  priceSuffix?: string;
   note?: string;
   targetAudience?: string;
 }
