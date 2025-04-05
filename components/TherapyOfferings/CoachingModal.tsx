@@ -14,8 +14,14 @@ interface CoachingModalProps {
 export const CoachingModal: React.FC<CoachingModalProps> = ({ isOpen, onClose, coachingId }) => {
   const [activeSection, setActiveSection] = React.useState<string>('main');
   const coaching = getCoachingTypeById(coachingId);
+  
+  console.log('CoachingModal rendering with ID:', coachingId);
+  console.log('Coaching data retrieved:', coaching);
 
-  if (!isOpen || !coaching) return null;
+  if (!isOpen || !coaching) {
+    console.log('CoachingModal not rendering - isOpen:', isOpen, 'coaching found:', !!coaching);
+    return null;
+  }
 
   const handleSectionToggle = (section: string) => {
     setActiveSection(activeSection === section ? 'main' : section);
