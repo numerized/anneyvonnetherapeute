@@ -5,6 +5,7 @@ import { TherapyCard } from './TherapyCard';
 import { getAllTherapyTypes, getTherapyOfferings, getCoachingOfferings, getOfferingsByType } from '@/data/therapyOfferings/utils';
 import { BaseOffering, TherapyType } from '@/data/therapyOfferings/types';
 import { TherapyModal } from './TherapyModal';
+import { CoachingModal } from './CoachingModal';
 
 interface TherapyGridProps {
   therapies?: BaseOffering[];
@@ -63,12 +64,21 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
         ))}
       </div>
 
-      {/* TherapyModal for displaying additional information */}
-      {showPromoModal && selectedTherapy && (
+      {/* Modal for displaying additional information - conditional based on offering type */}
+      {showPromoModal && selectedTherapy && offeringType === 'therapy' && (
         <TherapyModal
           isOpen={showPromoModal}
           onClose={handleCloseModal}
           therapyId={selectedTherapy}
+        />
+      )}
+      
+      {/* CoachingModal for displaying coaching information */}
+      {showPromoModal && selectedTherapy && offeringType === 'coaching' && (
+        <CoachingModal
+          isOpen={showPromoModal}
+          onClose={handleCloseModal}
+          coachingId={selectedTherapy}
         />
       )}
     </div>

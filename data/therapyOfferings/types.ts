@@ -73,6 +73,7 @@ export interface TherapyMainOffering {
   price?: number;
   note?: string;
   targetAudience?: string;
+  promises?: string[]; // Added for coaching offerings
 }
 
 export interface BaseOffering {
