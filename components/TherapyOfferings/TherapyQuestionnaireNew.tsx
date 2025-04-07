@@ -473,9 +473,8 @@ export function TherapyQuestionnaireNew() {
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState({
     situation: '',
-    need: '',
-    intimacyFocus: false,
-    stage: '',
+    focus: '',
+    specificNeed: '',
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
   const [showModal, setShowModal] = useState(false)
@@ -488,96 +487,137 @@ export function TherapyQuestionnaireNew() {
     setStep(2)
   }
 
-  const handleNeedSelect = (need: string) => {
-    setAnswers((prev) => ({ ...prev, need }))
+  const handleFocusSelect = (focus: string) => {
+    setAnswers((prev) => ({ ...prev, focus }))
+    setStep(3)
+  }
 
+  const handleSpecificNeedSelect = (specificNeed: string) => {
+    setAnswers((prev) => ({ ...prev, specificNeed }))
+    
     let keywords: string[] = [];
     let recommendedOptions: TherapyOption[] = [];
     
-    switch (need) {
-      case 'regular':
-        keywords = ['individuel', 'thérapie individuelle', 'accompagnement régulier'];
-        recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
-        break;
-      case 'intensive':
-        keywords = ['intensif', 'vit', 'thérapie intensive'];
-        recommendedOptions = getMatchingOfferingsOptions(keywords, answers.situation);
-        break;
-      case 'intimacy':
-        if (answers.situation === 'couple') {
-          keywords = ['intimité', 'sexualité', 'désir', 'couple'];
-          recommendedOptions = getMatchingOfferingsOptions(keywords, 'couple');
-          
-          // Always include the desire coaching card for sexuality-related questions
-          const desireCoachingOption = therapyOptions.find(
-            option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
-          );
-          
-          if (desireCoachingOption && !recommendedOptions.some(option => 
-              option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
-            recommendedOptions = [
-              ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
-              desireCoachingOption
-            ];
+    // Combine focus and specific need to get more accurate recommendations
+    if (answers.situation === 'couple') {
+      switch (answers.focus) {
+        case 'relationship':
+          switch (specificNeed) {
+            case 'start':
+              keywords = ['démarrer', 'commencer', 'relation', 'couple', 'démarrage', 'nouveau couple'];
+              break;
+            case 'improve':
+              keywords = ['améliorer', 'relation', 'couple', 'harmonie', 'communication', 'conflits'];
+              break;
+            case 'decide':
+              keywords = ['décision', 'avenir', 'relation', 'couple', 'doutes', 'séparation'];
+              break;
           }
-        } else if (answers.situation === 'individual') {
-          // For individual intimacy questions, skip gender selection and go directly to recommendations
-          keywords = ['intimité', 'sexualité', 'désir', 'individuel'];
-          recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
-          
-          // Always include the desire coaching card for individual sexuality-related questions
-          const desireCoachingOption = therapyOptions.find(
-            option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
-          );
-          
-          if (desireCoachingOption && !recommendedOptions.some(option => 
-              option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
-            recommendedOptions = [
-              ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
-              desireCoachingOption
-            ];
+          break;
+        case 'intimacy':
+          switch (specificNeed) {
+            case 'desire':
+              keywords = ['désir', 'libido', 'sexualité', 'couple', 'intimité'];
+              break;
+            case 'communication':
+              keywords = ['communication', 'intimité', 'couple', 'sexualité', 'dialogue'];
+              break;
+            case 'difficulties':
+              keywords = ['difficultés', 'sexualité', 'couple', 'problèmes', 'dysfonctions'];
+              break;
           }
-        }
-        break;
-      case 'start':
-        keywords = ['démarrer', 'commencer', 'relation', 'couple', 'démarrage'];
-        recommendedOptions = getMatchingOfferingsOptions(keywords, 'couple');
-        break;
-      case 'improve':
-        keywords = ['améliorer', 'relation', 'couple', 'harmonie', 'communication'];
-        recommendedOptions = getMatchingOfferingsOptions(keywords, 'couple');
-        break;
-      case 'decide':
-        keywords = ['décision', 'avenir', 'relation', 'couple'];
-        recommendedOptions = getMatchingOfferingsOptions(keywords, 'couple');
-        break;
-      default:
-        recommendedOptions = [];
+          break;
+        case 'parenting':
+          switch (specificNeed) {
+            case 'coparenting':
+              keywords = ['coparentalité', 'parents', 'enfants', 'famille'];
+              break;
+            case 'family':
+              keywords = ['famille', 'parents', 'enfants', 'relations familiales'];
+              break;
+            case 'separation':
+              keywords = ['séparation', 'divorce', 'enfants', 'famille'];
+              break;
+          }
+          break;
+      }
+    } else if (answers.situation === 'individual') {
+      switch (answers.focus) {
+        case 'personal':
+          switch (specificNeed) {
+            case 'regular':
+              keywords = ['individuel', 'thérapie individuelle', 'accompagnement régulier'];
+              break;
+            case 'intensive':
+              keywords = ['intensif', 'vit', 'thérapie intensive'];
+              break;
+            case 'specific':
+              keywords = ['spécifique', 'problématique', 'individuel', 'thérapie ciblée'];
+              break;
+          }
+          break;
+        case 'intimacy':
+          switch (specificNeed) {
+            case 'desire':
+              keywords = ['désir', 'libido', 'sexualité', 'individuel', 'intimité'];
+              break;
+            case 'identity':
+              keywords = ['identité', 'sexualité', 'orientation', 'individuel'];
+              break;
+            case 'difficulties':
+              keywords = ['difficultés', 'sexualité', 'individuel', 'problèmes', 'dysfonctions'];
+              break;
+          }
+          break;
+        case 'relationship':
+          switch (specificNeed) {
+            case 'patterns':
+              keywords = ['schémas', 'relations', 'répétitions', 'individuel'];
+              break;
+            case 'singlehood':
+              keywords = ['célibat', 'rencontres', 'relations', 'individuel'];
+              break;
+            case 'past':
+              keywords = ['passé', 'traumatismes', 'relations', 'individuel'];
+              break;
+          }
+          break;
+      }
     }
-
-    setRecommendations(recommendedOptions)
-    setStep(4)
-  }
-
-  const handleStageSelect = (stage: string) => {
-    setAnswers((prev) => ({ ...prev, stage }))
     
-    let keywords: string[] = [];
-    switch (stage) {
-      case 'beginning':
-        keywords = ['démarrer', 'commencer', 'démarrage', 'débuter'];
-        break;
-      case 'checkup':
-        keywords = ['bilan', 'point', 'check-up', 'évaluation'];
-        break;
-      case 'decision':
-        keywords = ['décision', 'choisir', 'avenir', 'décider'];
-        break;
-      default:
-        keywords = [];
+    recommendedOptions = getMatchingOfferingsOptions(keywords, answers.situation);
+    
+    // Always include the desire coaching card for sexuality-related questions
+    if ((answers.focus === 'intimacy' || specificNeed === 'desire') && 
+        (answers.situation === 'couple' || answers.situation === 'individual')) {
+      const desireCoachingOption = therapyOptions.find(
+        option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
+      );
+      
+      if (desireCoachingOption && !recommendedOptions.some(option => 
+          option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
+        recommendedOptions = [
+          ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
+          desireCoachingOption
+        ];
+      }
     }
     
-    const recommendedOptions = getMatchingOfferingsOptions(keywords, answers.situation);
+    // Ensure we have at least 2 recommendations
+    if (recommendedOptions.length < 2) {
+      // Add default options based on situation
+      const defaultOptions = therapyOptions.filter(option => 
+        option.type === answers.situation && 
+        !recommendedOptions.some(rec => rec.therapyId === option.therapyId && rec.offeringType === option.offeringType)
+      );
+      
+      if (defaultOptions.length > 0) {
+        recommendedOptions = [
+          ...recommendedOptions,
+          ...defaultOptions.slice(0, 2 - recommendedOptions.length)
+        ];
+      }
+    }
     
     setRecommendations(recommendedOptions)
     setStep(4)
@@ -587,9 +627,8 @@ export function TherapyQuestionnaireNew() {
     setStep(1)
     setAnswers({
       situation: '',
-      need: '',
-      intimacyFocus: false,
-      stage: '',
+      focus: '',
+      specificNeed: '',
     })
     setRecommendations([])
     scrollToSection('questionnaire-new')
@@ -860,45 +899,34 @@ export function TherapyQuestionnaireNew() {
                   className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">
-                    Que souhaitez-vous ?
+                    Quel est votre objectif ?
                   </h3>
                   <div className="grid gap-4">
                     <button
-                      onClick={() => handleNeedSelect('start')}
+                      onClick={() => handleFocusSelect('relationship')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <Sparkles className="w-5 h-5 flex-shrink-0" />
-                        <span>Bien démarrer notre relation</span>
+                        <Users2 className="w-5 h-5 flex-shrink-0" />
+                        <span>Améliorer ma relation</span>
                       </div>
                     </button>
                     <button
-                      onClick={() => handleNeedSelect('improve')}
+                      onClick={() => handleFocusSelect('intimacy')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <Heart className="w-5 h-5 flex-shrink-0" />
-                        <span>Améliorer notre relation actuelle</span>
+                        <span>Améliorer l'intimité</span>
                       </div>
                     </button>
                     <button
-                      onClick={() => handleNeedSelect('decide')}
+                      onClick={() => handleFocusSelect('parenting')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <Target className="w-5 h-5 flex-shrink-0" />
-                        <span>
-                          Prendre une décision sur l'avenir de notre relation
-                        </span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleNeedSelect('intimacy')}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Heart className="w-5 h-5 flex-shrink-0" />
-                        <span>Améliorer l'intimité dans notre relation</span>
+                        <Users className="w-5 h-5 flex-shrink-0" />
+                        <span>Améliorer ma parentalité</span>
                       </div>
                     </button>
                   </div>
@@ -912,78 +940,255 @@ export function TherapyQuestionnaireNew() {
                   className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">
-                    Je souhaite :
+                    Quel est votre objectif ?
                   </h3>
-                  <div className="space-y-4">
+                  <div className="grid gap-4">
                     <button
-                      onClick={() => handleNeedSelect('regular')}
+                      onClick={() => handleFocusSelect('personal')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <Users2 className="w-5 h-5 flex-shrink-0" />
-                        <span>Un accompagnement régulier</span>
+                        <User className="w-5 h-5 flex-shrink-0" />
+                        <span>Améliorer ma vie personnelle</span>
                       </div>
                     </button>
                     <button
-                      onClick={() => handleNeedSelect('intensive')}
-                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-5 h-5 flex-shrink-0" />
-                        <span>Un accompagnement intensif</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => handleNeedSelect('intimacy')}
+                      onClick={() => handleFocusSelect('intimacy')}
                       className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <Heart className="w-5 h-5 flex-shrink-0" />
-                        <span>Un accompagnement sur l'intimité</span>
+                        <span>Améliorer l'intimité</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => handleFocusSelect('relationship')}
+                      className="w-full bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-4 text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Users2 className="w-5 h-5 flex-shrink-0" />
+                        <span>Améliorer mes relations</span>
                       </div>
                     </button>
                   </div>
                 </motion.div>
               ) : step === 3 ? (
                 <motion.div
-                  key="step-3-stage"
+                  key="step-3-specific"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">
-                    Quelle étape de votre relation ?
+                    {answers.situation === 'couple' ? (
+                      answers.focus === 'relationship' ? 'Quelle est votre situation de couple ?' :
+                      answers.focus === 'intimacy' ? 'Quel aspect de l\'intimité souhaitez-vous améliorer ?' :
+                      'Quel aspect de la parentalité vous préoccupe ?'
+                    ) : (
+                      answers.focus === 'personal' ? 'Quel type d\'accompagnement recherchez-vous ?' :
+                      answers.focus === 'intimacy' ? 'Quel aspect de l\'intimité souhaitez-vous explorer ?' :
+                      'Quel aspect relationnel souhaitez-vous travailler ?'
+                    )}
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button
-                      className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
-                      onClick={() => handleStageSelect('beginning')}
-                    >
-                      <h4 className="text-xl mb-2">Démarrage</h4>
-                      <p className="text-primary-cream/70">
-                        Pour bien commencer votre relation
-                      </p>
-                    </button>
-                    <button
-                      className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
-                      onClick={() => handleStageSelect('checkup')}
-                    >
-                      <h4 className="text-xl mb-2">Bilan</h4>
-                      <p className="text-primary-cream/70">
-                        Pour faire le point sur votre relation
-                      </p>
-                    </button>
-                    <button
-                      className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
-                      onClick={() => handleStageSelect('decision')}
-                    >
-                      <h4 className="text-xl mb-2">Décision</h4>
-                      <p className="text-primary-cream/70">
-                        Pour prendre une décision sur l'avenir de votre relation
-                      </p>
-                    </button>
-                  </div>
+                  
+                  {/* Couple + Relationship */}
+                  {answers.situation === 'couple' && answers.focus === 'relationship' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('start')}
+                      >
+                        <h4 className="text-xl mb-2">Démarrage</h4>
+                        <p className="text-primary-cream/70">
+                          Pour bien commencer votre relation
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('improve')}
+                      >
+                        <h4 className="text-xl mb-2">Amélioration</h4>
+                        <p className="text-primary-cream/70">
+                          Pour améliorer votre relation
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                        onClick={() => handleSpecificNeedSelect('decide')}
+                      >
+                        <h4 className="text-xl mb-2">Décision</h4>
+                        <p className="text-primary-cream/70">
+                          Pour prendre une décision sur l'avenir de votre relation
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Couple + Intimacy */}
+                  {answers.situation === 'couple' && answers.focus === 'intimacy' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('desire')}
+                      >
+                        <h4 className="text-xl mb-2">Désir</h4>
+                        <p className="text-primary-cream/70">
+                          Retrouver le désir dans votre couple
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('communication')}
+                      >
+                        <h4 className="text-xl mb-2">Communication</h4>
+                        <p className="text-primary-cream/70">
+                          Mieux communiquer sur l'intimité
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                        onClick={() => handleSpecificNeedSelect('difficulties')}
+                      >
+                        <h4 className="text-xl mb-2">Difficultés</h4>
+                        <p className="text-primary-cream/70">
+                          Surmonter des difficultés sexuelles
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Couple + Parenting */}
+                  {answers.situation === 'couple' && answers.focus === 'parenting' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('coparenting')}
+                      >
+                        <h4 className="text-xl mb-2">Coparentalité</h4>
+                        <p className="text-primary-cream/70">
+                          Améliorer votre coparentalité
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('family')}
+                      >
+                        <h4 className="text-xl mb-2">Famille</h4>
+                        <p className="text-primary-cream/70">
+                          Harmoniser les relations familiales
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                        onClick={() => handleSpecificNeedSelect('separation')}
+                      >
+                        <h4 className="text-xl mb-2">Séparation</h4>
+                        <p className="text-primary-cream/70">
+                          Gérer une séparation avec des enfants
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Individual + Personal */}
+                  {answers.situation === 'individual' && answers.focus === 'personal' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('regular')}
+                      >
+                        <h4 className="text-xl mb-2">Régulier</h4>
+                        <p className="text-primary-cream/70">
+                          Un accompagnement régulier
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('intensive')}
+                      >
+                        <h4 className="text-xl mb-2">Intensif</h4>
+                        <p className="text-primary-cream/70">
+                          Un accompagnement intensif
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                        onClick={() => handleSpecificNeedSelect('specific')}
+                      >
+                        <h4 className="text-xl mb-2">Spécifique</h4>
+                        <p className="text-primary-cream/70">
+                          Pour une problématique précise
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Individual + Intimacy */}
+                  {answers.situation === 'individual' && answers.focus === 'intimacy' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('desire')}
+                      >
+                        <h4 className="text-xl mb-2">Désir</h4>
+                        <p className="text-primary-cream/70">
+                          Explorer votre rapport au désir
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('identity')}
+                      >
+                        <h4 className="text-xl mb-2">Identité</h4>
+                        <p className="text-primary-cream/70">
+                          Explorer votre identité sexuelle
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                        onClick={() => handleSpecificNeedSelect('difficulties')}
+                      >
+                        <h4 className="text-xl mb-2">Difficultés</h4>
+                        <p className="text-primary-cream/70">
+                          Surmonter des difficultés sexuelles
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Individual + Relationship */}
+                  {answers.situation === 'individual' && answers.focus === 'relationship' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('patterns')}
+                      >
+                        <h4 className="text-xl mb-2">Schémas</h4>
+                        <p className="text-primary-cream/70">
+                          Comprendre vos schémas relationnels
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
+                        onClick={() => handleSpecificNeedSelect('singlehood')}
+                      >
+                        <h4 className="text-xl mb-2">Célibat</h4>
+                        <p className="text-primary-cream/70">
+                          Vivre pleinement votre célibat
+                        </p>
+                      </button>
+                      <button
+                        className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                        onClick={() => handleSpecificNeedSelect('past')}
+                      >
+                        <h4 className="text-xl mb-2">Passé</h4>
+                        <p className="text-primary-cream/70">
+                          Guérir des blessures relationnelles passées
+                        </p>
+                      </button>
+                    </div>
+                  )}
                 </motion.div>
               ) : step === 4 && recommendations.length > 0 ? (
                 <motion.section
