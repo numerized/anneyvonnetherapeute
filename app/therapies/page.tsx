@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { TherapyQuestionnaireNew } from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 import TherapyOfferingsPage from '@/components/TherapyOfferings/TherapyOfferingsPage'
 
 export const metadata = {
@@ -9,5 +10,10 @@ export const metadata = {
 }
 
 export default function TherapiesPage() {
-  return <TherapyOfferingsPage />
+  return (
+    <>
+      <TherapyOfferingsPage />
+      <TherapyQuestionnaireNew />
+    </>
+  )
 }
