@@ -1,2 +1,2 @@
-export * from './TherapyCard';
-export * from './TherapyGrid';
+export * from './TherapyCard'
+export * from './TherapyGrid'
