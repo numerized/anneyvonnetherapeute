@@ -475,7 +475,6 @@ export function TherapyQuestionnaireNew() {
     situation: '',
     need: '',
     intimacyFocus: false,
-    gender: '',
     stage: '',
   })
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
@@ -491,11 +490,6 @@ export function TherapyQuestionnaireNew() {
 
   const handleNeedSelect = (need: string) => {
     setAnswers((prev) => ({ ...prev, need }))
-
-    if (need === 'intimacy' && answers.situation === 'individual') {
-      setStep(3) // Go to gender selection
-      return
-    }
 
     let keywords: string[] = [];
     let recommendedOptions: TherapyOption[] = [];
@@ -527,6 +521,7 @@ export function TherapyQuestionnaireNew() {
             ];
           }
         } else if (answers.situation === 'individual') {
+          // For individual intimacy questions, skip gender selection and go directly to recommendations
           keywords = ['intimité', 'sexualité', 'désir', 'individuel'];
           recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
           
@@ -537,13 +532,10 @@ export function TherapyQuestionnaireNew() {
           
           if (desireCoachingOption && !recommendedOptions.some(option => 
               option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
-            const updatedOptions = [
+            recommendedOptions = [
               ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
               desireCoachingOption
             ];
-            setRecommendations(updatedOptions);
-          } else {
-            setRecommendations(recommendedOptions);
           }
         }
         break;
@@ -564,34 +556,6 @@ export function TherapyQuestionnaireNew() {
     }
 
     setRecommendations(recommendedOptions)
-    setStep(4)
-  }
-
-  const handleGenderSelect = (gender: 'male' | 'female') => {
-    setAnswers((prev) => ({ ...prev, gender }))
-    
-    const keywords = gender === 'male' 
-      ? ['homme', 'masculin', 'sexualité masculine'] 
-      : ['femme', 'féminin', 'sexualité féminine'];
-    
-    const recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
-    
-    // Always include the desire coaching card for gender-specific sexuality questions
-    const desireCoachingOption = therapyOptions.find(
-      option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
-    );
-    
-    if (desireCoachingOption && !recommendedOptions.some(option => 
-        option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
-      const updatedOptions = [
-        ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
-        desireCoachingOption
-      ];
-      setRecommendations(updatedOptions);
-    } else {
-      setRecommendations(recommendedOptions);
-    }
-    
     setStep(4)
   }
 
@@ -625,7 +589,6 @@ export function TherapyQuestionnaireNew() {
       situation: '',
       need: '',
       intimacyFocus: false,
-      gender: '',
       stage: '',
     })
     setRecommendations([])
@@ -981,34 +944,43 @@ export function TherapyQuestionnaireNew() {
                     </button>
                   </div>
                 </motion.div>
-              ) : step === 3 && answers.need === 'intimacy' ? (
+              ) : step === 3 ? (
                 <motion.div
-                  key="step-3-gender"
+                  key="step-3-stage"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   className="space-y-6 p-8"
                 >
                   <h3 className="text-xl text-primary-cream mb-6">
-                    Vous êtes :
+                    Quelle étape de votre relation ?
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
                       className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
-                      onClick={() => handleGenderSelect('male')}
+                      onClick={() => handleStageSelect('beginning')}
                     >
-                      <h4 className="text-xl mb-2">Un homme</h4>
+                      <h4 className="text-xl mb-2">Démarrage</h4>
                       <p className="text-primary-cream/70">
-                        Programme de transformation sexuelle pour hommes
+                        Pour bien commencer votre relation
                       </p>
                     </button>
                     <button
                       className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors"
-                      onClick={() => handleGenderSelect('female')}
+                      onClick={() => handleStageSelect('checkup')}
                     >
-                      <h4 className="text-xl mb-2">Une femme</h4>
+                      <h4 className="text-xl mb-2">Bilan</h4>
                       <p className="text-primary-cream/70">
-                        Voyage vers une sexualité libérée et épanouie
+                        Pour faire le point sur votre relation
+                      </p>
+                    </button>
+                    <button
+                      className="bg-primary-forest hover:bg-primary-forest/70 text-primary-cream rounded-[24px] p-6 text-left transition-colors col-span-full"
+                      onClick={() => handleStageSelect('decision')}
+                    >
+                      <h4 className="text-xl mb-2">Décision</h4>
+                      <p className="text-primary-cream/70">
+                        Pour prendre une décision sur l'avenir de votre relation
                       </p>
                     </button>
                   </div>
