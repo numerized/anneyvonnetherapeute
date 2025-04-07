@@ -85,7 +85,7 @@ export default function DashboardPage() {
   const getSessionDate = useCallback(
     (sessionId: string): string | undefined => {
       // Always use the exact session ID provided
-      return sessionDates[sessionId];
+      return sessionDates[sessionId]
     },
     [sessionDates],
   )
@@ -464,7 +464,9 @@ export default function DashboardPage() {
 
     // Store the session ID in localStorage to ensure we only update this specific session
     localStorage.setItem('currentBookingSessionId', event.id)
-    console.log(`Starting booking for session: ${event.id} - saved to localStorage`)
+    console.log(
+      `Starting booking for session: ${event.id} - saved to localStorage`,
+    )
 
     // Set the booking session to show loading state
     setBookingSession(event.id)
@@ -480,20 +482,26 @@ export default function DashboardPage() {
         console.error('No user found')
         return
       }
-      
+
       // Get the current booking session ID from localStorage
-      const currentBookingSessionId = localStorage.getItem('currentBookingSessionId')
-      
+      const currentBookingSessionId = localStorage.getItem(
+        'currentBookingSessionId',
+      )
+
       if (!currentBookingSessionId) {
         console.error('No session ID found in localStorage')
         return
       }
-      
-      console.log(`Processing appointment for session ID from localStorage: ${currentBookingSessionId}`)
-      
+
+      console.log(
+        `Processing appointment for session ID from localStorage: ${currentBookingSessionId}`,
+      )
+
       // Find the session from the journey based on the ID from localStorage
-      const sessionToUse = coupleTherapyJourney.find(event => event.id === currentBookingSessionId)
-      
+      const sessionToUse = coupleTherapyJourney.find(
+        (event) => event.id === currentBookingSessionId,
+      )
+
       if (!sessionToUse) {
         console.error(`Session not found with ID: ${currentBookingSessionId}`)
         return
@@ -642,9 +650,11 @@ export default function DashboardPage() {
             [`sessionDetails.${currentBookingSessionId}`]: newSessionDetail,
             [`sessionDates.${currentBookingSessionId}`]: startTime,
             updatedAt: Timestamp.now(),
-          };
+          }
 
-          console.log(`Updating session from localStorage: ${currentBookingSessionId}`)
+          console.log(
+            `Updating session from localStorage: ${currentBookingSessionId}`,
+          )
 
           // Update the document with direct update
           await updateDoc(userDocRef, updateObject)
@@ -670,7 +680,7 @@ export default function DashboardPage() {
 
           // Reset booking session to remove the loading state
           setBookingSession(null)
-          
+
           // Hide the Calendly modal
           setShowCalendlyModal(false)
 
@@ -1193,8 +1203,10 @@ export default function DashboardPage() {
               {/* Partner 2 Journey */}
               <div>
                 <h3 className="text-xl font-semibold text-primary-coral mb-4">
-                  Parcours Individuel de{' '
-                  /* eslint-disable-next-line no-nested-ternary */
+                  Parcours Individuel de
+                  {
+                    ' '
+                    /* eslint-disable-next-line no-nested-ternary */
                   }
                   {partnerProfile?.firstName
                     ? `${partnerProfile.firstName}`

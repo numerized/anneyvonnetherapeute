@@ -153,7 +153,7 @@
               "Agenda fixe 4 séances sur 1 mois"
             ],
             "duration": "1 mois - 4 x 60'",
-            "price": 720.00,
+            "price": 720.0,
             "priceDetails": "pour le programme complet"
           },
           {
@@ -165,7 +165,7 @@
               "Agenda fixe : 2 séances par mois"
             ],
             "duration": "3 mois - 12 x 60'",
-            "price": 2160.00,
+            "price": 2160.0,
             "priceDetails": "(3 X 720) pour le programme complet"
           },
           {
@@ -177,7 +177,7 @@
               "Agenda fixe : 1 séance par mois"
             ],
             "duration": "6 mois - 12 x 60'",
-            "price": 2160.00,
+            "price": 2160.0,
             "priceDetails": "(3 X 720) pour le programme complet"
           }
         ],
@@ -225,7 +225,7 @@
           "Visuel et/ou Présentiel au Cabinet de Neuchâtel ou Can Xesc Therapie à Ibiza",
           "Flexible pour Very Important Therapy"
         ],
-        "price": 210.00,
+        "price": 210.0,
         "note": "par séance",
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
         "uniqueBenefits": [

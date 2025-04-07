@@ -1,55 +1,61 @@
-"use client";
+'use client'
 
-import React, { useState } from 'react';
-import { TherapyCard } from './TherapyCard';
-import { getAllTherapyTypes, getTherapyOfferings, getCoachingOfferings, getOfferingsByType } from '@/data/therapyOfferings/utils';
-import { BaseOffering, TherapyType } from '@/data/therapyOfferings/types';
-import { TherapyModal } from './TherapyModal';
-import { CoachingModal } from './CoachingModal';
+import React, { useState } from 'react'
+
+import { BaseOffering, TherapyType } from '@/data/therapyOfferings/types'
+import {
+  getAllTherapyTypes,
+  getCoachingOfferings,
+  getOfferingsByType,
+  getTherapyOfferings,
+} from '@/data/therapyOfferings/utils'
+
+import { CoachingModal } from './CoachingModal'
+import { TherapyCard } from './TherapyCard'
+import { TherapyModal } from './TherapyModal'
 
 interface TherapyGridProps {
-  therapies?: BaseOffering[];
-  className?: string;
-  displayAll?: boolean;
-  displayIds?: string[];
-  offeringType?: 'therapy' | 'coaching';
+  therapies?: BaseOffering[]
+  className?: string
+  displayAll?: boolean
+  displayIds?: string[]
+  offeringType?: 'therapy' | 'coaching'
 }
 
-export const TherapyGrid: React.FC<TherapyGridProps> = ({ 
-  therapies, 
+export const TherapyGrid: React.FC<TherapyGridProps> = ({
+  therapies,
   className = '',
   displayAll = true,
   displayIds = [],
-  offeringType = 'therapy'
+  offeringType = 'therapy',
 }) => {
-  const [showPromoModal, setShowPromoModal] = useState(false);
-  const [selectedTherapy, setSelectedTherapy] = useState<string | null>(null);
+  const [showPromoModal, setShowPromoModal] = useState(false)
+  const [selectedTherapy, setSelectedTherapy] = useState<string | null>(null)
 
   // Get therapies from props or fetch all if not provided
-  const therapyList = therapies || getOfferingsByType(offeringType);
-  
+  const therapyList = therapies || getOfferingsByType(offeringType)
+
   // Get common benefits from the offerings data
-  const { commonBenefits = [] } = offeringType === 'therapy' 
-    ? getTherapyOfferings() 
-    : getCoachingOfferings();
-  
+  const { commonBenefits = [] } =
+    offeringType === 'therapy' ? getTherapyOfferings() : getCoachingOfferings()
+
   // Filter therapies if displayAll is false and displayIds is provided
-  const filteredTherapies = displayAll 
-    ? therapyList 
-    : therapyList.filter(therapy => displayIds.includes(therapy.id));
+  const filteredTherapies = displayAll
+    ? therapyList
+    : therapyList.filter((therapy) => displayIds.includes(therapy.id))
 
   const handleShowPromo = (therapyId: string) => {
-    console.log('handleShowPromo called with ID:', therapyId);
-    console.log('Current offering type:', offeringType);
-    setSelectedTherapy(therapyId);
-    setShowPromoModal(true);
-  };
+    console.log('handleShowPromo called with ID:', therapyId)
+    console.log('Current offering type:', offeringType)
+    setSelectedTherapy(therapyId)
+    setShowPromoModal(true)
+  }
 
   const handleCloseModal = () => {
-    console.log('handleCloseModal called');
-    setShowPromoModal(false);
-    setSelectedTherapy(null);
-  };
+    console.log('handleCloseModal called')
+    setShowPromoModal(false)
+    setSelectedTherapy(null)
+  }
 
   return (
     <div className={`${className}`}>
@@ -57,9 +63,9 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredTherapies.map((therapy, index) => (
           <div key={therapy.id} className="h-full">
-            <TherapyCard 
-              therapy={therapy} 
-              index={index} 
+            <TherapyCard
+              therapy={therapy}
+              index={index}
               onShowPromo={handleShowPromo}
               commonBenefits={commonBenefits}
             />
@@ -86,7 +92,7 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default TherapyGrid;
+export default TherapyGrid
