@@ -146,6 +146,24 @@ const getMatchingOfferingsOptions = (
   const therapyMatches: (TherapyOption & { matchScore: number })[] = [];
   const coachingMatches: (TherapyOption & { matchScore: number })[] = [];
   
+  // Add special case handling for specific user contexts
+  // This helps direct users to the most appropriate options based on their situation
+  const isIntimacyRelated = keywords.some(kw => 
+    ['intimité', 'sexualité', 'désir', 'libido', 'sexuel', 'intime'].includes(kw.toLowerCase())
+  );
+  
+  const isDecisionRelated = keywords.some(kw => 
+    ['décision', 'doute', 'choix', 'rester', 'partir', 'séparation', 'avenir'].includes(kw.toLowerCase())
+  );
+  
+  const isCommunicationRelated = keywords.some(kw => 
+    ['communication', 'conflit', 'dispute', 'écoute', 'comprendre', 'tension'].includes(kw.toLowerCase())
+  );
+  
+  const isNewRelationship = keywords.some(kw => 
+    ['nouveau', 'nouvelle', 'début', 'démarrer', 'commencement', 'rencontre'].includes(kw.toLowerCase())
+  );
+  
   // Check therapy offerings
   allOfferings.therapies.forEach(therapy => {
     // Skip if therapy doesn't match situation filter
@@ -181,6 +199,26 @@ const getMatchingOfferingsOptions = (
       });
     }
 
+    // Special case boosts based on context
+    if (isIntimacyRelated && 
+        (therapy.id.includes('women-sexuality') || 
+         therapy.id.includes('men-sexuality') || 
+         therapy.id === 'vit-a-la-carte')) {
+      matchScore += 4;
+    }
+    
+    if (isDecisionRelated && therapy.id.includes('decision')) {
+      matchScore += 4;
+    }
+    
+    if (isCommunicationRelated && therapy.id.includes('couple')) {
+      matchScore += 3;
+    }
+    
+    if (isNewRelationship && therapy.id.includes('beginning')) {
+      matchScore += 4;
+    }
+
     // If there's a match, add to results
     if (matchScore > 0) {
       const existingOption = therapyOptions.find(
@@ -210,7 +248,9 @@ const getMatchingOfferingsOptions = (
   // Check coaching offerings
   allOfferings.coaching.forEach(coaching => {
     // Skip if coaching doesn't match situation filter
-    if (situation === 'couple' && !coaching.id.includes('couple')) {
+    if (situation === 'couple' && !coaching.id.includes('couple') && 
+        !coaching.title.toLowerCase().includes('couple') && 
+        !coaching.description.toLowerCase().includes('couple')) {
       return;
     }
     
@@ -238,6 +278,23 @@ const getMatchingOfferingsOptions = (
         }
       });
     }
+    
+    // Apply special case boosts based on context
+    if (isIntimacyRelated && coaching.id.includes('desire-exploration')) {
+      matchScore += 4;
+    }
+    
+    if (isDecisionRelated && coaching.id.includes('doubts-decision')) {
+      matchScore += 5;
+    }
+    
+    if (isCommunicationRelated && coaching.id.includes('communication-conflicts')) {
+      matchScore += 5;
+    }
+    
+    if (isNewRelationship && coaching.id.includes('new-relationship')) {
+      matchScore += 5;
+    }
 
     // If there's a match, add to results
     if (matchScore > 0) {
@@ -251,10 +308,32 @@ const getMatchingOfferingsOptions = (
           matchScore
         });
       } else {
+        // Determine the most appropriate type based on coaching content
+        let type: TherapyOption['type'] = 'individual';
+        
+        if (coaching.id.includes('couple') || 
+            coaching.title.toLowerCase().includes('couple') || 
+            coaching.description.toLowerCase().includes('couple')) {
+          type = 'couple';
+        } else if (coaching.id.includes('desire') || 
+                  coaching.title.toLowerCase().includes('désir') || 
+                  coaching.description.toLowerCase().includes('sexualité')) {
+          type = 'sexology';
+        } else if (coaching.id.includes('check') || 
+                  coaching.title.toLowerCase().includes('bilan')) {
+          type = 'checkup';
+        } else if (coaching.id.includes('doubt') || 
+                  coaching.title.toLowerCase().includes('doute')) {
+          type = 'decision';
+        } else if (coaching.id.includes('new') || 
+                  coaching.title.toLowerCase().includes('début')) {
+          type = 'beginning';
+        }
+        
         coachingMatches.push({
           title: coaching.title,
           description: coaching.description || '',
-          type: (coaching.id.includes('couple') ? 'couple' : 'individual') as TherapyOption['type'],
+          type,
           therapyId: coaching.id,
           offeringType: 'coaching',
           matchScore
@@ -285,20 +364,68 @@ const getMatchingOfferingsOptions = (
     results.push(sortedCoachingMatches[0]);
   }
   
+  // Special case for intimacy-related queries - prioritize both therapy and coaching options
+  if (isIntimacyRelated) {
+    // Find best intimacy therapy option if not already added
+    const intimacyTherapyOption = sortedTherapyMatches.find(option => 
+      option.therapyId.includes('sexuality') || option.therapyId === 'vit-a-la-carte'
+    );
+    
+    if (intimacyTherapyOption && !results.some(r => r.therapyId === intimacyTherapyOption.therapyId)) {
+      results.push(intimacyTherapyOption);
+    }
+    
+    // Find best intimacy coaching option if not already added
+    const intimacyCoachingOption = sortedCoachingMatches.find(option => 
+      option.therapyId.includes('desire-exploration')
+    );
+    
+    if (intimacyCoachingOption && !results.some(r => r.therapyId === intimacyCoachingOption.therapyId)) {
+      results.push(intimacyCoachingOption);
+    }
+  }
+  
+  // Special case for decision-related queries
+  if (isDecisionRelated) {
+    // Find best decision therapy option if not already added
+    const decisionTherapyOption = sortedTherapyMatches.find(option => 
+      option.therapyId.includes('decision')
+    );
+    
+    if (decisionTherapyOption && !results.some(r => r.therapyId === decisionTherapyOption.therapyId)) {
+      results.push(decisionTherapyOption);
+    }
+    
+    // Find best decision coaching option if not already added
+    const decisionCoachingOption = sortedCoachingMatches.find(option => 
+      option.therapyId.includes('doubts-decision')
+    );
+    
+    if (decisionCoachingOption && !results.some(r => r.therapyId === decisionCoachingOption.therapyId)) {
+      results.push(decisionCoachingOption);
+    }
+  }
+  
   // Add more results up to maxResults, alternating between therapy and coaching
   let therapyIndex = 1;
   let coachingIndex = 1;
   
   while (results.length < maxResults) {
-    if (therapyIndex < sortedTherapyMatches.length && results.length < maxResults) {
+    // Check if we've already added the therapy option at current index
+    if (therapyIndex < sortedTherapyMatches.length && 
+        !results.some(r => r.therapyId === sortedTherapyMatches[therapyIndex].therapyId) && 
+        results.length < maxResults) {
       results.push(sortedTherapyMatches[therapyIndex]);
-      therapyIndex++;
     }
+    therapyIndex++;
     
-    if (coachingIndex < sortedCoachingMatches.length && results.length < maxResults) {
+    // Check if we've already added the coaching option at current index
+    if (coachingIndex < sortedCoachingMatches.length && 
+        !results.some(r => r.therapyId === sortedCoachingMatches[coachingIndex].therapyId) && 
+        results.length < maxResults) {
       results.push(sortedCoachingMatches[coachingIndex]);
-      coachingIndex++;
     }
+    coachingIndex++;
     
     // If we've exhausted both lists, break
     if (therapyIndex >= sortedTherapyMatches.length && 
@@ -307,12 +434,35 @@ const getMatchingOfferingsOptions = (
     }
   }
   
-  // Ensure we have at least 2 results if possible by adding more from either category
+  // Ensure we have at least 2 results by adding fallback options if needed
   if (results.length < 2) {
-    if (therapyIndex < sortedTherapyMatches.length) {
-      results.push(sortedTherapyMatches[therapyIndex]);
-    } else if (coachingIndex < sortedCoachingMatches.length) {
-      results.push(sortedCoachingMatches[coachingIndex]);
+    // First try to add non-duplicate options
+    while (therapyIndex < sortedTherapyMatches.length && results.length < 2) {
+      if (!results.some(r => r.therapyId === sortedTherapyMatches[therapyIndex].therapyId)) {
+        results.push(sortedTherapyMatches[therapyIndex]);
+      }
+      therapyIndex++;
+    }
+    
+    while (coachingIndex < sortedCoachingMatches.length && results.length < 2) {
+      if (!results.some(r => r.therapyId === sortedCoachingMatches[coachingIndex].therapyId)) {
+        results.push(sortedCoachingMatches[coachingIndex]);
+      }
+      coachingIndex++;
+    }
+    
+    // If still under 2, add default fallback options
+    if (results.length < 2) {
+      // Default to couple therapy if couple situation
+      if (situation === 'couple' && !results.some(r => r.therapyId === 'couple' && r.offeringType === 'therapy')) {
+        const coupleOption = therapyOptions.find(opt => opt.therapyId === 'couple' && opt.offeringType === 'therapy');
+        if (coupleOption) results.push(coupleOption);
+      }
+      // Default to individual therapy otherwise
+      else if (!results.some(r => r.therapyId === 'individual' && r.offeringType === 'therapy')) {
+        const individualOption = therapyOptions.find(opt => opt.therapyId === 'individual' && opt.offeringType === 'therapy');
+        if (individualOption) results.push(individualOption);
+      }
     }
   }
   
@@ -363,6 +513,38 @@ export function TherapyQuestionnaireNew() {
         if (answers.situation === 'couple') {
           keywords = ['intimité', 'sexualité', 'désir', 'couple'];
           recommendedOptions = getMatchingOfferingsOptions(keywords, 'couple');
+          
+          // Always include the desire coaching card for sexuality-related questions
+          const desireCoachingOption = therapyOptions.find(
+            option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
+          );
+          
+          if (desireCoachingOption && !recommendedOptions.some(option => 
+              option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
+            recommendedOptions = [
+              ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
+              desireCoachingOption
+            ];
+          }
+        } else if (answers.situation === 'individual') {
+          keywords = ['intimité', 'sexualité', 'désir', 'individuel'];
+          recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
+          
+          // Always include the desire coaching card for individual sexuality-related questions
+          const desireCoachingOption = therapyOptions.find(
+            option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
+          );
+          
+          if (desireCoachingOption && !recommendedOptions.some(option => 
+              option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
+            const updatedOptions = [
+              ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
+              desireCoachingOption
+            ];
+            setRecommendations(updatedOptions);
+          } else {
+            setRecommendations(recommendedOptions);
+          }
         }
         break;
       case 'start':
@@ -394,7 +576,22 @@ export function TherapyQuestionnaireNew() {
     
     const recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
     
-    setRecommendations(recommendedOptions)
+    // Always include the desire coaching card for gender-specific sexuality questions
+    const desireCoachingOption = therapyOptions.find(
+      option => option.therapyId === 'desire-exploration' && option.offeringType === 'coaching'
+    );
+    
+    if (desireCoachingOption && !recommendedOptions.some(option => 
+        option.therapyId === 'desire-exploration' && option.offeringType === 'coaching')) {
+      const updatedOptions = [
+        ...recommendedOptions.filter((_, index) => index < recommendedOptions.length - 1),
+        desireCoachingOption
+      ];
+      setRecommendations(updatedOptions);
+    } else {
+      setRecommendations(recommendedOptions);
+    }
+    
     setStep(4)
   }
 
