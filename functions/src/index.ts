@@ -411,6 +411,38 @@ export const sendNewsletterWelcomeEmail = onDocumentCreated(
           </p>
         </div>
 
+        <div style="background-color: #F0F7F4; border-radius: 16px; padding: 24px; margin: 30px 0;">
+          <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
+            Prochains Lives Sur Le Divan d'Anne Yvonne
+          </h2>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+            Ne manquez pas nos prochains lives interactifs et gratuits. Posez vos questions et échangez sur des sujets liés à la relation.
+          </p>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; margin-bottom: 20px; justify-content: center;">
+            <div style="background-color: #335145; color: white; padding: 12px 20px; border-radius: 12px; text-align: center; flex: 1; min-width: 120px;">
+              <span style="display: block; font-size: 18px; font-weight: bold;">15 Avril</span>
+              <span style="display: block; font-size: 14px;">20h00</span>
+            </div>
+            <div style="background-color: #335145; color: white; padding: 12px 20px; border-radius: 12px; text-align: center; flex: 1; min-width: 120px;">
+              <span style="display: block; font-size: 18px; font-weight: bold;">13 Mai</span>
+              <span style="display: block; font-size: 14px;">20h00</span>
+            </div>
+            <div style="background-color: #335145; color: white; padding: 12px 20px; border-radius: 12px; text-align: center; flex: 1; min-width: 120px;">
+              <span style="display: block; font-size: 18px; font-weight: bold;">17 Juin</span>
+              <span style="display: block; font-size: 14px;">20h00</span>
+            </div>
+          </div>
+
+          <div style="text-align: center;">
+            <a href="https://www.coeur-a-corps.org/live" 
+               style="display: inline-block; background-color: #E8927C; color: white; text-decoration: none; font-size: 16px; font-weight: bold; padding: 12px 24px; border-radius: 24px;">
+              Rejoindre les Lives
+            </a>
+          </div>
+        </div>
+
         <div style="background-color: #FFF5F5; border-radius: 16px; padding: 24px; margin: 30px 0;">
           <h2 style="color: #E8927C; font-size: min(20px, 4.5vw); margin-bottom: 15px; line-height: 1.3;">
             Découvrez Votre Profil Amoureux
