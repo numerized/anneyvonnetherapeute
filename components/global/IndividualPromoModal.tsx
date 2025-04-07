@@ -8,17 +8,20 @@ interface IndividualPromoModalProps {
   onClose: () => void
 }
 
-export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalProps) {
+export function IndividualPromoModal({
+  isOpen,
+  onClose,
+}: IndividualPromoModalProps) {
   if (!isOpen) return null
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-primary-dark/80 backdrop-blur-lg z-50"
       onClick={onClose}
     >
-      <div 
+      <div
         className="fixed inset-x-0 bottom-0 top-16 bg-primary-forest/90 backdrop-blur-md rounded-t-3xl overflow-y-auto"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
@@ -35,66 +38,88 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
 
           <div className="space-y-6 text-primary-cream/90">
             <blockquote className="text-xl italic border-l-4 border-primary-coral pl-4 mb-8">
-              "Un parcours pensé pour celles et ceux en quête d'une compréhension plus profonde d'eux-mêmes et d'un alignement authentique dans leur vie et/ou dans leurs relations."
+              "Un parcours pensé pour celles et ceux en quête d'une
+              compréhension plus profonde d'eux-mêmes et d'un alignement
+              authentique dans leur vie et/ou dans leurs relations."
             </blockquote>
 
-            <h4 className="text-2xl text-primary-coral mb-4">LES AVANTAGES DU FORFAIT INDIVIDUEL</h4>
+            <h4 className="text-2xl text-primary-coral mb-4">
+              LES AVANTAGES DU FORFAIT INDIVIDUEL
+            </h4>
 
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">Choisissez votre FORMULE :</strong>{" "}
-                  Adaptez votre parcours thérapeutique selon vos besoins et votre rythme.
+                  <strong className="text-primary-coral">
+                    Choisissez votre FORMULE :
+                  </strong>{' '}
+                  Adaptez votre parcours thérapeutique selon vos besoins et
+                  votre rythme.
                 </p>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">Identifiez votre THÈME thérapeutique :</strong>{" "}
+                  <strong className="text-primary-coral">
+                    Identifiez votre THÈME thérapeutique :
+                  </strong>{' '}
                   Un formulaire en ligne pour cibler précisément vos besoins.
                 </p>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">SÉANCE GRATUITE de 30 minutes :</strong>{" "}
+                  <strong className="text-primary-coral">
+                    SÉANCE GRATUITE de 30 minutes :
+                  </strong>{' '}
                   Une première rencontre pour définir ensemble votre parcours.
                 </p>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">Support WhatsApp hebdomadaire :</strong>{" "}
+                  <strong className="text-primary-coral">
+                    Support WhatsApp hebdomadaire :
+                  </strong>{' '}
                   Posez une question, recevez une réponse audio personnalisée.
                 </p>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">Accès à la plateforme :</strong>{" "}
-                  Ressources exclusives et événements en ligne pour soutenir votre transformation.
+                  <strong className="text-primary-coral">
+                    Accès à la plateforme :
+                  </strong>{' '}
+                  Ressources exclusives et événements en ligne pour soutenir
+                  votre transformation.
                 </p>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">Modules spécifiques :</strong>{" "}
-                  Accompagnement et support avec des modules adaptés à vos thèmes.
+                  <strong className="text-primary-coral">
+                    Modules spécifiques :
+                  </strong>{' '}
+                  Accompagnement et support avec des modules adaptés à vos
+                  thèmes.
                 </p>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-primary-coral mt-1.5">•</span>
                 <p>
-                  <strong className="text-primary-coral">Délocalisation des thérapies :</strong>{" "}
-                  Profitez de l'accompagnement, peu importe où vous vous trouvez.
+                  <strong className="text-primary-coral">
+                    Délocalisation des thérapies :
+                  </strong>{' '}
+                  Profitez de l'accompagnement, peu importe où vous vous
+                  trouvez.
                 </p>
               </li>
             </ul>
           </div>
 
           <div className="mb-8">
-            <br/>
+            <br />
             <h4 className="text-2xl text-primary-coral mb-4">Points Clés</h4>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4 text-primary-cream/90">
@@ -120,28 +145,34 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
                   1
                 </div>
                 <p className="text-lg mb-6">
-                  "Découvrez l'accompagnement individuel, un espace privilégié où vous pourrez explorer vos questionnements, vos défis et vos aspirations dans un cadre bienveillant et confidentiel. C'est l'occasion de vous reconnecter à vous-même et d'avancer vers l'épanouissement que vous méritez."
+                  "Découvrez l'accompagnement individuel, un espace privilégié
+                  où vous pourrez explorer vos questionnements, vos défis et vos
+                  aspirations dans un cadre bienveillant et confidentiel. C'est
+                  l'occasion de vous reconnecter à vous-même et d'avancer vers
+                  l'épanouissement que vous méritez."
                 </p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
                   2
                 </div>
-                <p className="text-lg mb-6">
-                  Durée : 1h30 - Prix : 150€
-                </p>
+                <p className="text-lg mb-6">Durée : 1h30 - Prix : 150€</p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
                   3
                 </div>
-                <p className="text-primary-cream/90 text-lg">Choix de la formule adaptée</p>
+                <p className="text-primary-cream/90 text-lg">
+                  Choix de la formule adaptée
+                </p>
               </div>
               <div className="flex items-start gap-4">
                 <div className="bg-primary-coral rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary-cream">
                   4
                 </div>
-                <p className="text-primary-cream/90 text-lg">Suivi personnalisé continu</p>
+                <p className="text-primary-cream/90 text-lg">
+                  Suivi personnalisé continu
+                </p>
               </div>
             </div>
           </div>
@@ -157,10 +188,12 @@ export function IndividualPromoModal({ isOpen, onClose }: IndividualPromoModalPr
 
           <div className="mt-8">
             <p className="text-lg">
-              L'accompagnement individuel est une opportunité unique de transformation.
+              L'accompagnement individuel est une opportunité unique de
+              transformation.
             </p>
             <p className="text-lg">
-              "Ensemble, créons l'espace idéal pour votre épanouissement personnel et relationnel."
+              "Ensemble, créons l'espace idéal pour votre épanouissement
+              personnel et relationnel."
             </p>
           </div>
 

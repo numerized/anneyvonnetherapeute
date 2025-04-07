@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Masonry from 'react-masonry-css'
 
 import { Capsule, capsules } from './data/capsules'
@@ -16,7 +16,9 @@ export default function Espace180Page() {
   const [activeMedia, setActiveMedia] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [likedCapsules, setLikedCapsules] = useState<{ [key: number]: number }>({})
+  const [likedCapsules, setLikedCapsules] = useState<{ [key: number]: number }>(
+    {},
+  )
   const [currentTime, setCurrentTime] = useState<{ [key: number]: number }>({})
   const [duration, setDuration] = useState<{ [key: number]: number }>({})
   const [isDragging, setIsDragging] = useState<{ [key: number]: boolean }>({})
@@ -29,11 +31,15 @@ export default function Espace180Page() {
 
   // Check for capsule ID from both route params and search params
   const routeParamId = params?.id ? parseInt(params.id as string, 10) : null
-  const searchParamId = searchParams.get('capsule') ? parseInt(searchParams.get('capsule') as string, 10) : null
+  const searchParamId = searchParams.get('capsule')
+    ? parseInt(searchParams.get('capsule') as string, 10)
+    : null
   const singleCapsuleId = routeParamId || searchParamId
 
   // Find the single capsule if ID is provided
-  const singleCapsule = singleCapsuleId ? capsules.find(c => c.id === singleCapsuleId) : null
+  const singleCapsule = singleCapsuleId
+    ? capsules.find((c) => c.id === singleCapsuleId)
+    : null
 
   // Client-side only effects
   useEffect(() => {
@@ -42,15 +48,15 @@ export default function Espace180Page() {
 
   // Set up Media Session API for mobile devices
   useEffect(() => {
-    if (!isClient) return;
-    
+    if (!isClient) return
+
     if ('mediaSession' in navigator && navigator.mediaSession) {
       const updateMediaSession = () => {
-        if (activeMedia === null) return;
-        
-        const activeCapsule = capsules.find(c => c.id === activeMedia);
-        if (!activeCapsule) return;
-        
+        if (activeMedia === null) return
+
+        const activeCapsule = capsules.find((c) => c.id === activeMedia)
+        if (!activeCapsule) return
+
         // Update metadata on lock screen / control center
         if (typeof MediaMetadata !== 'undefined') {
           navigator.mediaSession.metadata = new MediaMetadata({
@@ -58,202 +64,231 @@ export default function Espace180Page() {
             artist: 'Anne Yvonne Relations',
             album: 'Espace 180',
             artwork: [
-              { 
+              {
                 src: activeCapsule.squarePosterUrl || activeCapsule.posterUrl,
                 sizes: '512x512',
-                type: 'image/png'
-              }
-            ]
-          });
+                type: 'image/png',
+              },
+            ],
+          })
         }
-        
+
         // Set up playback control handlers
         navigator.mediaSession.setActionHandler('play', () => {
-          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          const media =
+            audioRefs.current[activeMedia] || videoRefs.current[activeMedia]
           if (media && media.paused) {
-            media.play().catch(err => console.error('Error playing media:', err));
-            setIsPlaying(true);
+            media
+              .play()
+              .catch((err) => console.error('Error playing media:', err))
+            setIsPlaying(true)
           }
-        });
+        })
 
         navigator.mediaSession.setActionHandler('pause', () => {
-          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          const media =
+            audioRefs.current[activeMedia] || videoRefs.current[activeMedia]
           if (media && !media.paused) {
-            media.pause();
-            setIsPlaying(false);
+            media.pause()
+            setIsPlaying(false)
           }
-        });
+        })
 
         // Optional seek controls
         navigator.mediaSession.setActionHandler('seekforward', () => {
-          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          const media =
+            audioRefs.current[activeMedia] || videoRefs.current[activeMedia]
           if (media) {
-            media.currentTime = Math.min(media.currentTime + 10, media.duration);
+            media.currentTime = Math.min(media.currentTime + 10, media.duration)
           }
-        });
+        })
 
         navigator.mediaSession.setActionHandler('seekbackward', () => {
-          const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+          const media =
+            audioRefs.current[activeMedia] || videoRefs.current[activeMedia]
           if (media) {
-            media.currentTime = Math.max(media.currentTime - 10, 0);
+            media.currentTime = Math.max(media.currentTime - 10, 0)
           }
-        });
-      };
+        })
+      }
 
       if (activeMedia !== null) {
-        updateMediaSession();
+        updateMediaSession()
 
         // Update play state
-        const media = audioRefs.current[activeMedia] || videoRefs.current[activeMedia];
+        const media =
+          audioRefs.current[activeMedia] || videoRefs.current[activeMedia]
         if (media) {
           // @ts-ignore - playbackState might not be typescripted correctly
-          navigator.mediaSession.playbackState = media.paused ? 'paused' : 'playing';
+          navigator.mediaSession.playbackState = media.paused
+            ? 'paused'
+            : 'playing'
         }
       } else {
         // No active media
         // @ts-ignore - playbackState might not be typescripted correctly
-        navigator.mediaSession.playbackState = 'none';
+        navigator.mediaSession.playbackState = 'none'
       }
     }
-  }, [isClient, activeMedia]);
+  }, [isClient, activeMedia])
 
   // Memoize document event handlers
-  const handleDocumentMouseMove = useCallback((e: MouseEvent) => {
-    // Prevent text selection during dragging
-    if (Object.values(isDragging).some(value => value)) {
-      e.preventDefault();
-    }
-    
-    Object.keys(isDragging).forEach(idStr => {
-      const id = parseInt(idStr);
-      if (isDragging[id] && progressTrackRefs.current[id]) {
-        const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
-        let position = (e.clientX - trackRect.left) / trackRect.width;
-        
-        // Clamp position between 0 and 1
-        position = Math.max(0, Math.min(1, position));
-        
-        const media = audioRefs.current[id] || videoRefs.current[id];
-        if (media) {
-          const newTime = position * media.duration;
-          media.currentTime = newTime;
-          setCurrentTime(prev => ({ ...prev, [id]: newTime }));
-        }
+  const handleDocumentMouseMove = useCallback(
+    (e: MouseEvent) => {
+      // Prevent text selection during dragging
+      if (Object.values(isDragging).some((value) => value)) {
+        e.preventDefault()
       }
-    });
-  }, [isDragging]);
+
+      Object.keys(isDragging).forEach((idStr) => {
+        const id = parseInt(idStr)
+        if (isDragging[id] && progressTrackRefs.current[id]) {
+          const trackRect =
+            progressTrackRefs.current[id]!.getBoundingClientRect()
+          let position = (e.clientX - trackRect.left) / trackRect.width
+
+          // Clamp position between 0 and 1
+          position = Math.max(0, Math.min(1, position))
+
+          const media = audioRefs.current[id] || videoRefs.current[id]
+          if (media) {
+            const newTime = position * media.duration
+            media.currentTime = newTime
+            setCurrentTime((prev) => ({ ...prev, [id]: newTime }))
+          }
+        }
+      })
+    },
+    [isDragging],
+  )
 
   const handleDocumentMouseUp = useCallback(() => {
-    setIsDragging({});
-  }, []);
+    setIsDragging({})
+  }, [])
 
-  const handleDocumentTouchMove = useCallback((e: TouchEvent) => {
-    // Prevent default behavior like scrolling during dragging
-    if (Object.values(isDragging).some(value => value)) {
-      e.preventDefault();
-    }
-    
-    Object.keys(isDragging).forEach(idStr => {
-      const id = parseInt(idStr);
-      if (isDragging[id] && progressTrackRefs.current[id]) {
-        const trackRect = progressTrackRefs.current[id]!.getBoundingClientRect();
-        let position = (e.touches[0].clientX - trackRect.left) / trackRect.width;
-        
-        // Clamp position between 0 and 1
-        position = Math.max(0, Math.min(1, position));
-        
-        const media = audioRefs.current[id] || videoRefs.current[id];
-        if (media) {
-          const newTime = position * media.duration;
-          media.currentTime = newTime;
-          setCurrentTime(prev => ({ ...prev, [id]: newTime }));
-        }
+  const handleDocumentTouchMove = useCallback(
+    (e: TouchEvent) => {
+      // Prevent default behavior like scrolling during dragging
+      if (Object.values(isDragging).some((value) => value)) {
+        e.preventDefault()
       }
-    });
-  }, [isDragging]);
+
+      Object.keys(isDragging).forEach((idStr) => {
+        const id = parseInt(idStr)
+        if (isDragging[id] && progressTrackRefs.current[id]) {
+          const trackRect =
+            progressTrackRefs.current[id]!.getBoundingClientRect()
+          let position =
+            (e.touches[0].clientX - trackRect.left) / trackRect.width
+
+          // Clamp position between 0 and 1
+          position = Math.max(0, Math.min(1, position))
+
+          const media = audioRefs.current[id] || videoRefs.current[id]
+          if (media) {
+            const newTime = position * media.duration
+            media.currentTime = newTime
+            setCurrentTime((prev) => ({ ...prev, [id]: newTime }))
+          }
+        }
+      })
+    },
+    [isDragging],
+  )
 
   const handleDocumentTouchEnd = useCallback(() => {
-    setIsDragging({});
-  }, []);
+    setIsDragging({})
+  }, [])
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient) return
 
     // Store current refs to avoid closure issues
-    const currentAudioRefs = { ...audioRefs.current };
-    const currentVideoRefs = { ...videoRefs.current };
+    const currentAudioRefs = { ...audioRefs.current }
+    const currentVideoRefs = { ...videoRefs.current }
 
     const handlePlay = (event: Event) => {
-      const element = event.target as HTMLMediaElement;
+      const element = event.target as HTMLMediaElement
 
-      const capsuleId = Object.keys(currentAudioRefs).find(key => currentAudioRefs[key] === element) ||
-        Object.keys(currentVideoRefs).find(key => currentVideoRefs[key] === element);
+      const capsuleId =
+        Object.keys(currentAudioRefs).find(
+          (key) => currentAudioRefs[key] === element,
+        ) ||
+        Object.keys(currentVideoRefs).find(
+          (key) => currentVideoRefs[key] === element,
+        )
 
       if (capsuleId) {
-        setActiveMedia(parseInt(capsuleId));
-        setIsPlaying(true);
+        setActiveMedia(parseInt(capsuleId))
+        setIsPlaying(true)
 
         // Update media session
         if ('mediaSession' in navigator && navigator.mediaSession) {
           // @ts-ignore - playbackState might not be typescripted correctly
-          navigator.mediaSession.playbackState = 'playing';
+          navigator.mediaSession.playbackState = 'playing'
         }
       }
-    };
+    }
 
     const handlePause = () => {
-      setIsPlaying(false);
+      setIsPlaying(false)
 
       // Update media session
       if ('mediaSession' in navigator && navigator.mediaSession) {
         // @ts-ignore - playbackState might not be typescripted correctly
-        navigator.mediaSession.playbackState = 'paused';
+        navigator.mediaSession.playbackState = 'paused'
       }
-    };
+    }
 
     // Add event listeners to all media elements
-    Object.values(currentAudioRefs).forEach(audio => {
+    Object.values(currentAudioRefs).forEach((audio) => {
       if (audio) {
-        audio.addEventListener('play', handlePlay);
-        audio.addEventListener('pause', handlePause);
+        audio.addEventListener('play', handlePlay)
+        audio.addEventListener('pause', handlePause)
       }
-    });
+    })
 
-    Object.values(currentVideoRefs).forEach(video => {
+    Object.values(currentVideoRefs).forEach((video) => {
       if (video) {
-        video.addEventListener('play', handlePlay);
-        video.addEventListener('pause', handlePause);
+        video.addEventListener('play', handlePlay)
+        video.addEventListener('pause', handlePause)
       }
-    });
+    })
 
     // Add document-level event listeners for dragging
-    document.addEventListener('mousemove', handleDocumentMouseMove);
-    document.addEventListener('mouseup', handleDocumentMouseUp);
-    document.addEventListener('touchmove', handleDocumentTouchMove);
-    document.addEventListener('touchend', handleDocumentTouchEnd);
+    document.addEventListener('mousemove', handleDocumentMouseMove)
+    document.addEventListener('mouseup', handleDocumentMouseUp)
+    document.addEventListener('touchmove', handleDocumentTouchMove)
+    document.addEventListener('touchend', handleDocumentTouchEnd)
 
     return () => {
       // Remove event listeners using the same refs from closure
-      Object.values(currentAudioRefs).forEach(audio => {
+      Object.values(currentAudioRefs).forEach((audio) => {
         if (audio) {
-          audio.removeEventListener('play', handlePlay);
-          audio.removeEventListener('pause', handlePause);
+          audio.removeEventListener('play', handlePlay)
+          audio.removeEventListener('pause', handlePause)
         }
-      });
+      })
 
-      Object.values(currentVideoRefs).forEach(video => {
+      Object.values(currentVideoRefs).forEach((video) => {
         if (video) {
-          video.removeEventListener('play', handlePlay);
-          video.removeEventListener('pause', handlePause);
+          video.removeEventListener('play', handlePlay)
+          video.removeEventListener('pause', handlePause)
         }
-      });
+      })
 
-      document.removeEventListener('mousemove', handleDocumentMouseMove);
-      document.removeEventListener('mouseup', handleDocumentMouseUp);
-      document.removeEventListener('touchmove', handleDocumentTouchMove);
-      document.removeEventListener('touchend', handleDocumentTouchEnd);
-    };
-  }, [isClient, handleDocumentMouseMove, handleDocumentMouseUp, handleDocumentTouchMove, handleDocumentTouchEnd]);
+      document.removeEventListener('mousemove', handleDocumentMouseMove)
+      document.removeEventListener('mouseup', handleDocumentMouseUp)
+      document.removeEventListener('touchmove', handleDocumentTouchMove)
+      document.removeEventListener('touchend', handleDocumentTouchEnd)
+    }
+  }, [
+    isClient,
+    handleDocumentMouseMove,
+    handleDocumentMouseUp,
+    handleDocumentTouchMove,
+    handleDocumentTouchEnd,
+  ])
 
   // Load liked capsules from localStorage
   useEffect(() => {
@@ -267,11 +302,11 @@ export default function Espace180Page() {
   }, [])
 
   const toggleLike = (capsuleId: number) => {
-    setLikedCapsules(prev => {
+    setLikedCapsules((prev) => {
       const currentLikes = prev[capsuleId] || 0
       const newLikes = {
         ...prev,
-        [capsuleId]: currentLikes > 0 ? 0 : 1 // Toggle between 0 and 1
+        [capsuleId]: currentLikes > 0 ? 0 : 1, // Toggle between 0 and 1
       }
       // Save to localStorage
       localStorage.setItem('espace180Likes', JSON.stringify(newLikes))
@@ -286,7 +321,8 @@ export default function Espace180Page() {
     if (media.paused) {
       // Pause any other playing media
       if (activeMedia !== null && activeMedia !== capsuleId) {
-        const activeMediaElement = videoRefs.current[activeMedia] || audioRefs.current[activeMedia]
+        const activeMediaElement =
+          videoRefs.current[activeMedia] || audioRefs.current[activeMedia]
         if (activeMediaElement) {
           activeMediaElement.pause()
         }
@@ -295,12 +331,12 @@ export default function Espace180Page() {
       try {
         const playPromise = media.play()
         if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.error("Error playing media:", error)
+          playPromise.catch((error) => {
+            console.error('Error playing media:', error)
           })
         }
       } catch (error) {
-        console.error("Exception playing media:", error)
+        console.error('Exception playing media:', error)
       }
       setActiveMedia(capsuleId)
     } else {
@@ -310,178 +346,201 @@ export default function Espace180Page() {
   }
 
   // Get unique tags with counts
-  const allTags = capsules.reduce((acc, capsule) => {
-    capsule.tags.forEach(tag => {
-      acc[tag] = (acc[tag] || 0) + 1
-    })
-    return acc
-  }, {} as { [key: string]: number })
+  const allTags = capsules.reduce(
+    (acc, capsule) => {
+      capsule.tags.forEach((tag) => {
+        acc[tag] = (acc[tag] || 0) + 1
+      })
+      return acc
+    },
+    {} as { [key: string]: number },
+  )
 
   // Sort tags by count (descending) and alphabetically
-  const sortedTags = Object.entries(allTags)
-    .sort(([tagA, countA], [tagB, countB]) => {
+  const sortedTags = Object.entries(allTags).sort(
+    ([tagA, countA], [tagB, countB]) => {
       if (countA === countB) {
         return tagA.localeCompare(tagB)
       }
       return countB - countA
-    })
+    },
+  )
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     )
   }
 
   // Filter capsules based on selected tags
-  const filteredCapsules = capsules.filter(capsule => {
-    const isLiked = likedCapsules[capsule.id] || 0 > 0;
-    const hasFavoriteTag = selectedTags.includes('Mes Préférées');
-    const otherTags = selectedTags.filter(tag => tag !== 'Mes Préférées');
+  const filteredCapsules = capsules.filter((capsule) => {
+    const isLiked = likedCapsules[capsule.id] || 0 > 0
+    const hasFavoriteTag = selectedTags.includes('Mes Préférées')
+    const otherTags = selectedTags.filter((tag) => tag !== 'Mes Préférées')
 
     // Check if capsule matches other selected tags
-    const matchesOtherTags = otherTags.length === 0 ||
-      otherTags.some(tag => capsule.tags.includes(tag));
+    const matchesOtherTags =
+      otherTags.length === 0 ||
+      otherTags.some((tag) => capsule.tags.includes(tag))
 
     // If favorites is selected, show liked capsules that match other tags (if any)
     if (hasFavoriteTag) {
       if (otherTags.length > 0) {
-        return isLiked || matchesOtherTags;
+        return isLiked || matchesOtherTags
       }
-      return isLiked;
+      return isLiked
     }
 
     // If favorites is not selected, only show capsules matching other tags
-    return matchesOtherTags;
-  });
+    return matchesOtherTags
+  })
 
   // Get count of liked capsules for the counter
-  const likedCapsulesCount = Object.values(likedCapsules).filter(count => count > 0).length;
+  const likedCapsulesCount = Object.values(likedCapsules).filter(
+    (count) => count > 0,
+  ).length
 
   // Add reset likes function
   const resetAllLikes = () => {
-    localStorage.removeItem('espace180Likes');
-    setLikedCapsules({});
-  };
+    localStorage.removeItem('espace180Likes')
+    setLikedCapsules({})
+  }
 
   // Function to set the ref based on media type
-  const setMediaRef = (element: HTMLVideoElement | HTMLAudioElement | null, id: number) => {
+  const setMediaRef = (
+    element: HTMLVideoElement | HTMLAudioElement | null,
+    id: number,
+  ) => {
     if (element) {
       if (element instanceof HTMLVideoElement) {
-        videoRefs.current[id] = element;
+        videoRefs.current[id] = element
       } else {
-        audioRefs.current[id] = element;
+        audioRefs.current[id] = element
       }
     }
-  };
+  }
 
   // Function to handle time updates
   const handleTimeUpdate = (id: number) => {
-    const media = videoRefs.current[id] || audioRefs.current[id];
+    const media = videoRefs.current[id] || audioRefs.current[id]
     if (media) {
-      setCurrentTime(prev => ({
+      setCurrentTime((prev) => ({
         ...prev,
-        [id]: media.currentTime
-      }));
-      
+        [id]: media.currentTime,
+      }))
+
       if (!duration[id] && media.duration && !isNaN(media.duration)) {
-        setDuration(prev => ({
+        setDuration((prev) => ({
           ...prev,
-          [id]: media.duration
-        }));
+          [id]: media.duration,
+        }))
       }
-      
+
       // Update progress bar width
-      const progressBar = progressRefs.current[id];
+      const progressBar = progressRefs.current[id]
       if (progressBar) {
-        const progress = (media.currentTime / (media.duration || 1)) * 100;
-        progressBar.style.width = `${progress}%`;
+        const progress = (media.currentTime / (media.duration || 1)) * 100
+        progressBar.style.width = `${progress}%`
       }
     }
-  };
+  }
 
   // Function to handle seeking
-  const handleSeek = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    const media = videoRefs.current[id] || audioRefs.current[id];
-    if (!media) return;
-    
-    const progressTrack = e.currentTarget;
-    const rect = progressTrack.getBoundingClientRect();
-    
+  const handleSeek = (
+    id: number,
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) => {
+    const media = videoRefs.current[id] || audioRefs.current[id]
+    if (!media) return
+
+    const progressTrack = e.currentTarget
+    const rect = progressTrack.getBoundingClientRect()
+
     // Get the x position based on mouse or touch event
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clickPosition = (clientX - rect.left) / rect.width;
-    
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const clickPosition = (clientX - rect.left) / rect.width
+
     // Clamp the position between 0 and 1
-    const clampedPosition = Math.max(0, Math.min(1, clickPosition));
-    const seekTime = clampedPosition * (media.duration || 0);
-    
+    const clampedPosition = Math.max(0, Math.min(1, clickPosition))
+    const seekTime = clampedPosition * (media.duration || 0)
+
     // Update media current time
-    media.currentTime = seekTime;
-    
+    media.currentTime = seekTime
+
     // Update state
-    setCurrentTime(prev => ({
+    setCurrentTime((prev) => ({
       ...prev,
-      [id]: seekTime
-    }));
-  };
+      [id]: seekTime,
+    }))
+  }
 
-  const handleMouseDown = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+  const handleMouseDown = (
+    id: number,
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) => {
     // Prevent default browser behavior
-    e.preventDefault();
-    
-    // First seek to the clicked/touched position
-    handleSeek(id, e);
-    
-    // Then start the dragging mode
-    setIsDragging(prev => ({ ...prev, [id]: true }));
-  };
+    e.preventDefault()
 
-  const handleMouseMove = (id: number, e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    // First seek to the clicked/touched position
+    handleSeek(id, e)
+
+    // Then start the dragging mode
+    setIsDragging((prev) => ({ ...prev, [id]: true }))
+  }
+
+  const handleMouseMove = (
+    id: number,
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) => {
     // Prevent default browser behavior if dragging
     if (isDragging[id]) {
-      e.preventDefault();
-      handleSeek(id, e);
+      e.preventDefault()
+      handleSeek(id, e)
     }
-  };
+  }
 
-  const handleMouseUp = (id: number, e?: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+  const handleMouseUp = (
+    id: number,
+    e?: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) => {
     // Prevent default browser behavior
-    if (e) e.preventDefault();
-    setIsDragging(prev => ({ ...prev, [id]: false }));
-  };
+    if (e) e.preventDefault()
+    setIsDragging((prev) => ({ ...prev, [id]: false }))
+  }
 
   // Memoize the dragging state check
   const isAnyDragging = useMemo(() => {
-    return Object.values(isDragging).some(value => value);
-  }, [isDragging]);
+    return Object.values(isDragging).some((value) => value)
+  }, [isDragging])
 
   // Effect to handle global user-select style during dragging
   useEffect(() => {
     if (isAnyDragging) {
-      document.body.classList.add('user-select-none');
+      document.body.classList.add('user-select-none')
     } else {
-      document.body.classList.remove('user-select-none');
+      document.body.classList.remove('user-select-none')
     }
-    
+
     return () => {
-      document.body.classList.remove('user-select-none');
-    };
-  }, [isAnyDragging]); // Now correctly depends on the memoized value
+      document.body.classList.remove('user-select-none')
+    }
+  }, [isAnyDragging]) // Now correctly depends on the memoized value
 
   // Format time in seconds to MM:SS format
   const formatTime = (timeInSeconds: number): string => {
-    if (isNaN(timeInSeconds)) return '00:00';
-    
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = Math.floor(timeInSeconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+    if (isNaN(timeInSeconds)) return '00:00'
+
+    const minutes = Math.floor(timeInSeconds / 60)
+    const seconds = Math.floor(timeInSeconds % 60)
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  }
 
   const renderCapsule = (capsule: Capsule, isLarge: boolean) => {
     return (
-      <div key={capsule.id} className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}>
+      <div
+        key={capsule.id}
+        className={`bg-primary-dark ${isLarge ? 'p-8 md:p-12' : 'p-8'} rounded-[32px] flex flex-col`}
+      >
         {/* Media Container */}
         <div className="relative w-full rounded-[32px] overflow-hidden">
           {/* Aspect ratio container */}
@@ -498,12 +557,12 @@ export default function Espace180Page() {
                     poster={capsule.posterUrl}
                     onTimeUpdate={() => handleTimeUpdate(capsule.id)}
                     onLoadedMetadata={(e) => {
-                      const video = e.currentTarget;
+                      const video = e.currentTarget
                       if (video.duration && !isNaN(video.duration)) {
-                        setDuration(prev => ({
+                        setDuration((prev) => ({
                           ...prev,
-                          [capsule.id]: video.duration
-                        }));
+                          [capsule.id]: video.duration,
+                        }))
                       }
                     }}
                   />
@@ -515,12 +574,12 @@ export default function Espace180Page() {
                       className="hidden"
                       onTimeUpdate={() => handleTimeUpdate(capsule.id)}
                       onLoadedMetadata={(e) => {
-                        const audio = e.currentTarget;
+                        const audio = e.currentTarget
                         if (audio.duration && !isNaN(audio.duration)) {
-                          setDuration(prev => ({
+                          setDuration((prev) => ({
                             ...prev,
-                            [capsule.id]: audio.duration
-                          }));
+                            [capsule.id]: audio.duration,
+                          }))
                         }
                       }}
                     />
@@ -536,8 +595,13 @@ export default function Espace180Page() {
                 {/* Frost bubbles */}
                 <div className="absolute top-4 right-4 flex gap-4 z-20">
                   {/* Capsule title bubble */}
-                  <Link href={`/espace180/capsule/${capsule.id}`} className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all">
-                    <span className="text-white font-medium">#{capsule.id}</span>
+                  <Link
+                    href={`/espace180/capsule/${capsule.id}`}
+                    className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all"
+                  >
+                    <span className="text-white font-medium">
+                      #{capsule.id}
+                    </span>
                   </Link>
                 </div>
                 {/* Play button - Left side */}
@@ -546,16 +610,36 @@ export default function Espace180Page() {
                   <button
                     onClick={() => togglePlay(capsule.id)}
                     className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-                    aria-label={activeMedia === capsule.id ? 'Pause media' : 'Play media'}
+                    aria-label={
+                      activeMedia === capsule.id ? 'Pause media' : 'Play media'
+                    }
                   >
                     <div className="w-6 h-6 flex items-center justify-center">
                       {activeMedia === capsule.id ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                          <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-6 h-6 text-white"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                          <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-6 h-6 text-white"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       )}
                     </div>
@@ -596,9 +680,9 @@ export default function Espace180Page() {
               <span>{formatTime(currentTime[capsule.id] || 0)}</span>
               <span>{formatTime(duration[capsule.id] || 0)}</span>
             </div>
-            <div 
+            <div
               ref={(el) => {
-                progressTrackRefs.current[capsule.id] = el;
+                progressTrackRefs.current[capsule.id] = el
               }}
               className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors select-none"
               onMouseDown={(e) => handleMouseDown(capsule.id, e)}
@@ -611,24 +695,26 @@ export default function Espace180Page() {
             >
               {/* Background track with gradient */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 rounded-full"></div>
-              
+
               {/* Progress fill */}
-              <div 
+              <div
                 ref={(el) => {
-                  progressRefs.current[capsule.id] = el;
+                  progressRefs.current[capsule.id] = el
                 }}
                 className="absolute left-0 top-0 h-full bg-white/60 rounded-full transition-all duration-100"
                 style={{ width: '0%' }}
               />
-              
+
               {/* Progress handle */}
-              <div 
+              <div
                 className="h-5 w-5 bg-white rounded-full absolute top-1/2 -translate-y-1/2 -ml-2.5 shadow-md transition-transform duration-150 transform hover:scale-110"
-                style={{ 
+                style={{
                   left: `${((currentTime[capsule.id] || 0) / (duration[capsule.id] || 1)) * 100}%`,
                   display: duration[capsule.id] ? 'block' : 'none',
                   opacity: isDragging[capsule.id] ? '1' : '0.7',
-                  transform: isDragging[capsule.id] ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%)'
+                  transform: isDragging[capsule.id]
+                    ? 'translateY(-50%) scale(1.1)'
+                    : 'translateY(-50%)',
                 }}
               />
             </div>
@@ -640,9 +726,11 @@ export default function Espace180Page() {
           {/* Title and duration grouped without spacing */}
           <div>
             <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
-            {capsule.duration && <div className="text-sm text-white/60">{capsule.duration}</div>}
+            {capsule.duration && (
+              <div className="text-sm text-white/60">{capsule.duration}</div>
+            )}
           </div>
-          
+
           {/* Description with spacing from title/duration group */}
           <p className="text-white/80 mt-4">{capsule.description}</p>
 
@@ -652,23 +740,26 @@ export default function Espace180Page() {
           </p>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-4 justify-end" style={{ position: 'relative', zIndex: 30 }}>
+          <div
+            className="flex flex-wrap gap-2 mt-4 justify-end"
+            style={{ position: 'relative', zIndex: 30 }}
+          >
             {capsule.tags.map((tag, index) => {
               // Create a function to handle tag click that's unique to this instance
               const handleThisTagClick = (e: React.MouseEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log(`Tag clicked: ${tag}`);
+                e.preventDefault()
+                e.stopPropagation()
+                console.log(`Tag clicked: ${tag}`)
 
                 if (singleCapsule) {
                   // Set this tag and navigate back to main view
-                  window.location.href = '/espace180';
+                  window.location.href = '/espace180'
                 } else {
                   // Toggle this tag in the filter
-                  toggleTag(tag);
+                  toggleTag(tag)
                 }
-                return false;
-              };
+                return false
+              }
 
               return (
                 <span
@@ -676,23 +767,23 @@ export default function Espace180Page() {
                   onClick={handleThisTagClick}
                   className="px-3 py-1 text-xs rounded-full transition-all cursor-pointer inline-block relative z-30 hover:bg-white/30"
                   style={{
-                    backgroundColor: selectedTags.includes(tag) ? 'white' : 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: selectedTags.includes(tag)
+                      ? 'white'
+                      : 'rgba(255, 255, 255, 0.1)',
                     color: selectedTags.includes(tag) ? '#1a202c' : 'white',
                     fontWeight: selectedTags.includes(tag) ? 500 : 400,
-                    pointerEvents: 'auto'
+                    pointerEvents: 'auto',
                   }}
                 >
                   {tag}
                 </span>
-              );
+              )
             })}
           </div>
-
         </div>
-
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
@@ -704,8 +795,8 @@ export default function Espace180Page() {
               Espace 180
             </h1>
             <p className="text-xl text-primary-cream/80">
-              Découvrez notre collection de méditations guidées et d'exercices pratiques
-              pour vous accompagner dans votre cheminement personnel.
+              Découvrez notre collection de méditations guidées et d'exercices
+              pratiques pour vous accompagner dans votre cheminement personnel.
             </p>
           </div>
         </div>
@@ -745,15 +836,22 @@ export default function Espace180Page() {
                     fill="currentColor"
                     className={`w-5 h-5 transition-transform duration-300 ${isFilterOpen ? 'rotate-90' : ''}`}
                   >
-                    <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
 
               {/* Filter Content - Hidden on mobile unless expanded */}
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${isFilterOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
-                  }`}
+                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${
+                  isFilterOpen
+                    ? 'max-h-[500px] opacity-100'
+                    : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
+                }`}
               >
                 <div className="flex flex-wrap gap-3 justify-center">
                   {/* Favorites Filter */}
@@ -792,7 +890,9 @@ export default function Espace180Page() {
         <div className="container mx-auto px-4 pb-16">
           {filteredCapsules.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-white text-xl">Aucune capsule ne correspond à votre sélection.</p>
+              <p className="text-white text-xl">
+                Aucune capsule ne correspond à votre sélection.
+              </p>
             </div>
           ) : filteredCapsules.length === 1 && !singleCapsule ? (
             // Single filtered capsule view - make it centered and larger
@@ -803,9 +903,7 @@ export default function Espace180Page() {
             // Two capsules - display in two columns
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredCapsules.map((capsule) => (
-                <div key={capsule.id}>
-                  {renderCapsule(capsule, false)}
-                </div>
+                <div key={capsule.id}>{renderCapsule(capsule, false)}</div>
               ))}
             </div>
           ) : singleCapsule ? (
@@ -819,7 +917,7 @@ export default function Espace180Page() {
               breakpointCols={{
                 default: 3,
                 1024: 2,
-                640: 1
+                640: 1,
               }}
               className="my-masonry-grid"
               columnClassName="my-masonry-grid_column"
@@ -829,20 +927,20 @@ export default function Espace180Page() {
           )}
           {/* CSS for Masonry Grid */}
           <style jsx global>{`
-              .my-masonry-grid {
-                display: flex;
-                width: auto;
-                gap: 2rem;
-              }
-              .my-masonry-grid_column {
-                background-clip: padding-box;
-              }
-              .my-masonry-grid_column > div {
-                margin-bottom: 2rem;
-              }
-            `}</style>
+            .my-masonry-grid {
+              display: flex;
+              width: auto;
+              gap: 2rem;
+            }
+            .my-masonry-grid_column {
+              background-clip: padding-box;
+            }
+            .my-masonry-grid_column > div {
+              margin-bottom: 2rem;
+            }
+          `}</style>
         </div>
       </div>
     </main>
-  );
+  )
 }

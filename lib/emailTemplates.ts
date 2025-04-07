@@ -1,5 +1,10 @@
 // Helper function to create coaching program email template
-export const createCoachingEmailTemplate = (email: string, finalPrice: number, currency: string, discountApplied: number) => `
+export const createCoachingEmailTemplate = (
+  email: string,
+  finalPrice: number,
+  currency: string,
+  discountApplied: number,
+) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
            alt="Anne Yvonne Relations" 
@@ -58,7 +63,7 @@ export const createWebinarEmailTemplate = (
   currency: string,
   discountApplied: number,
   calendarLinks: Array<{ date: string; googleLink: string }>,
-  wherebyLink: string
+  wherebyLink: string,
 ) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
@@ -91,13 +96,13 @@ export const createWebinarEmailTemplate = (
             <strong>${new Date(date).toLocaleDateString('fr-FR', {
               day: 'numeric',
               month: 'long',
-              year: 'numeric'
+              year: 'numeric',
             })}</strong> - 
             <a href="${googleLink}" target="_blank" style="color: #E97451; text-decoration: underline;">
               Ajouter à Google Calendar
             </a>
           </li>
-        `
+        `,
           )
           .join('')}
       </ul>
@@ -122,7 +127,12 @@ export const createWebinarEmailTemplate = (
 `
 
 // Helper function to create group coaching email template
-export const createGroupCoachingEmailTemplate = (email: string, finalPrice: number, currency: string, discountApplied: number) => `
+export const createGroupCoachingEmailTemplate = (
+  email: string,
+  finalPrice: number,
+  currency: string,
+  discountApplied: number,
+) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <img src="https://coeur-a-corps.org/images/logo.png" 
            alt="Anne Yvonne Relations" 

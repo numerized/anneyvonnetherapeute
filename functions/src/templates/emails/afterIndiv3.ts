@@ -1,11 +1,12 @@
-import { EmailTemplate } from '../types';
-import { baseTemplate, createButton } from '../base';
+import { EmailTemplate } from '../types'
+import { baseTemplate, createButton } from '../base'
 
 export const afterIndiv3Email: EmailTemplate = {
   subject: 'Suite à votre séance individuelle',
   triggerType: 'afterSession',
   delayDays: 1,
-  getHtml: (data) => baseTemplate(`
+  getHtml: (data) =>
+    baseTemplate(`
     <h2 style="color: #E8927C; margin-bottom: 20px;">Bonjour ${data.name},</h2>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
@@ -13,5 +14,5 @@ export const afterIndiv3Email: EmailTemplate = {
     </p>
 
     ${data.cycle2Url ? createButton(data.cycle2Url, 'Accéder au formulaire') : ''}
-  `)
-};
+  `),
+}

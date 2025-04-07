@@ -70,6 +70,6 @@ export default defineConfig({
   ],
   cors: {
     allowedOrigins: ['https://www.coeur-a-corps.org', 'http://localhost:3000'],
-    allowCredentials: true
-  }
+    allowCredentials: true,
+  },
 })

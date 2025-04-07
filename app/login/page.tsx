@@ -1,19 +1,20 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
       const response = await fetch('/api/login', {
@@ -22,29 +23,29 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
+        throw new Error(data.error || 'Something went wrong')
       }
 
       // Save email for later verification
-      window.localStorage.setItem('emailForSignIn', email);
+      window.localStorage.setItem('emailForSignIn', email)
 
       // Show success message
-      toast.success('Lien magique envoyé ! Vérifiez votre email.');
-      
+      toast.success('Lien magique envoyé ! Vérifiez votre email.')
+
       // Optional: Redirect to a confirmation page
-      router.push('/login/check-email');
+      router.push('/login/check-email')
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Échec de l\'envoi du lien magique. Veuillez réessayer.');
+      console.error('Login error:', error)
+      toast.error("Échec de l'envoi du lien magique. Veuillez réessayer.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="relative min-h-screen grid place-items-center bg-primary-forest">
@@ -54,9 +55,11 @@ export default function LoginPage() {
             Connexion
           </h2>
           <p className="mt-2 text-primary-cream/80">
-            Pour accéder à votre espace personnel, entrez votre adresse email ci-dessous.
+            Pour accéder à votre espace personnel, entrez votre adresse email
+            ci-dessous.
             <br />
-            Nous vous enverrons un lien sécurisé par email pour vous connecter sans mot de passe.
+            Nous vous enverrons un lien sécurisé par email pour vous connecter
+            sans mot de passe.
           </p>
         </div>
 
@@ -89,5 +92,5 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
-  );
+  )
 }

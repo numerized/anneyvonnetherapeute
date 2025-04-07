@@ -1,77 +1,84 @@
-'use client';
+'use client'
 
-import { Suspense, useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { app } from '@/lib/firebase';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from 'firebase/firestore'
+import { Loader2 } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { app } from '@/lib/firebase'
 
 function InvitationContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams?.get('token') ?? '';
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [invitation, setInvitation] = useState<any>(null);
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams?.get('token') ?? ''
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [invitation, setInvitation] = useState<any>(null)
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const validateInvitation = async () => {
       if (!token) {
-        setError('Token d\'invitation manquant');
-        setLoading(false);
-        return;
+        setError("Token d'invitation manquant")
+        setLoading(false)
+        return
       }
 
       try {
-        const db = getFirestore(app);
-        const invitationsRef = collection(db, 'invitations');
-        const q = query(invitationsRef, where('token', '==', token));
-        const querySnapshot = await getDocs(q);
+        const db = getFirestore(app)
+        const invitationsRef = collection(db, 'invitations')
+        const q = query(invitationsRef, where('token', '==', token))
+        const querySnapshot = await getDocs(q)
 
         if (querySnapshot.empty) {
-          setError('Token d\'invitation invalide');
-          setLoading(false);
-          return;
+          setError("Token d'invitation invalide")
+          setLoading(false)
+          return
         }
 
-        const invitationDoc = querySnapshot.docs[0];
-        const invitationData = invitationDoc.data();
+        const invitationDoc = querySnapshot.docs[0]
+        const invitationData = invitationDoc.data()
 
         // Check if invitation is expired
         if (invitationData.expiresAt.toDate() < new Date()) {
-          setError('Cette invitation a expiré');
-          setLoading(false);
-          return;
+          setError('Cette invitation a expiré')
+          setLoading(false)
+          return
         }
 
         // Check if invitation is already used
         if (invitationData.status === 'completed') {
-          setError('Cette invitation a déjà été utilisée');
-          setLoading(false);
-          return;
+          setError('Cette invitation a déjà été utilisée')
+          setLoading(false)
+          return
         }
 
-        setInvitation({ id: invitationDoc.id, ...invitationData });
-        setEmail(invitationData.partnerEmail);
-        setLoading(false);
+        setInvitation({ id: invitationDoc.id, ...invitationData })
+        setEmail(invitationData.partnerEmail)
+        setLoading(false)
       } catch (error) {
-        console.error('Error validating invitation:', error);
-        setError('Erreur lors de la validation de l\'invitation');
-        setLoading(false);
+        console.error('Error validating invitation:', error)
+        setError("Erreur lors de la validation de l'invitation")
+        setLoading(false)
       }
-    };
+    }
 
-    validateInvitation();
-  }, [token]);
+    validateInvitation()
+  }, [token])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
       const response = await fetch('/api/login', {
@@ -79,38 +86,38 @@ function InvitationContent() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           email,
           invitationToken: token,
           invitationId: invitation.id,
-          inviterId: invitation.inviterId
+          inviterId: invitation.inviterId,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
+        throw new Error(data.error || 'Something went wrong')
       }
 
       // Save email for later verification
-      window.localStorage.setItem('emailForSignIn', email);
-      window.localStorage.setItem('invitationToken', token);
-      window.localStorage.setItem('invitationId', invitation.id);
-      window.localStorage.setItem('inviterId', invitation.inviterId);
+      window.localStorage.setItem('emailForSignIn', email)
+      window.localStorage.setItem('invitationToken', token)
+      window.localStorage.setItem('invitationId', invitation.id)
+      window.localStorage.setItem('inviterId', invitation.inviterId)
 
       // Show success message
-      toast.success('Lien magique envoyé ! Vérifiez votre email.');
-      
+      toast.success('Lien magique envoyé ! Vérifiez votre email.')
+
       // Redirect to check email page
-      router.push('/login/check-email');
+      router.push('/login/check-email')
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Échec de l\'envoi du lien magique. Veuillez réessayer.');
+      console.error('Login error:', error)
+      toast.error("Échec de l'envoi du lien magique. Veuillez réessayer.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -119,7 +126,7 @@ function InvitationContent() {
           <Loader2 className="w-6 h-6 animate-spin text-primary-cream/80" />
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -136,7 +143,7 @@ function InvitationContent() {
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -147,9 +154,11 @@ function InvitationContent() {
             Rejoignez votre partenaire
           </h2>
           <p className="mt-2 text-primary-cream/80">
-            Pour accéder à votre espace personnel, confirmez votre email ci-dessous.
+            Pour accéder à votre espace personnel, confirmez votre email
+            ci-dessous.
             <br />
-            Nous vous enverrons un lien sécurisé par email pour vous connecter sans mot de passe.
+            Nous vous enverrons un lien sécurisé par email pour vous connecter
+            sans mot de passe.
           </p>
         </div>
 
@@ -182,17 +191,19 @@ function InvitationContent() {
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 export default function InvitationPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-primary-forest flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-primary-forest flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-coral"></div>
+        </div>
+      }
+    >
       <InvitationContent />
     </Suspense>
-  );
+  )
 }

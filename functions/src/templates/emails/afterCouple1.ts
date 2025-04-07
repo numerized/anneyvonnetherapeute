@@ -1,11 +1,12 @@
-import { EmailTemplate } from '../types';
-import { baseTemplate, createButton } from '../base';
+import { EmailTemplate } from '../types'
+import { baseTemplate, createButton } from '../base'
 
 export const afterCouple1Email: EmailTemplate = {
   subject: 'Suite de notre première séance – instructions et préparation',
   triggerType: 'afterSession',
   delayDays: 1,
-  getHtml: (data) => baseTemplate(`
+  getHtml: (data) =>
+    baseTemplate(`
     <h2 style="color: #E8927C; margin-bottom: 20px;">Madame, Monsieur,</h2>
 
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
@@ -45,5 +46,5 @@ export const afterCouple1Email: EmailTemplate = {
     <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
       Je reste disponible pour toute question.
     </p>
-  `)
-};
+  `),
+}

@@ -21,7 +21,8 @@ interface TherapyPricingProps {
 
 export function TherapyPricing({ className }: TherapyPricingProps) {
   const [showPromoModal, setShowPromoModal] = useState(false)
-  const [showIndividualPromoModal, setShowIndividualPromoModal] = useState(false)
+  const [showIndividualPromoModal, setShowIndividualPromoModal] =
+    useState(false)
   const [showVitPromoModal, setShowVitPromoModal] = useState(false)
 
   const handleShowPromo = (modalType: string) => {
@@ -56,16 +57,29 @@ export function TherapyPricing({ className }: TherapyPricingProps) {
             <CoupleTherapyCard onShowPromo={() => handleShowPromo('promo')} />
             <SexologyTherapyCard onShowPromo={() => handleShowPromo('promo')} />
             <MenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
-            <WomenTherapyCard onShowPromo={() => handleShowPromo('individual')} />
-            <IndividualTherapyCard onShowPromo={() => handleShowPromo('individual')} />
+            <WomenTherapyCard
+              onShowPromo={() => handleShowPromo('individual')}
+            />
+            <IndividualTherapyCard
+              onShowPromo={() => handleShowPromo('individual')}
+            />
             <VitTherapyCard onShowPromo={() => handleShowPromo('vit')} />
           </div>
         </div>
       </section>
 
-      <PromoModal isOpen={showPromoModal} onClose={() => setShowPromoModal(false)} />
-      <IndividualPromoModal isOpen={showIndividualPromoModal} onClose={() => setShowIndividualPromoModal(false)} />
-      <VitPromoModal isOpen={showVitPromoModal} onClose={() => setShowVitPromoModal(false)} />
+      <PromoModal
+        isOpen={showPromoModal}
+        onClose={() => setShowPromoModal(false)}
+      />
+      <IndividualPromoModal
+        isOpen={showIndividualPromoModal}
+        onClose={() => setShowIndividualPromoModal(false)}
+      />
+      <VitPromoModal
+        isOpen={showVitPromoModal}
+        onClose={() => setShowVitPromoModal(false)}
+      />
     </>
   )
 }

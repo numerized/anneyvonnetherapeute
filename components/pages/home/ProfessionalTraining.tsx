@@ -1,6 +1,6 @@
 'use client'
 
-import { Award, Calendar,GraduationCap, Users } from 'lucide-react'
+import { Award, Calendar, GraduationCap, Users } from 'lucide-react'
 
 interface ProfessionalTrainingProps {
   className?: string
@@ -18,7 +18,8 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
             Formation pour Thérapeutes
           </h2>
           <p className="text-xl text-primary-cream/80 max-w-2xl mx-auto">
-            Enrichissez votre pratique avec nos méthodes thérapeutiques innovantes
+            Enrichissez votre pratique avec nos méthodes thérapeutiques
+            innovantes
           </p>
         </div>
 
@@ -28,9 +29,12 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
               <div className="flex items-start gap-4">
                 <GraduationCap className="text-primary-coral mt-1" size={24} />
                 <div>
-                  <h3 className="text-primary-coral font-bold mb-2">Formation Approfondie</h3>
+                  <h3 className="text-primary-coral font-bold mb-2">
+                    Formation Approfondie
+                  </h3>
                   <p className="text-primary-cream/90">
-                    Maîtrisez les techniques de la thérapie Cœurs à Corps et développez une approche holistique unique.
+                    Maîtrisez les techniques de la thérapie Cœurs à Corps et
+                    développez une approche holistique unique.
                   </p>
                 </div>
               </div>
@@ -38,9 +42,12 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
               <div className="flex items-start gap-4">
                 <Users className="text-primary-coral mt-1" size={24} />
                 <div>
-                  <h3 className="text-primary-coral font-bold mb-2">Supervision de Groupe</h3>
+                  <h3 className="text-primary-coral font-bold mb-2">
+                    Supervision de Groupe
+                  </h3>
                   <p className="text-primary-cream/90">
-                    Échangez avec vos pairs et bénéficiez d'un accompagnement personnalisé dans votre pratique.
+                    Échangez avec vos pairs et bénéficiez d'un accompagnement
+                    personnalisé dans votre pratique.
                   </p>
                 </div>
               </div>
@@ -48,9 +55,12 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
               <div className="flex items-start gap-4">
                 <Award className="text-primary-coral mt-1" size={24} />
                 <div>
-                  <h3 className="text-primary-coral font-bold mb-2">Certification Officielle</h3>
+                  <h3 className="text-primary-coral font-bold mb-2">
+                    Certification Officielle
+                  </h3>
                   <p className="text-primary-cream/90">
-                    Obtenez une certification reconnue et rejoignez notre réseau de thérapeutes qualifiés.
+                    Obtenez une certification reconnue et rejoignez notre réseau
+                    de thérapeutes qualifiés.
                   </p>
                 </div>
               </div>
@@ -58,9 +68,12 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
               <div className="flex items-start gap-4">
                 <Calendar className="text-primary-coral mt-1" size={24} />
                 <div>
-                  <h3 className="text-primary-coral font-bold mb-2">Formations Flexibles</h3>
+                  <h3 className="text-primary-coral font-bold mb-2">
+                    Formations Flexibles
+                  </h3>
                   <p className="text-primary-cream/90">
-                    Des programmes adaptés à votre emploi du temps, en présentiel ou en ligne.
+                    Des programmes adaptés à votre emploi du temps, en
+                    présentiel ou en ligne.
                   </p>
                 </div>
               </div>
@@ -74,8 +87,8 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
           </div>
 
           <div className="relative h-[600px]">
-            <div 
-              className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/50 via-50% to-primary-forest/20 z-10 rounded-[24px]" 
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/50 via-50% to-primary-forest/20 z-10 rounded-[24px]"
               aria-hidden="true"
             />
             <img
@@ -86,7 +99,8 @@ export function ProfessionalTraining({ className }: ProfessionalTrainingProps) {
             <div className="absolute bottom-8 left-8 right-8 text-primary-cream z-20">
               <div className="bg-primary-dark/80 p-6 rounded-[24px]">
                 <p className="text-xl mb-4">
-                  "Transmettez l'art de la thérapie relationnelle et faites partie du changement."
+                  "Transmettez l'art de la thérapie relationnelle et faites
+                  partie du changement."
                 </p>
                 <p className="text-primary-teal font-handwriting text-lg">
                   Anne Yvonne Racine

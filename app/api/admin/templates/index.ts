@@ -1,2 +1,2 @@
-import { emailTemplates } from '@/functions/src/templates/emails';
-export default emailTemplates;
+import { emailTemplates } from '@/functions/src/templates/emails'
+export default emailTemplates

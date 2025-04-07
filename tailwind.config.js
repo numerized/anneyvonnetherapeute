@@ -26,7 +26,7 @@ module.exports = {
           dark: '#2A3A3A',
           forest: '#395756',
           teal: '#7BA7BC',
-          sky: '#89C5CC'
+          sky: '#89C5CC',
         },
       },
     },

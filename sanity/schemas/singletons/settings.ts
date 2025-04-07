@@ -21,7 +21,8 @@ export default defineType({
     defineField({
       name: 'notificationMessage',
       title: 'Message de notification',
-      description: 'Message affiché en haut du site (laissez vide pour masquer)',
+      description:
+        'Message affiché en haut du site (laissez vide pour masquer)',
       type: 'string',
     }),
     defineField({
@@ -56,7 +57,7 @@ export default defineType({
               title: 'Title',
               name: 'title',
               type: 'string',
-              validation: Rule => Rule.required()
+              validation: (Rule) => Rule.required(),
             }),
             defineField({
               title: 'Style',
@@ -66,12 +67,12 @@ export default defineType({
                 list: [
                   { title: 'Simple Text', value: 'text' },
                   { title: 'Button Plain', value: 'button-plain' },
-                  { title: 'Button Clear', value: 'button-clear' }
+                  { title: 'Button Clear', value: 'button-clear' },
                 ],
-                layout: 'radio'
+                layout: 'radio',
               },
-              validation: Rule => Rule.required(),
-              initialValue: 'text'
+              validation: (Rule) => Rule.required(),
+              initialValue: 'text',
             }),
             defineField({
               title: 'Link Type',
@@ -80,57 +81,60 @@ export default defineType({
               options: {
                 list: [
                   { title: 'Internal Page', value: 'reference' },
-                  { title: 'Anchor Scroll', value: 'anchor' }
+                  { title: 'Anchor Scroll', value: 'anchor' },
                 ],
-                layout: 'radio'
+                layout: 'radio',
               },
-              validation: Rule => Rule.required()
+              validation: (Rule) => Rule.required(),
             }),
             defineField({
               title: 'Page Reference',
               name: 'reference',
               type: 'reference',
-              to: [
-                { type: 'home' },
-                { type: 'page' },
-                { type: 'project' }
-              ],
-              hidden: ({ parent }: { parent: MenuItem }) => parent?.linkType !== 'reference'
+              to: [{ type: 'home' }, { type: 'page' }, { type: 'project' }],
+              hidden: ({ parent }: { parent: MenuItem }) =>
+                parent?.linkType !== 'reference',
             }),
             defineField({
               title: 'Anchor ID',
               name: 'anchor',
               type: 'string',
-              description: 'The ID of the section to scroll to (without the # symbol)',
-              hidden: ({ parent }: { parent: MenuItem }) => parent?.linkType !== 'anchor',
-              validation: Rule => Rule.custom((anchor: string | undefined, context: ValidationContext) => {
-                const parent = context.parent as MenuItem
-                if (parent?.linkType === 'anchor' && !anchor) {
-                  return 'Anchor ID is required for anchor links'
-                }
-                return true
-              })
-            })
+              description:
+                'The ID of the section to scroll to (without the # symbol)',
+              hidden: ({ parent }: { parent: MenuItem }) =>
+                parent?.linkType !== 'anchor',
+              validation: (Rule) =>
+                Rule.custom(
+                  (anchor: string | undefined, context: ValidationContext) => {
+                    const parent = context.parent as MenuItem
+                    if (parent?.linkType === 'anchor' && !anchor) {
+                      return 'Anchor ID is required for anchor links'
+                    }
+                    return true
+                  },
+                ),
+            }),
           ],
           preview: {
             select: {
               title: 'title',
               linkType: 'linkType',
               reference: 'reference.title',
-              anchor: 'anchor'
+              anchor: 'anchor',
             },
             prepare(selection: MenuItem & { reference?: string }) {
               const { title, linkType, reference, anchor } = selection
               return {
                 title: title,
-                subtitle: linkType === 'reference' 
-                  ? `Page: ${reference || 'Not set'}`
-                  : `Scroll to: #${anchor || 'Not set'}`
+                subtitle:
+                  linkType === 'reference'
+                    ? `Page: ${reference || 'Not set'}`
+                    : `Scroll to: #${anchor || 'Not set'}`,
               }
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     }),
     defineField({
       name: 'footer',

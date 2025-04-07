@@ -7,13 +7,16 @@ interface QuestionnairePage1Props {
   onBack: () => void
 }
 
-export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) {
+export function QuestionnairePage1({
+  onNext,
+  onBack,
+}: QuestionnairePage1Props) {
   const [date] = useState(() => {
     const today = new Date()
     return today.toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   })
   const [whyImportant, setWhyImportant] = useState('')
@@ -36,15 +39,18 @@ export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) 
 
           <div className="mb-8">
             <p className="text-gray-700 mb-6">
-              L'estime de soi est la pierre angulaire de toutes les relations saines.
-              Elle nous permet de nous respecter, de poser des limites et d'attirer des interactions
-              épanouissantes. Dans ce carnet, vous explorerez vos forces, vos besoins et vos
-              objectifs pour construire une vie amoureuse alignée avec vos valeurs.
+              L'estime de soi est la pierre angulaire de toutes les relations
+              saines. Elle nous permet de nous respecter, de poser des limites
+              et d'attirer des interactions épanouissantes. Dans ce carnet, vous
+              explorerez vos forces, vos besoins et vos objectifs pour
+              construire une vie amoureuse alignée avec vos valeurs.
             </p>
           </div>
 
           <div className="mb-12 question-group">
-            <h3 className="text-lg font-medium text-gray-700 italic mb-6">Pourquoi l'estime de soi est essentielle en amour</h3>
+            <h3 className="text-lg font-medium text-gray-700 italic mb-6">
+              Pourquoi l'estime de soi est essentielle en amour
+            </h3>
             <textarea
               value={whyImportant}
               onChange={(e) => setWhyImportant(e.target.value)}
@@ -54,7 +60,9 @@ export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) 
           </div>
 
           <div className="mb-12 question-group">
-            <h3 className="text-lg font-medium text-gray-700 italic mb-6">Ma propre définition de l'estime de soi</h3>
+            <h3 className="text-lg font-medium text-gray-700 italic mb-6">
+              Ma propre définition de l'estime de soi
+            </h3>
             <textarea
               value={definition}
               onChange={(e) => setDefinition(e.target.value)}
@@ -82,8 +90,8 @@ export function QuestionnairePage1({ onNext, onBack }: QuestionnairePage1Props) 
         </div>
 
         <blockquote className="text-primary-coral italic text-sm mt-8 print:hidden">
-          "Vous seul(e) détenez le pouvoir de définir votre valeur.
-          Ne laissez jamais quelqu'un d'autre écrire votre histoire."
+          "Vous seul(e) détenez le pouvoir de définir votre valeur. Ne laissez
+          jamais quelqu'un d'autre écrire votre histoire."
         </blockquote>
       </div>
     </div>

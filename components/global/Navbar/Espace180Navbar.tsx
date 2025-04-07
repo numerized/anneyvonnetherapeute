@@ -12,6 +12,7 @@ import { EmailForm } from '@/components/shared/EmailForm'
 import { app } from '@/lib/firebase'
 import { urlFor } from '@/sanity/lib/image'
 import { SettingsPayload } from '@/types'
+
 import NotificationBanner from '../NotificationBanner/NotificationBanner'
 
 interface Espace180NavbarProps {
@@ -21,54 +22,65 @@ interface Espace180NavbarProps {
 export default function Espace180Navbar({ data }: Espace180NavbarProps) {
   const pathname = usePathname()
   const isProchainement = pathname === '/prochainement'
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAppointmentModal, setShowAppointmentModal] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined)
 
   const logoAsset = data?.logo?.asset
-  const logoUrl = logoAsset?.path ? `https://cdn.sanity.io/${logoAsset.path}` : null
+  const logoUrl = logoAsset?.path
+    ? `https://cdn.sanity.io/${logoAsset.path}`
+    : null
 
   useEffect(() => {
-    const auth = getAuth(app);
-    
-    // Set initial auth state
-    setIsLoggedIn(!!auth.currentUser);
-    
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-    });
+    const auth = getAuth(app)
 
-    return () => unsubscribe();
-  }, []);
+    // Set initial auth state
+    setIsLoggedIn(!!auth.currentUser)
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user)
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   // Don't render anything until we know the auth state
   if (isLoggedIn === undefined) {
-    return null;
+    return null
   }
 
   return (
     <>
       {/* Desktop Header */}
-      <header className="relative bg-primary-dark hidden md:block" role="banner">
+      <header
+        className="relative bg-primary-dark hidden md:block"
+        role="banner"
+      >
         {isProchainement ? (
           <NotificationBanner message="Lancement en 2025" />
-        ) : data.notificationMessage && (
-          <NotificationBanner message={data.notificationMessage} />
+        ) : (
+          data.notificationMessage && (
+            <NotificationBanner message={data.notificationMessage} />
+          )
         )}
         <div className="max-w-7xl mx-auto px-6">
-          <nav 
-            className="relative py-4" 
-            role="navigation" 
+          <nav
+            className="relative py-4"
+            role="navigation"
             aria-label="Main navigation"
           >
             <div className="flex justify-end items-center relative">
               {logoUrl && (
                 <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
                   <Link href="/" className="flex-shrink-0">
-                    <Image 
+                    <Image
                       src={logoUrl}
-                      alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+                      alt={
+                        data.logo?.alt
+                          ?.replace(/[\u200B-\u200D\uFEFF]/g, '')
+                          .trim() || 'Logo'
+                      }
                       className="h-[172px] w-auto"
                       width={500}
                       height={500}
@@ -90,24 +102,32 @@ export default function Espace180Navbar({ data }: Espace180NavbarProps) {
       <header className="relative bg-primary-dark md:hidden" role="banner">
         {isProchainement ? (
           <NotificationBanner message="Lancement en 2025" />
-        ) : data.notificationMessage && (
-          <NotificationBanner message={data.notificationMessage} />
+        ) : (
+          data.notificationMessage && (
+            <NotificationBanner message={data.notificationMessage} />
+          )
         )}
         <div className="px-4">
           <nav className="flex justify-between items-center py-4">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               {logoUrl ? (
-                <Image 
+                <Image
                   src={logoUrl}
-                  alt={data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() || "Logo"}
+                  alt={
+                    data.logo?.alt
+                      ?.replace(/[\u200B-\u200D\uFEFF]/g, '')
+                      .trim() || 'Logo'
+                  }
                   className="h-12 w-auto"
                   width={200}
                   height={200}
                   priority
                 />
               ) : (
-                <span className="text-white font-bold text-xl">Anne Yvonne</span>
+                <span className="text-white font-bold text-xl">
+                  Anne Yvonne
+                </span>
               )}
             </Link>
 

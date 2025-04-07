@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { functions } from '@/lib/firebase'
+
 import { Modal } from '@/components/shared/Modal'
+import { functions } from '@/lib/firebase'
 
 interface EmailFormProps {
   onClose?: () => void
@@ -13,7 +14,9 @@ export function EmailForm({ onClose }: EmailFormProps) {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<
+    'idle' | 'success' | 'error'
+  >('idle')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,18 +24,21 @@ export function EmailForm({ onClose }: EmailFormProps) {
     setSubmitStatus('idle')
 
     try {
-      const response = await fetch('https://us-central1-coeurs-a-corps.cloudfunctions.net/sendContactEmail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+      const response = await fetch(
+        'https://us-central1-coeurs-a-corps.cloudfunctions.net/sendContactEmail',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            message,
+          }),
         },
-        body: JSON.stringify({
-          name,
-          email,
-          message
-        })
-      })
+      )
 
       if (!response.ok) {
         const error = await response.json()
@@ -109,7 +115,9 @@ export function EmailForm({ onClose }: EmailFormProps) {
           </button>
         </div>
         {submitStatus === 'success' && (
-          <p className="text-sm text-primary-teal">Message envoyé avec succès!</p>
+          <p className="text-sm text-primary-teal">
+            Message envoyé avec succès!
+          </p>
         )}
         {submitStatus === 'error' && (
           <p className="text-sm text-primary-rust">

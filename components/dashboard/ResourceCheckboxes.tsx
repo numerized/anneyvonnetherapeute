@@ -1,24 +1,25 @@
-import React from 'react';
-import { Square } from 'lucide-react';
-import { TherapyResource } from '@/functions/src/templates/types';
+import { Square } from 'lucide-react'
+import React from 'react'
+
+import { TherapyResource } from '@/functions/src/templates/types'
 
 interface ResourceCheckboxesProps {
-  resources: TherapyResource[];
+  resources: TherapyResource[]
 }
 
 export function ResourceCheckboxes({ resources }: ResourceCheckboxesProps) {
   if (!resources || resources.length === 0) {
-    return null;
+    return null
   }
 
   // Group resources by type for better organization
-  const resourcesByType: Record<string, TherapyResource[]> = {};
-  resources.forEach(resource => {
+  const resourcesByType: Record<string, TherapyResource[]> = {}
+  resources.forEach((resource) => {
     if (!resourcesByType[resource.type]) {
-      resourcesByType[resource.type] = [];
+      resourcesByType[resource.type] = []
     }
-    resourcesByType[resource.type].push(resource);
-  });
+    resourcesByType[resource.type].push(resource)
+  })
 
   // Map of resource types to display names
   const typeLabels: Record<string, string> = {
@@ -26,8 +27,8 @@ export function ResourceCheckboxes({ resources }: ResourceCheckboxesProps) {
     form: 'Formulaires',
     capsule: 'Capsules',
     audio: 'Audio',
-    reflection: 'Réflexions'
-  };
+    reflection: 'Réflexions',
+  }
 
   return (
     <div className="mt-2 ml-11 space-y-3">
@@ -42,11 +43,13 @@ export function ResourceCheckboxes({ resources }: ResourceCheckboxesProps) {
                 {/* Empty checkbox - not interactive */}
                 <Square className="h-3 w-3 text-transparent" />
               </div>
-              <span className="text-sm text-primary-cream/70">{resource.title}</span>
+              <span className="text-sm text-primary-cream/70">
+                {resource.title}
+              </span>
             </div>
           ))}
         </div>
       ))}
     </div>
-  );
+  )
 }

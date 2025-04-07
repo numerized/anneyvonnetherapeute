@@ -9,8 +9,8 @@ export const baseTemplate = (content: string): string => {
       </div>
       ${content}
     </div>
-  `;
-};
+  `
+}
 
 export const createButton = (url: string, text: string): string => {
   return `
@@ -18,5 +18,5 @@ export const createButton = (url: string, text: string): string => {
        style="display: inline-block; background-color: #E8927C; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold;">
       ${text}
     </a>
-  `;
-};
+  `
+}

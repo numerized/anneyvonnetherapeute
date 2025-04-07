@@ -1,0 +1,241 @@
+{
+  "title": "THÉRAPIES EXPLORATION - COEUR À CORPS",
+  "commonBenefits": [
+    "SMS WhatsApp chaque semaine : Vous posez une question, vous obtenez une réponse audio personnalisée.",
+    "Accès gratuit à la plateforme pendant 2 ans : Accédez à des ressources exclusives et des événements en ligne pour soutenir votre transformation.",
+    "Délocalisation des thérapies : Profitez de l'accompagnement, peu importe où vous vous trouvez, avec des sessions délocalisées accessibles partout",
+    "Accès pendant 2 ans à l'espace 180 Conversion d'Amour (capsules, lives, interactions)",
+    "Bénéficiez d'une première SÉANCE GRATUITE de 20 minutes"
+  ],
+  "therapyTypes": [
+    {
+      "id": "couple",
+      "type": "therapy",
+      "title": "THÉRAPIE RELATIONNELLE DE COUPLE",
+      "subtitle": "de cœur et de corps",
+      "category": "THERAPIES DE LA RELATION AMOUREUSE ET SEXUELLE",
+      "headline": "Une traversée au cœur de votre relation",
+      "description": "L'aventure à deux n'est jamais un long fleuve tranquille. Entre courants souterrains et vents contraires, chaque couple traverse des zones d'ombre et de lumière. Cette exploration vous invite à mettre en lumière vos fonctionnements, à comprendre les obstacles invisibles et à redéfinir votre cap, ensemble.",
+      "themes": [
+        {
+          "title": "Cartographier les schémas relationnels",
+          "description": "Décrypter les dynamiques répétitives et leur impact sur votre couple."
+        },
+        {
+          "title": "Naviguer les émotions et les attentes",
+          "description": "Apprendre à communiquer sans heurter ni s'effacer."
+        },
+        {
+          "title": "Explorer l'intimité et le désir",
+          "description": "Redécouvrir votre complicité et nourrir la connexion."
+        }
+      ],
+      "proverbs": [
+        "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble.",
+        "Aimer, ce n'est pas se regarder l'un l'autre, c'est regarder ensemble dans la même direction."
+      ],
+      "mainOffering": {
+        "title": "THERAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
+        "tagline": "Harmonisez votre relation à deux grâce à une approche innovante et transformative",
+        "quote": "On ne change pas une relation sans d'abord transformer ceux qui la vivent",
+        "process": {
+          "title": "Processus complet",
+          "details": [
+            "8 séances : 2 séances de couple et 6 séances individuelles",
+            "Bilans et introspections avant et après chaque séance."
+          ]
+        },
+        "uniqueBenefits": [
+          "Accompagnement et support avec des modules spécifiques à thèmes"
+        ],
+        "motto": "Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !",
+        "idealFor": "Parcours idéal pour les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre.",
+        "alternativeTaglines": [
+          "Un chemin vers l'harmonie – Pour les couples qui souhaitent mieux s'entendre, se comprendre et retrouver un équilibre profond.",
+          "Réinventer le dialogue – Un parcours dédié aux couples en quête d'harmonie et d'une relation plus fluide et authentique.",
+          "De la compréhension à la connexion – Pour ceux qui veulent dépasser les incompréhensions et créer une relation plus apaisée et épanouissante.",
+          "Retrouver l'accord essentiel – Une exploration à deux pour mieux s'entendre, mieux se comprendre et renforcer le lien.",
+          "Harmoniser la relation – Une approche pour les couples désireux d'un échange plus profond et d'une complicité renouvelée."
+        ],
+        "details": {
+          "title": "VOTRE THÉRAPIE DE COUPLE",
+          "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
+          "schedule": "Mise en place d'un agenda fixe",
+          "sessionLength": "séances de 60' (individuelles) - 90'(couple)",
+          "price": 2250,
+          "inclusions": [
+            "un entretien préalable 20'",
+            "un audio \"à l'avenir\" de fin de cycle thérapie"
+          ]
+        }
+      },
+      "options": [
+        {
+          "id": "neurotribu",
+          "title": "Option NeuroTribu – Une thérapie adaptée aux profils neurodivers",
+          "headline": "Équilibre & Connexion : Thérapie de couple et individuelle pour profils neuroatypiques",
+          "description": "Certaines personnes pensent, ressentent, aiment et communiquent autrement. C'est pourquoi la thérapie NeuroTribu propose un cadre spécifiquement conçu pour les personnes neuroatypiques (TSA, HPI, TDAH, hypersensibilité, dys...).",
+          "sections": [
+            {
+              "title": "Pourquoi une thérapie spécifique ?",
+              "content": "Les thérapies classiques ne prennent pas toujours en compte les différences de perception, de régulation émotionnelle, ou les besoins sensoriels spécifiques. Un accompagnement inadapté peut accentuer frustration et incompréhension."
+            },
+            {
+              "title": "Cette approche propose au contraire de :",
+              "bulletPoints": [
+                "valoriser les forces du couple ou de l'individu,",
+                "accueillir les singularités sans les réduire,",
+                "construire une dynamique relationnelle propre à chacun."
+              ]
+            }
+          ],
+          "commitments": [
+            "Un cadre thérapeutique pensé pour les profils neuroatypiques",
+            "Une posture respectueuse et non normative",
+            "Des outils concrets pour restaurer une compréhension mutuelle et une intimité ajustée"
+          ],
+          "themes": [
+            "Comprendre les différences neurologiques et leur impact sur la relation",
+            "Adapter la communication pour éviter les malentendus",
+            "Gérer les attentes et besoins sensoriels spécifiques",
+            "Co-créer un modèle relationnel qui respecte le rythme et les repères de chacun",
+            "Aborder l'intimité sans pression, avec des clés de décodage et de coopération"
+          ],
+          "targetAudience": [
+            "Couples où l'un ou les deux partenaires sont neurodivers",
+            "Personnes individuelles cherchant un cadre thérapeutique plus ajusté à leur fonctionnement",
+            "Partenaires en quête d'un espace sécurisant pour se comprendre sans jugement"
+          ],
+          "availability": "Consultations disponibles en ligne ou en présentiel à partir de mars 2025",
+          "reservation": "Réservez avec l'option « Neurodivers » sur notre site",
+          "audio": "Audio de présentation disponible bientôt",
+          "pricing": "TARIF IDENTIQUES POUR LES THERAPIES NEUROTRIBU"
+        }
+      ],
+      "hasAudioPresentation": true
+    },
+    {
+      "id": "individual",
+      "type": "therapy",
+      "title": "THÉRAPIE RELATIONNELLE INDIVIDUELLE",
+      "subtitle": "Accords à corps",
+      "category": "THÉRAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
+      "headline": "Un voyage au cœur de votre paysage intime",
+      "description": "Se comprendre soi-même est la première étape pour créer des relations saines et authentiques. Cette exploration vous aide à identifier vos blessures, vos croyances et vos aspirations profondes, pour transformer ce qui entrave votre relation à vous-même et aux autres.",
+      "themes": [
+        {
+          "title": "Les empreintes du passé",
+          "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+        },
+        {
+          "title": "Clarifier ses désirs",
+          "description": "Différencier les attentes héritées des envies réelles."
+        },
+        {
+          "title": "Se repositionner",
+          "description": "Apprendre à poser ses limites et à affirmer ses besoins."
+        }
+      ],
+      "proverbs": [
+        "Le plus grand voyage est celui qui mène à soi.",
+        "Celui qui regarde dehors rêve, celui qui regarde dedans s'éveille."
+      ],
+      "mainOffering": {
+        "tagline": "RETROUVEZ L'HARMONIE EN VOUS GRÂCE À UNE APPROCHE SIMPLE ET RADICALE",
+        "quote": "Changer sa vie, c'est d'abord se reconnecter à son corps et à soi.",
+        "formulas": [
+          {
+            "id": "mini-compact",
+            "title": "MINI COMPACT",
+            "features": [
+              "Définissez votre thème thérapeutique",
+              "Check-list + notes préalables et objectifs - à faire",
+              "Agenda fixe 4 séances sur 1 mois"
+            ],
+            "duration": "1 mois - 4 x 60'",
+            "price": 720.0,
+            "priceDetails": "pour le programme complet"
+          },
+          {
+            "id": "compact",
+            "title": "COMPACT",
+            "features": [
+              "Définissez votre thème thérapeutique",
+              "Check-list + notes préalables et objectifs - à faire",
+              "Agenda fixe : 2 séances par mois"
+            ],
+            "duration": "3 mois - 12 x 60'",
+            "price": 2160.0,
+            "priceDetails": "(3 X 720) pour le programme complet"
+          },
+          {
+            "id": "relax",
+            "title": "RELAX",
+            "features": [
+              "Définissez votre thème thérapeutique",
+              "Check-list + notes préalables et objectifs - à faire",
+              "Agenda fixe : 1 séance par mois"
+            ],
+            "duration": "6 mois - 12 x 60'",
+            "price": 2160.0,
+            "priceDetails": "(3 X 720) pour le programme complet"
+          }
+        ],
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "uniqueBenefits": [
+          "Outil d'introspection et de transformation personnelle",
+          "Modules d'accompagnement personnalisés selon vos besoins"
+        ],
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      },
+      "hasAudioPresentation": true
+    },
+    {
+      "id": "vit-a-la-carte",
+      "type": "therapy",
+      "title": "THÉRAPIE VIT À LA CARTE - POUR LES AMOUREUX DE L'AMOUR",
+      "pricing": {
+        "couple": 260,
+        "individual": 210
+      },
+      "headline": "Une expédition sur-mesure pour les passionnés de la relation",
+      "description": "Pour ceux qui veulent explorer l'amour sous toutes ses formes, cette thérapie est un parcours adaptatif, en fonction de vos questionnements du moment. Elle permet de plonger dans les eaux profondes de la relation amoureuse et sexuelle, en toute liberté et selon votre rythme.",
+      "themes": [
+        {
+          "title": "Alchimie et désir",
+          "description": "Comment nourrir l'attirance et l'intensité dans le temps ?"
+        },
+        {
+          "title": "Relation consciente",
+          "description": "Construire des liens basés sur l'authenticité et la liberté."
+        },
+        {
+          "title": "Les territoires du plaisir",
+          "description": "Explorer sans tabou l'expression de ses envies et limites."
+        }
+      ],
+      "proverbs": [
+        "L'amour est une invitation à la découverte, et non une promesse de sécurité.",
+        "Aimer, c'est offrir à l'autre un espace pour se déployer."
+      ],
+      "mainOffering": {
+        "title": "VIT LUXUS INDIVIDUEL",
+        "features": [
+          "Séances à l'unité et à choix selon calendrier",
+          "Visuel et/ou Présentiel au Cabinet de Neuchâtel ou Can Xesc Therapie à Ibiza",
+          "Flexible pour Very Important Therapy"
+        ],
+        "price": 210.0,
+        "note": "par séance",
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "uniqueBenefits": [
+          "Approche entièrement personnalisée",
+          "Flexibilité dans le rythme des séances"
+        ],
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      },
+      "hasTest": true,
+      "hasAudioPresentation": true
+    }
+  ]
+}

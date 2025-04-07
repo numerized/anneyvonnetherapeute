@@ -1,19 +1,23 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
+
+import { Stats } from '@/components/shared/Stats'
+
+import PaymentSuccess from './PaymentSuccess'
 import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
 import { PurchaseTicket } from './PurchaseTicket'
-import PaymentSuccess from './PaymentSuccess'
-import { Stats } from '@/components/shared/Stats'
-import Link from 'next/link'
 
 export function ProchainementPage({ data, settings }: any) {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
-  const [selectedTicketType, setSelectedTicketType] = useState<'standard' | 'vip'>('standard')
+  const [selectedTicketType, setSelectedTicketType] = useState<
+    'standard' | 'vip'
+  >('standard')
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isPlaying2, setIsPlaying2] = useState(false)
@@ -67,7 +71,9 @@ export function ProchainementPage({ data, settings }: any) {
         videoRef.current.pause()
       } else {
         // Stop header video if playing and update its state
-        const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement
+        const headerVideo = document.querySelector(
+          'video[data-header-video]',
+        ) as HTMLVideoElement
         if (headerVideo) {
           headerVideo.pause()
           // Update header's play button state through a custom event
@@ -90,7 +96,9 @@ export function ProchainementPage({ data, settings }: any) {
         videoRef2.current.pause()
       } else {
         // Stop header video if playing and update its state
-        const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement
+        const headerVideo = document.querySelector(
+          'video[data-header-video]',
+        ) as HTMLVideoElement
         if (headerVideo) {
           headerVideo.pause()
           // Update header's play button state through a custom event
@@ -114,8 +122,8 @@ export function ProchainementPage({ data, settings }: any) {
   const statsItems = [
     { value: '95%', label: 'Taux de satisfaction client' },
     { value: '500+', label: 'Couples accompagnés' },
-    { value: '20', label: 'Années d\'expérience' },
-    { value: '85%', label: 'Amélioration des relations' }
+    { value: '20', label: "Années d'expérience" },
+    { value: '85%', label: 'Amélioration des relations' },
   ]
 
   return (
@@ -124,7 +132,11 @@ export function ProchainementPage({ data, settings }: any) {
         <PaymentSuccess />
       ) : (
         <>
-          <ProchainementHero hero={data.hero} data={settings} onShowPurchase={() => setShowPurchaseModal(true)} />
+          <ProchainementHero
+            hero={data.hero}
+            data={settings}
+            onShowPurchase={() => setShowPurchaseModal(true)}
+          />
 
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
@@ -140,8 +152,8 @@ export function ProchainementPage({ data, settings }: any) {
 
                   <div className="w-full md:w-1/3 flex justify-center">
                     <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
-                      <div className="text-primary-coral font-medium mb-2">LIVE: « Oser nos désirs »</div>
-                      <div className="text-2xl font-bold text-primary-cream mb-1">18 Mars</div>
+                      <div className="text-primary-coral font-medium mb-2">LIVE: Sur le divan d'Anne Yvonne</div>
+                      <div className="text-2xl font-bold text-primary-cream mb-1">15 Avril</div>
                       <div className="text-xl text-primary-cream">20h00</div>
                     </div>
                   </div>
@@ -151,7 +163,7 @@ export function ProchainementPage({ data, settings }: any) {
                       LE LIVE D'ANNE YVONNE SUR LE DIVAN
                     </h2>
                     <p className="text-primary-cream/80 mb-6">
-                      Le live mensuel sur le thème : « Oser nos désirs : amour, libido et renaissance du printemps ».
+                      Le live mensuel du mois d'avril - Accès à partir de 19h45
                     </p>
                     <div className="flex justify-end">
                       <Link
@@ -167,12 +179,15 @@ export function ProchainementPage({ data, settings }: any) {
 
               {/* Header */}
               <div className="text-center mb-12">
-                <br /><br />
+                <br />
+                <br />
                 <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
                   COACHING RELATIONNEL 7/7
                 </h2>
                 <div className="text-lg md:text-xl">
-                  <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>OFFRE EXCLUSIVE LIMITÉE</p>
+                  <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>
+                    OFFRE EXCLUSIVE LIMITÉE
+                  </p>
                 </div>
               </div>
 
@@ -189,15 +204,18 @@ export function ProchainementPage({ data, settings }: any) {
                     className="object-cover"
                     priority
                   />
-                  <div className="absolute inset-0 z-10" style={{
-                    background: 'linear-gradient(-55deg, transparent 25%, rgba(18, 44, 28, 0.2) 40%, rgba(18, 44, 28, 0.35) 70%)'
-                  }} />
+                  <div
+                    className="absolute inset-0 z-10"
+                    style={{
+                      background:
+                        'linear-gradient(-55deg, transparent 25%, rgba(18, 44, 28, 0.2) 40%, rgba(18, 44, 28, 0.35) 70%)',
+                    }}
+                  />
                 </div>
               )}
 
               {/* Event Details and Price Grid */}
               <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
-
                 <div className="flex-grow">
                   <div className="h-full flex items-center justify-center">
                     <div className="text-center">
@@ -206,7 +224,9 @@ export function ProchainementPage({ data, settings }: any) {
                           <div className="text-2xl line-through text-primary-cream/60">{`999 ${currency?.toUpperCase()}`}</div>
                           <div className="text-3xl text-primary-coral font-semibold">{`899 ${currency?.toUpperCase()}`}</div>
                           <div className="bg-primary-coral/20 rounded-lg py-2 px-6 inline-block">
-                            <span className="text-primary-coral font-semibold">COEUR180</span>
+                            <span className="text-primary-coral font-semibold">
+                              COEUR180
+                            </span>
                             <span className="ml-2">-10%</span>
                           </div>
                         </div>
@@ -214,13 +234,17 @@ export function ProchainementPage({ data, settings }: any) {
                         <div className="text-3xl">{`999 ${currency?.toUpperCase()}`}</div>
                       )}
                       <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
-                        L'argent ne doit pas être un obstacle, contactez-moi si vous faites faces à des difficultés financières, nous trouverons une solution !
+                        L'argent ne doit pas être un obstacle, contactez-moi si
+                        vous faites faces à des difficultés financières, nous
+                        trouverons une solution !
                       </p>
                       <button
                         onClick={() => setShowPurchaseModal(true)}
                         className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
                       >
-                        {hasDiscount ? 'Profiter de l\'offre -10%' : 'Réserver ma place'}
+                        {hasDiscount
+                          ? "Profiter de l'offre -10%"
+                          : 'Réserver ma place'}
                       </button>
                     </div>
                   </div>
@@ -247,7 +271,9 @@ export function ProchainementPage({ data, settings }: any) {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-primary-coral">♦</span>
-                        <span>TROIS SEANCES DE THÉRAPIE À LA CARTE VIA WHEREBY</span>
+                        <span>
+                          TROIS SEANCES DE THÉRAPIE À LA CARTE VIA WHEREBY
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -262,39 +288,64 @@ export function ProchainementPage({ data, settings }: any) {
 
                 <div className="space-y-6 text-primary-cream/80">
                   <p>
-                    Ce programme n'est pas une simple démarche d'accompagnement. C'est une exploration méthodique de vos dynamiques relationnelles,
-                    fondée sur une analyse fine et des outils concrets.
+                    Ce programme n'est pas une simple démarche d'accompagnement.
+                    C'est une exploration méthodique de vos dynamiques
+                    relationnelles, fondée sur une analyse fine et des outils
+                    concrets.
                   </p>
 
                   <p>
-                    Chaque interaction, chaque blocage, chaque incompréhension est porteur de sens. Ce coaching vous invite à déchiffrer
-                    ces messages sous-jacents et à comprendre ce qui, parfois, freine ou complexifie vos liens personnels et professionnels.
+                    Chaque interaction, chaque blocage, chaque incompréhension
+                    est porteur de sens. Ce coaching vous invite à déchiffrer
+                    ces messages sous-jacents et à comprendre ce qui, parfois,
+                    freine ou complexifie vos liens personnels et
+                    professionnels.
                   </p>
 
-                  <p className="font-medium mb-4">Les résultats ne résident pas dans des promesses vagues, mais dans une transformation palpable :</p>
+                  <p className="font-medium mb-4">
+                    Les résultats ne résident pas dans des promesses vagues,
+                    mais dans une transformation palpable :
+                  </p>
                   <ul className="space-y-4 text-primary-cream/80 m-0">
                     <li className="flex items-start gap-2">
                       <span className="text-primary-coral">♦</span>
-                      <span>Une lucidité accrue sur vos comportements et leurs impacts.</span>
+                      <span>
+                        Une lucidité accrue sur vos comportements et leurs
+                        impacts.
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary-coral">♦</span>
-                      <span>Une capacité renforcée à ajuster vos réponses émotionnelles et stratégiques.</span>
+                      <span>
+                        Une capacité renforcée à ajuster vos réponses
+                        émotionnelles et stratégiques.
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary-coral">♦</span>
-                      <span>La création de relations en phase avec vos valeurs, vos objectifs et votre vision.</span>
+                      <span>
+                        La création de relations en phase avec vos valeurs, vos
+                        objectifs et votre vision.
+                      </span>
                     </li>
                   </ul>
 
                   <p>
-                    En 1 mois, avec un accompagnement continu et des séances ciblées, vous développerez des compétences relationnelles tangibles,
-                    applicables immédiatement dans votre quotidien. Loin des approches stéréotypées, ce programme vous offre une structure
-                    rationnelle et rigoureuse pour atteindre une maîtrise de vos interactions.
+                    En 1 mois, avec un accompagnement continu et des séances
+                    ciblées, vous développerez des compétences relationnelles
+                    tangibles, applicables immédiatement dans votre quotidien.
+                    Loin des approches stéréotypées, ce programme vous offre une
+                    structure rationnelle et rigoureuse pour atteindre une
+                    maîtrise de vos interactions.
                   </p>
 
-                  <p className="italic font-medium" style={{ color: '#D9B70D' }}>
-                    Comprendre, c'est changer. Êtes-vous prêt à repenser vos relations à la lumière d'une démarche précise et impactante ?
+                  <p
+                    className="italic font-medium"
+                    style={{ color: '#D9B70D' }}
+                  >
+                    Comprendre, c'est changer. Êtes-vous prêt à repenser vos
+                    relations à la lumière d'une démarche précise et impactante
+                    ?
                   </p>
                 </div>
               </div>
@@ -336,22 +387,49 @@ export function ProchainementPage({ data, settings }: any) {
                   {/* Text Column */}
                   <div className="space-y-4 text-primary-cream">
                     <div>
-                      <h3 className="text-xl font-light text-primary-coral mb-1">UNE HISTOIRE D'ENGAGEMENT</h3>
-                      <p className="text-base mb-3">Anne Yvonne Racine et Cœurs à Corps, en quelques phrases.</p>
+                      <h3 className="text-xl font-light text-primary-coral mb-1">
+                        UNE HISTOIRE D'ENGAGEMENT
+                      </h3>
+                      <p className="text-base mb-3">
+                        Anne Yvonne Racine et Cœurs à Corps, en quelques
+                        phrases.
+                      </p>
                     </div>
 
                     <div className="space-y-3 text-primary-cream/90 text-sm">
                       <p>
-                        Depuis plus de 50 ans, ma vie et mon parcours professionnel m'ont guidée vers une quête essentielle pour moi, de mieux: comprendre, d'explorer profondément et de transformer la manière dont nous nous relions à nous-mêmes, aux autres et au monde.
+                        Depuis plus de 50 ans, ma vie et mon parcours
+                        professionnel m'ont guidée vers une quête essentielle
+                        pour moi, de mieux: comprendre, d'explorer profondément
+                        et de transformer la manière dont nous nous relions à
+                        nous-mêmes, aux autres et au monde.
                       </p>
                       <p>
-                        Avec Cœur à Corps, je rassemble tout ce que mes expériences de vie et mon engagement thérapeutique m'ont appris pour offrir une plateforme dédiée à la Nouvelle Relation. Une relation qui ne se limite plus à la simple réaction, mais qui s'ouvre à une conscience profonde des enjeux individuels et collectifs.
+                        Avec Cœur à Corps, je rassemble tout ce que mes
+                        expériences de vie et mon engagement thérapeutique m'ont
+                        appris pour offrir une plateforme dédiée à la Nouvelle
+                        Relation. Une relation qui ne se limite plus à la simple
+                        réaction, mais qui s'ouvre à une conscience profonde des
+                        enjeux individuels et collectifs.
                       </p>
                       <p>
-                        Cette démarche s'articule autour de trois axes fondamentaux : Amour, Désir et Esprit. Ensemble, ils nous invitent à retourner à la source de notre désir d'amour, à explorer ce qui nous anime vraiment et à grandir, à la fois individuellement et dans nos relations.
+                        Cette démarche s'articule autour de trois axes
+                        fondamentaux : Amour, Désir et Esprit. Ensemble, ils
+                        nous invitent à retourner à la source de notre désir
+                        d'amour, à explorer ce qui nous anime vraiment et à
+                        grandir, à la fois individuellement et dans nos
+                        relations.
                       </p>
                       <p>
-                        Cœur à Corps propose un espace unique, <span className="font-medium">UNE CONVERSION à 180 DEGRES D'AMOUR</span> conçue avec des personnes incroyables dans une atmosphère que je ne pensais pas pouvoir un jour connaitre. Un espace conçu pour offrir à chacun la liberté et la tranquillité nécessaires d'avancer, à son rythme et là où il a le désir d'aller.
+                        Cœur à Corps propose un espace unique,{' '}
+                        <span className="font-medium">
+                          UNE CONVERSION à 180 DEGRES D'AMOUR
+                        </span>{' '}
+                        conçue avec des personnes incroyables dans une
+                        atmosphère que je ne pensais pas pouvoir un jour
+                        connaitre. Un espace conçu pour offrir à chacun la
+                        liberté et la tranquillité nécessaires d'avancer, à son
+                        rythme et là où il a le désir d'aller.
                       </p>
                     </div>
                   </div>
@@ -387,23 +465,45 @@ export function ProchainementPage({ data, settings }: any) {
                                 <div className="absolute top-4 right-4 flex gap-4 z-20">
                                   {/* Title bubble */}
                                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                                    <span className="text-white font-medium">INTRODUCTION</span>
+                                    <span className="text-white font-medium">
+                                      INTRODUCTION
+                                    </span>
                                   </div>
                                 </div>
                                 {/* Play/Pause button */}
                                 <button
                                   onClick={togglePlay}
                                   className="absolute right-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-                                  aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+                                  aria-label={
+                                    isPlaying ? 'Pause audio' : 'Play audio'
+                                  }
                                 >
                                   <div className="w-6 h-6 flex items-center justify-center">
                                     {isPlaying ? (
-                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                                        <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-6 h-6 text-white"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z"
+                                          clipRule="evenodd"
+                                        />
                                       </svg>
                                     ) : (
-                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                                        <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-6 h-6 text-white"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                                          clipRule="evenodd"
+                                        />
                                       </svg>
                                     )}
                                   </div>
@@ -438,23 +538,45 @@ export function ProchainementPage({ data, settings }: any) {
                                 <div className="absolute top-4 right-4 flex gap-4 z-20">
                                   {/* Title bubble */}
                                   <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                                    <span className="text-white font-medium">CONVERSION AMOUR 180°</span>
+                                    <span className="text-white font-medium">
+                                      CONVERSION AMOUR 180°
+                                    </span>
                                   </div>
                                 </div>
                                 {/* Play/Pause button */}
                                 <button
                                   onClick={togglePlay2}
                                   className="absolute right-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-                                  aria-label={isPlaying2 ? 'Pause audio' : 'Play audio'}
+                                  aria-label={
+                                    isPlaying2 ? 'Pause audio' : 'Play audio'
+                                  }
                                 >
                                   <div className="w-6 h-6 flex items-center justify-center">
                                     {isPlaying2 ? (
-                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                                        <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-6 h-6 text-white"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z"
+                                          clipRule="evenodd"
+                                        />
                                       </svg>
                                     ) : (
-                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
-                                        <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-6 h-6 text-white"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                                          clipRule="evenodd"
+                                        />
                                       </svg>
                                     )}
                                   </div>
@@ -474,7 +596,9 @@ export function ProchainementPage({ data, settings }: any) {
                 <PurchaseTicket
                   ticketType="standard"
                   onClose={() => setShowPurchaseModal(false)}
-                  defaultCouponCode={isCanceled ? 'COEUR180' : couponCode || undefined}
+                  defaultCouponCode={
+                    isCanceled ? 'COEUR180' : couponCode || undefined
+                  }
                 />
               )}
             </div>

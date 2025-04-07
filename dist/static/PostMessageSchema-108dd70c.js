@@ -1,1 +1,450 @@
-import{r as _,aZ as P,cp as O,u as $,at as q,cq as D,cr as I,j as M,cs as U,ct as h}from"./sanity-033f6ba9.js";function V(t){const{validation:n}=t.type;if(!n)return!1;const r=Array.isArray(n)?n:[n];for(const o of r){let p=!1;const d=new Proxy({},{get:(m,g)=>()=>(g==="required"&&(p=!0),d)});if(typeof o=="function"&&(o(d),p)||typeof o=="object"&&o!==null&&"_required"in o&&o._required==="required")return!0}return!1}function j(t,n){let r=t;for(;r;){if(r.name===n||r.type&&r.type.name===n)return!0;r=r.type}return!1}function B(t){return j(t,"object")||t.jsonType==="object"||"fields"in t}function C(t){return j(t,"array")}function S(t){return j(t,"reference")}function L(t){return j(t,"crossDatasetReference")}function K(t){return j(t,"string")}function W(t){return j(t,"number")}function N(t){let n=t;for(;n;){if(!n.type)return n;n=n.type}}function k(t){return"fields"in t?t.type?k(t.type).concat(t.fields):t.fields:[]}function Y(t){const n=new Set;function r(a,f){if(!n.has(a)){if(n.add(a),"fields"in a)for(const s of k(a)){const e=N(s.type);if(e.name==="document"){f.add(e);continue}let i;a.type.type?i=s.type.type.name:"jsonType"in a.type&&(i=s.type.jsonType),(i==="object"||i==="block")&&(S(s.type)?s.type.to.forEach(u=>f.add(u.type)):f.add(s.type)),r(s.type,f)}else if("of"in a)for(const s of a.of)r(s,f)}}const o=new Map;t.getTypeNames().forEach(a=>{const f=t.get(a);if(f===void 0||f.type===null)return;const s=new Set;r(f,s),o.set(f,s),n.clear()});const p=[],d=new Set,m=new Set;function g(a){if(m.has(a)||d.has(a))return;d.add(a);const f=o.get(a);f!==void 0&&f.forEach(s=>g(s)),d.delete(a),m.add(a),p.includes(a.name)||p.unshift(a.name)}for(const[a]of o)g(a);return p}const Z=function({schemaType:t,theme:n}){const{theme:r,scheme:o,tone:p}=n,d=new I;return t.icon?M.jsx(U,{sheet:d.instance,children:M.jsx(h,{theme:r,scheme:o,tone:p,children:_.createElement(t.icon)})}):null},z=t=>({_id:{type:"objectField",name:"_id",value:{type:"string"}},_type:{type:"objectField",name:"_type",value:{type:"string",value:t}},_createdAt:{type:"objectField",name:"_createdAt",value:{type:"string"}},_updatedAt:{type:"objectField",name:"_updatedAt",value:{type:"string"}},_rev:{type:"objectField",name:"_rev",value:{type:"string"}}});function G(t){var r;const n=(r=t.options)==null?void 0:r.list;return n&&Array.isArray(n)?{type:"union",of:n.map(o=>({type:"string",value:typeof o=="string"?o:o.value}))}:{type:"string"}}function H(t){var r;const n=(r=t.options)==null?void 0:r.list;return n&&Array.isArray(n)?{type:"union",of:n.map(o=>({type:"number",value:typeof o=="number"?o:o.value}))}:{type:"number"}}function A(t,n=!1){const r={_ref:{type:"objectField",name:"_ref",value:{type:"string"}},_type:{type:"objectField",name:"_type",value:{type:"string",value:"reference"}},_weak:{type:"objectField",name:"_weak",value:{type:"boolean"},optional:!0}};return n&&(r._key={type:"objectField",name:"_key",value:{type:"string"}}),{type:"object",fields:r,dereferencesTo:t}}function J(t){const n=Q(t);return n.length===1?A(n[0]):{type:"union",of:n.map(r=>({type:"unionOption",name:r,value:A(r)}))}}function Q(t){const n=x(t);return[...new Set([...n.map(r=>r.name)])]}function x(t){const n="to"in t?t.to:[];return"type"in t&&S(t.type)?[...x(t.type),...n]:n}const F=new Map([["text",{type:"string"}],["url",{type:"string"}],["datetime",{type:"string"}],["date",{type:"string"}],["boolean",{type:"boolean"}],["email",{type:"string"}]]);function X(t,n){const r=new Set,{schema:o,basePath:p}=t;return Y(o).map(e=>{const i=o.get(e);if(i===void 0)return;const u=m(i);if(u!==null)return u.type==="type"&&r.add(i),u}).filter(e=>e!==void 0);function d(e){if(e.icon)return D(_.createElement(Z,{schemaType:e,theme:n}))}function m(e){let i;if(e.type?i=e.type.name:"jsonType"in e&&(i=e.jsonType),i==="document"){const c=g(e);return c.type==="unknown"?null:{type:"document",name:e.name,title:typeof e.title=="string"?e.title:void 0,icon:d(e),fields:{...z(e.name),...c.fields}}}const u=a(e);return u.type==="unknown"?null:u.type==="object"?{name:e.name,type:"type",value:{type:"object",fields:{_type:{type:"objectField",name:"_type",value:{type:"string",value:e.name}},...u.fields}}}:{name:e.name,title:typeof e.title=="string"?e.title:void 0,type:"type",value:u}}function g(e){const i={};for(const u of k(e)){const c=a(u.type);c!==null&&(i[u.name]={type:"objectField",name:u.name,title:typeof u.type.title=="string"?u.type.title:void 0,value:c,optional:V(u)===!1})}return{type:"object",fields:i}}function a(e){var u,c,v,l;if(((u=N(e))==null?void 0:u.name)==="document")return A(e.name);if(r.has(e.type))return{type:"inline",name:e.type.name};if(((v=(c=e.type)==null?void 0:c.type)==null?void 0:v.name)==="object")return{type:"inline",name:e.type.name};if(K(e))return G(e);if(W(e))return H(e);const i=F.get(((l=e.type)==null?void 0:l.name)||"");if(i)return i;if(e.type&&F.has(e.type.name))return F.get(e.type.name);if(L(e))return{type:"unknown"};if(S(e))return J(e);if(C(e))return s(e);if(B(e))return g(e);throw new Error(`Type "${e.name}" not found`)}function f(e,i){var v;const{options:u}=e;if(!u)return;const c={...u};return u.insertMenu&&(c.insertMenu={...u.insertMenu,views:(v=u.insertMenu.views)==null?void 0:v.map(l=>l.name==="grid"?{name:"grid",previewImageUrls:l.previewImageUrl?i.reduce((y,{name:b})=>{var R;const w=(R=l.previewImageUrl)==null?void 0:R.call(l,b);if(!w)return y;try{new URL(w),y[b]=w}catch{y[b]=new URL(w,`${window.location.origin}${p?`${p}/`:""}`).toString()}return y},{}):void 0}:l)}),c}function s(e){const i=[];for(const l of e.of){let y=a(l);const b={type:"unionOption",icon:d(l),name:l.name,title:typeof l.title=="string"?l.title:void 0,value:y};y.type==="inline"?y={type:"object",fields:{_key:E()},rest:y}:y.type==="object"&&(y.rest={type:"object",fields:{_key:E()}}),b.value=y,i.push(b)}if(i.length===0)return{type:"null"};if(i.length>1)return{type:"union",of:i,options:f(e,i)};const{name:u,title:c,value:v}=i[0];return{type:"array",of:{type:"arrayItem",name:u,title:typeof c=="string"?c:void 0,value:v}}}}function E(){return{type:"objectField",name:"_key",value:{type:"string"}}}function T(t){const n=t.reduce((r,{id:o,path:p})=>(r[o]?r[o].add(p):r[o]=new Set([p]),r),{});return Object.entries(n)}function ee(t){const{comlink:n,perspective:r}=t,o=P(),p=O();_.useEffect(()=>{const m=X(o,p);return n.post({type:"presentation/schema",data:{schema:m}}),n.on("visual-editing/schema",()=>({schema:m}))},[n,p,o]);const d=$({apiVersion:q});return _.useEffect(()=>n.on("visual-editing/schema-union-types",async m=>{const g=T(m.paths),a=await Promise.all(g.map(async([s,e])=>{const i=Array.from(e),u=`*[_id == $id][0]{${i.map((l,y)=>`"${y}": ${l}[0]._type`).join(",")}}`,c=await d.fetch(u,{id:s},{perspective:r,tag:"presentation-schema"}),v=i.map((l,y)=>({path:l,type:c[y]}));return{id:s,paths:v}})),f=new Map;return a.forEach(s=>{f.set(s.id,new Map(s.paths.map(({path:e,type:i})=>[e,i])))}),{types:f}}),[n,d,r]),null}var ne=_.memo(ee);export{ne as default};
+import {
+  r as _,
+  aZ as P,
+  cp as O,
+  u as $,
+  at as q,
+  cq as D,
+  cr as I,
+  j as M,
+  cs as U,
+  ct as h,
+} from './sanity-033f6ba9.js'
+function V(t) {
+  const { validation: n } = t.type
+  if (!n) return !1
+  const r = Array.isArray(n) ? n : [n]
+  for (const o of r) {
+    let p = !1
+    const d = new Proxy(
+      {},
+      { get: (m, g) => () => (g === 'required' && (p = !0), d) },
+    )
+    if (
+      (typeof o == 'function' && (o(d), p)) ||
+      (typeof o == 'object' &&
+        o !== null &&
+        '_required' in o &&
+        o._required === 'required')
+    )
+      return !0
+  }
+  return !1
+}
+function j(t, n) {
+  let r = t
+  for (; r; ) {
+    if (r.name === n || (r.type && r.type.name === n)) return !0
+    r = r.type
+  }
+  return !1
+}
+function B(t) {
+  return j(t, 'object') || t.jsonType === 'object' || 'fields' in t
+}
+function C(t) {
+  return j(t, 'array')
+}
+function S(t) {
+  return j(t, 'reference')
+}
+function L(t) {
+  return j(t, 'crossDatasetReference')
+}
+function K(t) {
+  return j(t, 'string')
+}
+function W(t) {
+  return j(t, 'number')
+}
+function N(t) {
+  let n = t
+  for (; n; ) {
+    if (!n.type) return n
+    n = n.type
+  }
+}
+function k(t) {
+  return 'fields' in t ? (t.type ? k(t.type).concat(t.fields) : t.fields) : []
+}
+function Y(t) {
+  const n = new Set()
+  function r(a, f) {
+    if (!n.has(a)) {
+      if ((n.add(a), 'fields' in a))
+        for (const s of k(a)) {
+          const e = N(s.type)
+          if (e.name === 'document') {
+            f.add(e)
+            continue
+          }
+          let i
+          a.type.type
+            ? (i = s.type.type.name)
+            : 'jsonType' in a.type && (i = s.type.jsonType),
+            (i === 'object' || i === 'block') &&
+              (S(s.type)
+                ? s.type.to.forEach((u) => f.add(u.type))
+                : f.add(s.type)),
+            r(s.type, f)
+        }
+      else if ('of' in a) for (const s of a.of) r(s, f)
+    }
+  }
+  const o = new Map()
+  t.getTypeNames().forEach((a) => {
+    const f = t.get(a)
+    if (f === void 0 || f.type === null) return
+    const s = new Set()
+    r(f, s), o.set(f, s), n.clear()
+  })
+  const p = [],
+    d = new Set(),
+    m = new Set()
+  function g(a) {
+    if (m.has(a) || d.has(a)) return
+    d.add(a)
+    const f = o.get(a)
+    f !== void 0 && f.forEach((s) => g(s)),
+      d.delete(a),
+      m.add(a),
+      p.includes(a.name) || p.unshift(a.name)
+  }
+  for (const [a] of o) g(a)
+  return p
+}
+const Z = function ({ schemaType: t, theme: n }) {
+    const { theme: r, scheme: o, tone: p } = n,
+      d = new I()
+    return t.icon
+      ? M.jsx(U, {
+          sheet: d.instance,
+          children: M.jsx(h, {
+            theme: r,
+            scheme: o,
+            tone: p,
+            children: _.createElement(t.icon),
+          }),
+        })
+      : null
+  },
+  z = (t) => ({
+    _id: { type: 'objectField', name: '_id', value: { type: 'string' } },
+    _type: {
+      type: 'objectField',
+      name: '_type',
+      value: { type: 'string', value: t },
+    },
+    _createdAt: {
+      type: 'objectField',
+      name: '_createdAt',
+      value: { type: 'string' },
+    },
+    _updatedAt: {
+      type: 'objectField',
+      name: '_updatedAt',
+      value: { type: 'string' },
+    },
+    _rev: { type: 'objectField', name: '_rev', value: { type: 'string' } },
+  })
+function G(t) {
+  var r
+  const n = (r = t.options) == null ? void 0 : r.list
+  return n && Array.isArray(n)
+    ? {
+        type: 'union',
+        of: n.map((o) => ({
+          type: 'string',
+          value: typeof o == 'string' ? o : o.value,
+        })),
+      }
+    : { type: 'string' }
+}
+function H(t) {
+  var r
+  const n = (r = t.options) == null ? void 0 : r.list
+  return n && Array.isArray(n)
+    ? {
+        type: 'union',
+        of: n.map((o) => ({
+          type: 'number',
+          value: typeof o == 'number' ? o : o.value,
+        })),
+      }
+    : { type: 'number' }
+}
+function A(t, n = !1) {
+  const r = {
+    _ref: { type: 'objectField', name: '_ref', value: { type: 'string' } },
+    _type: {
+      type: 'objectField',
+      name: '_type',
+      value: { type: 'string', value: 'reference' },
+    },
+    _weak: {
+      type: 'objectField',
+      name: '_weak',
+      value: { type: 'boolean' },
+      optional: !0,
+    },
+  }
+  return (
+    n &&
+      (r._key = {
+        type: 'objectField',
+        name: '_key',
+        value: { type: 'string' },
+      }),
+    { type: 'object', fields: r, dereferencesTo: t }
+  )
+}
+function J(t) {
+  const n = Q(t)
+  return n.length === 1
+    ? A(n[0])
+    : {
+        type: 'union',
+        of: n.map((r) => ({ type: 'unionOption', name: r, value: A(r) })),
+      }
+}
+function Q(t) {
+  const n = x(t)
+  return [...new Set([...n.map((r) => r.name)])]
+}
+function x(t) {
+  const n = 'to' in t ? t.to : []
+  return 'type' in t && S(t.type) ? [...x(t.type), ...n] : n
+}
+const F = new Map([
+  ['text', { type: 'string' }],
+  ['url', { type: 'string' }],
+  ['datetime', { type: 'string' }],
+  ['date', { type: 'string' }],
+  ['boolean', { type: 'boolean' }],
+  ['email', { type: 'string' }],
+])
+function X(t, n) {
+  const r = new Set(),
+    { schema: o, basePath: p } = t
+  return Y(o)
+    .map((e) => {
+      const i = o.get(e)
+      if (i === void 0) return
+      const u = m(i)
+      if (u !== null) return u.type === 'type' && r.add(i), u
+    })
+    .filter((e) => e !== void 0)
+  function d(e) {
+    if (e.icon) return D(_.createElement(Z, { schemaType: e, theme: n }))
+  }
+  function m(e) {
+    let i
+    if (
+      (e.type ? (i = e.type.name) : 'jsonType' in e && (i = e.jsonType),
+      i === 'document')
+    ) {
+      const c = g(e)
+      return c.type === 'unknown'
+        ? null
+        : {
+            type: 'document',
+            name: e.name,
+            title: typeof e.title == 'string' ? e.title : void 0,
+            icon: d(e),
+            fields: { ...z(e.name), ...c.fields },
+          }
+    }
+    const u = a(e)
+    return u.type === 'unknown'
+      ? null
+      : u.type === 'object'
+        ? {
+            name: e.name,
+            type: 'type',
+            value: {
+              type: 'object',
+              fields: {
+                _type: {
+                  type: 'objectField',
+                  name: '_type',
+                  value: { type: 'string', value: e.name },
+                },
+                ...u.fields,
+              },
+            },
+          }
+        : {
+            name: e.name,
+            title: typeof e.title == 'string' ? e.title : void 0,
+            type: 'type',
+            value: u,
+          }
+  }
+  function g(e) {
+    const i = {}
+    for (const u of k(e)) {
+      const c = a(u.type)
+      c !== null &&
+        (i[u.name] = {
+          type: 'objectField',
+          name: u.name,
+          title: typeof u.type.title == 'string' ? u.type.title : void 0,
+          value: c,
+          optional: V(u) === !1,
+        })
+    }
+    return { type: 'object', fields: i }
+  }
+  function a(e) {
+    var u, c, v, l
+    if (((u = N(e)) == null ? void 0 : u.name) === 'document') return A(e.name)
+    if (r.has(e.type)) return { type: 'inline', name: e.type.name }
+    if (
+      ((v = (c = e.type) == null ? void 0 : c.type) == null
+        ? void 0
+        : v.name) === 'object'
+    )
+      return { type: 'inline', name: e.type.name }
+    if (K(e)) return G(e)
+    if (W(e)) return H(e)
+    const i = F.get(((l = e.type) == null ? void 0 : l.name) || '')
+    if (i) return i
+    if (e.type && F.has(e.type.name)) return F.get(e.type.name)
+    if (L(e)) return { type: 'unknown' }
+    if (S(e)) return J(e)
+    if (C(e)) return s(e)
+    if (B(e)) return g(e)
+    throw new Error(`Type "${e.name}" not found`)
+  }
+  function f(e, i) {
+    var v
+    const { options: u } = e
+    if (!u) return
+    const c = { ...u }
+    return (
+      u.insertMenu &&
+        (c.insertMenu = {
+          ...u.insertMenu,
+          views:
+            (v = u.insertMenu.views) == null
+              ? void 0
+              : v.map((l) =>
+                  l.name === 'grid'
+                    ? {
+                        name: 'grid',
+                        previewImageUrls: l.previewImageUrl
+                          ? i.reduce((y, { name: b }) => {
+                              var R
+                              const w =
+                                (R = l.previewImageUrl) == null
+                                  ? void 0
+                                  : R.call(l, b)
+                              if (!w) return y
+                              try {
+                                new URL(w), (y[b] = w)
+                              } catch {
+                                y[b] = new URL(
+                                  w,
+                                  `${window.location.origin}${p ? `${p}/` : ''}`,
+                                ).toString()
+                              }
+                              return y
+                            }, {})
+                          : void 0,
+                      }
+                    : l,
+                ),
+        }),
+      c
+    )
+  }
+  function s(e) {
+    const i = []
+    for (const l of e.of) {
+      let y = a(l)
+      const b = {
+        type: 'unionOption',
+        icon: d(l),
+        name: l.name,
+        title: typeof l.title == 'string' ? l.title : void 0,
+        value: y,
+      }
+      y.type === 'inline'
+        ? (y = { type: 'object', fields: { _key: E() }, rest: y })
+        : y.type === 'object' &&
+          (y.rest = { type: 'object', fields: { _key: E() } }),
+        (b.value = y),
+        i.push(b)
+    }
+    if (i.length === 0) return { type: 'null' }
+    if (i.length > 1) return { type: 'union', of: i, options: f(e, i) }
+    const { name: u, title: c, value: v } = i[0]
+    return {
+      type: 'array',
+      of: {
+        type: 'arrayItem',
+        name: u,
+        title: typeof c == 'string' ? c : void 0,
+        value: v,
+      },
+    }
+  }
+}
+function E() {
+  return { type: 'objectField', name: '_key', value: { type: 'string' } }
+}
+function T(t) {
+  const n = t.reduce(
+    (r, { id: o, path: p }) => (r[o] ? r[o].add(p) : (r[o] = new Set([p])), r),
+    {},
+  )
+  return Object.entries(n)
+}
+function ee(t) {
+  const { comlink: n, perspective: r } = t,
+    o = P(),
+    p = O()
+  _.useEffect(() => {
+    const m = X(o, p)
+    return (
+      n.post({ type: 'presentation/schema', data: { schema: m } }),
+      n.on('visual-editing/schema', () => ({ schema: m }))
+    )
+  }, [n, p, o])
+  const d = $({ apiVersion: q })
+  return (
+    _.useEffect(
+      () =>
+        n.on('visual-editing/schema-union-types', async (m) => {
+          const g = T(m.paths),
+            a = await Promise.all(
+              g.map(async ([s, e]) => {
+                const i = Array.from(e),
+                  u = `*[_id == $id][0]{${i.map((l, y) => `"${y}": ${l}[0]._type`).join(',')}}`,
+                  c = await d.fetch(
+                    u,
+                    { id: s },
+                    { perspective: r, tag: 'presentation-schema' },
+                  ),
+                  v = i.map((l, y) => ({ path: l, type: c[y] }))
+                return { id: s, paths: v }
+              }),
+            ),
+            f = new Map()
+          return (
+            a.forEach((s) => {
+              f.set(
+                s.id,
+                new Map(s.paths.map(({ path: e, type: i }) => [e, i])),
+              )
+            }),
+            { types: f }
+          )
+        }),
+      [n, d, r],
+    ),
+    null
+  )
+}
+var ne = _.memo(ee)
+export { ne as default }

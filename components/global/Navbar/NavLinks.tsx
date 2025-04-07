@@ -9,15 +9,22 @@ interface NavLinksProps {
   setShowAppointmentModal: (show: boolean) => void
 }
 
-export function NavLinks({ menuItems, setIsMenuOpen, setShowAppointmentModal }: NavLinksProps) {
-  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchor: string) => {
-    e.preventDefault();
-    setIsMenuOpen(false);
-    scrollToSection(anchor);
-  };
+export function NavLinks({
+  menuItems,
+  setIsMenuOpen,
+  setShowAppointmentModal,
+}: NavLinksProps) {
+  const handleAnchorClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    anchor: string,
+  ) => {
+    e.preventDefault()
+    setIsMenuOpen(false)
+    scrollToSection(anchor)
+  }
 
-  return null;
-  
+  return null
+
   /* Commented out navigation elements
   return (
     <>

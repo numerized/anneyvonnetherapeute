@@ -6,19 +6,22 @@
 
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(255, 127, 80, 0.6),
-                0 0 10px rgba(255, 127, 80, 0.4),
-                0 0 15px rgba(255, 127, 80, 0.2);
+    box-shadow:
+      0 0 5px rgba(255, 127, 80, 0.6),
+      0 0 10px rgba(255, 127, 80, 0.4),
+      0 0 15px rgba(255, 127, 80, 0.2);
   }
   50% {
-    box-shadow: 0 0 10px rgba(255, 127, 80, 0.8),
-                0 0 20px rgba(255, 127, 80, 0.6),
-                0 0 30px rgba(255, 127, 80, 0.4);
+    box-shadow:
+      0 0 10px rgba(255, 127, 80, 0.8),
+      0 0 20px rgba(255, 127, 80, 0.6),
+      0 0 30px rgba(255, 127, 80, 0.4);
   }
   100% {
-    box-shadow: 0 0 5px rgba(255, 127, 80, 0.6),
-                0 0 10px rgba(255, 127, 80, 0.4),
-                0 0 15px rgba(255, 127, 80, 0.2);
+    box-shadow:
+      0 0 5px rgba(255, 127, 80, 0.6),
+      0 0 10px rgba(255, 127, 80, 0.4),
+      0 0 15px rgba(255, 127, 80, 0.2);
   }
 }
 
@@ -27,7 +30,7 @@
 }
 
 .aleo-heading {
-  font-family: "Aleo", serif;
+  font-family: 'Aleo', serif;
   font-optical-sizing: auto;
   font-weight: 900;
   font-style: normal;
@@ -96,15 +99,22 @@
     @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
   }
   h1 {
-    font-family: ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color emoji!important;
-    font-weight: 900!important;
-    font-size: 4em!important;
-    line-height: 0.9em!important;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      sans-serif,
+      Apple Color Emoji,
+      Segoe UI Emoji,
+      Segoe UI Symbol,
+      Noto Color emoji !important;
+    font-weight: 900 !important;
+    font-size: 4em !important;
+    line-height: 0.9em !important;
   }
 
   footer h1 {
     font-size: 3em;
-    font-family: 'Tan', sans-serif!important;
+    font-family: 'Tan', sans-serif !important;
   }
 
   .test-title {
