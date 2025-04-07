@@ -13,7 +13,6 @@ import {
 } from 'lucide-react'
 import { useRef, useState } from 'react'
 
-import { QuestionnaireReward } from '@/components/shared/QuestionnaireReward'
 import { BaseOffering } from '@/data/therapyOfferings/types'
 import { 
   getAllOfferings, 
@@ -28,7 +27,7 @@ import { scrollToSection } from '@/utils/scroll'
 import { TherapyCard } from './TherapyCard'
 import { TherapyModal } from './TherapyModal'
 
-import { XMarkIcon as XIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 
 type TherapyOption = {
@@ -333,7 +332,6 @@ export function TherapyQuestionnaireNew() {
   const [showModal, setShowModal] = useState(false)
   const [selectedTherapyId, setSelectedTherapyId] = useState<string | null>(null)
   const [selectedOfferingType, setSelectedOfferingType] = useState<'therapy' | 'coaching' | null>(null)
-  const [showReward, setShowReward] = useState(false)
   const questionnaireRef = useRef<HTMLElement>(null)
 
   const handleSituationSelect = (situation: string) => {
@@ -384,7 +382,6 @@ export function TherapyQuestionnaireNew() {
     }
 
     setRecommendations(recommendedOptions)
-    setShowReward(true)
     setStep(4)
   }
 
@@ -398,7 +395,6 @@ export function TherapyQuestionnaireNew() {
     const recommendedOptions = getMatchingOfferingsOptions(keywords, 'individual');
     
     setRecommendations(recommendedOptions)
-    setShowReward(true)
     setStep(4)
   }
 
@@ -423,7 +419,6 @@ export function TherapyQuestionnaireNew() {
     const recommendedOptions = getMatchingOfferingsOptions(keywords, answers.situation);
     
     setRecommendations(recommendedOptions)
-    setShowReward(true)
     setStep(4)
   }
 
@@ -437,9 +432,12 @@ export function TherapyQuestionnaireNew() {
       stage: '',
     })
     setRecommendations([])
-    setShowReward(false)
     scrollToSection('questionnaire-new')
   }
+
+  const handleCloseReward = () => {
+    // Removed
+  };
 
   const handleShowPromo = (therapyId: string) => {
     // Find the selected option to determine if it's therapy or coaching
@@ -465,36 +463,63 @@ export function TherapyQuestionnaireNew() {
       description: option.description,
     };
 
+    // Get benefit icon based on therapy type
+    const getBenefitIcon = () => {
+      const type = option.type.toLowerCase();
+      
+      if (type.includes('couple') || type === 'sexology') {
+        return <Heart size={24} />;
+      } else if (type === 'vit') {
+        return <Clock size={24} />;
+      } else if (type === 'beginning' || type === 'checkup' || type === 'decision') {
+        return <Target size={24} />;
+      } else if (type === 'men' || type === 'women' || type === 'individual') {
+        return <User size={24} />;
+      } else {
+        return <Sparkles size={24} />;
+      }
+    };
+
     return (
       <div
         key={option.therapyId}
-        className="flex flex-col sm:flex-row mb-8 p-6 border border-gray-200 rounded-lg shadow-md hover:shadow-xl transition-shadow"
+        className="flex flex-col h-full bg-primary-forest/30 backdrop-blur-sm rounded-[16px] overflow-hidden hover:shadow-xl transition-shadow border border-primary-cream/20"
       >
-        <div className="basis-4/5 pr-4">
-          <h3 className="text-xl font-semibold text-primary-500 mb-2">
-            {option.title}
-          </h3>
-          <p className="text-gray-600 mb-2 line-clamp-2">
+        <div className="p-6 flex flex-col h-full">
+          <div className="flex items-center mb-4">
+            <div className="mr-3 text-primary-coral">
+              {getBenefitIcon()}
+            </div>
+            <h3 className="text-xl font-semibold text-primary-cream">
+              {option.title}
+            </h3>
+          </div>
+          
+          <p className="text-primary-cream/70 mb-4 line-clamp-3">
             {theme?.description || option.description}
           </p>
-          <p className="text-sm text-gray-400 mb-4">
-            Type: {option.offeringType === 'therapy' ? 'Thérapie' : 'Coaching'}
-          </p>
-          <div className="mt-auto">
-            <button
-              onClick={() => handleShowPromo(option.therapyId)}
-              className="text-white bg-primary-500 hover:bg-primary-600 rounded-lg px-4 py-2 transition-colors"
-            >
-              En savoir plus
-            </button>
+          
+          <div className="mt-auto pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-primary-cream/60">
+                {option.offeringType === 'therapy' ? 'Thérapie' : 'Coaching'}
+              </span>
+              
+              <button
+                onClick={() => handleShowPromo(option.therapyId)}
+                className="inline-flex items-center text-primary-coral hover:text-primary-coral/80 font-medium transition-colors"
+              >
+                En savoir plus <ArrowUpRight className="ml-1 h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const renderPromoModal = () => {
-    if (!selectedTherapyId || !selectedOfferingType) return null
+    if (!selectedTherapyId || !selectedOfferingType) return null;
 
     // Get the offering data based on type (therapy or coaching)
     let offering;
@@ -504,53 +529,85 @@ export function TherapyQuestionnaireNew() {
       offering = getCoachingTypeById(selectedTherapyId);
     }
     
-    if (!offering) return null
+    if (!offering) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-2xl font-semibold text-primary-500">
-                {offering.title}
-              </h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <XIcon className="h-6 w-6" />
-              </button>
-            </div>
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-primary-dark w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[16px]">
+          <div className="p-8 relative">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-primary-cream/70 hover:text-primary-cream transition-colors"
+            >
+              <XMarkIcon className="h-6 w-6" />
+            </button>
             
-            <div className="mb-6">
-              <p className="text-gray-700 mb-4">{offering.description}</p>
-              
-              {offering.themes && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Thèmes abordés
-                  </h3>
-                  <ul className="list-disc list-inside space-y-2">
-                    {offering.themes.map((theme, index) => (
-                      <li key={index} className="text-gray-700">
-                        <span className="font-medium">{theme.title}</span>: {theme.description}
-                      </li>
-                    ))}
-                  </ul>
+            <h2 className="text-3xl font-semibold text-primary-cream mb-4">
+              {offering.title}
+            </h2>
+            
+            <p className="text-primary-cream/80 mb-6">{offering.description}</p>
+            
+            {/* Themes Section */}
+            {offering.themes && offering.themes.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-xl font-medium mb-4 text-primary-coral">
+                  Thèmes abordés
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {offering.themes.map((theme, index) => (
+                    <div
+                      key={index}
+                      className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]"
+                    >
+                      <h4 className="font-bold text-primary-cream mb-2">
+                        {theme.title}
+                      </h4>
+                      <p className="text-primary-cream/80">{theme.description}</p>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
             
-            <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+            {/* Details Section - Optional */}
+            {offering.mainOffering?.details && (
+              <div className="mb-8">
+                <h3 className="text-xl font-medium mb-4 text-primary-coral">
+                  {offering.mainOffering.details.title || 'Détails'}
+                </h3>
+                <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
+                  {offering.mainOffering.details.schedule && (
+                    <p className="text-primary-cream mb-2">{offering.mainOffering.details.schedule}</p>
+                  )}
+                  
+                  {offering.mainOffering.details.inclusions && (
+                    <div>
+                      <p className="text-primary-cream font-bold mb-2">Inclus:</p>
+                      <ul className="space-y-1">
+                        {offering.mainOffering.details.inclusions.map((item, index) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-primary-coral mr-2">✓</span>
+                            <span className="text-primary-cream/90">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <div className="flex justify-between items-center pt-6 mt-6 border-t border-primary-cream/20">
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-500 hover:text-gray-700 font-medium"
+                className="text-primary-cream/70 hover:text-primary-cream font-medium transition-colors"
               >
                 Retour
               </button>
               <Link
                 href={`/${selectedOfferingType === 'therapy' ? 'therapies' : 'coaching'}/${selectedTherapyId}`}
-                className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-primary-coral text-primary-dark hover:bg-primary-coral/90 px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 Découvrir ce forfait
               </Link>
@@ -558,15 +615,15 @@ export function TherapyQuestionnaireNew() {
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <>
       <section
         ref={questionnaireRef}
         id="questionnaire-new"
-        className="py-16 bg-primary-forest/30"
+        className="py-16 bg-primary-forest"
         aria-labelledby="questionnaire-title"
       >
         <div className="max-w-7xl mx-auto px-6">
@@ -597,7 +654,7 @@ export function TherapyQuestionnaireNew() {
             </div>
           </div>
 
-          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px]">
+          <div className="bg-primary-forest/30 backdrop-blur-sm rounded-[32px] border border-primary-cream/20">
             <AnimatePresence mode="wait">
               {step === 1 ? (
                 <motion.div
@@ -760,28 +817,38 @@ export function TherapyQuestionnaireNew() {
                   </div>
                 </motion.div>
               ) : step === 4 && recommendations.length > 0 ? (
-                <motion.div
-                  key="step-4"
+                <motion.section
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="grid grid-cols-12 gap-8 p-8"
+                  transition={{ duration: 0.5 }}
+                  className="mt-12 bg-primary-forest/30 backdrop-blur-sm rounded-[32px] p-8 border border-primary-cream/20"
                 >
-                  {recommendations.map((option, index) => (
-                    <div
-                      key={option.type}
-                      className={`col-span-12 ${
-                        recommendations.length === 1
-                          ? option.type === 'men' || option.type === 'women'
-                            ? 'md:col-span-12'
-                            : 'md:col-span-6 md:col-start-4'
-                          : 'md:col-span-6'
-                      } ${recommendations.length === 1 ? 'mx-auto max-w-4xl' : ''}`}
-                    >
-                      {renderCard(option)}
+                  <h2 className="text-3xl text-center font-light mb-1 text-primary-cream">
+                    Recommandations
+                  </h2>
+                  <p className="text-center text-primary-cream/70 mb-8">
+                    Basées sur vos réponses, voici les options qui pourraient vous convenir
+                  </p>
+
+                  <div className="max-w-7xl mx-auto px-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {recommendations.map((option) => (
+                        <div key={option.therapyId}>
+                          {renderCard(option)}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </motion.div>
+                    
+                    <div className="flex justify-center mt-12">
+                      <button
+                        onClick={handleRestart}
+                        className="bg-primary-coral hover:bg-primary-rust transition-colors text-primary-cream rounded-[24px] py-3 px-6 font-bold"
+                      >
+                        Recommencer
+                      </button>
+                    </div>
+                  </div>
+                </motion.section>
               ) : null}
             </AnimatePresence>
 
@@ -804,17 +871,6 @@ export function TherapyQuestionnaireNew() {
           </div>
         </div>
       </section>
-
-      {showReward && (
-        <QuestionnaireReward
-          isOpen={showReward}
-          onClose={() => {
-            setShowReward(false)
-            // Don't reset step or recommendations when closing reward
-          }}
-          situation={answers.situation as 'couple' | 'individual'}
-        />
-      )}
 
       {showModal && selectedTherapyId && renderPromoModal()}
     </>
