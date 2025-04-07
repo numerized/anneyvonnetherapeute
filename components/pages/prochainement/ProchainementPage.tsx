@@ -152,8 +152,8 @@ export function ProchainementPage({ data, settings }: any) {
 
                   <div className="w-full md:w-1/3 flex justify-center">
                     <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
-                      <div className="text-primary-coral font-medium mb-2">LIVE: « Oser nos désirs »</div>
-                      <div className="text-2xl font-bold text-primary-cream mb-1">18 Mars</div>
+                      <div className="text-primary-coral font-medium mb-2">LIVE: Sur le divan d'Anne Yvonne</div>
+                      <div className="text-2xl font-bold text-primary-cream mb-1">15 Avril</div>
                       <div className="text-xl text-primary-cream">20h00</div>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export function ProchainementPage({ data, settings }: any) {
                       LE LIVE D'ANNE YVONNE SUR LE DIVAN
                     </h2>
                     <p className="text-primary-cream/80 mb-6">
-                      Le live mensuel sur le thème : « Oser nos désirs : amour, libido et renaissance du printemps ».
+                      Le live mensuel du mois d'avril - Accès à partir de 19h45
                     </p>
                     <div className="flex justify-end">
                       <Link
