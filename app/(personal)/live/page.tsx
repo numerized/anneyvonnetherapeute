@@ -20,7 +20,7 @@ export default function LivePage() {
   useEffect(() => {
     const updateTimeUntilLive = () => {
       const now = new Date()
-      const liveDate = new Date('2025-03-18T20:00:00+01:00')
+      const liveDate = new Date('2025-04-15T20:00:00+02:00')
       const diff = liveDate.getTime() - now.getTime()
 
       // Check if live is active (within the 1-hour session)
@@ -66,8 +66,7 @@ export default function LivePage() {
             </h1>
             <h2>Sur le divan d'Anne Yvonne</h2>
             <p className="text-primary-coral mt-2">
-              Le 18 mars à 20h : Le live mensuel sur le thème « Oser nos désirs
-              : amour, libido et renaissance du printemps ».
+              Le prochain live: 15 avril à 20h - Les suivants: 13 Mai - 17 Juin
             </p>
           </div>
 

@@ -14,8 +14,8 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
   useEffect(() => {
     const checkLiveStatus = () => {
       const now = new Date()
-      const liveStart = new Date('2025-03-18T20:00:00+01:00')
-      const liveEnd = new Date('2025-03-18T23:00:00+01:00')
+      const liveStart = new Date('2025-04-15T19:45:00+02:00')
+      const liveEnd = new Date('2025-04-15T23:00:00+02:00')
       setIsLiveActive(now >= liveStart && now <= liveEnd)
       setIsLiveFinished(now > liveEnd)
     }
@@ -65,8 +65,7 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
                   Le live est terminé
                 </h3>
                 <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
-                  Merci d'avoir participé au live sur le thème "« Oser nos
-                  désirs : amour, libido et renaissance du printemps »".
+                  Merci d'avoir participé au live!
                   N'oubliez pas de vous inscrire à la newsletter pour être
                   informé(e) des prochains lives.
                 </p>
@@ -74,11 +73,10 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
             ) : (
               <>
                 <h3 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
-                  Le live commencera le 18 mars à 20h
+                  Le live commencera le 15 avril à 20h
                 </h3>
                 <h2 className="text-xl sm:text-2xl md:text-3xl text-primary-coral mb-3 sm:mb-4">
-                  "« Oser nos désirs : amour, libido et renaissance du printemps
-                  »"
+                  Le live mensuel c'est ici! les prochains : 13 Mai - 17 Juin
                 </h2>
                 <p className="text-primary-cream/90 text-sm sm:text-base mb-4 sm:mb-6 max-w-lg sm:max-w-2xl mx-auto">
                   En attendant, n'oubliez pas de vous inscrire à la newsletter
@@ -98,7 +96,7 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
       <iframe
         src={
           typeof window !== 'undefined' &&
-          window.location.hostname === 'localhost'
+            window.location.hostname === 'localhost'
             ? 'https://whereby.com/rezokev'
             : 'https://whereby.com/coeur-a-corps?minimal=1'
         }
