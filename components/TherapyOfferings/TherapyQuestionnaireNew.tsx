@@ -260,7 +260,7 @@ const TherapyQuestionnaireNew = () => {
           situation === 'A' || situation === 'D' ? 'individual' : 'couple', 2)
     }
     
-    // Ensure we have exactly 2 recommendations
+    // Ensure we have at least 2 recommendations
     if (recommendations.length < 2) {
       // Add more recommendations from the filtered offerings if needed
       const additionalRecommendations = filteredOfferings
@@ -270,9 +270,9 @@ const TherapyQuestionnaireNew = () => {
       recommendations.push(...additionalRecommendations)
     }
     
-    // Ensure we don't have more than 2 recommendations
-    if (recommendations.length > 2) {
-      recommendations = recommendations.slice(0, 2)
+    // Ensure we don't have more than 3 recommendations
+    if (recommendations.length > 3) {
+      recommendations = recommendations.slice(0, 3)
     }
     
     setRecommendations(recommendations)
