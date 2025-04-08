@@ -173,10 +173,13 @@ const TherapyQuestionnaireNew = () => {
       })),
     ]
     
-    // Filter out VIT and NEURO TRIBU offerings
+    // Filter out NEURO TRIBU offerings but keep VIT for later
     const filteredOfferings = allOfferings.filter(o => 
-      !o.therapyId.includes('vit') && !o.therapyId.includes('neuro')
+      !o.therapyId.includes('neuro')
     )
+    
+    // Separate VIT offerings for later use
+    const vitOffering = allOfferings.find(o => o.therapyId.includes('vit-a-la-carte'))
     
     // Helper function to find an offering by its ID
     const findOffering = (id: string): TherapyOption | undefined => {
@@ -268,6 +271,11 @@ const TherapyQuestionnaireNew = () => {
         .slice(0, 2 - recommendations.length)
       
       recommendations.push(...additionalRecommendations)
+    }
+    
+    // Add VIT offering if not already in recommendations
+    if (vitOffering && !recommendations.some(r => r.therapyId.includes('vit'))) {
+      recommendations.push(vitOffering)
     }
     
     // Ensure we don't have more than 3 recommendations
