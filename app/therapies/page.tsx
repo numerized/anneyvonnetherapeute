@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { TherapyQuestionnaireNew } from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
+import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 import TherapyOfferingsPage from '@/components/TherapyOfferings/TherapyOfferingsPage'
 
 export const metadata = {
