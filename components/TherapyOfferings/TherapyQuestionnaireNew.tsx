@@ -205,8 +205,9 @@ const TherapyQuestionnaireNew = () => {
       case 'B1': // En couple > Communication
         recommendations = [
           findOffering('couple') || filteredOfferings[0],
-          findOffering('communication-conflicts') || filteredOfferings[0] 
-        ].filter(Boolean).slice(0, 2)
+          findOffering('communication-conflicts') || filteredOfferings[0],
+          findOffering('expectations-disappointments') || filteredOfferings[0]
+        ].filter(Boolean).slice(0, 3)
         break
         
       case 'B2': // En couple > Désir
@@ -219,16 +220,17 @@ const TherapyQuestionnaireNew = () => {
       case 'C1': // En questionnement > Évaluation
         recommendations = [
           findOffering('couple-checkup') || filteredOfferings[0],
-          findOffering('individual') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
+          findOffering('individual') || filteredOfferings[0],
+          findOffering('expectations-disappointments') || filteredOfferings[0]
+        ].filter(Boolean).slice(0, 3)
         break
         
       case 'C2': // En questionnement > Décision
-        // Since there's no direct 'decision' offering, we'll use related ones
         recommendations = [
+          findOffering('doubts-decision') || filteredOfferings[0],
           findOffering('couple') || filteredOfferings[0],
           findOffering('individual') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
+        ].filter(Boolean).slice(0, 3)
         break
         
       case 'D1': // Rupture > Comprendre
@@ -325,25 +327,25 @@ const TherapyQuestionnaireNew = () => {
               onClick={() => handleSituationSelect('A')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">A. Je suis célibataire et je veux mieux comprendre mon rapport aux relations.</h4>
+              <h4 className="font-medium">Je suis célibataire et je veux mieux comprendre mon rapport aux relations.</h4>
             </button>
             <button
               onClick={() => handleSituationSelect('B')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">B. Je suis en couple et je souhaite améliorer notre relation.</h4>
+              <h4 className="font-medium">Je suis en couple et je souhaite améliorer notre relation.</h4>
             </button>
             <button
               onClick={() => handleSituationSelect('C')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">C. Je me questionne sur l'avenir de ma relation.</h4>
+              <h4 className="font-medium">Je me questionne sur l'avenir de ma relation.</h4>
             </button>
             <button
               onClick={() => handleSituationSelect('D')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">D. Je viens de vivre une rupture et je veux avancer.</h4>
+              <h4 className="font-medium">Je viens de vivre une rupture et je veux avancer.</h4>
             </button>
           </div>
         </div>
@@ -366,13 +368,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handlePrioritySelect('A1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">A1. Comprendre pourquoi je répète toujours les mêmes schémas.</h4>
+                  <h4 className="font-medium">Comprendre pourquoi je répète toujours les mêmes schémas.</h4>
                 </button>
                 <button
                   onClick={() => handlePrioritySelect('A2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">A2. Mieux cerner mes désirs et mes attentes pour orienter mes choix relationnels.</h4>
+                  <h4 className="font-medium">Mieux cerner mes désirs et mes attentes pour orienter mes choix relationnels.</h4>
                 </button>
               </>
             )}
@@ -383,13 +385,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handlePrioritySelect('B1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">B1. Améliorer la communication et éviter les incompréhensions.</h4>
+                  <h4 className="font-medium">Améliorer la communication et éviter les incompréhensions.</h4>
                 </button>
                 <button
                   onClick={() => handlePrioritySelect('B2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">B2. Raviver le désir et retrouver une connexion plus profonde.</h4>
+                  <h4 className="font-medium">Raviver le désir et retrouver une connexion plus profonde.</h4>
                 </button>
               </>
             )}
@@ -400,13 +402,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handlePrioritySelect('C1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">C1. Évaluer si ma relation est encore alignée avec mes aspirations.</h4>
+                  <h4 className="font-medium">Évaluer si ma relation est encore alignée avec mes aspirations.</h4>
                 </button>
                 <button
                   onClick={() => handlePrioritySelect('C2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">C2. Prendre une décision réfléchie sur l'avenir du couple.</h4>
+                  <h4 className="font-medium">Prendre une décision réfléchie sur l'avenir du couple.</h4>
                 </button>
               </>
             )}
@@ -417,13 +419,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handlePrioritySelect('D1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">D1. Mieux comprendre cette rupture et ce qu'elle révèle sur moi.</h4>
+                  <h4 className="font-medium">Mieux comprendre cette rupture et ce qu'elle révèle sur moi.</h4>
                 </button>
                 <button
                   onClick={() => handlePrioritySelect('D2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">D2. Me reconstruire et envisager une nouvelle dynamique amoureuse.</h4>
+                  <h4 className="font-medium">Me reconstruire et envisager une nouvelle dynamique amoureuse.</h4>
                 </button>
               </>
             )}
@@ -448,13 +450,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('A1.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">A1.1 J'ai du mal à identifier ce qui influence mes choix relationnels.</h4>
+                  <h4 className="font-medium">J'ai du mal à identifier ce qui influence mes choix relationnels.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('A1.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">A1.2 Je ressens un blocage émotionnel qui m'empêche d'avancer sereinement.</h4>
+                  <h4 className="font-medium">Je ressens un blocage émotionnel qui m'empêche d'avancer sereinement.</h4>
                 </button>
               </>
             )}
@@ -465,13 +467,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('A2.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">A2.1 J'ai du mal à exprimer mes attentes dans une relation.</h4>
+                  <h4 className="font-medium">J'ai du mal à exprimer mes attentes dans une relation.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('A2.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">A2.2 J'ai peur de m'engager et de faire les mauvais choix.</h4>
+                  <h4 className="font-medium">J'ai peur de m'engager et de faire les mauvais choix.</h4>
                 </button>
               </>
             )}
@@ -482,13 +484,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('B1.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">B1.1 Nos discussions tournent souvent en conflit.</h4>
+                  <h4 className="font-medium">Nos discussions tournent souvent en conflit.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('B1.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">B1.2 J'aimerais mieux comprendre les besoins de mon/ma partenaire.</h4>
+                  <h4 className="font-medium">J'aimerais mieux comprendre les besoins de mon/ma partenaire.</h4>
                 </button>
               </>
             )}
@@ -499,13 +501,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('B2.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">B2.1 La routine a pris le dessus sur notre relation.</h4>
+                  <h4 className="font-medium">La routine a pris le dessus sur notre relation.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('B2.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">B2.2 Il y a un déséquilibre dans nos attentes affectives et sexuelles.</h4>
+                  <h4 className="font-medium">Il y a un déséquilibre dans nos attentes affectives et sexuelles.</h4>
                 </button>
               </>
             )}
@@ -516,13 +518,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('C1.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">C1.1 Je ressens une distance émotionnelle avec mon/ma partenaire.</h4>
+                  <h4 className="font-medium">Je ressens une distance émotionnelle avec mon/ma partenaire.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('C1.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">C1.2 J'ai peur de me tromper et de regretter ma décision.</h4>
+                  <h4 className="font-medium">J'ai peur de me tromper et de regretter ma décision.</h4>
                 </button>
               </>
             )}
@@ -533,13 +535,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('C2.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">C2.1 Je veux clarifier mes sentiments et ceux de mon/ma partenaire.</h4>
+                  <h4 className="font-medium">Je veux clarifier mes sentiments et ceux de mon/ma partenaire.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('C2.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">C2.2 J'ai besoin d'un espace neutre pour poser les choses sereinement.</h4>
+                  <h4 className="font-medium">J'ai besoin d'un espace neutre pour poser les choses sereinement.</h4>
                 </button>
               </>
             )}
@@ -550,13 +552,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('D1.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">D1.1 J'ai du mal à tourner la page émotionnellement.</h4>
+                  <h4 className="font-medium">J'ai du mal à tourner la page émotionnellement.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('D1.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">D1.2 Je ressens une peur de reproduire les mêmes erreurs.</h4>
+                  <h4 className="font-medium">Je ressens une peur de reproduire les mêmes erreurs.</h4>
                 </button>
               </>
             )}
@@ -567,13 +569,13 @@ const TherapyQuestionnaireNew = () => {
                   onClick={() => handleChallengeSelect('D2.1')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">D2.1 Je veux retrouver confiance en moi et en l'amour.</h4>
+                  <h4 className="font-medium">Je veux retrouver confiance en moi et en l'amour.</h4>
                 </button>
                 <button
                   onClick={() => handleChallengeSelect('D2.2')}
                   className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
                 >
-                  <h4 className="font-medium">D2.2 J'aimerais être accompagné(e) pour redéfinir ma manière d'aimer.</h4>
+                  <h4 className="font-medium">J'aimerais être accompagné(e) pour redéfinir ma manière d'aimer.</h4>
                 </button>
               </>
             )}
@@ -618,6 +620,12 @@ const TherapyQuestionnaireNew = () => {
                 </div>
               </div>
             ))}
+          </div>
+          
+          {/* Message about the journey */}
+          <div className="mt-8 mb-8 bg-primary-cream p-6 rounded-lg text-center">
+            <p className="mb-2 font-medium">Votre voyage commence ici. Prêt(e) à embarquer ?</p>
+            <p className="text-gray-700">Un itinéraire peut être suivi pas à pas ou construit librement. Chaque chemin est là pour vous aider à mieux vous comprendre, choisir, aimer, et vous sentir plus libre dans vos relations.</p>
           </div>
           
           <div className="mt-8 text-center">
