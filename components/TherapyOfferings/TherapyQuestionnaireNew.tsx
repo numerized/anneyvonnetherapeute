@@ -301,7 +301,7 @@ const TherapyQuestionnaireNew = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">🌿 Trouvez votre itinéraire intérieur</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Trouvez votre itinéraire intérieur</h2>
       <p className="text-center mb-8">Un questionnaire en 5 étapes pour découvrir l'accompagnement qui vous correspond : coaching (voyage intérieur) ou thérapie (exploration profonde).</p>
       
       {/* Progress indicator */}
@@ -325,25 +325,25 @@ const TherapyQuestionnaireNew = () => {
               onClick={() => handleSituationSelect('A')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">🔹 A. Je suis célibataire et je veux mieux comprendre mon rapport aux relations.</h4>
+              <h4 className="font-medium">A. Je suis célibataire et je veux mieux comprendre mon rapport aux relations.</h4>
             </button>
             <button
               onClick={() => handleSituationSelect('B')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">🔹 B. Je suis en couple et je souhaite améliorer notre relation.</h4>
+              <h4 className="font-medium">B. Je suis en couple et je souhaite améliorer notre relation.</h4>
             </button>
             <button
               onClick={() => handleSituationSelect('C')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">🔹 C. Je me questionne sur l'avenir de ma relation.</h4>
+              <h4 className="font-medium">C. Je me questionne sur l'avenir de ma relation.</h4>
             </button>
             <button
               onClick={() => handleSituationSelect('D')}
               className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
             >
-              <h4 className="font-medium">🔹 D. Je viens de vivre une rupture et je veux avancer.</h4>
+              <h4 className="font-medium">D. Je viens de vivre une rupture et je veux avancer.</h4>
             </button>
           </div>
         </div>
@@ -356,7 +356,7 @@ const TherapyQuestionnaireNew = () => {
             <button onClick={() => setStep(1)} className="mr-2 text-primary-coral">
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h3 className="text-xl font-semibold">🧭 ÉTAPE 2 : Quelle est votre priorité actuelle ?</h3>
+            <h3 className="text-xl font-semibold">ÉTAPE 2 : Quelle est votre priorité actuelle ?</h3>
           </div>
           
           <div className="space-y-4">
@@ -438,7 +438,7 @@ const TherapyQuestionnaireNew = () => {
             <button onClick={() => setStep(2)} className="mr-2 text-primary-coral">
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h3 className="text-xl font-semibold">💬 ÉTAPE 3 : Quel est votre principal défi ?</h3>
+            <h3 className="text-xl font-semibold">ÉTAPE 3 : Quel est votre principal défi ?</h3>
           </div>
           
           <div className="space-y-4">
@@ -588,12 +588,12 @@ const TherapyQuestionnaireNew = () => {
             <button onClick={() => setStep(3)} className="mr-2 text-primary-coral">
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <h3 className="text-xl font-semibold">🚀 ÉTAPE 5 : Votre itinéraire personnalisé</h3>
+            <h3 className="text-xl font-semibold">Votre itinéraire personnalisé</h3>
           </div>
           
           {/* Intention section */}
           <div className="bg-primary-cream p-6 rounded-lg mb-8 border border-primary-coral">
-            <h4 className="font-semibold text-lg mb-3">🌟 Votre intention profonde :</h4>
+            <h4 className="font-semibold text-lg mb-3">Votre intention profonde :</h4>
             <p className="text-gray-700">{getIntentionText()}</p>
           </div>
           
