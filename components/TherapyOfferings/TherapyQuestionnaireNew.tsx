@@ -21,6 +21,10 @@ type TherapyOption = {
     | 'women'
   therapyId: string
   offeringType: 'therapy' | 'coaching'
+  price?: number
+  priceDetails?: string
+  hasFormulas?: boolean
+  formulas?: any[]
 }
 
 // Define offerings that are specifically for couples
@@ -157,20 +161,87 @@ const TherapyQuestionnaireNew = () => {
 
     // Combine all offerings for easier selection
     const allOfferings: TherapyOption[] = [
-      ...therapyOfferings.therapyTypes.map((therapy) => ({
-        title: therapy.title,
-        description: therapy.description || '',
-        type: therapy.id as any,
-        therapyId: therapy.id,
-        offeringType: 'therapy' as const,
-      })),
-      ...coachingOfferings.coachingTypes.map((coaching) => ({
-        title: coaching.title,
-        description: coaching.description || '',
-        type: coaching.id as any,
-        therapyId: coaching.id,
-        offeringType: 'coaching' as const,
-      })),
+      ...therapyOfferings.therapyTypes.map((therapy: any) => {
+        // Extract price and priceDetails based on the structure
+        let price: number | undefined;
+        let priceDetails: string | undefined;
+        let hasFormulas = false;
+        let formulas: any[] = [];
+        
+        if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
+          // Store formulas information
+          hasFormulas = true;
+          formulas = therapy.formulas;
+          
+          // Use the first formula's price as the main price display
+          price = therapy.formulas[0].price;
+          priceDetails = "plusieurs formules disponibles";
+        } else if (therapy.mainOffering && therapy.mainOffering.formulas && 
+                  Array.isArray(therapy.mainOffering.formulas) && therapy.mainOffering.formulas.length > 0) {
+          // Handle case where formulas are inside mainOffering
+          hasFormulas = true;
+          formulas = therapy.mainOffering.formulas;
+          
+          // Use the first formula's price as the main price display
+          price = therapy.mainOffering.formulas[0].price;
+          priceDetails = "plusieurs formules disponibles";
+        } else if (therapy.pricing && typeof therapy.pricing === 'object') {
+          // Handle case where pricing is an object with couple/individual properties
+          if (therapy.pricing.couple) {
+            price = therapy.pricing.couple;
+            priceDetails = "pour couple";
+          } else if (therapy.pricing.individual) {
+            price = therapy.pricing.individual;
+            priceDetails = "pour individuel";
+          }
+        } else if (therapy.mainOffering && therapy.mainOffering.price) {
+          // Handle case where price is in mainOffering
+          price = therapy.mainOffering.price;
+          priceDetails = therapy.mainOffering.note;
+        } else if (therapy.price) {
+          // Direct price property
+          price = therapy.price;
+          priceDetails = therapy.priceDetails;
+        }
+        
+        return {
+          title: therapy.title,
+          description: therapy.description || '',
+          type: therapy.id as any,
+          therapyId: therapy.id,
+          offeringType: 'therapy' as const,
+          price,
+          priceDetails,
+          hasFormulas,
+          formulas
+        };
+      }),
+      ...coachingOfferings.coachingTypes.map((coaching: any) => {
+        // Extract price and priceDetails
+        let price: number | undefined;
+        let priceDetails: string | undefined;
+        
+        if (coaching.price) {
+          price = coaching.price;
+        } else if (coaching.mainOffering && coaching.mainOffering.price) {
+          // Get price from mainOffering
+          price = coaching.mainOffering.price;
+          
+          if (coaching.mainOffering.details && coaching.mainOffering.details.duration) {
+            priceDetails = coaching.mainOffering.details.duration;
+          }
+        }
+        
+        return {
+          title: coaching.title,
+          description: coaching.description || '',
+          type: coaching.id as any,
+          therapyId: coaching.id,
+          offeringType: 'coaching' as const,
+          price,
+          priceDetails
+        };
+      }),
     ]
     
     // Filter out NEURO TRIBU offerings but keep VIT for later
@@ -181,9 +252,42 @@ const TherapyQuestionnaireNew = () => {
     // Separate VIT offerings for later use
     const vitOffering = allOfferings.find(o => o.therapyId.includes('vit-a-la-carte'))
     
+    // If vitOffering exists but doesn't have price info, add it
+    if (vitOffering && !vitOffering.price) {
+      const rawVitOffering = therapyOfferings.therapyTypes.find((t: any) => t.id === 'vit-a-la-carte');
+      if (rawVitOffering && rawVitOffering.mainOffering && rawVitOffering.mainOffering.price) {
+        vitOffering.price = rawVitOffering.mainOffering.price;
+        vitOffering.priceDetails = rawVitOffering.mainOffering.note || 'par séance';
+      } else if (rawVitOffering && rawVitOffering.pricing) {
+        // Use individual price by default
+        vitOffering.price = rawVitOffering.pricing.individual || rawVitOffering.pricing.couple;
+        vitOffering.priceDetails = 'par séance';
+      }
+    }
+    
     // Helper function to find an offering by its ID
     const findOffering = (id: string): TherapyOption | undefined => {
-      return filteredOfferings.find(o => o.therapyId === id)
+      // Get the offering from the filtered list
+      const offering = filteredOfferings.find(o => o.therapyId === id);
+      
+      if (!offering) return undefined;
+      
+      // For THÉRAPIE RELATIONNELLE INDIVIDUELLE specifically, ensure formulas are included
+      if (id === 'individual') {
+        // Find the original data with complete formulas
+        const rawOffering = therapyOfferings.therapyTypes.find((t: any) => t.id === 'individual');
+        if (rawOffering && rawOffering.mainOffering && rawOffering.mainOffering.formulas && 
+            Array.isArray(rawOffering.mainOffering.formulas)) {
+          offering.hasFormulas = true;
+          offering.formulas = rawOffering.mainOffering.formulas;
+          if (!offering.price && rawOffering.mainOffering.formulas.length > 0) {
+            offering.price = rawOffering.mainOffering.formulas[0].price;
+            offering.priceDetails = "plusieurs formules disponibles";
+          }
+        }
+      }
+      
+      return offering;
     }
     
     // Create an array to hold our final recommendations
@@ -612,20 +716,37 @@ const TherapyQuestionnaireNew = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {recommendations.map((option, index) => (
               <div key={index} className="border rounded-lg p-6 hover:shadow-md transition-all">
-                <h4 className="font-bold text-lg mb-2 text-primary-coral">{option.title}</h4>
-                <p className="text-gray-600 mb-4">{option.description}</p>
-                <span className="inline-block bg-primary-cream text-primary-coral px-3 py-1 rounded-full text-sm">
+                <span className="inline-block bg-primary-cream text-primary-coral px-3 py-1 rounded-full text-sm mb-3">
                   {option.offeringType === 'therapy' ? 'Thérapie' : 'Coaching'}
                 </span>
-                <div className="mt-4">
-                  <Link
-                    href={`/therapy-offerings/${option.therapyId}`}
-                    className="flex items-center text-primary-coral hover:text-primary-rust"
-                  >
-                    <span className="mr-1">En savoir plus</span>
-                    <ArrowUpRight className="w-4 h-4" />
-                  </Link>
+                <h4 className="font-bold text-lg mb-2 text-primary-coral">{option.title}</h4>
+                <p className="text-gray-600 mb-4">{option.description}</p>
+                <div className="flex flex-wrap items-center justify-end mb-4">
+                  {option.price && (
+                    <span className="text-sm font-medium text-gray-700">
+                      {option.price}€ {option.priceDetails && <span className="text-xs">({option.priceDetails})</span>}
+                    </span>
+                  )}
+                  {!option.price && (
+                    <span className="text-sm font-medium text-gray-700">
+                      Tarif sur demande
+                    </span>
+                  )}
                 </div>
+                
+                {option.hasFormulas && option.formulas && option.formulas.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-gray-100">
+                    <h5 className="text-sm font-medium mb-2">Formules disponibles:</h5>
+                    <div className="space-y-2">
+                      {option.formulas.map((formula, idx) => (
+                        <div key={idx} className="text-xs text-gray-600">
+                          <span className="font-medium">{formula.title}:</span> {formula.price}€ 
+                          {formula.duration && <span> ({formula.duration})</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
