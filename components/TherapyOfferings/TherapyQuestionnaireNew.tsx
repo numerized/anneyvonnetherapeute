@@ -732,7 +732,7 @@ const TherapyQuestionnaireNew = () => {
                 <div key={index} className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
                   <div className="space-y-12">
                     <div className="text-right">
-                      <span className="inline-block bg-primary-cream text-primary-coral px-3 py-1 rounded-full text-sm mb-3">
+                      <span className="inline-block bg-primary-dark text-primary-coral px-3 py-1 rounded-full text-sm mb-3">
                         {option.offeringType === 'therapy' ? 'Thérapie' : 'Coaching'}
                       </span>
                       <h4 className="text-2xl text-primary-coral font-light mb-2">{option.title}</h4>
