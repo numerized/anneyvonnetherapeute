@@ -168,7 +168,20 @@ const TherapyQuestionnaireNew = () => {
         let hasFormulas = false;
         let formulas: any[] = [];
         
-        if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
+        // Special case for VIT therapy
+        if (therapy.id === 'vit-a-la-carte' && therapy.pricing) {
+          hasFormulas = false; // Not formula-based
+          if (therapy.pricing.individual && therapy.pricing.couple) {
+            price = undefined; // Don't show a main price
+            priceDetails = `individuel: ${therapy.pricing.individual}€ par séance\ncouple: ${therapy.pricing.couple}€ par séance`;
+          } else if (therapy.pricing.individual) {
+            price = therapy.pricing.individual;
+            priceDetails = "par séance (individuel)";
+          } else if (therapy.pricing.couple) {
+            price = therapy.pricing.couple;
+            priceDetails = "par séance (couple)";
+          }
+        } else if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
           // Store formulas information
           hasFormulas = true;
           formulas = therapy.formulas;
@@ -727,7 +740,12 @@ const TherapyQuestionnaireNew = () => {
                       {option.price}€ {option.priceDetails && <span className="text-xs">({option.priceDetails})</span>}
                     </span>
                   )}
-                  {!option.price && (
+                  {!option.price && option.priceDetails && (
+                    <span className="text-sm font-medium text-gray-700 whitespace-pre-line text-right">
+                      {option.priceDetails}
+                    </span>
+                  )}
+                  {!option.price && !option.priceDetails && (
                     <span className="text-sm font-medium text-gray-700">
                       Tarif sur demande
                     </span>
