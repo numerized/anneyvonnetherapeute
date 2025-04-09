@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUpRight, ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowUpRight, ArrowLeft, ArrowRight, Moon, Star } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { getTherapyOfferings, getCoachingOfferings } from '@/data/therapyOfferings/utils'
@@ -536,7 +536,9 @@ const TherapyQuestionnaireNew = () => {
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
                     </span>
                     <h4 className="font-medium">Comprendre pourquoi je répète toujours les mêmes schémas.</h4>
@@ -547,9 +549,8 @@ const TherapyQuestionnaireNew = () => {
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="16"></line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                       </svg>
                     </span>
                     <h4 className="font-medium">Mieux cerner mes désirs et mes attentes pour orienter mes choix relationnels.</h4>
@@ -575,11 +576,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
-                        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
-                        <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
-                        <path d="M19 11h2m-1 -1v2"></path>
-                      </svg>
+                      <Moon className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">Raviver le désir et retrouver une connexion plus profonde.</h4>
                   </button>
@@ -648,26 +645,39 @@ const TherapyQuestionnaireNew = () => {
         {/* Step 3: Main Challenge */}
         {step === 3 && (
           <div className="mb-8">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-6">
               <button onClick={() => setStep(2)} className="mr-2 text-primary-coral">
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h3 className="text-xl font-semibold text-primary-coral">ÉTAPE 3 : Quel est votre principal défi ?</h3>
+              <h3 className="text-xl font-semibold text-primary-cream">Quel est votre principal défi ?</h3>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
               {answers.priority === 'A1' && (
                 <>
                   <button
                     onClick={() => handleChallengeSelect('A1.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'ai du mal à identifier ce qui influence mes choix relationnels.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('A1.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Je ressens un blocage émotionnel qui m'empêche d'avancer sereinement.</h4>
                   </button>
                 </>
@@ -677,14 +687,26 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('A2.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'ai du mal à exprimer mes attentes dans une relation.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('A2.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="m15 9-6 6"></path>
+                        <path d="m9 9 6 6"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'ai peur de m'engager et de faire les mauvais choix.</h4>
                   </button>
                 </>
@@ -694,14 +716,26 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('B1.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Nos discussions tournent souvent en conflit.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('B1.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'aimerais mieux comprendre les besoins de mon/ma partenaire.</h4>
                   </button>
                 </>
@@ -711,14 +745,27 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('B2.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">La routine a pris le dessus sur notre relation.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('B2.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+                        <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+                        <path d="M19 11h2m-1 -1v2"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Il y a un déséquilibre dans nos attentes affectives et sexuelles.</h4>
                   </button>
                 </>
@@ -728,14 +775,26 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('C1.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Je ressens une distance émotionnelle avec mon/ma partenaire.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('C1.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M10 13a5 5 0 0 1 7.54.54l3-3a5 5 0 0 1-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 1-7.54-.54l-3 3a5 5 0 0 1 7.07 7.07l1.71-1.71"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'ai peur de me tromper et de regretter ma décision.</h4>
                   </button>
                 </>
@@ -745,14 +804,29 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('C2.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Je veux clarifier mes sentiments et ceux de mon/ma partenaire.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('C2.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'ai besoin d'un espace neutre pour poser les choses sereinement.</h4>
                   </button>
                 </>
@@ -762,14 +836,28 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('D1.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                        <path d="M12 9v4"></path>
+                        <path d="M12 17h.01"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'ai du mal à tourner la page émotionnellement.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('D1.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="m15 9-6 6"></path>
+                        <path d="m9 9 6 6"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Je ressens une peur de reproduire les mêmes erreurs.</h4>
                   </button>
                 </>
@@ -779,14 +867,24 @@ const TherapyQuestionnaireNew = () => {
                 <>
                   <button
                     onClick={() => handleChallengeSelect('D2.1')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">Je veux retrouver confiance en moi et en l'amour.</h4>
                   </button>
                   <button
                     onClick={() => handleChallengeSelect('D2.2')}
-                    className="w-full text-left p-4 border rounded-lg hover:border-primary-coral hover:shadow-md transition-all"
+                    className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
+                        <path d="M21 2H3v16h5v4l4-4h5l4-4V2zM7 7h.01M12 7h.01M17 7h.01"></path>
+                      </svg>
+                    </span>
                     <h4 className="font-medium">J'aimerais être accompagné(e) pour redéfinir ma manière d'aimer.</h4>
                   </button>
                 </>
