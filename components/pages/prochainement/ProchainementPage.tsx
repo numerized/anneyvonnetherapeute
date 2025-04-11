@@ -8,16 +8,12 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Stats } from '@/components/shared/Stats'
+import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 
-import PaymentSuccess from './PaymentSuccess'
 import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
-import { PurchaseTicket } from './PurchaseTicket'
+import PaymentSuccess from './PaymentSuccess'
 
 export function ProchainementPage({ data, settings }: any) {
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
-  const [selectedTicketType, setSelectedTicketType] = useState<
-    'standard' | 'vip'
-  >('standard')
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isPlaying2, setIsPlaying2] = useState(false)
@@ -25,16 +21,7 @@ export function ProchainementPage({ data, settings }: any) {
   const videoRef2 = useRef<HTMLVideoElement>(null)
   const searchParams = useSearchParams()
   const success = searchParams?.get('success') ?? null
-  const isCanceled = searchParams?.get('canceled') === 'true'
-  const couponCode = searchParams?.get('coupon') ?? undefined
-  const currency = settings?.currency || 'EUR'
-  const hasDiscount = isCanceled || couponCode === 'COEUR180'
   const capsulesSectionRef = useRef<HTMLDivElement>(null)
-
-  const handleTicketPurchase = (type: 'standard' | 'vip') => {
-    setSelectedTicketType(type)
-    setShowPurchaseModal(true)
-  }
 
   useEffect(() => {
     setIsClient(true)
@@ -135,225 +122,21 @@ export function ProchainementPage({ data, settings }: any) {
           <ProchainementHero
             hero={data.hero}
             data={settings}
-            onShowPurchase={() => setShowPurchaseModal(true)}
           />
 
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
-              {/* <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
-                  PROCHAIN LIVE
-                </h2>
-              </div>
-
-              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-
-                  <div className="w-full md:w-1/3 flex justify-center">
-                    <div className="bg-primary-dark/30 rounded-2xl p-6 text-center w-full max-w-[240px]">
-                      <div className="text-primary-coral font-medium mb-2">LIVE: Sur le divan d'Anne Yvonne</div>
-                      <div className="text-2xl font-bold text-primary-cream mb-1">15 Avril</div>
-                      <div className="text-xl text-primary-cream">20h00</div>
-                    </div>
-                  </div>
-
-                  <div className="w-full md:w-2/3">
-                    <h2 className="text-2xl font-medium text-primary-coral mb-4">
-                      LE LIVE D'ANNE YVONNE SUR LE DIVAN
-                    </h2>
-                    <p className="text-primary-cream/80 mb-6">
-                      Le live mensuel du mois d'avril - Accès à partir de 19h45
-                    </p>
-                    <div className="flex justify-end">
-                      <Link
-                        href="/live"
-                        className="inline-flex items-center bg-primary-coral hover:bg-primary-coral/90 text-primary-cream px-6 py-3 rounded-full transition-colors"
-                      >
-                        Accéder au live
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* Header */}
-              <div className="text-center mb-12">
-                <br />
-                <br />
-                <h2 className="text-3xl md:text-5xl font-medium text-primary-coral mb-4">
-                  COACHING RELATIONNEL 7/7
-                </h2>
-                <div className="text-lg md:text-xl">
-                  <p className="font-bold mb-4" style={{ color: '#D9B70D' }}>
-                    OFFRE EXCLUSIVE LIMITÉE
-                  </p>
-                </div>
-              </div>
-
-              {/* Offer Image */}
-              {!isCanceled && (
-                <div
-                  id="offer-section"
-                  className="mb-12 relative w-full aspect-[16/9] rounded-[32px] overflow-hidden"
-                >
-                  <Image
-                    src="/images/tempoffer.webp"
-                    alt="Offre temporaire"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  <div
-                    className="absolute inset-0 z-10"
-                    style={{
-                      background:
-                        'linear-gradient(-55deg, transparent 25%, rgba(18, 44, 28, 0.2) 40%, rgba(18, 44, 28, 0.35) 70%)',
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Event Details and Price Grid */}
-              <div className="grid md:grid-cols-2 gap-8 mb-6 auto-rows-fr">
-                <div className="flex-grow">
-                  <div className="h-full flex items-center justify-center">
-                    <div className="text-center">
-                      {hasDiscount ? (
-                        <div className="space-y-4">
-                          <div className="text-2xl line-through text-primary-cream/60">{`999 ${currency?.toUpperCase()}`}</div>
-                          <div className="text-3xl text-primary-coral font-semibold">{`899 ${currency?.toUpperCase()}`}</div>
-                          <div className="bg-primary-coral/20 rounded-lg py-2 px-6 inline-block">
-                            <span className="text-primary-coral font-semibold">
-                              COEUR180
-                            </span>
-                            <span className="ml-2">-10%</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-3xl">{`999 ${currency?.toUpperCase()}`}</div>
-                      )}
-                      <p className="text-sm text-primary-cream/60 mt-6 max-w-md mx-auto">
-                        L'argent ne doit pas être un obstacle, contactez-moi si
-                        vous faites faces à des difficultés financières, nous
-                        trouverons une solution !
-                      </p>
-                      <button
-                        onClick={() => setShowPurchaseModal(true)}
-                        className="w-full bg-primary-coral hover:bg-primary-rust text-primary-cream py-3 px-6 rounded-full transition-colors duration-200 mt-6"
-                      >
-                        {hasDiscount
-                          ? "Profiter de l'offre -10%"
-                          : 'Réserver ma place'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="bg-primary-forest rounded-[32px] p-8 shadow-lg">
-                    <ul className="space-y-4 text-primary-cream/80 m-0">
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>OPTIMISEZ VOS RELATIONS EN 1 MOIS</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>SPECIAL DIVERSITÉS</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>COACHING INDIVIDUEL 24/24 SUR 1 MOIS</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>ÉCHANGES QUOTIDIENS VIA TELEGRAM</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary-coral">♦</span>
-                        <span>
-                          TROIS SEANCES DE THÉRAPIE À LA CARTE VIA WHEREBY
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Rest of the content... */}
-              <div className="bg-primary-forest rounded-[32px] p-8 mb-8 shadow-lg">
-                <h2 className="text-2xl font-medium text-primary-coral mb-6">
-                  Explorez vos relations sous un nouveau prisme
-                </h2>
-
-                <div className="space-y-6 text-primary-cream/80">
-                  <p>
-                    Ce programme n'est pas une simple démarche d'accompagnement.
-                    C'est une exploration méthodique de vos dynamiques
-                    relationnelles, fondée sur une analyse fine et des outils
-                    concrets.
-                  </p>
-
-                  <p>
-                    Chaque interaction, chaque blocage, chaque incompréhension
-                    est porteur de sens. Ce coaching vous invite à déchiffrer
-                    ces messages sous-jacents et à comprendre ce qui, parfois,
-                    freine ou complexifie vos liens personnels et
-                    professionnels.
-                  </p>
-
-                  <p className="font-medium mb-4">
-                    Les résultats ne résident pas dans des promesses vagues,
-                    mais dans une transformation palpable :
-                  </p>
-                  <ul className="space-y-4 text-primary-cream/80 m-0">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary-coral">♦</span>
-                      <span>
-                        Une lucidité accrue sur vos comportements et leurs
-                        impacts.
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary-coral">♦</span>
-                      <span>
-                        Une capacité renforcée à ajuster vos réponses
-                        émotionnelles et stratégiques.
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary-coral">♦</span>
-                      <span>
-                        La création de relations en phase avec vos valeurs, vos
-                        objectifs et votre vision.
-                      </span>
-                    </li>
-                  </ul>
-
-                  <p>
-                    En 1 mois, avec un accompagnement continu et des séances
-                    ciblées, vous développerez des compétences relationnelles
-                    tangibles, applicables immédiatement dans votre quotidien.
-                    Loin des approches stéréotypées, ce programme vous offre une
-                    structure rationnelle et rigoureuse pour atteindre une
-                    maîtrise de vos interactions.
-                  </p>
-
-                  <p
-                    className="italic font-medium"
-                    style={{ color: '#D9B70D' }}
-                  >
-                    Comprendre, c'est changer. Êtes-vous prêt à repenser vos
-                    relations à la lumière d'une démarche précise et impactante
-                    ?
-                  </p>
-                </div>
-              </div>
               {/* Stats Section */}
               <Stats
                 title="Une approche unique de la thérapie relationnelle"
                 items={statsItems}
               />
+              
+              {/* Questionnaire Section */}
+              <div className="mt-16 mb-16 overflow-hidden rounded-[32px]">
+                <TherapyQuestionnaireNew />
+              </div>
 
               {/* Presentation Section */}
               <div className="mb-16 bg-primary-dark/30 rounded-[32px] overflow-hidden">
@@ -590,17 +373,6 @@ export function ProchainementPage({ data, settings }: any) {
                   </div>
                 </div>
               </div>
-
-              {/* Purchase Modal */}
-              {showPurchaseModal && (
-                <PurchaseTicket
-                  ticketType="standard"
-                  onClose={() => setShowPurchaseModal(false)}
-                  defaultCouponCode={
-                    isCanceled ? 'COEUR180' : couponCode || undefined
-                  }
-                />
-              )}
             </div>
           </section>
         </>
