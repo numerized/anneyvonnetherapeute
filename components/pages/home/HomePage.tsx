@@ -13,7 +13,7 @@ import { Hero } from './Hero'
 import { ProfessionalTraining } from './ProfessionalTraining'
 import { RelationshipStages } from './RelationshipStages'
 import { TherapyPricing } from './TherapyPricing'
-import { TherapyQuestionnaire } from './TherapyQuestionnaire'
+import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 
 export interface HomePageProps {
   data: HomePagePayload | null
@@ -50,7 +50,7 @@ export function HomePage({
       {/* About Section */}
       <About />
 
-      <TherapyQuestionnaire />
+      <TherapyQuestionnaireNew />
 
       <ProfessionalTraining />
       <AiCompanion />
