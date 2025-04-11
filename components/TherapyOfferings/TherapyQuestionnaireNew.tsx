@@ -60,50 +60,57 @@ const TherapyQuestionnaireNew = () => {
   // State for recommendations
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
 
-  // First useEffect to load saved data from localStorage
+  // State for tracking if the component is mounted (client-side rendering)
+  const [mounted, setMounted] = useState(false)
+
+  // First useEffect to mark component as mounted and load saved data
   useEffect(() => {
-    // Only run on client-side
-    if (typeof window !== 'undefined') {
-      try {
-        const completed = localStorage.getItem('questionnaire_completed')
-        console.log('Loading questionnaire state, completed:', completed)
+    setMounted(true)
 
-        if (completed === 'true') {
-          const storedAnswers = localStorage.getItem('answers')
-          const storedRecommendations = localStorage.getItem('recommendations')
-          console.log('Found stored data:', !!storedAnswers, !!storedRecommendations)
+    // Load data from localStorage
+    try {
+      const completed = localStorage.getItem('questionnaire_completed')
 
-          if (storedAnswers && storedRecommendations) {
-            const parsedAnswers = JSON.parse(storedAnswers)
-            const parsedRecommendations = JSON.parse(storedRecommendations)
-            console.log('Parsed data:', 
-              'Has intention:', !!parsedAnswers.intention, 
-              'Recommendations count:', parsedRecommendations.length
-            )
+      if (completed === 'true') {
+        const storedAnswers = localStorage.getItem('answers')
+        const storedRecommendations = localStorage.getItem('recommendations')
 
-            if (parsedAnswers.intention && parsedRecommendations && parsedRecommendations.length > 0) {
-              // Set the state with the saved values
-              console.log('Loading saved questionnaire results')
-              setAnswers(parsedAnswers)
-              setRecommendations(parsedRecommendations)
+        if (storedAnswers && storedRecommendations) {
+          const parsedAnswers = JSON.parse(storedAnswers)
+          const parsedRecommendations = JSON.parse(storedRecommendations)
 
-              // Use setTimeout to avoid hydration issues
-              setTimeout(() => {
-                console.log('Setting step to 4 to show results')
-                setStep(4)
-              }, 100) // Slightly longer timeout to ensure state is updated
-            }
+          // Only proceed if we have valid data
+          if (parsedAnswers && parsedAnswers.intention &&
+              parsedRecommendations && parsedRecommendations.length > 0) {
+
+            // Set state with saved values
+            setAnswers(parsedAnswers)
+            setRecommendations(parsedRecommendations)
+
+            // Set step to show results after a small delay
+            setTimeout(() => setStep(4), 200)
           }
         }
-      } catch (error) {
-        console.error('Error loading saved data:', error)
-        // Clear storage on error to prevent continuous errors
-        localStorage.removeItem('answers')
-        localStorage.removeItem('recommendations')
-        localStorage.removeItem('questionnaire_completed')
       }
+    } catch (error) {
+      console.error('Error loading from localStorage:', error)
+      // Clear localStorage on error
+      localStorage.removeItem('questionnaire_completed')
+      localStorage.removeItem('answers')
+      localStorage.removeItem('recommendations')
     }
-  }, []) // Empty dependency array so it only runs once on component mount
+  }, [])
+
+  // Function to save questionnaire results
+  const saveQuestionnaireResults = (updatedAnswers, recommendedOptions) => {
+    try {
+      localStorage.setItem('questionnaire_completed', 'true')
+      localStorage.setItem('answers', JSON.stringify(updatedAnswers))
+      localStorage.setItem('recommendations', JSON.stringify(recommendedOptions))
+    } catch (error) {
+      console.error('Error saving to localStorage:', error)
+    }
+  }
 
   // Handler for situation selection
   const handleSituationSelect = (situation: string) => {
@@ -156,18 +163,7 @@ const TherapyQuestionnaireNew = () => {
     setStep(4)
 
     // Save data to localStorage when results are generated
-    try {
-      console.log('Saving to localStorage:', 
-        'Answers:', JSON.stringify(updatedAnswers).substring(0, 50) + '...',
-        'Recommendations:', recommendedOptions.length
-      )
-      
-      localStorage.setItem('answers', JSON.stringify(updatedAnswers))
-      localStorage.setItem('recommendations', JSON.stringify(recommendedOptions))
-      localStorage.setItem('questionnaire_completed', 'true')
-    } catch (error) {
-      console.error('Error saving to localStorage:', error)
-    }
+    saveQuestionnaireResults(updatedAnswers, recommendedOptions)
   }
 
   return (
@@ -1185,6 +1181,14 @@ const TherapyQuestionnaireNew = () => {
                   localStorage.removeItem('recommendations')
                   localStorage.removeItem('questionnaire_completed')
                   setStep(1)
+                  setAnswers({
+                    situation: '',
+                    priority: '',
+                    challenge: '',
+                    intention: '',
+                    skippedChallengeStep: false,
+                  })
+                  setRecommendations([])
                 }}
                 className="text-primary-cream cursor-pointer hover:text-primary-coral"
               >
