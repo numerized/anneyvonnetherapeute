@@ -289,7 +289,7 @@ export const generateRecommendedOptions = (
   // Create an array to hold our final recommendations
   let recommendedOptions: TherapyOption[] = []
 
-  // For each path, select the 2 most appropriate existing offerings
+  // For each path, select the most appropriate existing offerings
   switch (priority) {
     case 'A1': // Célibataire > Mieux comprendre
       recommendedOptions = [
@@ -297,7 +297,7 @@ export const generateRecommendedOptions = (
         findOffering('new-relationship') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'A2': // Célibataire > Aligner désirs/choix
@@ -306,7 +306,7 @@ export const generateRecommendedOptions = (
         findOffering('individual') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'B1': // En couple > Communication
@@ -316,7 +316,7 @@ export const generateRecommendedOptions = (
         findOffering('expectations-disappointments') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'B2': // En couple > Désir
@@ -325,7 +325,7 @@ export const generateRecommendedOptions = (
         findOffering('couple') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'C1': // En questionnement > Évaluation
@@ -335,7 +335,7 @@ export const generateRecommendedOptions = (
         findOffering('expectations-disappointments') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'C2': // En questionnement > Décision
@@ -345,7 +345,7 @@ export const generateRecommendedOptions = (
         findOffering('individual') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'D1': // Rupture > Comprendre
@@ -354,7 +354,7 @@ export const generateRecommendedOptions = (
         findOffering('new-relationship') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     case 'D2': // Rupture > Reconstruction
@@ -363,7 +363,7 @@ export const generateRecommendedOptions = (
         findOffering('individual') || filteredOfferings[0],
       ]
         .filter(Boolean)
-        .slice(0, 2)
+        .slice(0, 4) // Allow up to 4 highly relevant offerings
       break
 
     default:
@@ -376,7 +376,7 @@ export const generateRecommendedOptions = (
       recommendedOptions = getMatchingOfferingsOptions(
         keywords,
         situation === 'A' || situation === 'D' ? 'individual' : 'couple',
-        2,
+        4, // Allow up to 4 highly relevant offerings
       )
   }
 
@@ -392,17 +392,18 @@ export const generateRecommendedOptions = (
     recommendedOptions.push(...additionalRecommendations)
   }
 
-  // Add VIT offering if not already in recommendations
+  // Add VIT offering if not already in recommendations and we have space for it
   if (
     vitOffering &&
-    !recommendedOptions.some((r) => r.therapyId.includes('vit'))
+    !recommendedOptions.some((r) => r.therapyId.includes('vit')) &&
+    recommendedOptions.length < 4 // Only add if we have fewer than 4 offerings
   ) {
     recommendedOptions.push(vitOffering)
   }
 
-  // Ensure we don't have more than 3 recommendations
-  if (recommendedOptions.length > 3) {
-    recommendedOptions = recommendedOptions.slice(0, 3)
+  // Ensure we don't have more than 4 recommendations
+  if (recommendedOptions.length > 4) {
+    recommendedOptions = recommendedOptions.slice(0, 4)
   }
 
   return recommendedOptions
