@@ -9,6 +9,7 @@ import {
   generateRecommendedOptions,
   getIntentionText,
 } from '@/utils/therapyRecommendations'
+import { scrollToSection } from '@/utils/scroll'
 
 type TherapyOption = {
   title: string
@@ -167,7 +168,7 @@ const TherapyQuestionnaireNew = () => {
   }
 
   return (
-    <section className="bg-primary-dark py-16">
+    <section id="questionnaire" className="bg-primary-dark py-16">
       <div className="max-w-4xl mx-auto p-6 text-primary-cream/90">
         {/* Header */}
         <div className="text-center mb-12">
@@ -1189,6 +1190,7 @@ const TherapyQuestionnaireNew = () => {
                     skippedChallengeStep: false,
                   })
                   setRecommendations([])
+                  scrollToSection('questionnaire')
                 }}
                 className="text-primary-cream cursor-pointer hover:text-primary-coral"
               >
