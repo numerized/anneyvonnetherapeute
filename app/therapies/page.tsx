@@ -1,7 +1,6 @@
 import React from 'react'
 
 import TherapyOfferingsPage from '@/components/TherapyOfferings/TherapyOfferingsPage'
-import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 
 export const metadata = {
   title: 'Thérapies - Coeur à Corps | Anne Yvonne Thérapie',
@@ -13,7 +12,6 @@ export default function TherapiesPage() {
   return (
     <>
       <TherapyOfferingsPage />
-      <TherapyQuestionnaireNew />
     </>
   )
 }
