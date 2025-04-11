@@ -968,7 +968,7 @@ const TherapyQuestionnaireNew = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h3 className="text-xl font-semibold text-primary-coral">
+              <h3 className="text-2xl font-semibold text-primary-coral">
                 Votre itinéraire personnalisé
               </h3>
             </div>
@@ -1100,7 +1100,7 @@ const TherapyQuestionnaireNew = () => {
 
             {/* Message about the journey */}
             <div className="mt-8 mb-8 bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] text-center">
-              <p className="mb-2 font-medium text-primary-coral">
+              <p className="mb-2 font-bold text-lg text-primary-coral">
                 Votre voyage commence ici. Prêt(e) à embarquer ?
               </p>
               <p className="text-primary-cream/90">
@@ -1119,7 +1119,7 @@ const TherapyQuestionnaireNew = () => {
             <div className="mt-8 text-center">
               <span
                 onClick={() => setStep(1)}
-                className="text-primary-cream cursor-pointer hover:text-primary-coral underline"
+                className="text-primary-cream cursor-pointer hover:text-primary-coral"
               >
                 Recommencer le questionnaire
               </span>
