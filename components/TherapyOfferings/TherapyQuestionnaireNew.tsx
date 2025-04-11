@@ -26,7 +26,6 @@ import {
   MessageSquare,
   BookOpen
 } from 'lucide-react'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import { scrollToSection } from '@/utils/scroll'
@@ -34,6 +33,7 @@ import {
   generateRecommendedOptions,
   getIntentionText,
 } from '@/utils/therapyRecommendations'
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal'
 
 type TherapyOption = {
   title: string
@@ -87,6 +87,11 @@ const TherapyQuestionnaireNew = () => {
 
   // State for tracking if the component is mounted (client-side rendering)
   const [mounted, setMounted] = useState(false)
+
+  // State for Calendly modal
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false)
+  const [appointmentScheduled, setAppointmentScheduled] = useState(false)
+  const [appointmentDate, setAppointmentDate] = useState('')
 
   // First useEffect to mark component as mounted and load saved data
   useEffect(() => {
@@ -195,6 +200,82 @@ const TherapyQuestionnaireNew = () => {
 
     // Save data to localStorage when results are generated
     saveQuestionnaireResults(updatedAnswers, recommendedOptions)
+  }
+
+  // Handle appointment scheduled
+  const handleAppointmentScheduled = async (eventData: any) => {
+    try {
+      // Validate that we have the expected event data structure
+      if (
+        eventData.event !== 'calendly.event_scheduled' ||
+        !eventData.payload
+      ) {
+        console.error('Invalid event data format:', eventData)
+        return
+      }
+
+      // Extract data from Calendly's standard event structure
+      const eventUri = eventData.payload?.event?.uri || ''
+
+      if (!eventUri) {
+        console.error('Missing event URI:', eventData)
+        return
+      }
+
+      try {
+        // Fetch event details from our API
+        const eventDetailsResponse = await fetch(
+          `/api/calendly/event-details?eventUri=${encodeURIComponent(eventUri)}`,
+        )
+
+        if (!eventDetailsResponse.ok) {
+          throw new Error(
+            `Failed to fetch event details: ${eventDetailsResponse.status}`,
+          )
+        }
+
+        const eventDetailsResult = await eventDetailsResponse.json()
+
+        if (!eventDetailsResult.success || !eventDetailsResult.data) {
+          throw new Error('Invalid response from event details API')
+        }
+
+        const eventDetails = eventDetailsResult.data
+
+        // Get event start time
+        let startTime = eventDetails.start_time
+
+        if (!startTime) {
+          // Fallback (should rarely happen)
+          const scheduledTime = new Date()
+          scheduledTime.setHours(scheduledTime.getHours() + 1)
+          startTime = scheduledTime.toISOString()
+        }
+
+        // Format date for display
+        const dateObj = new Date(startTime)
+        const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        }).format(dateObj)
+
+        // Format to capitalize first letter of the day name
+        const formattedDateCapitalized =
+          formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
+
+        setAppointmentDate(formattedDateCapitalized)
+        setAppointmentScheduled(true)
+
+      } catch (error) {
+        console.error('Error fetching appointment details:', error)
+      }
+    } catch (error) {
+      console.error('Error handling appointment:', error)
+    }
   }
 
   return (
@@ -792,13 +873,23 @@ const TherapyQuestionnaireNew = () => {
                 choisir, aimer, et vous sentir plus libre dans vos relations.
               </p>
               <div className="mt-4">
-                <Link
-                  href="/rendez-vous"
-                  className="inline-flex items-center px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all"
-                >
-                  Réserver une séance gratuite de 20min
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
-                </Link>
+                {appointmentScheduled ? (
+                  <div className="bg-primary-dark/50 p-4 rounded-lg text-primary-cream flex flex-col items-center">
+                    <div className="flex items-center mb-2">
+                      <Check className="text-primary-coral mr-2 h-5 w-5" />
+                      <span className="font-medium">Rendez-vous confirmé</span>
+                    </div>
+                    <p className="text-sm">{appointmentDate}</p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowCalendlyModal(true)}
+                    className="inline-flex items-center px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all"
+                  >
+                    Réserver une séance gratuite de 20min
+                    <ArrowUpRight className="ml-2 h-4 w-4" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -827,6 +918,22 @@ const TherapyQuestionnaireNew = () => {
           </div>
         )}
       </div>
+      
+      {/* Calendly Modal */}
+      <CalendlyModal
+        isOpen={showCalendlyModal}
+        onClose={(isScheduled) => {
+          setShowCalendlyModal(false)
+          if (!isScheduled) {
+            // Only reset if user closed without scheduling
+            setAppointmentScheduled(false)
+          }
+        }}
+        sessionType="20-min-free-session" 
+        onAppointmentScheduled={handleAppointmentScheduled}
+        userEmail=""
+        customUrl="https://calendly.com/numerized-ara/20min"
+      />
     </section>
   )
 }
