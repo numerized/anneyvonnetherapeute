@@ -142,16 +142,6 @@ export const prepareTherapyOfferings = (): TherapyOption[] => {
         priceDetails = 'par séance (couple)'
       }
     }
-    // LEGACY APPROACH: Handle couple therapy with details structure
-    else if (therapy.details && therapy.details.price) {
-      price = therapy.details.price
-      sessionLength = therapy.details.sessionLength
-
-      let detailsArray: string[] = []
-      if (therapy.details.duration) detailsArray.push(therapy.details.duration)
-
-      priceDetails = detailsArray.join(' • ')
-    }
     // LEGACY APPROACH: Other pricing structures
     else if (therapy.mainOffering && therapy.mainOffering.price) {
       price = therapy.mainOffering.price
@@ -184,9 +174,16 @@ export const prepareCoachingOfferings = (): TherapyOption[] => {
     let price: number | undefined
     let priceDetails: string | undefined
     let sessionLength: string | undefined
+    let hasFormulas = false
+    let formulas: any[] = []
 
     // HARMONIZED APPROACH: Check for formulas first
     if (coaching.mainOffering?.formulas?.length > 0) {
+      // Store formulas information
+      hasFormulas = true
+      formulas = coaching.mainOffering.formulas
+      
+      // Use the first formula's price as the main price display
       const firstFormula = coaching.mainOffering.formulas[0]
       price = firstFormula.price
 
@@ -205,15 +202,6 @@ export const prepareCoachingOfferings = (): TherapyOption[] => {
       price = coaching.price
     } else if (coaching.mainOffering && coaching.mainOffering.price) {
       price = coaching.mainOffering.price
-
-      if (coaching.mainOffering.details) {
-        if (coaching.mainOffering.details.duration) {
-          priceDetails = coaching.mainOffering.details.duration
-        }
-        if (coaching.mainOffering.details.sessionLength) {
-          sessionLength = coaching.mainOffering.details.sessionLength
-        }
-      }
     }
 
     return {
@@ -225,6 +213,8 @@ export const prepareCoachingOfferings = (): TherapyOption[] => {
       price,
       priceDetails,
       sessionLength,
+      hasFormulas,
+      formulas,
     }
   })
 }
