@@ -22,6 +22,7 @@ export function ProchainementPage({ data, settings }: any) {
   const searchParams = useSearchParams()
   const success = searchParams?.get('success') ?? null
   const capsulesSectionRef = useRef<HTMLDivElement>(null)
+  const questionnaireSectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -102,6 +103,10 @@ export function ProchainementPage({ data, settings }: any) {
     }
   }
 
+  const scrollToQuestionnaire = () => {
+    questionnaireSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }
+
   if (!data?.hero) {
     return null
   }
@@ -122,6 +127,8 @@ export function ProchainementPage({ data, settings }: any) {
           <ProchainementHero
             hero={data.hero}
             data={settings}
+            onShowPurchase={scrollToQuestionnaire}
+            customButtonText="Commencer le questionnaire"
           />
 
           {/* Main Content Section */}
@@ -134,7 +141,7 @@ export function ProchainementPage({ data, settings }: any) {
               />
               
               {/* Questionnaire Section */}
-              <div className="mt-16 mb-16 overflow-hidden rounded-[32px]">
+              <div ref={questionnaireSectionRef} className="mt-16 mb-16 overflow-hidden rounded-[32px]">
                 <TherapyQuestionnaireNew />
               </div>
 
