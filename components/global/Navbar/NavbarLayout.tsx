@@ -78,7 +78,7 @@ export default function NavbarLayout({ data }: NavbarProps) {
           {isLoggedIn === null ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : isLoggedIn ? (
-            'Espace 180°'
+            'Espace Privé'
           ) : (
             item.title
           )}
