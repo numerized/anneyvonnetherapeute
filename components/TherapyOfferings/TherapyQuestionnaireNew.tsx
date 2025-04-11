@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Moon, Star } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import {
   generateRecommendedOptions,
@@ -60,6 +60,51 @@ const TherapyQuestionnaireNew = () => {
   // State for recommendations
   const [recommendations, setRecommendations] = useState<TherapyOption[]>([])
 
+  // First useEffect to load saved data from localStorage
+  useEffect(() => {
+    // Only run on client-side
+    if (typeof window !== 'undefined') {
+      try {
+        const completed = localStorage.getItem('questionnaire_completed')
+        console.log('Loading questionnaire state, completed:', completed)
+
+        if (completed === 'true') {
+          const storedAnswers = localStorage.getItem('answers')
+          const storedRecommendations = localStorage.getItem('recommendations')
+          console.log('Found stored data:', !!storedAnswers, !!storedRecommendations)
+
+          if (storedAnswers && storedRecommendations) {
+            const parsedAnswers = JSON.parse(storedAnswers)
+            const parsedRecommendations = JSON.parse(storedRecommendations)
+            console.log('Parsed data:', 
+              'Has intention:', !!parsedAnswers.intention, 
+              'Recommendations count:', parsedRecommendations.length
+            )
+
+            if (parsedAnswers.intention && parsedRecommendations && parsedRecommendations.length > 0) {
+              // Set the state with the saved values
+              console.log('Loading saved questionnaire results')
+              setAnswers(parsedAnswers)
+              setRecommendations(parsedRecommendations)
+
+              // Use setTimeout to avoid hydration issues
+              setTimeout(() => {
+                console.log('Setting step to 4 to show results')
+                setStep(4)
+              }, 100) // Slightly longer timeout to ensure state is updated
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading saved data:', error)
+        // Clear storage on error to prevent continuous errors
+        localStorage.removeItem('answers')
+        localStorage.removeItem('recommendations')
+        localStorage.removeItem('questionnaire_completed')
+      }
+    }
+  }, []) // Empty dependency array so it only runs once on component mount
+
   // Handler for situation selection
   const handleSituationSelect = (situation: string) => {
     setAnswers({ ...answers, situation })
@@ -103,9 +148,26 @@ const TherapyQuestionnaireNew = () => {
     // Generate intention text
     const intention = getIntentionText(answers.priority, challenge)
 
+    const updatedAnswers = { ...answers, challenge, intention }
+
+    // Update state
     setRecommendations(recommendedOptions)
-    setAnswers((prev) => ({ ...prev, challenge, intention }))
+    setAnswers(updatedAnswers)
     setStep(4)
+
+    // Save data to localStorage when results are generated
+    try {
+      console.log('Saving to localStorage:', 
+        'Answers:', JSON.stringify(updatedAnswers).substring(0, 50) + '...',
+        'Recommendations:', recommendedOptions.length
+      )
+      
+      localStorage.setItem('answers', JSON.stringify(updatedAnswers))
+      localStorage.setItem('recommendations', JSON.stringify(recommendedOptions))
+      localStorage.setItem('questionnaire_completed', 'true')
+    } catch (error) {
+      console.error('Error saving to localStorage:', error)
+    }
   }
 
   return (
@@ -863,7 +925,7 @@ const TherapyQuestionnaireNew = () => {
                         strokeLinejoin="round"
                         className="text-primary-cream"
                       >
-                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                        <path d="M21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
                         <path d="M12 9v4"></path>
                         <path d="M12 17h.01"></path>
                       </svg>
@@ -1118,7 +1180,12 @@ const TherapyQuestionnaireNew = () => {
 
             <div className="mt-8 text-center">
               <span
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  localStorage.removeItem('answers')
+                  localStorage.removeItem('recommendations')
+                  localStorage.removeItem('questionnaire_completed')
+                  setStep(1)
+                }}
                 className="text-primary-cream cursor-pointer hover:text-primary-coral"
               >
                 Recommencer le questionnaire
