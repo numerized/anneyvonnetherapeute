@@ -1117,12 +1117,12 @@ const TherapyQuestionnaireNew = () => {
             </div>
 
             <div className="mt-8 text-center">
-              <button
+              <span
                 onClick={() => setStep(1)}
-                className="px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all"
+                className="text-primary-cream cursor-pointer hover:text-primary-coral underline"
               >
                 Recommencer le questionnaire
-              </button>
+              </span>
             </div>
           </div>
         )}
