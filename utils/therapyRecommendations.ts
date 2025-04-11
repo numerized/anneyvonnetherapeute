@@ -295,6 +295,7 @@ export const generateRecommendedOptions = (
       recommendedOptions = [
         findOffering('individual') || filteredOfferings[0],
         findOffering('new-relationship') || filteredOfferings[0],
+        findOffering('expectations-disappointments') || filteredOfferings[0],
       ]
         .filter(Boolean)
         .slice(0, 4) // Allow up to 4 highly relevant offerings
@@ -304,6 +305,7 @@ export const generateRecommendedOptions = (
       recommendedOptions = [
         findOffering('new-relationship') || filteredOfferings[0],
         findOffering('individual') || filteredOfferings[0],
+        findOffering('desire-exploration') || filteredOfferings[0],
       ]
         .filter(Boolean)
         .slice(0, 4) // Allow up to 4 highly relevant offerings
@@ -352,6 +354,8 @@ export const generateRecommendedOptions = (
       recommendedOptions = [
         findOffering('individual') || filteredOfferings[0],
         findOffering('new-relationship') || filteredOfferings[0],
+        findOffering('traverse-unknown-relationship') || filteredOfferings[0],
+        findOffering('expectations-disappointments') || filteredOfferings[0],
       ]
         .filter(Boolean)
         .slice(0, 4) // Allow up to 4 highly relevant offerings
@@ -361,6 +365,8 @@ export const generateRecommendedOptions = (
       recommendedOptions = [
         findOffering('new-relationship') || filteredOfferings[0],
         findOffering('individual') || filteredOfferings[0],
+        findOffering('traverse-unknown-relationship') || filteredOfferings[0],
+        findOffering('expectations-disappointments') || filteredOfferings[0],
       ]
         .filter(Boolean)
         .slice(0, 4) // Allow up to 4 highly relevant offerings
