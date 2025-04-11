@@ -1,7 +1,31 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Moon, Star } from 'lucide-react'
+import { 
+  ArrowLeft, 
+  ArrowRight, 
+  ArrowUpRight, 
+  Moon, 
+  Star, 
+  Check,
+  User,
+  Heart,
+  Home,
+  Clock,
+  ChevronsUp,
+  MessageCircle,
+  Target,
+  Anchor,
+  Crosshair,
+  Route,
+  Compass,
+  Sparkles,
+  Lightbulb,
+  HeartCrack,
+  Network,
+  MessageSquare,
+  BookOpen
+} from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -203,21 +227,7 @@ const TherapyQuestionnaireNew = () => {
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-primary-cream"
-                  >
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+                  <User className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
                   Je suis célibataire et je veux mieux comprendre mon rapport
@@ -230,23 +240,7 @@ const TherapyQuestionnaireNew = () => {
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-primary-cream"
-                  >
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </svg>
+                  <Heart className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
                   Je suis en couple et je souhaite améliorer notre relation.
@@ -258,21 +252,7 @@ const TherapyQuestionnaireNew = () => {
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-primary-cream"
-                  >
-                    <path d="M9 18l6-6-6-6"></path>
-                    <circle cx="12" cy="12" r="10"></circle>
-                  </svg>
+                  <Home className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
                   Je me questionne sur l'avenir de ma relation.
@@ -284,23 +264,7 @@ const TherapyQuestionnaireNew = () => {
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-primary-cream"
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M16 16s-1.5-2-4-2-4 2-4 2"></path>
-                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                  </svg>
+                  <Clock className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
                   Je viens de vivre une rupture et je veux avancer.
@@ -339,22 +303,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                      </svg>
+                      <ChevronsUp className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Comprendre pourquoi je répète toujours les mêmes schémas.
@@ -365,21 +314,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                      </svg>
+                      <MessageCircle className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Mieux cerner mes désirs et mes attentes pour orienter mes
@@ -396,20 +331,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                      </svg>
+                      <Target className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Améliorer la communication et éviter les incompréhensions.
@@ -420,7 +342,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <Moon className="w-5 h-5 text-primary-cream" />
+                      <Anchor className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Raviver le désir et retrouver une connexion plus profonde.
@@ -436,21 +358,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M9 18l6-6-6-6"></path>
-                        <circle cx="12" cy="12" r="10"></circle>
-                      </svg>
+                      <Crosshair className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Évaluer si ma relation est encore alignée avec mes
@@ -462,21 +370,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M14 9V5a3 3 0 0 1 0 7.07"></path>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                      </svg>
+                      <Route className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Prendre une décision réfléchie sur l'avenir du couple.
@@ -492,21 +386,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                      </svg>
+                      <Compass className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Apprendre à mieux me connaître et à m'accepter.
@@ -517,22 +397,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                        <path d="m15 9-6 6"></path>
-                        <path d="m9 9 6 6"></path>
-                      </svg>
+                      <Sparkles className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Développer mes capacités relationnelles et ma confiance.
@@ -567,22 +432,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                      </svg>
+                      <Lightbulb className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'ai du mal à identifier ce qui influence mes choix
@@ -594,21 +444,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                      </svg>
+                      <HeartCrack className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Je ressens un blocage émotionnel qui m'empêche d'avancer
@@ -625,20 +461,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                      </svg>
+                      <Network className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'ai du mal à exprimer mes attentes dans une relation.
@@ -649,22 +472,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                        <path d="m15 9-6 6"></path>
-                        <path d="m9 9 6 6"></path>
-                      </svg>
+                      <MessageSquare className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'ai peur de m'engager et de faire les mauvais choix.
@@ -680,22 +488,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                      </svg>
+                      <BookOpen className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Nos discussions tournent souvent en conflit.
@@ -706,20 +499,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                      </svg>
+                      <Check className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'aimerais mieux comprendre les besoins de mon/ma
@@ -736,21 +516,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 6v6l4 2"></path>
-                      </svg>
+                      <Clock className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       La routine a pris le dessus sur notre relation.
@@ -761,22 +527,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
-                        <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
-                        <path d="M19 11h2m-1 -1v2"></path>
-                      </svg>
+                      <Heart className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Il y a un déséquilibre dans nos attentes affectives et
@@ -793,21 +544,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                      </svg>
+                      <User className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Je ressens une distance émotionnelle avec mon/ma
@@ -819,21 +556,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M10 13a5 5 0 0 1 7.54.54l3-3a5 5 0 0 1-7.07-7.07l-1.72 1.71"></path>
-                        <path d="M14 11a5 5 0 0 1-7.54-.54l-3 3a5 5 0 0 1 7.07 7.07l1.71-1.71"></path>
-                      </svg>
+                      <ChevronsUp className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'ai peur de me tromper et de regretter ma décision.
@@ -849,29 +572,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <rect
-                          x="3"
-                          y="3"
-                          width="18"
-                          height="18"
-                          rx="2"
-                          ry="2"
-                        ></rect>
-                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                      </svg>
+                      <Compass className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Je veux clarifier mes sentiments et ceux de mon/ma
@@ -883,23 +584,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                      </svg>
+                      <Crosshair className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'ai besoin d'un espace neutre pour poser les choses
@@ -916,22 +601,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
-                        <path d="M12 9v4"></path>
-                        <path d="M12 17h.01"></path>
-                      </svg>
+                      <Sparkles className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'ai du mal à tourner la page émotionnellement.
@@ -942,22 +612,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                        <path d="m15 9-6 6"></path>
-                        <path d="m9 9 6 6"></path>
-                      </svg>
+                      <Network className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Je ressens une peur de reproduire les mêmes erreurs.
@@ -973,20 +628,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                      </svg>
+                      <Heart className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       Je veux retrouver confiance en moi et en l'amour.
@@ -997,20 +639,7 @@ const TherapyQuestionnaireNew = () => {
                     className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-primary-cream"
-                      >
-                        <path d="M21 2H3v16h5v4l4-4h5l4-4V2zM7 7h.01M12 7h.01M17 7h.01"></path>
-                      </svg>
+                      <MessageSquare className="w-5 h-5 text-primary-cream" />
                     </span>
                     <h4 className="font-medium">
                       J'aimerais être accompagné(e) pour redéfinir ma manière
@@ -1106,21 +735,10 @@ const TherapyQuestionnaireNew = () => {
                         {option.sessionLength && (
                           <div className="mt-3 pt-3 border-t border-primary-cream/20">
                             <div className="flex items-center gap-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
+                              <Clock 
                                 className="text-primary-coral"
-                              >
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                              </svg>
+                                size={18}
+                              />
                               <p className="text-sm text-primary-cream/90">
                                 {option.sessionLength}
                               </p>
