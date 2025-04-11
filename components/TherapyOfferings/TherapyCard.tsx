@@ -221,7 +221,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       <div className="space-y-12">
         {/* Title and Subtitle */}
         <div className="text-right">
-          <div className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4" role="presentation" aria-label={getTypeLabel()}>
+          <div
+            className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4"
+            role="presentation"
+            aria-label={getTypeLabel()}
+          >
             {getTypeLabel()}
           </div>
           <h3 className="text-2xl text-primary-cream font-light mb-2">

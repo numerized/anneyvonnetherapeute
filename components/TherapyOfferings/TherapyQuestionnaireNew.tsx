@@ -69,14 +69,18 @@ const TherapyQuestionnaireNew = () => {
   // Handler for priority selection
   const handlePrioritySelect = (priority: string) => {
     setAnswers({ ...answers, priority })
-    
+
     // Check if we should skip the challenge step
     const skipChallengeForPriorities = ['A1', 'A2', 'B1', 'D1', 'D2']
     const shouldSkipChallenge = skipChallengeForPriorities.includes(priority)
-    
+
     // Store whether we skipped for back button logic
-    setAnswers(prev => ({ ...prev, priority, skippedChallengeStep: shouldSkipChallenge }))
-    
+    setAnswers((prev) => ({
+      ...prev,
+      priority,
+      skippedChallengeStep: shouldSkipChallenge,
+    }))
+
     if (shouldSkipChallenge) {
       // Skip directly to results with a default challenge
       const defaultChallenge = `${priority}.1`
@@ -1104,6 +1108,12 @@ const TherapyQuestionnaireNew = () => {
                 Chaque chemin est là pour vous aider à mieux vous comprendre,
                 choisir, aimer, et vous sentir plus libre dans vos relations.
               </p>
+              <div className="mt-4">
+                <Link href="/rendez-vous" className="inline-flex items-center px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all">
+                  Réserver une séance gratuite de 20min
+                  <ArrowUpRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
             </div>
 
             <div className="mt-8 text-center">
