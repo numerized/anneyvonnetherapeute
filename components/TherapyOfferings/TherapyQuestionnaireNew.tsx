@@ -48,11 +48,13 @@ const TherapyQuestionnaireNew = () => {
     priority: string
     challenge: string
     intention: string
+    skippedChallengeStep: boolean
   }>({
     situation: '',
     priority: '',
     challenge: '',
     intention: '',
+    skippedChallengeStep: false,
   })
 
   // State for recommendations
@@ -70,8 +72,12 @@ const TherapyQuestionnaireNew = () => {
     
     // Check if we should skip the challenge step
     const skipChallengeForPriorities = ['A1', 'A2', 'B1', 'D1', 'D2']
+    const shouldSkipChallenge = skipChallengeForPriorities.includes(priority)
     
-    if (skipChallengeForPriorities.includes(priority)) {
+    // Store whether we skipped for back button logic
+    setAnswers(prev => ({ ...prev, priority, skippedChallengeStep: shouldSkipChallenge }))
+    
+    if (shouldSkipChallenge) {
       // Skip directly to results with a default challenge
       const defaultChallenge = `${priority}.1`
       handleChallengeSelect(defaultChallenge)
@@ -83,8 +89,6 @@ const TherapyQuestionnaireNew = () => {
 
   // Handler for challenge selection
   const handleChallengeSelect = (challenge: string) => {
-    setAnswers({ ...answers, challenge })
-
     // Generate recommendation based on answers
     const recommendedOptions = generateRecommendedOptions(
       answers.situation,
@@ -955,7 +959,7 @@ const TherapyQuestionnaireNew = () => {
           <div className="mb-8">
             <div className="flex items-center mb-6">
               <button
-                onClick={() => setStep(3)}
+                onClick={() => setStep(answers.skippedChallengeStep ? 2 : 3)}
                 className="mr-2 text-primary-coral"
               >
                 <ArrowLeft className="w-5 h-5" />
