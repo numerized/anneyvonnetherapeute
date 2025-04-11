@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, ArrowLeft, ArrowRight, Moon, Star } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { getTherapyOfferings, getCoachingOfferings } from '@/data/therapyOfferings/utils'
+import { generateRecommendedOptions, getIntentionText } from '@/utils/therapyRecommendations'
 
 type TherapyOption = {
   title: string
@@ -30,92 +30,6 @@ type TherapyOption = {
 
 // Define offerings that are specifically for couples
 const coupleSpecificOfferings = ['couple', 'checkup', 'decision', 'vit-a-la-carte']
-
-// This function gets matching offerings based on the keywords and situation.
-// It intelligently scores and filters offerings to provide the most relevant matches.
-const getMatchingOfferingsOptions = (keywords: string[], situation: string = '', maxResults: number = 2): TherapyOption[] => {
-  const therapyOfferings = getTherapyOfferings()
-  const coachingOfferings = getCoachingOfferings()
-
-  // Define offerings that are specifically for individuals
-  const individualSpecificOfferings = ['individual', 'new-relationship']
-
-  // First, collect all offerings into a uniform format
-  const allOfferings: TherapyOption[] = [
-    ...therapyOfferings.therapyTypes.map((therapy) => ({
-      title: therapy.title,
-      description: therapy.description || '',
-      type: therapy.id as any,
-      therapyId: therapy.id,
-      offeringType: 'therapy' as const,
-    })),
-    ...coachingOfferings.coachingTypes.map((coaching) => ({
-      title: coaching.title,
-      description: coaching.description || '',
-      type: coaching.id as any,
-      therapyId: coaching.id,
-      offeringType: 'coaching' as const,
-    })),
-  ]
-
-  // Create a copy of the array to avoid mutation
-  const scoredOfferings = [...allOfferings]
-
-  // Score each offering based on keyword match
-  scoredOfferings.forEach((offering) => {
-    let score = 0
-    const titleLower = offering.title.toLowerCase()
-    const descLower = offering.description.toLowerCase()
-
-    // Check if the offering is appropriate for the situation
-    if (situation === 'individual' && coupleSpecificOfferings.includes(offering.therapyId)) {
-      // Heavily penalize couple-specific offerings for individuals
-      score -= 100
-    } else if (situation === 'couple' && individualSpecificOfferings.includes(offering.therapyId)) {
-      // Penalize individual-specific offerings for couples
-      score -= 50
-    }
-
-    // Additional text-based checks for situation
-    if (situation === 'individual') {
-      // Penalize offerings that mention couples or relationships in their title
-      if (
-        titleLower.includes('couple') ||
-        titleLower.includes('relation') ||
-        titleLower.includes('partenaire')
-      ) {
-        score -= 30
-      }
-    }
-
-    // Score based on keyword matches
-    keywords.forEach((keyword) => {
-      const keywordLower = keyword.toLowerCase()
-      
-      // Check title for keyword
-      if (titleLower.includes(keywordLower)) {
-        score += 5
-      }
-      
-      // Check description for keyword
-      if (descLower.includes(keywordLower)) {
-        score += 3
-      }
-    })
-
-    // Add the score to the offering
-    offering['score'] = score
-  })
-
-  // Sort by score (highest first)
-  scoredOfferings.sort((a, b) => b['score'] - a['score'])
-
-  // Filter out negatively scored offerings
-  const positiveOfferings = scoredOfferings.filter(offering => offering['score'] > -10)
-
-  // Return the top results, with a default maximum
-  return positiveOfferings.slice(0, maxResults)
-}
 
 const TherapyQuestionnaireNew = () => {
   // State for current step and answers
@@ -150,297 +64,20 @@ const TherapyQuestionnaireNew = () => {
   // Handler for challenge selection
   const handleChallengeSelect = (challenge: string) => {
     setAnswers({ ...answers, challenge })
-    generateRecommendations(answers.situation, answers.priority, challenge)
-    setStep(4)
-  }
-
-  // Generate recommendations based on user selections
-  const generateRecommendations = (situation: string, priority: string, challenge: string) => {
-    // Fetch all available offerings
-    const therapyOfferings = getTherapyOfferings()
-    const coachingOfferings = getCoachingOfferings()
-
-    // Combine all offerings for easier selection
-    const allOfferings: TherapyOption[] = [
-      ...therapyOfferings.therapyTypes.map((therapy: any) => {
-        // Extract price and priceDetails based on the structure
-        let price: number | undefined;
-        let priceDetails: string | undefined;
-        let sessionLength: string | undefined;
-        let hasFormulas = false;
-        let formulas: any[] = [];
-        
-        // Special case for VIT therapy
-        if (therapy.id === 'vit-a-la-carte' && therapy.pricing) {
-          hasFormulas = false; // Not formula-based
-          if (therapy.pricing.individual && therapy.pricing.couple) {
-            price = undefined; // Don't show a main price
-            priceDetails = `individuel: ${therapy.pricing.individual}€ par séance\ncouple: ${therapy.pricing.couple}€ par séance`;
-          } else if (therapy.pricing.individual) {
-            price = therapy.pricing.individual;
-            priceDetails = "par séance (individuel)";
-          } else if (therapy.pricing.couple) {
-            price = therapy.pricing.couple;
-            priceDetails = "par séance (couple)";
-          }
-        } else if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
-          // Store formulas information
-          hasFormulas = true;
-          formulas = therapy.formulas;
-          
-          // Use the first formula's price as the main price display
-          price = therapy.formulas[0].price;
-          priceDetails = "plusieurs formules disponibles";
-        } else if (therapy.mainOffering && therapy.mainOffering.formulas && 
-                  Array.isArray(therapy.mainOffering.formulas) && therapy.mainOffering.formulas.length > 0) {
-          // Handle case where formulas are inside mainOffering
-          hasFormulas = true;
-          formulas = therapy.mainOffering.formulas;
-          
-          // Use the first formula's price as the main price display
-          price = therapy.mainOffering.formulas[0].price;
-          priceDetails = "plusieurs formules disponibles";
-        } else if (therapy.pricing && typeof therapy.pricing === 'object') {
-          // Handle case where pricing is an object with couple/individual properties
-          if (therapy.pricing.couple) {
-            price = therapy.pricing.couple;
-            priceDetails = "pour couple";
-          } else if (therapy.pricing.individual) {
-            price = therapy.pricing.individual;
-            priceDetails = "pour individuel";
-          }
-        } else if (therapy.details && therapy.details.price) {
-          // Handle specific case for THÉRAPIE RELATIONNELLE DE COUPLE with details structure
-          price = therapy.details.price;
-          sessionLength = therapy.details.sessionLength;
-          let detailsArray: string[] = [];
-          if (therapy.details.duration) detailsArray.push(therapy.details.duration);
-          
-          priceDetails = detailsArray.join(' • ');
-        } else if (therapy.mainOffering && therapy.mainOffering.price) {
-          // Handle case where price is in mainOffering
-          price = therapy.mainOffering.price;
-          priceDetails = therapy.mainOffering.note;
-        } else if (therapy.price) {
-          // Direct price property
-          price = therapy.price;
-          priceDetails = therapy.priceDetails;
-        }
-        
-        return {
-          title: therapy.title,
-          description: therapy.description || '',
-          type: therapy.id as any,
-          therapyId: therapy.id,
-          offeringType: 'therapy' as const,
-          price,
-          priceDetails,
-          sessionLength,
-          hasFormulas,
-          formulas
-        };
-      }),
-      ...coachingOfferings.coachingTypes.map((coaching: any) => {
-        // Extract price and priceDetails
-        let price: number | undefined;
-        let priceDetails: string | undefined;
-        let sessionLength: string | undefined;
-        
-        if (coaching.price) {
-          price = coaching.price;
-        } else if (coaching.mainOffering && coaching.mainOffering.price) {
-          // Get price from mainOffering
-          price = coaching.mainOffering.price;
-          if (coaching.mainOffering.details) {
-            if (coaching.mainOffering.details.duration) {
-              priceDetails = coaching.mainOffering.details.duration;
-            }
-            if (coaching.mainOffering.details.sessionLength) {
-              sessionLength = coaching.mainOffering.details.sessionLength;
-            }
-          }
-        }
-        
-        return {
-          title: coaching.title,
-          description: coaching.description || '',
-          type: coaching.id as any,
-          therapyId: coaching.id,
-          offeringType: 'coaching' as const,
-          price,
-          priceDetails,
-          sessionLength
-        };
-      }),
-    ]
     
-    // Filter out NEURO TRIBU offerings but keep VIT for later
-    const filteredOfferings = allOfferings.filter(o => 
-      !o.therapyId.includes('neuro')
+    // Generate recommendation based on answers
+    const recommendedOptions = generateRecommendedOptions(
+      answers.situation,
+      answers.priority,
+      challenge
     )
     
-    // Separate VIT offerings for later use
-    const vitOffering = allOfferings.find(o => o.therapyId.includes('vit-a-la-carte'))
+    // Generate intention text
+    const intention = getIntentionText(answers.priority, challenge)
     
-    // If vitOffering exists but doesn't have price info, add it
-    if (vitOffering && !vitOffering.price) {
-      const rawVitOffering = therapyOfferings.therapyTypes.find((t: any) => t.id === 'vit-a-la-carte');
-      if (rawVitOffering && rawVitOffering.mainOffering && rawVitOffering.mainOffering.price) {
-        vitOffering.price = rawVitOffering.mainOffering.price;
-        vitOffering.priceDetails = rawVitOffering.mainOffering.note || 'par séance';
-      } else if (rawVitOffering && rawVitOffering.pricing) {
-        // Use individual price by default
-        vitOffering.price = rawVitOffering.pricing.individual || rawVitOffering.pricing.couple;
-        vitOffering.priceDetails = 'par séance';
-      }
-    }
-    
-    // Helper function to find an offering by its ID
-    const findOffering = (id: string): TherapyOption | undefined => {
-      // Get the offering from the filtered list
-      const offering = filteredOfferings.find(o => o.therapyId === id);
-      
-      if (!offering) return undefined;
-      
-      // For THÉRAPIE RELATIONNELLE INDIVIDUELLE specifically, ensure formulas are included
-      if (id === 'individual') {
-        // Find the original data with complete formulas
-        const rawOffering = therapyOfferings.therapyTypes.find((t: any) => t.id === 'individual');
-        if (rawOffering && rawOffering.mainOffering && rawOffering.mainOffering.formulas && 
-            Array.isArray(rawOffering.mainOffering.formulas)) {
-          offering.hasFormulas = true;
-          offering.formulas = rawOffering.mainOffering.formulas;
-          if (!offering.price && rawOffering.mainOffering.formulas.length > 0) {
-            offering.price = rawOffering.mainOffering.formulas[0].price;
-            offering.priceDetails = "plusieurs formules disponibles";
-          }
-        }
-      }
-      
-      return offering;
-    }
-    
-    // Create an array to hold our final recommendations
-    let recommendations: TherapyOption[] = []
-    
-    // For each path, select the 2 most appropriate existing offerings 
-    switch(priority) {
-      case 'A1': // Célibataire > Comprendre schémas
-        recommendations = [
-          findOffering('individual') || filteredOfferings[0],
-          findOffering('new-relationship') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
-        break
-        
-      case 'A2': // Célibataire > Aligner désirs/choix
-        recommendations = [
-          findOffering('new-relationship') || filteredOfferings[0],
-          findOffering('individual') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
-        break
-        
-      case 'B1': // En couple > Communication
-        recommendations = [
-          findOffering('couple') || filteredOfferings[0],
-          findOffering('communication-conflicts') || filteredOfferings[0],
-          findOffering('expectations-disappointments') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 3)
-        break
-        
-      case 'B2': // En couple > Désir
-        recommendations = [
-          findOffering('desire-exploration') || filteredOfferings[0],
-          findOffering('couple') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
-        break
-        
-      case 'C1': // En questionnement > Évaluation
-        recommendations = [
-          findOffering('couple-checkup') || filteredOfferings[0],
-          findOffering('individual') || filteredOfferings[0],
-          findOffering('expectations-disappointments') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 3)
-        break
-        
-      case 'C2': // En questionnement > Décision
-        recommendations = [
-          findOffering('doubts-decision') || filteredOfferings[0],
-          findOffering('couple') || filteredOfferings[0],
-          findOffering('individual') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 3)
-        break
-        
-      case 'D1': // Rupture > Comprendre
-        recommendations = [
-          findOffering('individual') || filteredOfferings[0],
-          findOffering('new-relationship') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
-        break
-        
-      case 'D2': // Rupture > Reconstruction
-        recommendations = [
-          findOffering('new-relationship') || filteredOfferings[0],
-          findOffering('individual') || filteredOfferings[0]
-        ].filter(Boolean).slice(0, 2)
-        break
-        
-      default:
-        // Fallback to algorithm-based recommendations if no specific case matched
-        let keywords: string[] = []
-        
-        if (situation === 'A') keywords.push('individuel', 'personnel')
-        else if (situation === 'B') keywords.push('couple', 'communication')
-        else if (situation === 'C') keywords.push('decision', 'bilan')
-        else if (situation === 'D') keywords.push('rupture', 'reconstruction')
-        
-        recommendations = getMatchingOfferingsOptions(keywords, 
-          situation === 'A' || situation === 'D' ? 'individual' : 'couple', 2)
-    }
-    
-    // Ensure we have at least 2 recommendations
-    if (recommendations.length < 2) {
-      // Add more recommendations from the filtered offerings if needed
-      const additionalRecommendations = filteredOfferings
-        .filter(o => !recommendations.some(r => r.therapyId === o.therapyId))
-        .slice(0, 2 - recommendations.length)
-      
-      recommendations.push(...additionalRecommendations)
-    }
-    
-    // Add VIT offering if not already in recommendations
-    if (vitOffering && !recommendations.some(r => r.therapyId.includes('vit'))) {
-      recommendations.push(vitOffering)
-    }
-    
-    // Ensure we don't have more than 3 recommendations
-    if (recommendations.length > 3) {
-      recommendations = recommendations.slice(0, 3)
-    }
-    
-    setRecommendations(recommendations)
-  }
-
-  // Get appropriate intention text based on priority and challenge
-  const getIntentionText = () => {
-    if (answers.priority === 'A1') {
-      return "Explorer mon passé affectif pour mieux comprendre mes schémas. Apprendre à sortir de la répétition et à faire des choix conscients."
-    } else if (answers.priority === 'A2') {
-      return "Clarifier mes attentes pour construire une relation plus alignée avec moi-même. Dépasser mes blocages et m'ouvrir à des relations épanouissantes."
-    } else if (answers.priority === 'B1') {
-      return "Apprendre à communiquer de manière plus fluide et constructive. Mieux comprendre mon/ma partenaire pour renforcer notre relation."
-    } else if (answers.priority === 'B2') {
-      return "Retrouver du désir et de la spontanéité dans mon couple. Explorer de nouvelles manières de nourrir l'intimité."
-    } else if (answers.priority === 'C1') {
-      return "Faire le point sur mon couple et mes attentes sans précipitation. Comprendre les dynamiques profondes de ma relation."
-    } else if (answers.priority === 'C2') {
-      return "Être accompagné(e) dans une prise de décision sereine. Clarifier mes doutes et choisir la direction la plus juste pour moi."
-    } else if (answers.priority === 'D1') {
-      return "Donner du sens à ma rupture et éviter de reproduire les mêmes schémas. Transformer cette étape en un apprentissage pour l'avenir."
-    } else if (answers.priority === 'D2') {
-      return "Retrouver une stabilité émotionnelle et reconstruire ma confiance. Me préparer à une nouvelle histoire d'amour plus consciente."
-    } else {
-      return ""
-    }
+    setRecommendations(recommendedOptions)
+    setAnswers(prev => ({ ...prev, challenge, intention }))
+    setStep(4)
   }
 
   return (
@@ -649,7 +286,9 @@ const TherapyQuestionnaireNew = () => {
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5"></path>
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                        <path d="m15 9-6 6"></path>
+                        <path d="m9 9 6 6"></path>
                       </svg>
                     </span>
                     <h4 className="font-medium">Développer mes capacités relationnelles et ma confiance.</h4>
@@ -924,7 +563,7 @@ const TherapyQuestionnaireNew = () => {
             {/* Intention section */}
             <div className="bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] mb-8">
               <h4 className="font-semibold text-lg mb-3 text-primary-coral">Votre intention profonde :</h4>
-              <p className="text-primary-cream/90">{getIntentionText()}</p>
+              <p className="text-primary-cream/90">{answers.intention}</p>
             </div>
             
             {/* Recommendations */}
