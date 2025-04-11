@@ -37,9 +37,7 @@
           {
             "id": "coaching-communication",
             "title": "VOTRE COACHING COMMUNICATION",
-            "features": [
-              "4 séances hebdomadaires"
-            ],
+            "features": ["4 séances hebdomadaires"],
             "duration": "4 séances hebdomadaires",
             "price": 720,
             "priceDetails": "pour le programme complet",
@@ -91,9 +89,7 @@
           {
             "id": "coaching-attentes",
             "title": "VOTRE COACHING ATTENTES",
-            "features": [
-              "4 séances hebdomadaires"
-            ],
+            "features": ["4 séances hebdomadaires"],
             "duration": "4 séances hebdomadaires",
             "price": 720,
             "priceDetails": "pour le programme complet",
@@ -145,9 +141,7 @@
           {
             "id": "coaching-desir",
             "title": "VOTRE COACHING DÉSIR",
-            "features": [
-              "4 séances hebdomadaires"
-            ],
+            "features": ["4 séances hebdomadaires"],
             "duration": "4 séances hebdomadaires",
             "price": 720,
             "priceDetails": "pour le programme complet",
@@ -199,9 +193,7 @@
           {
             "id": "coaching-demarrage",
             "title": "VOTRE COACHING DÉMARRAGE",
-            "features": [
-              "4 séances hebdomadaires"
-            ],
+            "features": ["4 séances hebdomadaires"],
             "duration": "4 séances hebdomadaires",
             "price": 720,
             "priceDetails": "pour le programme complet",
@@ -253,9 +245,7 @@
           {
             "id": "coaching-checkup",
             "title": "VOTRE COACHING CHECK-UP",
-            "features": [
-              "4 séances hebdomadaires"
-            ],
+            "features": ["4 séances hebdomadaires"],
             "duration": "4 séances hebdomadaires",
             "price": 720,
             "priceDetails": "pour le programme complet",
@@ -307,9 +297,7 @@
           {
             "id": "coaching-decision",
             "title": "VOTRE COACHING DÉCISION",
-            "features": [
-              "4 séances hebdomadaires"
-            ],
+            "features": ["4 séances hebdomadaires"],
             "duration": "4 séances hebdomadaires",
             "price": 720,
             "priceDetails": "pour le programme complet",

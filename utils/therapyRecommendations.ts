@@ -182,7 +182,7 @@ export const prepareCoachingOfferings = (): TherapyOption[] => {
       // Store formulas information
       hasFormulas = true
       formulas = coaching.mainOffering.formulas
-      
+
       // Use the first formula's price as the main price display
       const firstFormula = coaching.mainOffering.formulas[0]
       price = firstFormula.price
@@ -322,15 +322,17 @@ export const generateRecommendedOptions = (
       break
 
     case 'B2': // En couple > Désir
-      if (challenge === 'B2.1') { // La routine a pris le dessus sur notre relation
+      if (challenge === 'B2.1') {
+        // La routine a pris le dessus sur notre relation
         recommendedOptions = [
           findOffering('desire-exploration') || filteredOfferings[0],
           findOffering('couple') || filteredOfferings[0],
           findOffering('communication-conflicts') || filteredOfferings[0],
         ]
           .filter(Boolean)
-          .slice(0, 4) 
-      } else if (challenge === 'B2.2') { // Déséquilibre dans les attentes affectives et sexuelles
+          .slice(0, 4)
+      } else if (challenge === 'B2.2') {
+        // Déséquilibre dans les attentes affectives et sexuelles
         recommendedOptions = [
           findOffering('desire-exploration') || filteredOfferings[0],
           findOffering('couple') || filteredOfferings[0],
@@ -450,13 +452,13 @@ export const getIntentionText = (
     if (challengeCode === '1' || challenge === 'C1') {
       return 'Mieux comprendre mes schémas relationnels et les patterns qui se répètent dans mes relations.'
     } else if (challengeCode === '2' || challenge === 'C2') {
-      return 'Comprendre pourquoi je ne parviens pas à faire confiance et à m\'engager dans une relation.'
+      return "Comprendre pourquoi je ne parviens pas à faire confiance et à m'engager dans une relation."
     } else if (challengeCode === '3' || challenge === 'C3') {
       return "Explorer mes blocages autour de l'intimité et retrouver une relation sereine à ma sexualité."
     } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Clarifier mes attentes relationnelles pour préparer une relation future épanouissante.'
     } else if (challengeCode === '5' || challenge === 'C5') {
-      return 'Comprendre comment j\'ai contribué aux difficultés dans mes relations passées.'
+      return "Comprendre comment j'ai contribué aux difficultés dans mes relations passées."
     }
   } else if (priority === 'A2') {
     // Single + Aligning desires
@@ -465,7 +467,7 @@ export const getIntentionText = (
     } else if (challengeCode === '2' || challenge === 'A2.2') {
       return 'Développer ma capacité à établir des relations de confiance et sécurisantes.'
     } else if (challengeCode === '3' || challenge === 'C3') {
-      return "Explorer mes désirs profonds et créer une relation épanouissante à ma sexualité."
+      return 'Explorer mes désirs profonds et créer une relation épanouissante à ma sexualité.'
     } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Aligner mes choix relationnels avec mes valeurs et mes aspirations profondes.'
     } else if (challengeCode === '5' || challenge === 'C5') {
@@ -474,9 +476,9 @@ export const getIntentionText = (
   } else if (priority === 'B1') {
     // Couple + Communication
     if (challengeCode === '1' || challenge === 'B1.1') {
-      return "Améliorer notre communication et sortir des conflits répétitifs qui nous épuisent."
+      return 'Améliorer notre communication et sortir des conflits répétitifs qui nous épuisent.'
     } else if (challengeCode === '2' || challenge === 'B1.2') {
-      return "Mieux comprendre les besoins de mon/ma partenaire pour restaurer notre connexion."
+      return 'Mieux comprendre les besoins de mon/ma partenaire pour restaurer notre connexion.'
     } else if (challengeCode === '3' || challenge === 'C3') {
       return "Renouer avec l'intimité et raviver la flamme dans notre relation."
     } else if (challengeCode === '4' || challenge === 'C4') {
@@ -487,26 +489,26 @@ export const getIntentionText = (
   } else if (priority === 'B2') {
     // Couple + Desire
     if (challengeCode === '1' || challenge === 'B2.1') {
-      return "Sortir de la routine qui a pris le dessus sur notre relation et raviver notre connexion."
+      return 'Sortir de la routine qui a pris le dessus sur notre relation et raviver notre connexion.'
     } else if (challengeCode === '2' || challenge === 'B2.2') {
-      return "Équilibrer nos attentes affectives et sexuelles pour une relation plus harmonieuse."
+      return 'Équilibrer nos attentes affectives et sexuelles pour une relation plus harmonieuse.'
     } else if (challengeCode === '3' || challenge === 'C3') {
-      return "Raviver le désir et retrouver une sexualité épanouissante qui nous connecte."
+      return 'Raviver le désir et retrouver une sexualité épanouissante qui nous connecte.'
     } else if (challengeCode === '4' || challenge === 'C4') {
-      return "Construire un projet de couple qui nourrit notre complicité et notre intimité."
+      return 'Construire un projet de couple qui nourrit notre complicité et notre intimité.'
     } else if (challengeCode === '5' || challenge === 'C5') {
-      return "Comprendre ce qui bloque notre épanouissement intime et émotionnel."
+      return 'Comprendre ce qui bloque notre épanouissement intime et émotionnel.'
     }
   } else if (priority === 'C1') {
     // Questioning + Evaluation
     if (challengeCode === '1' || challenge === 'C1.1') {
       return 'Évaluer la distance émotionnelle dans notre relation et déterminer si elle peut être comblée.'
     } else if (challengeCode === '2' || challenge === 'C1.2') {
-      return 'Clarifier mes doutes et prendre une décision réfléchie sur l\'avenir de notre relation.'
+      return "Clarifier mes doutes et prendre une décision réfléchie sur l'avenir de notre relation."
     } else if (challengeCode === '3' || challenge === 'C3') {
       return "Comprendre pourquoi notre intimité s'est érodée et si nous pouvons la reconstruire."
     } else if (challengeCode === '4' || challenge === 'C4') {
-      return 'Déterminer si nos visions d\'avenir sont encore compatibles ou trop divergentes.'
+      return "Déterminer si nos visions d'avenir sont encore compatibles ou trop divergentes."
     } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Explorer les raisons profondes de mes questionnements sur notre relation.'
     }
@@ -517,9 +519,9 @@ export const getIntentionText = (
     } else if (challengeCode === '2' || challenge === 'C2.2') {
       return 'Créer un espace neutre et sécurisant pour poser les choses sereinement.'
     } else if (challengeCode === '3' || challenge === 'C3') {
-      return "Déterminer si notre connexion intime peut être restaurée ou si elle est définitivement perdue."
+      return 'Déterminer si notre connexion intime peut être restaurée ou si elle est définitivement perdue.'
     } else if (challengeCode === '4' || challenge === 'C4') {
-      return 'Évaluer si nos projets de vie peuvent encore s\'harmoniser ou s\'ils sont irréconciliables.'
+      return "Évaluer si nos projets de vie peuvent encore s'harmoniser ou s'ils sont irréconciliables."
     } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Comprendre ce qui a mené à ce questionnement pour prendre la meilleure décision possible.'
     }
@@ -528,7 +530,7 @@ export const getIntentionText = (
     if (challengeCode === '1' || challenge === 'D1.1') {
       return 'Comprendre mes émotions pour tourner la page émotionnellement et faire mon deuil de la relation.'
     } else if (challengeCode === '2' || challenge === 'D1.2') {
-      return 'Identifier mes patterns relationnels pour éviter de reproduire les mêmes erreurs à l\'avenir.'
+      return "Identifier mes patterns relationnels pour éviter de reproduire les mêmes erreurs à l'avenir."
     } else if (challengeCode === '3' || challenge === 'C3') {
       return "Comprendre l'impact de cette relation sur ma vision de l'intimité et de la sexualité."
     } else if (challengeCode === '4' || challenge === 'C4') {
@@ -539,11 +541,11 @@ export const getIntentionText = (
   } else if (priority === 'D2') {
     // Breakup + Rebuilding
     if (challengeCode === '1' || challenge === 'D2.1') {
-      return 'Retrouver confiance en moi et en l\'amour pour me préparer à une future relation.'
+      return "Retrouver confiance en moi et en l'amour pour me préparer à une future relation."
     } else if (challengeCode === '2' || challenge === 'D2.2') {
-      return 'Redéfinir ma manière d\'aimer et de m\'engager dans mes futures relations.'
+      return "Redéfinir ma manière d'aimer et de m'engager dans mes futures relations."
     } else if (challengeCode === '3' || challenge === 'C3') {
-      return "Reconstruire une relation saine à mon corps et à ma sexualité après cette rupture."
+      return 'Reconstruire une relation saine à mon corps et à ma sexualité après cette rupture.'
     } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Développer une vision équilibrée de ce que je veux dans mes futures relations.'
     } else if (challengeCode === '5' || challenge === 'C5') {
