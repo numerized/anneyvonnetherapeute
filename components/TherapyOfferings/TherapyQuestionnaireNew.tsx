@@ -974,7 +974,7 @@ const TherapyQuestionnaireNew = () => {
                 >
                   <div className="space-y-12">
                     <div className="text-right">
-                      <span className="inline-block bg-primary-dark text-primary-coral px-3 py-1 rounded-full text-sm mb-3">
+                      <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
                         {option.offeringType === 'therapy'
                           ? 'Thérapie'
                           : 'Coaching'}
