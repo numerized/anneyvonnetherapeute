@@ -23,6 +23,7 @@ type TherapyOption = {
   offeringType: 'therapy' | 'coaching'
   price?: number
   priceDetails?: string
+  sessionLength?: string
   hasFormulas?: boolean
   formulas?: any[]
 }
@@ -165,6 +166,7 @@ const TherapyQuestionnaireNew = () => {
         // Extract price and priceDetails based on the structure
         let price: number | undefined;
         let priceDetails: string | undefined;
+        let sessionLength: string | undefined;
         let hasFormulas = false;
         let formulas: any[] = [];
         
@@ -207,6 +209,14 @@ const TherapyQuestionnaireNew = () => {
             price = therapy.pricing.individual;
             priceDetails = "pour individuel";
           }
+        } else if (therapy.details && therapy.details.price) {
+          // Handle specific case for THÉRAPIE RELATIONNELLE DE COUPLE with details structure
+          price = therapy.details.price;
+          sessionLength = therapy.details.sessionLength;
+          let detailsArray: string[] = [];
+          if (therapy.details.duration) detailsArray.push(therapy.details.duration);
+          
+          priceDetails = detailsArray.join(' • ');
         } else if (therapy.mainOffering && therapy.mainOffering.price) {
           // Handle case where price is in mainOffering
           price = therapy.mainOffering.price;
@@ -225,6 +235,7 @@ const TherapyQuestionnaireNew = () => {
           offeringType: 'therapy' as const,
           price,
           priceDetails,
+          sessionLength,
           hasFormulas,
           formulas
         };
@@ -233,15 +244,20 @@ const TherapyQuestionnaireNew = () => {
         // Extract price and priceDetails
         let price: number | undefined;
         let priceDetails: string | undefined;
+        let sessionLength: string | undefined;
         
         if (coaching.price) {
           price = coaching.price;
         } else if (coaching.mainOffering && coaching.mainOffering.price) {
           // Get price from mainOffering
           price = coaching.mainOffering.price;
-          
-          if (coaching.mainOffering.details && coaching.mainOffering.details.duration) {
-            priceDetails = coaching.mainOffering.details.duration;
+          if (coaching.mainOffering.details) {
+            if (coaching.mainOffering.details.duration) {
+              priceDetails = coaching.mainOffering.details.duration;
+            }
+            if (coaching.mainOffering.details.sessionLength) {
+              sessionLength = coaching.mainOffering.details.sessionLength;
+            }
           }
         }
         
@@ -252,7 +268,8 @@ const TherapyQuestionnaireNew = () => {
           therapyId: coaching.id,
           offeringType: 'coaching' as const,
           price,
-          priceDetails
+          priceDetails,
+          sessionLength
         };
       }),
     ]
@@ -603,7 +620,8 @@ const TherapyQuestionnaireNew = () => {
                   >
                     <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-cream">
-                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                        <path d="M14 9V5a3 3 0 0 1 0 7.07"></path>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
                       </svg>
                     </span>
                     <h4 className="font-medium">Prendre une décision réfléchie sur l'avenir du couple.</h4>
@@ -946,6 +964,19 @@ const TherapyQuestionnaireNew = () => {
                             </div>
                           )}
                         </div>
+
+                        {/* Session length section */}
+                        {option.sessionLength && (
+                          <div className="mt-3 pt-3 border-t border-primary-cream/20">
+                            <div className="flex items-center gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-coral">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                              </svg>
+                              <p className="text-sm text-primary-cream/90">{option.sessionLength}</p>
+                            </div>
+                          </div>
+                        )}
 
                         {/* Formulas section */}
                         {option.hasFormulas && option.formulas && option.formulas.length > 0 && (
