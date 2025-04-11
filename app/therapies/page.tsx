@@ -1,7 +1,7 @@
 import React from 'react'
 
-import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 import TherapyOfferingsPage from '@/components/TherapyOfferings/TherapyOfferingsPage'
+import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 
 export const metadata = {
   title: 'Thérapies - Coeur à Corps | Anne Yvonne Thérapie',

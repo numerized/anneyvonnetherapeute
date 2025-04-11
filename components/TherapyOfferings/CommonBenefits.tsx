@@ -1,6 +1,6 @@
 'use client'
 
-import { Award,BookOpen, Globe, Heart, MessageCircle } from 'lucide-react'
+import { Award, BookOpen, Globe, Heart, MessageCircle } from 'lucide-react'
 import React from 'react'
 
 interface CommonBenefitsProps {
