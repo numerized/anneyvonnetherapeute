@@ -33,11 +33,18 @@
         "tagline": "Transformez vos défis en opportunités de croissance",
         "quote": "La relation est un voyage, et chaque conflit peut devenir une opportunité de croissance",
         "price": 720,
-        "details": {
-          "title": "VOTRE COACHING COMMUNICATION",
-          "duration": "4 séances hebdomadaires",
-          "sessionLength": "75 minutes par séance"
-        },
+        "formulas": [
+          {
+            "id": "coaching-communication",
+            "title": "VOTRE COACHING COMMUNICATION",
+            "features": [
+              "4 séances hebdomadaires"
+            ],
+            "duration": "4 séances hebdomadaires",
+            "price": 720,
+            "sessionLength": "75 minutes par séance"
+          }
+        ],
         "promises": [
           "Une meilleure compréhension des malentendus et des schémas récurrents",
           "Des outils pour gérer les conflits de manière constructive",
@@ -79,11 +86,18 @@
         "tagline": "Transformez vos différences en richesses",
         "quote": "Les attentes peuvent être des pièges ou des ponts",
         "price": 720,
-        "details": {
-          "title": "VOTRE COACHING ATTENTES",
-          "duration": "4 séances hebdomadaires",
-          "sessionLength": "75 minutes par séance"
-        },
+        "formulas": [
+          {
+            "id": "coaching-attentes",
+            "title": "VOTRE COACHING ATTENTES",
+            "features": [
+              "4 séances hebdomadaires"
+            ],
+            "duration": "4 séances hebdomadaires",
+            "price": 720,
+            "sessionLength": "75 minutes par séance"
+          }
+        ],
         "promises": [
           "Une relation plus équilibrée, où chacun trouve sa place",
           "Des compromis basés sur la compréhension mutuelle",
@@ -125,11 +139,18 @@
         "tagline": "Ravivez la flamme dans votre relation",
         "quote": "Le désir est un voyage, et chaque étape peut apporter une nouvelle dimension à votre relation intime",
         "price": 720,
-        "details": {
-          "title": "VOTRE COACHING DÉSIR",
-          "duration": "4 séances hebdomadaires",
-          "sessionLength": "75 minutes par séance"
-        },
+        "formulas": [
+          {
+            "id": "coaching-desir",
+            "title": "VOTRE COACHING DÉSIR",
+            "features": [
+              "4 séances hebdomadaires"
+            ],
+            "duration": "4 séances hebdomadaires",
+            "price": 720,
+            "sessionLength": "75 minutes par séance"
+          }
+        ],
         "promises": [
           "Une redécouverte de la séduction et du désir",
           "Des outils pour renforcer la connexion intime et l'épanouissement sexuel",
@@ -171,11 +192,18 @@
         "tagline": "Posez les bases d'une relation consciente",
         "quote": "Le début d'une relation est une exploration",
         "price": 720,
-        "details": {
-          "title": "VOTRE COACHING DÉMARRAGE",
-          "duration": "4 séances hebdomadaires",
-          "sessionLength": "75 minutes par séance"
-        },
+        "formulas": [
+          {
+            "id": "coaching-demarrage",
+            "title": "VOTRE COACHING DÉMARRAGE",
+            "features": [
+              "4 séances hebdomadaires"
+            ],
+            "duration": "4 séances hebdomadaires",
+            "price": 720,
+            "sessionLength": "75 minutes par séance"
+          }
+        ],
         "promises": [
           "Clarification de vos attentes et besoins profonds",
           "Des outils pour une communication authentique",
@@ -217,11 +245,18 @@
         "tagline": "Cultivez votre relation avec soin",
         "quote": "Votre relation mérite d'être cultivée avec soin",
         "price": 720,
-        "details": {
-          "title": "VOTRE COACHING CHECK-UP",
-          "duration": "4 séances hebdomadaires",
-          "sessionLength": "75 minutes par séance"
-        },
+        "formulas": [
+          {
+            "id": "coaching-checkup",
+            "title": "VOTRE COACHING CHECK-UP",
+            "features": [
+              "4 séances hebdomadaires"
+            ],
+            "duration": "4 séances hebdomadaires",
+            "price": 720,
+            "sessionLength": "75 minutes par séance"
+          }
+        ],
         "promises": [
           "Une meilleure compréhension mutuelle des besoins de chacun",
           "Une communication renforcée et plus fluide",
@@ -263,11 +298,18 @@
         "tagline": "Éclaircissez votre chemin",
         "quote": "Si les doutes vous freinent, ce coaching est l'opportunité de clarifier votre voie",
         "price": 720,
-        "details": {
-          "title": "VOTRE COACHING DÉCISION",
-          "duration": "4 séances hebdomadaires",
-          "sessionLength": "75 minutes par séance"
-        },
+        "formulas": [
+          {
+            "id": "coaching-decision",
+            "title": "VOTRE COACHING DÉCISION",
+            "features": [
+              "4 séances hebdomadaires"
+            ],
+            "duration": "4 séances hebdomadaires",
+            "price": 720,
+            "sessionLength": "75 minutes par séance"
+          }
+        ],
         "promises": [
           "Une clarté accrue sur vos décisions relationnelles",
           "Une meilleure compréhension des schémas inconscients et des croyances limitantes",

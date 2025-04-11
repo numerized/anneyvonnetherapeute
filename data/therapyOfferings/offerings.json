@@ -57,17 +57,24 @@
           "Retrouver l'accord essentiel – Une exploration à deux pour mieux s'entendre, mieux se comprendre et renforcer le lien.",
           "Harmoniser la relation – Une approche pour les couples désireux d'un échange plus profond et d'une complicité renouvelée."
         ],
-        "details": {
-          "title": "VOTRE THÉRAPIE DE COUPLE",
-          "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
-          "schedule": "Mise en place d'un agenda fixe",
-          "sessionLength": "60 minutes par séance (individuelles) - 90 minutes par séance (couple)",
-          "price": 2250,
-          "inclusions": [
-            "un entretien préalable 20'",
-            "un audio \"à l'avenir\" de fin de cycle thérapie"
-          ]
-        }
+        "formulas": [
+          {
+            "id": "couple-therapy",
+            "title": "VOTRE THÉRAPIE DE COUPLE",
+            "features": [
+              "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
+              "Mise en place d'un agenda fixe"
+            ],
+            "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
+            "price": 2250,
+            "priceDetails": "pour le programme complet",
+            "sessionLength": "60 minutes par séance (individuelles) - 90 minutes par séance (couple)",
+            "inclusions": [
+              "un entretien préalable 20'",
+              "un audio \"à l'avenir\" de fin de cycle thérapie"
+            ]
+          }
+        ]
       },
       "options": [
         {
