@@ -287,7 +287,7 @@ const TherapyQuestionnaireNew = () => {
             QUESTIONNAIRE
           </div>
           <h2 className="text-4xl font-light text-primary-coral mb-4">
-            Quelle thérapie vous correspond?
+            Quelle offre vous correspond?
           </h2>
           <p className="text-primary-cream/80">
             Répondez à deux questions simples pour découvrir nos recommandations
