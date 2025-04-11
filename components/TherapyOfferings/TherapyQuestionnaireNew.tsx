@@ -67,7 +67,18 @@ const TherapyQuestionnaireNew = () => {
   // Handler for priority selection
   const handlePrioritySelect = (priority: string) => {
     setAnswers({ ...answers, priority })
-    setStep(3)
+    
+    // Check if we should skip the challenge step
+    const skipChallengeForPriorities = ['A1', 'A2', 'B1', 'D1', 'D2']
+    
+    if (skipChallengeForPriorities.includes(priority)) {
+      // Skip directly to results with a default challenge
+      const defaultChallenge = `${priority}.1`
+      handleChallengeSelect(defaultChallenge)
+    } else {
+      // Continue to challenge step as normal
+      setStep(3)
+    }
   }
 
   // Handler for challenge selection

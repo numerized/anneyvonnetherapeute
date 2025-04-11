@@ -414,108 +414,113 @@ export const getIntentionText = (
   priority: string,
   challenge: string,
 ): string => {
+  // Extract challenge type from combined IDs (e.g., 'A1.1' -> '1')
+  const challengeCode = challenge.includes('.')
+    ? challenge.split('.')[1]
+    : challenge.replace(/[A-Z]/g, '')
+
   if (priority === 'A1') {
     // Single + Understanding patterns
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Mieux comprendre mes schémas relationnels et les patterns qui se répètent dans mes relations.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return "Comprendre pourquoi je ne parviens pas à faire confiance et à m'engager dans une relation."
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return "Explorer mes blocages autour de l'intimité et retrouver une relation sereine à ma sexualité."
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Clarifier mes attentes relationnelles pour préparer une relation future épanouissante.'
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return "Comprendre comment j'ai contribué aux difficultés dans mes relations passées."
     }
   } else if (priority === 'A2') {
     // Single + Aligning desires
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Apprendre à mieux communiquer mes besoins et mes limites dans mes futures relations.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return 'Développer ma capacité à établir des relations de confiance et sécurisantes.'
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return 'Explorer mes désirs profonds et créer une relation épanouissante à ma sexualité.'
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Aligner mes choix relationnels avec mes valeurs et mes aspirations profondes.'
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Comprendre ce qui me bloque pour vivre la relation que je désire vraiment.'
     }
   } else if (priority === 'B1') {
     // Couple + Communication
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Améliorer notre communication et sortir des conflits répétitifs qui nous épuisent.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return 'Restaurer la confiance et retrouver un sentiment de sécurité dans notre relation.'
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return "Renouer avec l'intimité et raviver la flamme dans notre relation."
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return "Aligner nos visions d'avenir et construire un projet de couple cohérent."
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return "Comprendre les dynamiques qui nous séparent et retrouver notre complicité d'avant."
     }
   } else if (priority === 'B2') {
     // Couple + Desire
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Apprendre à communiquer nos désirs et nos besoins intimes avec bienveillance.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return 'Créer un espace de confiance pour explorer nos désirs et nos fantasmes.'
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return 'Raviver le désir et retrouver une sexualité épanouissante qui nous connecte.'
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Développer une vision partagée de notre intimité et de notre sexualité.'
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Comprendre les blocages qui limitent notre désir et notre épanouissement intime.'
     }
   } else if (priority === 'C1') {
     // Questioning + Evaluation
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Identifier les problèmes de communication et voir si notre relation peut être réparée.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return 'Évaluer si la confiance peut être reconstruite ou si les blessures sont trop profondes.'
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return 'Déterminer si notre intimité et notre connexion peuvent être ravivées.'
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return "Clarifier si nos projets d'avenir sont encore compatibles ou si nos chemins divergent."
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Comprendre les dynamiques qui nous séparent et évaluer si nous pouvons les transformer.'
     }
   } else if (priority === 'C2') {
     // Questioning + Decision
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return "Trouver la clarté pour prendre une décision éclairée sur l'avenir de notre relation."
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return "Déterminer si je peux retrouver confiance ou s'il est temps de tourner la page."
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return "Décider si notre manque d'intimité et de connexion est un signal qu'il faut se séparer."
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return "Prendre une décision alignée avec mes valeurs profondes et mes aspirations d'avenir."
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Comprendre ce qui ne fonctionne pas pour prendre une décision authentique et sereine.'
     }
   } else if (priority === 'D1') {
     // Breakup + Understanding
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Analyser les problèmes de communication qui ont mené à la fin de ma relation.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return "Comprendre pourquoi la confiance s'est brisée et ce que je peux apprendre de cette expérience."
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return 'Explorer ce qui a érodé notre intimité et notre connexion au fil du temps.'
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return "Comprendre comment nos chemins se sont séparés et ce que cela m'apprend sur mes besoins."
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return 'Analyser les dynamiques qui ont mené à la rupture pour éviter de les reproduire.'
     }
   } else if (priority === 'D2') {
     // Breakup + Reconstruction
-    if (challenge === 'C1') {
+    if (challengeCode === '1' || challenge === 'C1') {
       return 'Développer de nouvelles compétences de communication pour mes futures relations.'
-    } else if (challenge === 'C2') {
+    } else if (challengeCode === '2' || challenge === 'C2') {
       return 'Reconstruire ma capacité à faire confiance après une rupture douloureuse.'
-    } else if (challenge === 'C3') {
+    } else if (challengeCode === '3' || challenge === 'C3') {
       return 'Guérir mes blessures intimes et me préparer à une nouvelle connexion authentique.'
-    } else if (challenge === 'C4') {
+    } else if (challengeCode === '4' || challenge === 'C4') {
       return 'Redéfinir mes aspirations relationnelles et me projeter dans un nouvel avenir.'
-    } else if (challenge === 'C5') {
+    } else if (challengeCode === '5' || challenge === 'C5') {
       return "Retrouver une stabilité émotionnelle et reconstruire ma confiance. Me préparer à une nouvelle histoire d'amour plus consciente."
     }
   }
