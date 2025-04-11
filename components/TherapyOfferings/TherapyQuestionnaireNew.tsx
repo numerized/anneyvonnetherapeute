@@ -3,13 +3,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Moon, Star } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useEffect,useState } from 'react'
 
+import { scrollToSection } from '@/utils/scroll'
 import {
   generateRecommendedOptions,
   getIntentionText,
 } from '@/utils/therapyRecommendations'
-import { scrollToSection } from '@/utils/scroll'
 
 type TherapyOption = {
   title: string
@@ -81,9 +81,12 @@ const TherapyQuestionnaireNew = () => {
           const parsedRecommendations = JSON.parse(storedRecommendations)
 
           // Only proceed if we have valid data
-          if (parsedAnswers && parsedAnswers.intention &&
-              parsedRecommendations && parsedRecommendations.length > 0) {
-
+          if (
+            parsedAnswers &&
+            parsedAnswers.intention &&
+            parsedRecommendations &&
+            parsedRecommendations.length > 0
+          ) {
             // Set state with saved values
             setAnswers(parsedAnswers)
             setRecommendations(parsedRecommendations)
@@ -107,7 +110,10 @@ const TherapyQuestionnaireNew = () => {
     try {
       localStorage.setItem('questionnaire_completed', 'true')
       localStorage.setItem('answers', JSON.stringify(updatedAnswers))
-      localStorage.setItem('recommendations', JSON.stringify(recommendedOptions))
+      localStorage.setItem(
+        'recommendations',
+        JSON.stringify(recommendedOptions),
+      )
     } catch (error) {
       console.error('Error saving to localStorage:', error)
     }
@@ -176,7 +182,7 @@ const TherapyQuestionnaireNew = () => {
             QUESTIONNAIRE
           </div>
           <h2 className="text-4xl font-light text-primary-coral mb-4">
-            Quelle thérapie vous correspond ?
+            Quelle thérapie vous correspond?
           </h2>
           <p className="text-primary-cream/80">
             Répondez à deux questions simples pour découvrir nos recommandations
@@ -1168,7 +1174,10 @@ const TherapyQuestionnaireNew = () => {
                 choisir, aimer, et vous sentir plus libre dans vos relations.
               </p>
               <div className="mt-4">
-                <Link href="/rendez-vous" className="inline-flex items-center px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all">
+                <Link
+                  href="/rendez-vous"
+                  className="inline-flex items-center px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all"
+                >
                   Réserver une séance gratuite de 20min
                   <ArrowUpRight className="ml-2 h-4 w-4" />
                 </Link>

@@ -295,7 +295,7 @@ export function TherapyQuestionnaire() {
                   ? recommendations.length === 1
                     ? 'Notre recommandation pour vous'
                     : 'Nos recommandations pour vous'
-                  : 'Quelle thérapie vous correspond ?'}
+                  : 'Quelle thérapie vous correspond?'}
               </h2>
               {step !== 4 && (
                 <p className="text-lg mt-4">
