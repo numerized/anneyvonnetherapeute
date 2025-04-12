@@ -19,6 +19,8 @@ export default function NavbarLayout() {
   const isProchainement = pathname === '/prochainement'
   const isCoachingGroupe = pathname === '/coaching-relationnel-en-groupe'
   const isLive = pathname === '/live'
+  const isTherapies = pathname === '/therapies' || pathname?.startsWith('/therapies/')
+  const isCoaching = pathname === '/coaching' || pathname?.startsWith('/coaching/')
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showCalendlyModal, setShowCalendlyModal] = useState(false)
@@ -75,7 +77,7 @@ export default function NavbarLayout() {
     }
   }, [appointmentScheduled, appointmentDate])
 
-  // Don't render navbar on live or coaching-relationnel-en-groupe routes
+  // Don't render navbar on specific routes (but always show on therapies and coaching routes)
   if (isLive || isCoachingGroupe) {
     return null
   }
@@ -184,7 +186,7 @@ export default function NavbarLayout() {
           >
             <div className="flex justify-end items-center relative">
               {logoUrl && (
-                <div className="absolute -bottom-[86px] left-0 z-50 hidden md:block">
+                <div className={`absolute -bottom-[86px] left-0 z-50 hidden md:block ${isTherapies || isCoaching ? 'opacity-100' : ''}`}>
                   <Link href="/" className="flex-shrink-0">
                     <Image
                       src={logoUrl}
@@ -198,7 +200,7 @@ export default function NavbarLayout() {
                 </div>
               )}
               {/* Desktop Navigation */}
-              {!isProchainement && (
+              {(!isProchainement || isTherapies || isCoaching) && (
                 <div className="hidden md:flex items-center space-x-8">
                   <NavLinks 
                     setIsMenuOpen={setIsMenuOpen}
