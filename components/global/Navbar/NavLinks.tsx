@@ -61,7 +61,7 @@ export function NavLinks({
         </a>
       ) : (
         <Link
-          href="/#about"
+          href="/accueil#about"
           className="text-white hover:text-white/80 transition-colors duration-200"
           onClick={() => setIsMenuOpen(false)}
         >

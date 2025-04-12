@@ -20,7 +20,6 @@ export function getTherapyOfferings(): TherapyOfferings {
  * Returns the full coaching offerings data structure
  */
 export function getCoachingOfferings(): CoachingOfferings {
-  console.log('Raw coaching data:', coachingData)
   return coachingData as CoachingOfferings
 }
 
