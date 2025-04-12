@@ -44,7 +44,50 @@ export default function Espace180Page() {
   // Client-side only effects
   useEffect(() => {
     setIsClient(true)
-  }, [])
+
+    // Set body background color to match the capsule view and remove all gaps
+    if (singleCapsuleId) {
+      document.body.style.backgroundColor = 'rgb(232,146,124)';
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      document.documentElement.style.margin = '0';
+      document.documentElement.style.padding = '0';
+      
+      // Add a class to the html element to handle potential white gaps
+      document.documentElement.classList.add('capsule-view');
+      
+      // Create style element to handle any gaps
+      const style = document.createElement('style');
+      style.id = 'capsule-view-styles';
+      style.innerHTML = `
+        html.capsule-view, 
+        html.capsule-view body, 
+        html.capsule-view #__next, 
+        html.capsule-view main {
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow-x: hidden;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    return () => {
+      // Reset body styles when component unmounts
+      document.body.style.backgroundColor = '';
+      document.body.style.margin = '';
+      document.body.style.padding = '';
+      document.documentElement.style.margin = '';
+      document.documentElement.style.padding = '';
+      document.documentElement.classList.remove('capsule-view');
+      
+      // Remove the added style element
+      const styleElement = document.getElementById('capsule-view-styles');
+      if (styleElement) {
+        styleElement.remove();
+      }
+    };
+  }, [singleCapsuleId])
 
   // Set up Media Session API for mobile devices
   useEffect(() => {
@@ -816,7 +859,7 @@ export default function Espace180Page() {
   }
 
   return (
-    <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
+    <main className={`min-h-screen ${singleCapsuleId ? 'bg-[rgb(232,146,124)] m-0 p-0' : 'bg-[rgb(232,146,124)]'}`}>
       {/* Hero Section - Only show if not viewing a single capsule */}
       {!singleCapsuleId && (
         <div className="relative bg-primary-forest py-20 overflow-hidden">
@@ -917,32 +960,34 @@ export default function Espace180Page() {
         )}
 
         {/* Capsules Grid */}
-        <div className="container mx-auto px-4 pb-16">
+        <div className="container mx-auto px-4 pb-20">
           {filteredCapsules.length === 0 ? (
-            <div className="text-center py-8">
+            <div className="text-center py-20">
               <p className="text-white text-xl">
-                Aucune capsule ne correspond à votre sélection.
+                Aucune capsule ne correspond à vos filtres.
               </p>
+              <button
+                onClick={() => setSelectedTags([])}
+                className="mt-6 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all"
+              >
+                Réinitialiser les filtres
+              </button>
             </div>
-          ) : filteredCapsules.length === 1 && !singleCapsule ? (
-            // Single filtered capsule view - make it centered and larger
-            <div className="max-w-5xl mx-auto">
+          ) : filteredCapsules.length === 1 ? (
+            <div className="max-w-lg mx-auto mt-12">
               {renderCapsule(filteredCapsules[0], true)}
             </div>
-          ) : filteredCapsules.length === 2 && !singleCapsule ? (
-            // Two capsules - display in two columns
+          ) : filteredCapsules.length === 2 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredCapsules.map((capsule) => (
                 <div key={capsule.id}>{renderCapsule(capsule, false)}</div>
               ))}
             </div>
           ) : singleCapsule ? (
-            // Single capsule from URL parameter - already centered
-            <div className="max-w-5xl mx-auto mt-12">
+            <div className="max-w-lg mx-auto mt-12">
               {renderCapsule(singleCapsule, true)}
             </div>
           ) : (
-            // Multiple capsules - masonry grid
             <Masonry
               breakpointCols={{
                 default: 3,
