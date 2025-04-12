@@ -1,6 +1,7 @@
 // Capsule data for Espace180
 export interface Capsule {
   id: number
+  uniqueId: string  // Unguessable ID for URLs
   title: string
   description: string
   date: Date
@@ -16,6 +17,7 @@ export interface Capsule {
 export const capsules: Capsule[] = [
   {
     id: 1,
+    uniqueId: 'med-erozen-f8c7b2a1',
     title: 'Meditation Erozen 001',
     description:
       "Une capsule conçue pour libérer votre créativité et explorer votre potentiel d'expression. Laissez-vous guider dans cet espace où l'imagination se déploie sans contraintes.",
@@ -29,6 +31,7 @@ export const capsules: Capsule[] = [
   },
   {
     id: 2,
+    uniqueId: 'zen-clic-9a3d7e5f',
     title: 'Zen Clic 1',
     description:
       'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
@@ -42,6 +45,7 @@ export const capsules: Capsule[] = [
   },
   {
     id: 3,
+    uniqueId: 'amour-passion-2c4e6d8b',
     title: 'Amour Passion',
     description:
       "Explorez les dimensions de l'amour passionnel et ses manifestations dans nos relations. Une réflexion sur l'intensité et la profondeur des liens amoureux.",
@@ -55,6 +59,7 @@ export const capsules: Capsule[] = [
   },
   {
     id: 4,
+    uniqueId: 'capsule-connaitre-4a2e1d6c',
     title: 'Capsule Connaître - Exploration',
     description:
       'Une invitation à explorer la connaissance de soi et des autres. Cette capsule audio vous guide dans une démarche introspective pour mieux vous comprendre et vous connecter à votre essence.',
@@ -69,6 +74,7 @@ export const capsules: Capsule[] = [
   },
   {
     id: 5,
+    uniqueId: 'et-si-la-relation-1a3e9d7f',
     title: "Et si la relation amoureuse n'est plus faite pour durer",
     description:
       "Une réflexion sur l'évolution des relations amoureuses dans notre société contemporaine. Questionnez vos attentes et vos perceptions sur la durabilité des liens affectifs.",
@@ -83,6 +89,7 @@ export const capsules: Capsule[] = [
   },
   {
     id: 6,
+    uniqueId: 'la-pensee-orientee-8a5e3c1d',
     title: 'La Pensée Orientée',
     description:
       "Découvrez comment aligner vos pensées vers des objectifs positifs et constructifs. Cette méditation guidée vous aide à structurer votre réflexion pour plus de clarté et d'efficacité.",
@@ -106,6 +113,7 @@ export const capsules: Capsule[] = [
   },
   {
     id: 7,
+    uniqueId: 'les-uns-et-les-autres-3a2e9d1f',
     title: 'Les Uns et Les Autres',
     description:
       'Une exploration des dynamiques relationnelles et des interactions entre individus. Cette capsule vous invite à porter un regard nouveau sur la façon dont nous nous connectons les uns aux autres.',
