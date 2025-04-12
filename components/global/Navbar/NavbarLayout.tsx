@@ -48,8 +48,10 @@ export default function NavbarLayout() {
   useEffect(() => {
     const auth = getAuth(app)
 
-    // Set initial auth state
-    setIsLoggedIn(!!auth.currentUser)
+    // Set initial auth state if available immediately
+    if (auth.currentUser) {
+      setIsLoggedIn(true)
+    }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(!!user)
@@ -75,11 +77,6 @@ export default function NavbarLayout() {
 
   // Don't render navbar on live or coaching-relationnel-en-groupe routes
   if (isLive || isCoachingGroupe) {
-    return null
-  }
-
-  // Don't render anything until we know the auth state
-  if (isLoggedIn === undefined) {
     return null
   }
 
