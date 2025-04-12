@@ -93,9 +93,22 @@ const TherapyQuestionnaireNew = () => {
   const [appointmentScheduled, setAppointmentScheduled] = useState(false)
   const [appointmentDate, setAppointmentDate] = useState('')
 
+  // State for coupon
+  const [hasCoupon, setHasCoupon] = useState(false)
+
+  // Calculate discounted price (10% off)
+  const calculateDiscountedPrice = (price: number) => {
+    return Math.round(price * 0.9)
+  }
+
   // First useEffect to mark component as mounted and load saved data
   useEffect(() => {
     setMounted(true)
+
+    // Check for coupon in URL
+    const url = new URL(window.location.href)
+    const coupon = url.searchParams.get('coupon')
+    setHasCoupon(coupon === 'COEUR180')
 
     // Load data from localStorage
     try {
@@ -756,6 +769,16 @@ const TherapyQuestionnaireNew = () => {
               <p className="text-primary-cream/90">{answers.intention}</p>
             </div>
 
+            {/* Coupon notification */}
+            {hasCoupon && (
+              <div className="bg-primary-coral/20 p-4 rounded-[24px] mb-6 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Check className="text-primary-coral" size={18} />
+                  <p className="text-primary-coral font-medium">Code promo COEUR180 (-10%) appliqué !</p>
+                </div>
+              </div>
+            )}
+
             {/* Recommendations */}
             <h4 className="font-semibold text-lg mb-4 text-primary-coral">
               Offres recommandées pour vous :
@@ -788,12 +811,24 @@ const TherapyQuestionnaireNew = () => {
                         <div className="text-primary-cream/90">
                           {option.price && (
                             <div className="text-right">
-                              <span className="text-sm font-medium">
-                                {option.price}€{' '}
-                                {option.priceDetails && (
-                                  <span>({option.priceDetails})</span>
-                                )}
-                              </span>
+                              {hasCoupon ? (
+                                <span className="text-sm font-medium">
+                                  <span className="line-through">{option.price}€</span>{' '}
+                                  <span className="text-primary-coral">
+                                    {calculateDiscountedPrice(option.price)}€
+                                  </span>{' '}
+                                  {option.priceDetails && (
+                                    <span>({option.priceDetails})</span>
+                                  )}
+                                </span>
+                              ) : (
+                                <span className="text-sm font-medium">
+                                  {option.price}€{' '}
+                                  {option.priceDetails && (
+                                    <span>({option.priceDetails})</span>
+                                  )}
+                                </span>
+                              )}
                             </div>
                           )}
                           {!option.price && option.priceDetails && (
@@ -845,7 +880,17 @@ const TherapyQuestionnaireNew = () => {
                                       ♦
                                     </span>
                                     <span>
-                                      {formula.title}: {formula.price}€
+                                      {formula.title}:{' '}
+                                      {hasCoupon ? (
+                                        <>
+                                          <span className="line-through">{formula.price}€</span>{' '}
+                                          <span className="text-primary-coral">
+                                            {calculateDiscountedPrice(formula.price)}€
+                                          </span>
+                                        </>
+                                      ) : (
+                                        `${formula.price}€`
+                                      )}
                                       {formula.duration && (
                                         <span> ({formula.duration})</span>
                                       )}
