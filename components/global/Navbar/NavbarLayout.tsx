@@ -29,6 +29,22 @@ export default function NavbarLayout() {
 
   const logoUrl = '/images/logo.png' // Static logo path
 
+  // Load appointment data from localStorage on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedAppointment = localStorage.getItem('appointmentData')
+        if (savedAppointment) {
+          const appointmentData = JSON.parse(savedAppointment)
+          setAppointmentScheduled(appointmentData.scheduled)
+          setAppointmentDate(appointmentData.date)
+        }
+      } catch (error) {
+        console.error('Error loading appointment data from localStorage:', error)
+      }
+    }
+  }, [])
+
   useEffect(() => {
     const auth = getAuth(app)
 
@@ -41,6 +57,21 @@ export default function NavbarLayout() {
 
     return () => unsubscribe()
   }, [])
+
+  // Save appointment data to localStorage whenever it changes
+  useEffect(() => {
+    if (appointmentScheduled && appointmentDate && typeof window !== 'undefined') {
+      try {
+        const appointmentData = {
+          scheduled: appointmentScheduled,
+          date: appointmentDate
+        }
+        localStorage.setItem('appointmentData', JSON.stringify(appointmentData))
+      } catch (error) {
+        console.error('Error saving appointment data to localStorage:', error)
+      }
+    }
+  }, [appointmentScheduled, appointmentDate])
 
   // Don't render navbar on live or coaching-relationnel-en-groupe routes
   if (isLive || isCoachingGroupe) {
@@ -273,7 +304,7 @@ export default function NavbarLayout() {
               <div className="bg-primary-teal/20 p-3 rounded-full mb-4">
                 <Check className="h-8 w-8 text-primary-teal" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Rendez-vous confirmé!</h2>
+              <h2 className="text-2xl font-bold mb-2 text-primary-coral">Rendez-vous confirmé!</h2>
               <p className="mb-4 text-gray-700">
                 Votre rendez-vous est prévu pour le {appointmentDate}.
               </p>
