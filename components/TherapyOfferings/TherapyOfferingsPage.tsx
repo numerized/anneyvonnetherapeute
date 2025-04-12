@@ -57,10 +57,10 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
             {badgeText}
           </div>
-          <h2 className="text-3xl md:text-4xl font-light mb-4 text-[#E9B49F]">
+          <h2 className="text-3xl md:text-4xl font-light mb-4 text-primary-coral">
             {title}
           </h2>
-          <p className="text-[#E9B49F]/70">{headline}</p>
+          <p className="text-primary-cream">{headline}</p>
         </div>
 
         {/* Therapy Grid */}
