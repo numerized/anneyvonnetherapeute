@@ -27,6 +27,7 @@ import {
   BookOpen
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 import { scrollToSection } from '@/utils/scroll'
 import {
@@ -95,6 +96,10 @@ const TherapyQuestionnaireNew = () => {
 
   // State for coupon
   const [hasCoupon, setHasCoupon] = useState(false)
+
+  // Check if we're on the home/accueil route
+  const pathname = usePathname()
+  const isHomePage = pathname === '/' || pathname === '/accueil' || pathname?.includes('/prochainement')
 
   // Calculate discounted price (10% off)
   const calculateDiscountedPrice = (price: number) => {
@@ -293,13 +298,13 @@ const TherapyQuestionnaireNew = () => {
 
   return (
     <section id="questionnaire" className="bg-primary-dark py-16">
-      <div className="max-w-4xl mx-auto p-6 text-primary-cream/90">
+      <div className={`mx-auto p-6 text-primary-cream/90 ${isHomePage ? 'max-w-6xl' : 'max-w-4xl'}`}>
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-1 text-xs font-medium bg-primary-forest/50 text-primary-cream rounded-full mb-4">
             QUESTIONNAIRE
           </div>
-          <h2 className="text-4xl font-light text-primary-coral mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-primary-cream">
             Quelle offre vous correspond?
           </h2>
           <p className="text-primary-cream/80">
@@ -310,62 +315,65 @@ const TherapyQuestionnaireNew = () => {
 
         {/* Step 1: Current Situation */}
         {step === 1 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-6 text-primary-cream">
-              Quelle est votre situation ?
+          <motion.div
+            key="step1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            <h3 className="text-xl font-medium mb-6 text-center">
+              Quelle est votre situation actuelle?
             </h3>
-
-            <div className="space-y-4">
+            <div className={`space-y-4 ${isHomePage ? 'md:max-w-5xl md:mx-auto' : ''}`}>
               <button
                 onClick={() => handleSituationSelect('A')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <User className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je suis célibataire et je veux mieux comprendre mon rapport
-                  aux relations.
-                </h4>
-              </button>
-
-              <button
-                onClick={() => handleSituationSelect('B')}
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
                   <Heart className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
-                  Je suis en couple et je souhaite améliorer notre relation.
+                  Je suis en couple et souhaite améliorer ma relation.
                 </h4>
               </button>
-
+              <button
+                onClick={() => handleSituationSelect('B')}
+                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+              >
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                  <HeartCrack className="w-5 h-5 text-primary-cream" />
+                </span>
+                <h4 className="font-medium">
+                  Je traverse des difficultés dans mon couple.
+                </h4>
+              </button>
               <button
                 onClick={() => handleSituationSelect('C')}
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <Home className="w-5 h-5 text-primary-cream" />
+                  <Target className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
                   Je me questionne sur l'avenir de ma relation.
                 </h4>
               </button>
-
               <button
                 onClick={() => handleSituationSelect('D')}
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
               >
                 <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <Clock className="w-5 h-5 text-primary-cream" />
+                  <User className="w-5 h-5 text-primary-cream" />
                 </span>
                 <h4 className="font-medium">
-                  Je viens de vivre une rupture et je veux avancer.
+                  Je souhaite travailler sur moi-même et ma façon d'être en
+                  relation.
                 </h4>
               </button>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 2: Current Priority */}
