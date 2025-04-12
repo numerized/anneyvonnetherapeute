@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { HiMenu } from 'react-icons/hi'
 
-import { EmailForm } from '@/components/shared/EmailForm'
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal'
 import { app } from '@/lib/firebase'
 
 import NotificationBanner from '../NotificationBanner/NotificationBanner'
@@ -21,8 +21,10 @@ export default function NavbarLayout() {
   const isLive = pathname === '/live'
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [showAppointmentModal, setShowAppointmentModal] = useState(false)
+  const [showCalendlyModal, setShowCalendlyModal] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined)
+  const [appointmentScheduled, setAppointmentScheduled] = useState(false)
+  const [appointmentDate, setAppointmentDate] = useState('')
 
   const logoUrl = '/images/logo.png' // Static logo path
 
@@ -47,6 +49,82 @@ export default function NavbarLayout() {
   // Don't render anything until we know the auth state
   if (isLoggedIn === undefined) {
     return null
+  }
+
+  // Handle appointment scheduled
+  const handleAppointmentScheduled = async (eventData: any) => {
+    try {
+      // Validate that we have the expected event data structure
+      if (
+        eventData.event !== 'calendly.event_scheduled' ||
+        !eventData.payload
+      ) {
+        console.error('Invalid event data format:', eventData)
+        return
+      }
+
+      // Extract data from Calendly's standard event structure
+      const eventUri = eventData.payload?.event?.uri || ''
+
+      if (!eventUri) {
+        console.error('Missing event URI:', eventData)
+        return
+      }
+
+      try {
+        // Fetch event details from our API
+        const eventDetailsResponse = await fetch(
+          `/api/calendly/event-details?eventUri=${encodeURIComponent(eventUri)}`,
+        )
+
+        if (!eventDetailsResponse.ok) {
+          throw new Error(
+            `Failed to fetch event details: ${eventDetailsResponse.status}`,
+          )
+        }
+
+        const eventDetailsResult = await eventDetailsResponse.json()
+
+        if (!eventDetailsResult.success || !eventDetailsResult.data) {
+          throw new Error('Invalid response from event details API')
+        }
+
+        const eventDetails = eventDetailsResult.data
+
+        // Get event start time
+        let startTime = eventDetails.start_time
+
+        if (!startTime) {
+          // Fallback (should rarely happen)
+          const scheduledTime = new Date()
+          scheduledTime.setHours(scheduledTime.getHours() + 1)
+          startTime = scheduledTime.toISOString()
+        }
+
+        // Format date for display
+        const dateObj = new Date(startTime)
+        const formattedDate = new Intl.DateTimeFormat('fr-FR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        }).format(dateObj)
+
+        // Format to capitalize first letter of the day name
+        const formattedDateCapitalized =
+          formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
+
+        setAppointmentDate(formattedDateCapitalized)
+        setAppointmentScheduled(true)
+
+      } catch (error) {
+        console.error('Error fetching appointment details:', error)
+      }
+    } catch (error) {
+      console.error('Error handling appointment:', error)
+    }
   }
 
   return (
@@ -87,8 +165,10 @@ export default function NavbarLayout() {
                 <div className="hidden md:flex items-center space-x-8">
                   <NavLinks 
                     setIsMenuOpen={setIsMenuOpen}
-                    setShowAppointmentModal={setShowAppointmentModal}
+                    setShowAppointmentModal={setShowCalendlyModal}
                     isLoggedIn={isLoggedIn}
+                    appointmentScheduled={appointmentScheduled}
+                    appointmentDate={appointmentDate}
                   />
                 </div>
               )}
@@ -150,30 +230,31 @@ export default function NavbarLayout() {
             <div className="flex flex-col space-y-6 items-center">
               <NavLinks 
                 setIsMenuOpen={setIsMenuOpen}
-                setShowAppointmentModal={setShowAppointmentModal}
+                setShowAppointmentModal={setShowCalendlyModal}
                 isLoggedIn={isLoggedIn}
+                appointmentScheduled={appointmentScheduled}
+                appointmentDate={appointmentDate}
               />
             </div>
           </div>
         )}
       </header>
-
-      {showAppointmentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">Prendre rendez-vous</h2>
-              <button
-                onClick={() => setShowAppointmentModal(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <EmailForm onClose={() => setShowAppointmentModal(false)} />
-          </div>
-        </div>
-      )}
+      
+      {/* Calendly Modal */}
+      <CalendlyModal
+        isOpen={showCalendlyModal}
+        onClose={(isScheduled) => {
+          setShowCalendlyModal(false)
+          if (!isScheduled) {
+            // Only reset if user closed without scheduling
+            setAppointmentScheduled(false)
+          }
+        }}
+        sessionType="20-min-free-session" 
+        onAppointmentScheduled={handleAppointmentScheduled}
+        userEmail=""
+        customUrl="https://calendly.com/numerized-ara/20min"
+      />
     </>
   )
 }
