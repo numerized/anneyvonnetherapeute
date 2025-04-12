@@ -69,24 +69,27 @@ export function NavLinks({
         </Link>
       )}
       
-      {appointmentScheduled ? (
-        <div className="bg-primary-teal/30 px-4 py-2 rounded-full text-primary-cream text-sm">
-          <div className="flex items-center">
-            <span className="text-primary-coral mr-2">✓</span>
-            <span>Rendez-vous: {appointmentDate}</span>
+      {/* Appointment section - hidden only on medium screens (md) */}
+      <div className="block md:hidden lg:block">
+        {appointmentScheduled ? (
+          <div className="bg-primary-teal/30 px-4 py-2 rounded-full text-primary-cream text-sm">
+            <div className="flex items-center">
+              <span className="text-primary-coral mr-2">✓</span>
+              <span>Rendez-vous: {appointmentDate}</span>
+            </div>
           </div>
-        </div>
-      ) : (
-        <button
-          onClick={() => {
-            setIsMenuOpen(false)
-            setShowAppointmentModal(true)
-          }}
-          className="px-4 py-2 bg-primary-coral text-white rounded-full hover:bg-primary-rust transition-all duration-200 font-bold"
-        >
-          Prendre Rendez-Vous
-        </button>
-      )}
+        ) : (
+          <button
+            onClick={() => {
+              setIsMenuOpen(false)
+              setShowAppointmentModal(true)
+            }}
+            className="px-4 py-2 bg-primary-coral text-white rounded-full hover:bg-primary-rust transition-all duration-200 font-bold"
+          >
+            Prendre Rendez-Vous
+          </button>
+        )}
+      </div>
       
       <Link
         href={isLoggedIn ? '/dashboard' : '/login'}
