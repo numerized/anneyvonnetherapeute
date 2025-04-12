@@ -1,7 +1,7 @@
 'use client'
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { X } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -25,6 +25,7 @@ export default function NavbarLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined)
   const [appointmentScheduled, setAppointmentScheduled] = useState(false)
   const [appointmentDate, setAppointmentDate] = useState('')
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
 
   const logoUrl = '/images/logo.png' // Static logo path
 
@@ -118,6 +119,9 @@ export default function NavbarLayout() {
 
         setAppointmentDate(formattedDateCapitalized)
         setAppointmentScheduled(true)
+        
+        // Show the confirmation modal
+        setShowConfirmationModal(true)
 
       } catch (error) {
         console.error('Error fetching appointment details:', error)
@@ -125,6 +129,11 @@ export default function NavbarLayout() {
     } catch (error) {
       console.error('Error handling appointment:', error)
     }
+  }
+  
+  // Close the confirmation modal
+  const closeConfirmationModal = () => {
+    setShowConfirmationModal(false)
   }
 
   return (
@@ -255,6 +264,32 @@ export default function NavbarLayout() {
         userEmail=""
         customUrl="https://calendly.com/numerized-ara/20min"
       />
+      
+      {/* Confirmation Modal */}
+      {showConfirmationModal && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <div className="flex flex-col items-center text-center">
+              <div className="bg-primary-teal/20 p-3 rounded-full mb-4">
+                <Check className="h-8 w-8 text-primary-teal" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Rendez-vous confirmé!</h2>
+              <p className="mb-4 text-gray-700">
+                Votre rendez-vous est prévu pour le {appointmentDate}.
+              </p>
+              <p className="mb-6 text-gray-700">
+                Un email de confirmation a été envoyé à votre adresse email avec tous les détails.
+              </p>
+              <button
+                onClick={closeConfirmationModal}
+                className="px-6 py-2 bg-primary-coral text-white font-bold rounded-full hover:bg-primary-rust transition-all"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
