@@ -30,15 +30,15 @@ export default function Espace180Page() {
   const params = useParams()
 
   // Check for capsule ID from both route params and search params
-  const routeParamId = params?.id ? parseInt(params.id as string, 10) : null
+  const routeParamId = params?.id ? params.id as string : null
   const searchParamId = searchParams.get('capsule')
-    ? parseInt(searchParams.get('capsule') as string, 10)
+    ? searchParams.get('capsule') as string
     : null
   const singleCapsuleId = routeParamId || searchParamId
 
   // Find the single capsule if ID is provided
   const singleCapsule = singleCapsuleId
-    ? capsules.find((c) => c.id === singleCapsuleId)
+    ? capsules.find((c) => c.uniqueId === singleCapsuleId)
     : null
 
   // Client-side only effects
@@ -596,7 +596,7 @@ export default function Espace180Page() {
                 <div className="absolute top-4 right-4 flex gap-4 z-20">
                   {/* Capsule title bubble */}
                   <Link
-                    href={`/espace180/capsule/${capsule.id}`}
+                    href={`/espace180/capsule/${capsule.uniqueId}`}
                     className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all"
                   >
                     <span className="text-white font-medium">
@@ -734,6 +734,36 @@ export default function Espace180Page() {
           {/* Description with spacing from title/duration group */}
           <p className="text-white/80 mt-4">{capsule.description}</p>
 
+          {/* Share Button */}
+          <div className="mt-4 flex items-center" style={{ position: 'relative', zIndex: 40 }}>
+            <button
+              onClick={() => {
+                // Create the URL with the capsule ID
+                const shareUrl = `${window.location.origin}/espace180?capsule=${capsule.uniqueId}`;
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(shareUrl).then(
+                  () => {
+                    alert('Lien copié dans le presse-papier ! Vous pouvez maintenant le partager.');
+                  },
+                  (err) => {
+                    console.error('Erreur lors de la copie du lien:', err);
+                  }
+                );
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all cursor-pointer"
+              aria-label="Copier le lien de partage"
+              style={{ pointerEvents: 'auto' }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-share">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" x2="12" y1="2" y2="15" />
+              </svg>
+              <span>Copier le lien</span>
+            </button>
+          </div>
+
           {/* Date - Moved between description and tags */}
           <p className="text-sm text-white/60 text-right mt-4">
             {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
@@ -787,24 +817,25 @@ export default function Espace180Page() {
 
   return (
     <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
-      {/* Hero Section */}
-      <div className="relative bg-primary-forest py-20 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl ml-auto text-right">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
-              Espace 180 Conversion d'Amour
-            </h1>
-            <p className="text-xl text-primary-cream/80">
-              Découvrez notre collection de méditations guidées et d'exercices
-              pratiques pour vous accompagner dans votre cheminement personnel.
-            </p>
+      {/* Hero Section - Only show if not viewing a single capsule */}
+      {!singleCapsuleId && (
+        <div className="relative bg-primary-forest py-20 overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl ml-auto text-right">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
+                Espace 180 Conversion d'Amour
+              </h1>
+              <p className="text-xl text-primary-cream/80">
+                Découvrez notre collection de méditations guidées et d'exercices
+                pratiques pour vous accompagner dans votre cheminement personnel.
+              </p>
+            </div>
           </div>
+          {/* Decorative circles */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
+          <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
         </div>
-        {/* Decorative circles */}
-        <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
-        <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
-      </div>
-
+      )}
       {/* Main Content */}
       <div className="relative">
         {/* Background gradient blobs */}
