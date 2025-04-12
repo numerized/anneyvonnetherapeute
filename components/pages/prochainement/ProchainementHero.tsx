@@ -90,22 +90,18 @@ function ProchainementHeroContent({ hero, data, onShowPurchase, customButtonText
         />
       </div>
 
-      {/* Mobile Logo and Login */}
-      <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
+      {/* Mobile Logo and Login - Removed to prevent duplication with NavbarLayout */}
+      {/* <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
           <Image
             src={logoUrl}
-            alt={
-              data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() ||
-              'Logo'
-            }
+            alt="Anne Yvonne Racine Thérapeute Logo"
             className="h-20 w-auto"
             width={300}
             height={300}
-            priority
           />
         )}
-      </div>
+      </div> */}
 
       <div className="relative z-20 w-full">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
