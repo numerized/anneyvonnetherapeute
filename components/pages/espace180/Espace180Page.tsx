@@ -792,7 +792,7 @@ export default function Espace180Page() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl ml-auto text-right">
             <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
-              Espace 180
+              Espace 180 Conversion d'Amour
             </h1>
             <p className="text-xl text-primary-cream/80">
               Découvrez notre collection de méditations guidées et d'exercices
@@ -847,11 +847,10 @@ export default function Espace180Page() {
 
               {/* Filter Content - Hidden on mobile unless expanded */}
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${
-                  isFilterOpen
+                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${isFilterOpen
                     ? 'max-h-[500px] opacity-100'
                     : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
-                }`}
+                  }`}
               >
                 <div className="flex flex-wrap gap-3 justify-center">
                   {/* Favorites Filter */}
