@@ -4,6 +4,7 @@ import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 
 import { Header } from '@/components/shared/Header'
 import { Stats } from '@/components/shared/Stats'
+import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 import type { HomePagePayload } from '@/types'
 
 import { About } from './About'
@@ -13,7 +14,6 @@ import { Hero } from './Hero'
 import { ProfessionalTraining } from './ProfessionalTraining'
 import { RelationshipStages } from './RelationshipStages'
 import { TherapyPricing } from './TherapyPricing'
-import { TherapyQuestionnaire } from './TherapyQuestionnaire'
 
 export interface HomePageProps {
   data: HomePagePayload | null
@@ -50,7 +50,7 @@ export function HomePage({
       {/* About Section */}
       <About />
 
-      <TherapyQuestionnaire />
+      <TherapyQuestionnaireNew />
 
       <ProfessionalTraining />
       <AiCompanion />

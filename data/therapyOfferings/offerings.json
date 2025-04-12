@@ -57,17 +57,24 @@
           "Retrouver l'accord essentiel – Une exploration à deux pour mieux s'entendre, mieux se comprendre et renforcer le lien.",
           "Harmoniser la relation – Une approche pour les couples désireux d'un échange plus profond et d'une complicité renouvelée."
         ],
-        "details": {
-          "title": "VOTRE THÉRAPIE DE COUPLE",
-          "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
-          "schedule": "Mise en place d'un agenda fixe",
-          "sessionLength": "séances de 60' (individuelles) - 90'(couple)",
-          "price": 2250,
-          "inclusions": [
-            "un entretien préalable 20'",
-            "un audio \"à l'avenir\" de fin de cycle thérapie"
-          ]
-        }
+        "formulas": [
+          {
+            "id": "couple-therapy",
+            "title": "VOTRE THÉRAPIE DE COUPLE",
+            "features": [
+              "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
+              "Mise en place d'un agenda fixe"
+            ],
+            "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
+            "price": 2250,
+            "priceDetails": "pour le programme complet",
+            "sessionLength": "60 minutes par séance (individuelles) - 90 minutes par séance (couple)",
+            "inclusions": [
+              "un entretien préalable 20'",
+              "un audio \"à l'avenir\" de fin de cycle thérapie"
+            ]
+          }
+        ]
       },
       "options": [
         {
@@ -154,7 +161,8 @@
             ],
             "duration": "1 mois - 4 x 60'",
             "price": 720.0,
-            "priceDetails": "pour le programme complet"
+            "priceDetails": "pour le programme complet",
+            "sessionLength": "60 minutes par séance"
           },
           {
             "id": "compact",
@@ -166,7 +174,8 @@
             ],
             "duration": "3 mois - 12 x 60'",
             "price": 2160.0,
-            "priceDetails": "(3 X 720) pour le programme complet"
+            "priceDetails": "(3 X 720) pour le programme complet",
+            "sessionLength": "60 minutes par séance"
           },
           {
             "id": "relax",
@@ -178,7 +187,8 @@
             ],
             "duration": "6 mois - 12 x 60'",
             "price": 2160.0,
-            "priceDetails": "(3 X 720) pour le programme complet"
+            "priceDetails": "(3 X 720) pour le programme complet",
+            "sessionLength": "60 minutes par séance"
           }
         ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
@@ -232,7 +242,8 @@
           "Approche entièrement personnalisée",
           "Flexibilité dans le rythme des séances"
         ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations.",
+        "sessionLength": "60 minutes par séance"
       },
       "hasTest": true,
       "hasAudioPresentation": true

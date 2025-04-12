@@ -9,5 +9,9 @@ export const metadata = {
 }
 
 export default function TherapiesPage() {
-  return <TherapyOfferingsPage />
+  return (
+    <>
+      <TherapyOfferingsPage />
+    </>
+  )
 }

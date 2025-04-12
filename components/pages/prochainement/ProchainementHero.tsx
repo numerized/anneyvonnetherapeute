@@ -14,9 +14,10 @@ interface HeroProps {
   hero: HomePagePayload['hero']
   data: any
   onShowPurchase?: () => void
+  customButtonText?: string
 }
 
-function ProchainementHeroContent({ hero, data, onShowPurchase }: HeroProps) {
+function ProchainementHeroContent({ hero, data, onShowPurchase, customButtonText }: HeroProps) {
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -52,10 +53,9 @@ function ProchainementHeroContent({ hero, data, onShowPurchase }: HeroProps) {
     }
   }
 
-  const handlePurchase = async () => {
-    const offerSection = document.getElementById('offer-section')
-    if (offerSection) {
-      offerSection.scrollIntoView({ behavior: 'smooth' })
+  const handlePurchase = () => {
+    if (onShowPurchase) {
+      onShowPurchase();
     }
   }
 
@@ -169,7 +169,7 @@ function ProchainementHeroContent({ hero, data, onShowPurchase }: HeroProps) {
                   onClick={handlePurchase}
                   className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200 animate-glow"
                 >
-                  Découvrir l'offre
+                  {customButtonText || "Découvrir l'offre"}
                 </button>
               </motion.div>
             </div>
@@ -272,12 +272,14 @@ export function ProchainementHeroWrapper({
   hero,
   data,
   onShowPurchase,
+  customButtonText,
 }: HeroProps) {
   return (
     <ProchainementHero
       hero={hero}
       data={data}
       onShowPurchase={onShowPurchase}
+      customButtonText={customButtonText}
     />
   )
 }

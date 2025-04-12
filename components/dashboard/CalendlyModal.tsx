@@ -12,6 +12,7 @@ export type SessionType =
   | 'individual1_partner2'
   | 'individual2_partner2'
   | 'individual3_partner2'
+  | '20-min-free-session'
   | 'final'
 
 // Props interface
@@ -23,12 +24,15 @@ export interface CalendlyModalProps {
   guestEmail?: string
   onAppointmentScheduled?: (eventData: any) => void
   minDate?: Date
+  customUrl?: string
 }
 
 const getSessionTitle = (sessionType: SessionType): string => {
   switch (sessionType) {
     case 'initial':
       return 'Séance de Couple Initiale'
+    case '20-min-free-session':
+      return ''
     case 'individual1_partner1':
     case 'individual1_partner2':
       return 'Séance Individuelle 1'
@@ -58,6 +62,7 @@ export function CalendlyModal({
   guestEmail,
   onAppointmentScheduled,
   minDate,
+  customUrl,
 }: CalendlyModalProps) {
   const [isCalendlyScriptLoaded, setIsCalendlyScriptLoaded] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
@@ -152,8 +157,9 @@ export function CalendlyModal({
       urlParams += `&guests=${encodeURIComponent(guestEmail)}`
     }
 
-    // Use the single Calendly URL from environment variable
-    const calendlyUrl = `${CALENDLY_URL}?hide_landing_page_details=1&hide_gdpr_banner=1&hide_event_type_details=1${urlParams}`
+    // Use the custom URL if provided, otherwise use the default URL
+    const baseUrl = customUrl || CALENDLY_URL;
+    const calendlyUrl = `${baseUrl}?hide_landing_page_details=1&hide_gdpr_banner=1&hide_event_type_details=1${urlParams}`
     console.log(`Initializing Calendly with URL: ${calendlyUrl}`)
 
     // Initialize Calendly inline widget
@@ -171,7 +177,7 @@ export function CalendlyModal({
         height: isMobile ? '100vh' : '700px',
       },
     })
-  }, [isCalendlyScriptLoaded, userEmail, guestEmail, isMobile, sessionType])
+  }, [isCalendlyScriptLoaded, userEmail, guestEmail, isMobile, sessionType, customUrl])
 
   // Initialize Calendly when modal is opened
   useEffect(() => {
