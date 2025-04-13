@@ -1,7 +1,7 @@
 // Capsule data for Espace180
 export interface Capsule {
   id: number
-  uniqueId: string  // Unguessable ID for URLs
+  uniqueId: string // Unguessable ID for URLs
   title: string
   description: string
   date: Date

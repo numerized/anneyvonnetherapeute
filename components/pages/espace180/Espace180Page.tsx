@@ -31,9 +31,9 @@ export default function Espace180Page() {
   const params = useParams()
 
   // Check for capsule ID from both route params and search params
-  const routeParamId = params?.id ? params.id as string : null
+  const routeParamId = params?.id ? (params.id as string) : null
   const searchParamId = searchParams.get('capsule')
-    ? searchParams.get('capsule') as string
+    ? (searchParams.get('capsule') as string)
     : null
   const singleCapsuleId = routeParamId || searchParamId
 
@@ -48,18 +48,18 @@ export default function Espace180Page() {
 
     // Set body background color to match the capsule view and remove all gaps
     if (singleCapsuleId) {
-      document.body.style.backgroundColor = 'rgb(232,146,124)';
-      document.body.style.margin = '0';
-      document.body.style.padding = '0';
-      document.documentElement.style.margin = '0';
-      document.documentElement.style.padding = '0';
-      
+      document.body.style.backgroundColor = 'rgb(232,146,124)'
+      document.body.style.margin = '0'
+      document.body.style.padding = '0'
+      document.documentElement.style.margin = '0'
+      document.documentElement.style.padding = '0'
+
       // Add a class to the html element to handle potential white gaps
-      document.documentElement.classList.add('capsule-view');
-      
+      document.documentElement.classList.add('capsule-view')
+
       // Create style element to handle any gaps
-      const style = document.createElement('style');
-      style.id = 'capsule-view-styles';
+      const style = document.createElement('style')
+      style.id = 'capsule-view-styles'
       style.innerHTML = `
         html.capsule-view, 
         html.capsule-view body, 
@@ -69,25 +69,25 @@ export default function Espace180Page() {
           padding: 0 !important;
           overflow-x: hidden;
         }
-      `;
-      document.head.appendChild(style);
+      `
+      document.head.appendChild(style)
     }
 
     return () => {
       // Reset body styles when component unmounts
-      document.body.style.backgroundColor = '';
-      document.body.style.margin = '';
-      document.body.style.padding = '';
-      document.documentElement.style.margin = '';
-      document.documentElement.style.padding = '';
-      document.documentElement.classList.remove('capsule-view');
-      
+      document.body.style.backgroundColor = ''
+      document.body.style.margin = ''
+      document.body.style.padding = ''
+      document.documentElement.style.margin = ''
+      document.documentElement.style.padding = ''
+      document.documentElement.classList.remove('capsule-view')
+
       // Remove the added style element
-      const styleElement = document.getElementById('capsule-view-styles');
+      const styleElement = document.getElementById('capsule-view-styles')
       if (styleElement) {
-        styleElement.remove();
+        styleElement.remove()
       }
-    };
+    }
   }, [singleCapsuleId])
 
   // Set up Media Session API for mobile devices
@@ -779,36 +779,54 @@ export default function Espace180Page() {
           <p className="text-white/80 mt-4">{capsule.description}</p>
 
           {/* Share Button */}
-          <div className="mt-4 flex items-center" style={{ position: 'relative', zIndex: 40 }}>
+          <div
+            className="mt-4 flex items-center"
+            style={{ position: 'relative', zIndex: 40 }}
+          >
             <button
               onClick={() => {
                 // Create the URL with the capsule ID
-                const shareUrl = `${window.location.origin}/espace180?capsule=${capsule.uniqueId}`;
-                
+                const shareUrl = `${window.location.origin}/espace180?capsule=${capsule.uniqueId}`
+
                 // Copy to clipboard
                 navigator.clipboard.writeText(shareUrl).then(
                   () => {
-                    setCopiedCapsule(capsule.id);
+                    setCopiedCapsule(capsule.id)
                     // Reset the button text after 3 seconds
                     setTimeout(() => {
-                      setCopiedCapsule(null);
-                    }, 3000);
+                      setCopiedCapsule(null)
+                    }, 3000)
                   },
                   (err) => {
-                    console.error('Erreur lors de la copie du lien:', err);
-                  }
-                );
+                    console.error('Erreur lors de la copie du lien:', err)
+                  },
+                )
               }}
               className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
               aria-label="Copier le lien de partage"
               style={{ pointerEvents: 'auto' }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-share">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-share"
+              >
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
                 <polyline points="16 6 12 2 8 6" />
                 <line x1="12" x2="12" y1="2" y2="15" />
               </svg>
-              <span>{copiedCapsule === capsule.id ? 'Copié dans le presse-papier' : 'Copier le lien'}</span>
+              <span>
+                {copiedCapsule === capsule.id
+                  ? 'Copié dans le presse-papier'
+                  : 'Copier le lien'}
+              </span>
             </button>
           </div>
 
@@ -864,7 +882,9 @@ export default function Espace180Page() {
   }
 
   return (
-    <main className={`min-h-screen ${singleCapsuleId ? 'bg-[rgb(232,146,124)] m-0 p-0' : 'bg-[rgb(232,146,124)]'}`}>
+    <main
+      className={`min-h-screen ${singleCapsuleId ? 'bg-[rgb(232,146,124)] m-0 p-0' : 'bg-[rgb(232,146,124)]'}`}
+    >
       {/* Hero Section - Only show if not viewing a single capsule */}
       {!singleCapsuleId && (
         <div className="relative bg-primary-forest py-20 overflow-hidden">
@@ -875,7 +895,8 @@ export default function Espace180Page() {
               </h1>
               <p className="text-xl text-primary-cream/80">
                 Découvrez notre collection de méditations guidées et d'exercices
-                pratiques pour vous accompagner dans votre cheminement personnel.
+                pratiques pour vous accompagner dans votre cheminement
+                personnel.
               </p>
             </div>
           </div>
@@ -926,10 +947,11 @@ export default function Espace180Page() {
 
               {/* Filter Content - Hidden on mobile unless expanded */}
               <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${isFilterOpen
+                className={`transition-all duration-300 ease-in-out overflow-hidden md:h-auto ${
+                  isFilterOpen
                     ? 'max-h-[500px] opacity-100'
                     : 'max-h-0 opacity-0 md:max-h-[500px] md:opacity-100'
-                  }`}
+                }`}
               >
                 <div className="flex flex-wrap gap-3 justify-center">
                   {/* Favorites Filter */}

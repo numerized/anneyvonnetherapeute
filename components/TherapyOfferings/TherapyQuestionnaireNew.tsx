@@ -1,40 +1,40 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  ArrowUpRight, 
-  Moon, 
-  Star, 
-  Check,
-  User,
-  Heart,
-  Home,
-  Clock,
-  ChevronsUp,
-  MessageCircle,
-  Target,
+import {
   Anchor,
-  Crosshair,
-  Route,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  Check,
+  ChevronsUp,
+  Clock,
   Compass,
-  Sparkles,
-  Lightbulb,
+  Crosshair,
+  Heart,
   HeartCrack,
-  Network,
+  Home,
+  Lightbulb,
+  MessageCircle,
   MessageSquare,
-  BookOpen
+  Moon,
+  Network,
+  Route,
+  Sparkles,
+  Star,
+  Target,
+  User,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
+import { CalendlyModal } from '@/components/dashboard/CalendlyModal'
 import { scrollToSection } from '@/utils/scroll'
 import {
   generateRecommendedOptions,
   getIntentionText,
 } from '@/utils/therapyRecommendations'
-import { CalendlyModal } from '@/components/dashboard/CalendlyModal'
 
 type TherapyOption = {
   title: string
@@ -99,7 +99,10 @@ const TherapyQuestionnaireNew = () => {
 
   // Check if we're on the home/accueil route
   const pathname = usePathname()
-  const isHomePage = pathname === '/' || pathname === '/accueil' || pathname?.includes('/prochainement')
+  const isHomePage =
+    pathname === '/' ||
+    pathname === '/accueil' ||
+    pathname?.includes('/prochainement')
 
   // Calculate discounted price (10% off)
   const calculateDiscountedPrice = (price: number) => {
@@ -287,7 +290,6 @@ const TherapyQuestionnaireNew = () => {
 
         setAppointmentDate(formattedDateCapitalized)
         setAppointmentScheduled(true)
-
       } catch (error) {
         console.error('Error fetching appointment details:', error)
       }
@@ -298,7 +300,9 @@ const TherapyQuestionnaireNew = () => {
 
   return (
     <section id="questionnaire" className="bg-primary-dark py-16">
-      <div className={`mx-auto p-6 text-primary-cream/90 ${isHomePage ? 'max-w-6xl' : 'max-w-4xl'}`}>
+      <div
+        className={`mx-auto p-6 text-primary-cream/90 ${isHomePage ? 'max-w-6xl' : 'max-w-4xl'}`}
+      >
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-1 text-xs font-medium bg-primary-forest/50 text-primary-cream rounded-full mb-4">
@@ -326,7 +330,9 @@ const TherapyQuestionnaireNew = () => {
             <h3 className="text-xl font-medium mb-6 text-center">
               Quelle est votre situation actuelle?
             </h3>
-            <div className={`space-y-4 ${isHomePage ? 'md:max-w-5xl md:mx-auto' : ''}`}>
+            <div
+              className={`space-y-4 ${isHomePage ? 'md:max-w-5xl md:mx-auto' : ''}`}
+            >
               <button
                 onClick={() => handleSituationSelect('A')}
                 className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
@@ -782,7 +788,9 @@ const TherapyQuestionnaireNew = () => {
               <div className="bg-primary-coral/20 p-4 rounded-[24px] mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Check className="text-primary-coral" size={18} />
-                  <p className="text-primary-coral font-medium">Code promo COEUR180 (-10%) appliqué !</p>
+                  <p className="text-primary-coral font-medium">
+                    Code promo COEUR180 (-10%) appliqué !
+                  </p>
                 </div>
               </div>
             )}
@@ -821,7 +829,9 @@ const TherapyQuestionnaireNew = () => {
                             <div className="text-right">
                               {hasCoupon ? (
                                 <span className="text-sm font-medium">
-                                  <span className="line-through">{option.price}€</span>{' '}
+                                  <span className="line-through">
+                                    {option.price}€
+                                  </span>{' '}
                                   <span className="text-primary-coral">
                                     {calculateDiscountedPrice(option.price)}€
                                   </span>{' '}
@@ -859,10 +869,7 @@ const TherapyQuestionnaireNew = () => {
                         {option.sessionLength && (
                           <div className="mt-3 pt-3 border-t border-primary-cream/20">
                             <div className="flex items-center gap-2">
-                              <Clock 
-                                className="text-primary-coral"
-                                size={18}
-                              />
+                              <Clock className="text-primary-coral" size={18} />
                               <p className="text-sm text-primary-cream/90">
                                 {option.sessionLength}
                               </p>
@@ -891,9 +898,14 @@ const TherapyQuestionnaireNew = () => {
                                       {formula.title}:{' '}
                                       {hasCoupon ? (
                                         <>
-                                          <span className="line-through">{formula.price}€</span>{' '}
+                                          <span className="line-through">
+                                            {formula.price}€
+                                          </span>{' '}
                                           <span className="text-primary-coral">
-                                            {calculateDiscountedPrice(formula.price)}€
+                                            {calculateDiscountedPrice(
+                                              formula.price,
+                                            )}
+                                            €
                                           </span>
                                         </>
                                       ) : (
@@ -971,7 +983,7 @@ const TherapyQuestionnaireNew = () => {
           </div>
         )}
       </div>
-      
+
       {/* Calendly Modal */}
       <CalendlyModal
         isOpen={showCalendlyModal}
@@ -982,7 +994,7 @@ const TherapyQuestionnaireNew = () => {
             setAppointmentScheduled(false)
           }
         }}
-        sessionType="20-min-free-session" 
+        sessionType="20-min-free-session"
         onAppointmentScheduled={handleAppointmentScheduled}
         userEmail=""
         customUrl="https://calendly.com/numerized-ara/20min"

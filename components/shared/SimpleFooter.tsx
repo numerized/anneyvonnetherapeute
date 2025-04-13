@@ -25,7 +25,7 @@ const SocialIcon = ({ platform }: { platform: string }) => {
 export default function SimpleFooter() {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  
+
   // Default newsletter content
   const newsletter = {
     title: 'CAPSULES AUDIO et CODE PROMO !',
@@ -80,7 +80,7 @@ export default function SimpleFooter() {
                   onSubmit={async (e) => {
                     e.preventDefault()
                     setIsLoading(true)
-                    
+
                     const form = e.target as HTMLFormElement
                     const emailInput = form.querySelector(
                       'input[type="email"]',
@@ -141,9 +141,25 @@ export default function SimpleFooter() {
                   >
                     {isLoading ? (
                       <div className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Traitement en cours...
                       </div>

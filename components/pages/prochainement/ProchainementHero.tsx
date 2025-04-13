@@ -17,7 +17,12 @@ interface HeroProps {
   customButtonText?: string
 }
 
-function ProchainementHeroContent({ hero, data, onShowPurchase, customButtonText }: HeroProps) {
+function ProchainementHeroContent({
+  hero,
+  data,
+  onShowPurchase,
+  customButtonText,
+}: HeroProps) {
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -55,7 +60,7 @@ function ProchainementHeroContent({ hero, data, onShowPurchase, customButtonText
 
   const handlePurchase = () => {
     if (onShowPurchase) {
-      onShowPurchase();
+      onShowPurchase()
     }
   }
 

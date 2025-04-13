@@ -19,8 +19,10 @@ export default function NavbarLayout() {
   const isProchainement = pathname === '/prochainement'
   const isCoachingGroupe = pathname === '/coaching-relationnel-en-groupe'
   const isLive = pathname === '/live'
-  const isTherapies = pathname === '/therapies' || pathname?.startsWith('/therapies/')
-  const isCoaching = pathname === '/coaching' || pathname?.startsWith('/coaching/')
+  const isTherapies =
+    pathname === '/therapies' || pathname?.startsWith('/therapies/')
+  const isCoaching =
+    pathname === '/coaching' || pathname?.startsWith('/coaching/')
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showCalendlyModal, setShowCalendlyModal] = useState(false)
@@ -42,7 +44,10 @@ export default function NavbarLayout() {
           setAppointmentDate(appointmentData.date)
         }
       } catch (error) {
-        console.error('Error loading appointment data from localStorage:', error)
+        console.error(
+          'Error loading appointment data from localStorage:',
+          error,
+        )
       }
     }
   }, [])
@@ -64,11 +69,15 @@ export default function NavbarLayout() {
 
   // Save appointment data to localStorage whenever it changes
   useEffect(() => {
-    if (appointmentScheduled && appointmentDate && typeof window !== 'undefined') {
+    if (
+      appointmentScheduled &&
+      appointmentDate &&
+      typeof window !== 'undefined'
+    ) {
       try {
         const appointmentData = {
           scheduled: appointmentScheduled,
-          date: appointmentDate
+          date: appointmentDate,
         }
         localStorage.setItem('appointmentData', JSON.stringify(appointmentData))
       } catch (error) {
@@ -149,10 +158,9 @@ export default function NavbarLayout() {
 
         setAppointmentDate(formattedDateCapitalized)
         setAppointmentScheduled(true)
-        
+
         // Show the confirmation modal
         setShowConfirmationModal(true)
-
       } catch (error) {
         console.error('Error fetching appointment details:', error)
       }
@@ -160,7 +168,7 @@ export default function NavbarLayout() {
       console.error('Error handling appointment:', error)
     }
   }
-  
+
   // Close the confirmation modal
   const closeConfirmationModal = () => {
     setShowConfirmationModal(false)
@@ -186,7 +194,9 @@ export default function NavbarLayout() {
           >
             <div className="flex justify-end items-center relative">
               {logoUrl && (
-                <div className={`absolute -bottom-[86px] left-0 z-50 hidden md:block ${isTherapies || isCoaching ? 'opacity-100' : ''}`}>
+                <div
+                  className={`absolute -bottom-[86px] left-0 z-50 hidden md:block ${isTherapies || isCoaching ? 'opacity-100' : ''}`}
+                >
                   <Link href="/" className="flex-shrink-0">
                     <Image
                       src={logoUrl}
@@ -202,7 +212,7 @@ export default function NavbarLayout() {
               {/* Desktop Navigation */}
               {(!isProchainement || isTherapies || isCoaching) && (
                 <div className="hidden md:flex items-center space-x-8">
-                  <NavLinks 
+                  <NavLinks
                     setIsMenuOpen={setIsMenuOpen}
                     setShowAppointmentModal={setShowCalendlyModal}
                     isLoggedIn={isLoggedIn}
@@ -217,10 +227,7 @@ export default function NavbarLayout() {
       </header>
 
       {/* Mobile Header */}
-      <header
-        className="relative bg-primary-dark md:hidden"
-        role="banner"
-      >
+      <header className="relative bg-primary-dark md:hidden" role="banner">
         {isProchainement ? (
           <NotificationBanner message="Lancement en 2025" />
         ) : (
@@ -267,7 +274,7 @@ export default function NavbarLayout() {
             </button>
 
             <div className="flex flex-col space-y-6 items-center">
-              <NavLinks 
+              <NavLinks
                 setIsMenuOpen={setIsMenuOpen}
                 setShowAppointmentModal={setShowCalendlyModal}
                 isLoggedIn={isLoggedIn}
@@ -278,7 +285,7 @@ export default function NavbarLayout() {
           </div>
         )}
       </header>
-      
+
       {/* Calendly Modal */}
       <CalendlyModal
         isOpen={showCalendlyModal}
@@ -289,12 +296,12 @@ export default function NavbarLayout() {
             setAppointmentScheduled(false)
           }
         }}
-        sessionType="20-min-free-session" 
+        sessionType="20-min-free-session"
         onAppointmentScheduled={handleAppointmentScheduled}
         userEmail=""
         customUrl="https://calendly.com/numerized-ara/20min"
       />
-      
+
       {/* Confirmation Modal */}
       {showConfirmationModal && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -303,12 +310,15 @@ export default function NavbarLayout() {
               <div className="bg-primary-teal/20 p-3 rounded-full mb-4">
                 <Check className="h-8 w-8 text-primary-teal" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-primary-coral">Rendez-vous confirmé!</h2>
+              <h2 className="text-2xl font-bold mb-2 text-primary-coral">
+                Rendez-vous confirmé!
+              </h2>
               <p className="mb-4 text-gray-700">
                 Votre rendez-vous est prévu pour le {appointmentDate}.
               </p>
               <p className="mb-6 text-gray-700">
-                Un email de confirmation a été envoyé à votre adresse email avec tous les détails.
+                Un email de confirmation a été envoyé à votre adresse email avec
+                tous les détails.
               </p>
               <button
                 onClick={closeConfirmationModal}
