@@ -176,6 +176,74 @@ export default function Espace180Page() {
     }
   }, [isClient, activeMedia])
 
+  // Meta tags for social sharing
+  useEffect(() => {
+    if (singleCapsuleId && isClient) {
+      const capsule = capsules.find((c) => c.uniqueId === singleCapsuleId)
+
+      if (capsule) {
+        // Update meta tags for social sharing
+        const siteUrl = 'https://coeur-a-corps.org'
+        const imageUrl = capsule.squarePosterUrl
+          ? `${siteUrl}${capsule.squarePosterUrl}`
+          : `${siteUrl}${capsule.posterUrl}`
+
+        // Create or update Open Graph meta tags
+        updateMetaTag('og:title', capsule.title)
+        updateMetaTag('og:description', capsule.description)
+        updateMetaTag('og:image', imageUrl)
+        updateMetaTag(
+          'og:url',
+          `${siteUrl}/espace180?capsule=${capsule.uniqueId}`,
+        )
+        updateMetaTag('og:type', 'website')
+
+        // Twitter Card meta tags
+        updateMetaTag('twitter:card', 'summary_large_image')
+        updateMetaTag('twitter:title', capsule.title)
+        updateMetaTag('twitter:description', capsule.description)
+        updateMetaTag('twitter:image', imageUrl)
+      }
+    }
+
+    // Helper function to create or update meta tags
+    function updateMetaTag(property: string, content: string) {
+      let meta: HTMLMetaElement | null = document.querySelector(
+        `meta[property="${property}"]`,
+      )
+
+      if (!meta) {
+        meta = document.createElement('meta')
+        meta.setAttribute('property', property)
+        document.head.appendChild(meta)
+      }
+
+      meta.setAttribute('content', content)
+    }
+
+    // Cleanup function to remove meta tags when component unmounts
+    return () => {
+      const metaTags = [
+        'og:title',
+        'og:description',
+        'og:image',
+        'og:url',
+        'og:type',
+        'twitter:card',
+        'twitter:title',
+        'twitter:description',
+        'twitter:image',
+      ]
+
+      metaTags.forEach((tag) => {
+        const meta = document.querySelector(`meta[property="${tag}"]`)
+        if (meta) {
+          document.head.removeChild(meta)
+        }
+      })
+    }
+  }, [singleCapsuleId, isClient])
+
   // Memoize document event handlers
   const handleDocumentMouseMove = useCallback(
     (e: MouseEvent) => {
