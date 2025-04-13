@@ -52,22 +52,24 @@ export function WebinarHero({ hero, data }: HeroProps) {
         />
       </div>
 
-      {/* Mobile Logo and Login */}
-      <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
+      {/* Mobile Logo and Login - Removed to prevent duplication with NavbarLayout */}
+      {/* <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
           <Image
             src={logoUrl}
-            alt={
-              data.logo?.alt?.replace(/[\u200B-\u200D\uFEFF]/g, '').trim() ||
-              'Logo'
-            }
+            alt="Anne Yvonne Racine Thérapeute Logo"
             className="h-20 w-auto"
             width={300}
             height={300}
-            priority
           />
         )}
-      </div>
+        <Link
+          href={isLoggedIn ? '/dashboard' : '/login'}
+          className="inline-block px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105 whitespace-nowrap"
+        >
+          {isLoggedIn ? 'Espace Privé' : 'Se loguer'}
+        </Link>
+      </div> */}
 
       <div className="relative z-20 w-full">
         <div className="max-w-7xl mx-auto px-4 md:px-6">

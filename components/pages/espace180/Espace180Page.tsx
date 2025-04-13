@@ -22,6 +22,7 @@ export default function Espace180Page() {
   const [currentTime, setCurrentTime] = useState<{ [key: number]: number }>({})
   const [duration, setDuration] = useState<{ [key: number]: number }>({})
   const [isDragging, setIsDragging] = useState<{ [key: number]: boolean }>({})
+  const [copiedCapsule, setCopiedCapsule] = useState<number | null>(null)
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({})
   const audioRefs = useRef<{ [key: number]: HTMLAudioElement | null }>({})
   const progressRefs = useRef<{ [key: number]: HTMLDivElement | null }>({})
@@ -30,21 +31,64 @@ export default function Espace180Page() {
   const params = useParams()
 
   // Check for capsule ID from both route params and search params
-  const routeParamId = params?.id ? parseInt(params.id as string, 10) : null
+  const routeParamId = params?.id ? (params.id as string) : null
   const searchParamId = searchParams.get('capsule')
-    ? parseInt(searchParams.get('capsule') as string, 10)
+    ? (searchParams.get('capsule') as string)
     : null
   const singleCapsuleId = routeParamId || searchParamId
 
   // Find the single capsule if ID is provided
   const singleCapsule = singleCapsuleId
-    ? capsules.find((c) => c.id === singleCapsuleId)
+    ? capsules.find((c) => c.uniqueId === singleCapsuleId)
     : null
 
   // Client-side only effects
   useEffect(() => {
     setIsClient(true)
-  }, [])
+
+    // Set body background color to match the capsule view and remove all gaps
+    if (singleCapsuleId) {
+      document.body.style.backgroundColor = 'rgb(232,146,124)'
+      document.body.style.margin = '0'
+      document.body.style.padding = '0'
+      document.documentElement.style.margin = '0'
+      document.documentElement.style.padding = '0'
+
+      // Add a class to the html element to handle potential white gaps
+      document.documentElement.classList.add('capsule-view')
+
+      // Create style element to handle any gaps
+      const style = document.createElement('style')
+      style.id = 'capsule-view-styles'
+      style.innerHTML = `
+        html.capsule-view, 
+        html.capsule-view body, 
+        html.capsule-view #__next, 
+        html.capsule-view main {
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow-x: hidden;
+        }
+      `
+      document.head.appendChild(style)
+    }
+
+    return () => {
+      // Reset body styles when component unmounts
+      document.body.style.backgroundColor = ''
+      document.body.style.margin = ''
+      document.body.style.padding = ''
+      document.documentElement.style.margin = ''
+      document.documentElement.style.padding = ''
+      document.documentElement.classList.remove('capsule-view')
+
+      // Remove the added style element
+      const styleElement = document.getElementById('capsule-view-styles')
+      if (styleElement) {
+        styleElement.remove()
+      }
+    }
+  }, [singleCapsuleId])
 
   // Set up Media Session API for mobile devices
   useEffect(() => {
@@ -596,7 +640,7 @@ export default function Espace180Page() {
                 <div className="absolute top-4 right-4 flex gap-4 z-20">
                   {/* Capsule title bubble */}
                   <Link
-                    href={`/espace180/capsule/${capsule.id}`}
+                    href={`/espace180/capsule/${capsule.uniqueId}`}
                     className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all"
                   >
                     <span className="text-white font-medium">
@@ -734,6 +778,58 @@ export default function Espace180Page() {
           {/* Description with spacing from title/duration group */}
           <p className="text-white/80 mt-4">{capsule.description}</p>
 
+          {/* Share Button */}
+          <div
+            className="mt-4 flex items-center"
+            style={{ position: 'relative', zIndex: 40 }}
+          >
+            <button
+              onClick={() => {
+                // Create the URL with the capsule ID
+                const shareUrl = `${window.location.origin}/espace180?capsule=${capsule.uniqueId}`
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(shareUrl).then(
+                  () => {
+                    setCopiedCapsule(capsule.id)
+                    // Reset the button text after 3 seconds
+                    setTimeout(() => {
+                      setCopiedCapsule(null)
+                    }, 3000)
+                  },
+                  (err) => {
+                    console.error('Erreur lors de la copie du lien:', err)
+                  },
+                )
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+              aria-label="Copier le lien de partage"
+              style={{ pointerEvents: 'auto' }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-share"
+              >
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" x2="12" y1="2" y2="15" />
+              </svg>
+              <span>
+                {copiedCapsule === capsule.id
+                  ? 'Copié dans le presse-papier'
+                  : 'Copier le lien'}
+              </span>
+            </button>
+          </div>
+
           {/* Date - Moved between description and tags */}
           <p className="text-sm text-white/60 text-right mt-4">
             {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
@@ -786,25 +882,29 @@ export default function Espace180Page() {
   }
 
   return (
-    <main className="min-h-screen bg-[rgb(232,146,124)] pt-[var(--navbar-height)]">
-      {/* Hero Section */}
-      <div className="relative bg-primary-forest py-20 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl ml-auto text-right">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
-              Espace 180
-            </h1>
-            <p className="text-xl text-primary-cream/80">
-              Découvrez notre collection de méditations guidées et d'exercices
-              pratiques pour vous accompagner dans votre cheminement personnel.
-            </p>
+    <main
+      className={`min-h-screen ${singleCapsuleId ? 'bg-[rgb(232,146,124)] m-0 p-0' : 'bg-[rgb(232,146,124)]'}`}
+    >
+      {/* Hero Section - Only show if not viewing a single capsule */}
+      {!singleCapsuleId && (
+        <div className="relative bg-primary-forest py-20 overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl ml-auto text-right">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
+                Espace 180 Conversion d'Amour
+              </h1>
+              <p className="text-xl text-primary-cream/80">
+                Découvrez notre collection de méditations guidées et d'exercices
+                pratiques pour vous accompagner dans votre cheminement
+                personnel.
+              </p>
+            </div>
           </div>
+          {/* Decorative circles */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
+          <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
         </div>
-        {/* Decorative circles */}
-        <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-primary-coral/20 blur-3xl" />
-        <div className="absolute -bottom-32 right-[-20%] w-96 h-96 rounded-full bg-primary-coral/10 blur-3xl" />
-      </div>
-
+      )}
       {/* Main Content */}
       <div className="relative">
         {/* Background gradient blobs */}
@@ -887,32 +987,34 @@ export default function Espace180Page() {
         )}
 
         {/* Capsules Grid */}
-        <div className="container mx-auto px-4 pb-16">
+        <div className="container mx-auto px-4 pb-20">
           {filteredCapsules.length === 0 ? (
-            <div className="text-center py-8">
+            <div className="text-center py-20">
               <p className="text-white text-xl">
-                Aucune capsule ne correspond à votre sélection.
+                Aucune capsule ne correspond à vos filtres.
               </p>
+              <button
+                onClick={() => setSelectedTags([])}
+                className="mt-6 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all"
+              >
+                Réinitialiser les filtres
+              </button>
             </div>
-          ) : filteredCapsules.length === 1 && !singleCapsule ? (
-            // Single filtered capsule view - make it centered and larger
-            <div className="max-w-5xl mx-auto">
+          ) : filteredCapsules.length === 1 ? (
+            <div className="max-w-lg mx-auto mt-12">
               {renderCapsule(filteredCapsules[0], true)}
             </div>
-          ) : filteredCapsules.length === 2 && !singleCapsule ? (
-            // Two capsules - display in two columns
+          ) : filteredCapsules.length === 2 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredCapsules.map((capsule) => (
                 <div key={capsule.id}>{renderCapsule(capsule, false)}</div>
               ))}
             </div>
           ) : singleCapsule ? (
-            // Single capsule from URL parameter - already centered
-            <div className="max-w-5xl mx-auto mt-12">
+            <div className="max-w-lg mx-auto mt-12">
               {renderCapsule(singleCapsule, true)}
             </div>
           ) : (
-            // Multiple capsules - masonry grid
             <Masonry
               breakpointCols={{
                 default: 3,

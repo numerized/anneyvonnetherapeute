@@ -1,77 +1,103 @@
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-import { resolveHref } from '@/sanity/lib/utils'
 import { scrollToSection } from '@/utils/scroll'
 
 interface NavLinksProps {
-  menuItems: any[]
   setIsMenuOpen: (isOpen: boolean) => void
   setShowAppointmentModal: (show: boolean) => void
+  isLoggedIn?: boolean | undefined
+  appointmentScheduled?: boolean
+  appointmentDate?: string
 }
 
 export function NavLinks({
-  menuItems,
   setIsMenuOpen,
   setShowAppointmentModal,
+  isLoggedIn,
+  appointmentScheduled,
+  appointmentDate,
 }: NavLinksProps) {
+  const pathname = usePathname()
+  const isHomePage = pathname === '/' || pathname === '/accueil'
+
   const handleAnchorClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     anchor: string,
   ) => {
     e.preventDefault()
     setIsMenuOpen(false)
-    scrollToSection(anchor)
+
+    setTimeout(() => {
+      scrollToSection(anchor)
+    }, 100)
   }
 
-  return null
-
-  /* Commented out navigation elements
   return (
     <>
-      {menuItems?.map((menuItem, key) => {
-        if (menuItem.linkType === 'reference' && menuItem.reference) {
-          const href = resolveHref(menuItem.reference._type, menuItem.reference.slug?.current)
-          if (!href) {
-            return null
-          }
-          return (
-            <Link
-              key={key}
-              className={`text-lg hover:text-primary-teal transition-colors ${
-                menuItem.reference._type === 'home'
-                  ? 'font-extrabold'
-                  : ''
-              }`}
-              href={href}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {menuItem.title}
-            </Link>
-          )
-        } else if (menuItem.linkType === 'anchor' && menuItem.anchor) {
-          return (
-            <a
-              key={key}
-              className="text-lg hover:text-primary-teal transition-colors"
-              href={`#${menuItem.anchor}`}
-              onClick={(e) => handleAnchorClick(e, menuItem.anchor!)}
-            >
-              {menuItem.title}
-            </a>
-          )
-        }
-        return null
-      })}
-      <button
-        onClick={() => {
-          setIsMenuOpen(false)
-          setShowAppointmentModal(true)
-        }}
-        className="bg-primary-coral hover:bg-primary-rust transition-colors px-6 py-2 rounded-md font-bold focus:outline-none focus:ring-2 focus:ring-primary-teal"
+      <Link
+        href="/therapies"
+        className="text-white hover:text-white/80 transition-colors duration-200"
+        onClick={() => setIsMenuOpen(false)}
       >
-        Prendre rendez-vous
-      </button>
+        Therapies
+      </Link>
+
+      <Link
+        href="/coaching"
+        className="text-white hover:text-white/80 transition-colors duration-200"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Coachings
+      </Link>
+
+      {isHomePage ? (
+        <a
+          href="#about"
+          className="text-white hover:text-white/80 transition-colors duration-200"
+          onClick={(e) => handleAnchorClick(e, 'about')}
+        >
+          A Propos
+        </a>
+      ) : (
+        <Link
+          href="/accueil#about"
+          className="text-white hover:text-white/80 transition-colors duration-200"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          A Propos
+        </Link>
+      )}
+
+      {/* Appointment section - hidden only on medium screens (md) */}
+      <div className="block md:hidden lg:block">
+        {appointmentScheduled ? (
+          <div className="bg-primary-teal/30 px-4 py-2 rounded-full text-primary-cream text-sm">
+            <div className="flex items-center">
+              <span className="text-primary-coral mr-2">✓</span>
+              <span>Rendez-vous: {appointmentDate}</span>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              setIsMenuOpen(false)
+              setShowAppointmentModal(true)
+            }}
+            className="px-4 py-2 bg-primary-coral text-white rounded-full hover:bg-primary-rust transition-all duration-200 font-bold"
+          >
+            Prendre Rendez-Vous
+          </button>
+        )}
+      </div>
+
+      <Link
+        href={isLoggedIn ? '/dashboard' : '/login'}
+        className="px-4 py-2 rounded-full border-2 border-white text-white hover:bg-white/10 transition-colors duration-200"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        {isLoggedIn ? 'Espace Privé' : 'Se loguer'}
+      </Link>
     </>
   )
-  */
 }

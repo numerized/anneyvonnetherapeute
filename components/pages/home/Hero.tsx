@@ -77,8 +77,8 @@ export function Hero({ hero, data }: HeroProps) {
         )}
       </div>
 
-      {/* Mobile Logo and Login */}
-      <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
+      {/* Mobile Logo and Login - Removed to prevent duplication with NavbarLayout */}
+      {/* <div className="absolute top-4 w-full px-4 flex justify-between items-center md:hidden z-50">
         {logoUrl && (
           <Image
             src={logoUrl}
@@ -89,24 +89,21 @@ export function Hero({ hero, data }: HeroProps) {
             className="h-20 w-auto"
             width={300}
             height={300}
-            priority
           />
         )}
-        {data?.menuItems?.length > 0 &&
-          data.menuItems[data.menuItems.length - 1] && (
-            <Link
-              href={
-                data.menuItems[data.menuItems.length - 1].reference?.slug
-                  ?.current
-                  ? `/${data.menuItems[data.menuItems.length - 1].reference.slug.current}`
-                  : '#'
-              }
-              className="inline-block px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105 whitespace-nowrap"
-            >
-              {data.menuItems[data.menuItems.length - 1].title}
-            </Link>
-          )}
-      </div>
+        <Link
+          href={isLoggedIn ? '/dashboard' : '/login'}
+          className="inline-block px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105 whitespace-nowrap"
+        >
+          {isLoggedIn ? 'Espace Privé' : 'Se loguer'}
+        </Link>
+      </div> */}
+
+      {/* Full height mobile tint */}
+      <div
+        className="absolute inset-0 bg-[#0F1A17]/50 md:hidden"
+        aria-hidden="true"
+      />
 
       <div className="relative z-20 w-full">
         <div className="max-w-7xl mx-auto px-4 md:px-6">

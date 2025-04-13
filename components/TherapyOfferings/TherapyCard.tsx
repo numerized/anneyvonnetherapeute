@@ -1,7 +1,7 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   BaseOffering,
@@ -22,18 +22,90 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   onShowPromo,
   commonBenefits = [],
 }) => {
+  const [hasCoupon, setHasCoupon] = useState(false)
+
+  // Check for coupon in URL
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    const coupon = url.searchParams.get('coupon')
+    setHasCoupon(coupon === 'COEUR180')
+  }, [])
+
+  // Calculate discounted price (10% off)
+  const calculateDiscountedPrice = (price: number | undefined) => {
+    if (price === undefined) return 0
+    return Math.round(price * 0.9)
+  }
+
   // Get price display
   const getPriceDisplay = () => {
     if ('price' in therapy.mainOffering) {
-      // No longer need to include suffix since it's been removed
-      return `${therapy.mainOffering.price}€`
+      const price = therapy.mainOffering.price
+      if (hasCoupon) {
+        const discountedPrice = calculateDiscountedPrice(price)
+        return (
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary-cream line-through">{price}€</span>
+            <span className="text-primary-coral">{discountedPrice}€</span>
+          </div>
+        )
+      }
+      return `${price}€`
     } else if (therapy.mainOffering.details?.price) {
-      return `${therapy.mainOffering.details.price}€`
+      const price = therapy.mainOffering.details.price
+      if (hasCoupon) {
+        const discountedPrice = calculateDiscountedPrice(price)
+        return (
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary-cream line-through">{price}€</span>
+            <span className="text-primary-coral">{discountedPrice}€</span>
+          </div>
+        )
+      }
+      return `${price}€`
     } else if (therapy.pricing) {
       if (typeof therapy.pricing === 'object') {
+        if (hasCoupon) {
+          const discountedCouple = calculateDiscountedPrice(
+            therapy.pricing.couple,
+          )
+          const discountedIndividual = calculateDiscountedPrice(
+            therapy.pricing.individual,
+          )
+          return (
+            <div className="flex flex-col">
+              <div className="flex items-baseline gap-2">
+                <span className="text-primary-cream line-through">
+                  {therapy.pricing.couple}€
+                </span>
+                <span className="text-primary-coral">{discountedCouple}€</span>
+                <span className="text-primary-cream/80">/couple</span>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className="text-primary-cream line-through">
+                  {therapy.pricing.individual}€
+                </span>
+                <span className="text-primary-coral">
+                  {discountedIndividual}€
+                </span>
+                <span className="text-primary-cream/80">/individuel</span>
+              </div>
+            </div>
+          )
+        }
         return `${therapy.pricing.couple}€/couple · ${therapy.pricing.individual}€/individuel`
       }
-      return `${therapy.pricing}€`
+      const price = therapy.pricing
+      if (hasCoupon) {
+        const discountedPrice = calculateDiscountedPrice(price)
+        return (
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary-cream line-through">{price}€</span>
+            <span className="text-primary-coral">{discountedPrice}€</span>
+          </div>
+        )
+      }
+      return `${price}€`
     } else if (
       therapy.mainOffering.formulas &&
       therapy.mainOffering.formulas.length > 0
@@ -41,6 +113,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       const minPrice = Math.min(
         ...therapy.mainOffering.formulas.map((f) => f.price),
       )
+      if (hasCoupon) {
+        const discountedPrice = calculateDiscountedPrice(minPrice)
+        return (
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary-cream/80">à partir de</span>
+            <span className="text-primary-cream line-through">{minPrice}€</span>
+            <span className="text-primary-coral">{discountedPrice}€</span>
+          </div>
+        )
+      }
       return `à partir de ${minPrice}€`
     } else {
       return 'Prix sur demande'
@@ -175,21 +257,6 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     return mainOfferingInclusions
   }
 
-  // Generate a short title from the therapy title for use in the pricing section
-  const getShortTitle = (): string => {
-    // Extract first word or first two words if very short
-    const words = therapy.title.split(' ')
-    if (words.length === 0) return 'OFFRE'
-
-    // If it's a single word or the first word is very short, use it
-    if (words.length === 1 || words[0].length > 3) {
-      return words[0].toUpperCase()
-    }
-
-    // Otherwise use the first two words
-    return `${words[0]} ${words[1]}`.toUpperCase()
-  }
-
   // Get appropriate icon for different benefit types
   const getBenefitIcon = (benefit: string) => {
     const lowerBenefit = benefit.toLowerCase()
@@ -288,8 +355,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         <div className="bg-primary-forest/30 rounded-[24px] p-6">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
-              {therapy.mainOffering.details?.title ||
-                `VOTRE ${getShortTitle()}`}
+              {therapy.mainOffering.details?.title || `NOTRE OFFRE`}
             </h3>
 
             {/* Main offering price */}
@@ -297,9 +363,15 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               therapy.mainOffering.details?.price) && (
               <div className="flex flex-col gap-1">
                 <div className="flex items-end gap-1 justify-start">
-                  <p className="text-4xl text-primary-cream font-light">
-                    {getPriceDisplay()}
-                  </p>
+                  {typeof getPriceDisplay() === 'string' ? (
+                    <p className="text-4xl text-primary-cream font-light">
+                      {getPriceDisplay()}
+                    </p>
+                  ) : (
+                    <div className="text-4xl font-light">
+                      {getPriceDisplay()}
+                    </div>
+                  )}
                   <p className="text-primary-cream/70 pb-1">
                     {getPriceDetails()}
                   </p>
@@ -311,7 +383,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         <p>{therapy.mainOffering.details.duration}</p>
                       )}
                       {therapy.mainOffering.details.sessionLength && (
-                        <p>{therapy.mainOffering.details.sessionLength}</p>
+                        <p className="text-primary-cream/80 text-sm">
+                          {therapy.mainOffering.details.sessionLength}
+                        </p>
                       )}
                     </div>
                   )}
@@ -324,40 +398,106 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 <p className="text-base text-primary-cream font-light">
                   Prix à la séance:
                 </p>
-                <p className="text-sm text-primary-cream/90">
-                  Couple: {therapy.pricing.couple}€
-                </p>
-                <p className="text-sm text-primary-cream/90">
-                  Individuel: {therapy.pricing.individual}€
-                </p>
+                {hasCoupon ? (
+                  <>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-sm text-primary-cream/90 line-through">
+                        Couple: {therapy.pricing.couple}€
+                      </p>
+                      <p className="text-sm text-primary-coral">
+                        {calculateDiscountedPrice(therapy.pricing.couple)}€
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-sm text-primary-cream/90 line-through">
+                        Individuel: {therapy.pricing.individual}€
+                      </p>
+                      <p className="text-sm text-primary-coral">
+                        {calculateDiscountedPrice(therapy.pricing.individual)}€
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-primary-cream/90">
+                      Couple: {therapy.pricing.couple}€
+                    </p>
+                    <p className="text-sm text-primary-cream/90">
+                      Individuel: {therapy.pricing.individual}€
+                    </p>
+                  </>
+                )}
               </div>
             )}
 
             {/* Formulas if available */}
             {getFormulas().length > 0 && (
               <div className="space-y-3 mt-3">
-                <p className="text-xl text-primary-cream font-light">
-                  Formules disponibles:
-                </p>
+                {getFormulas().length > 1 && (
+                  <p className="text-xl text-primary-cream font-light">
+                    Formules disponibles:
+                  </p>
+                )}
                 {getFormulas().map((formula, idx) => (
                   <div
                     key={idx}
                     className="bg-primary-dark/30 p-3 rounded-[16px]"
                   >
-                    <div className="text-primary-cream font-bold">
-                      <h4 className="font-bold">{formula.title}</h4>
-                    </div>
-                    <p className="text-primary-cream">{formula.price}€</p>
-
-                    {formula.priceDetails && (
-                      <p className="text-primary-cream/70 text-sm">
-                        {formula.priceDetails}
-                      </p>
+                    {getFormulas().length > 1 && (
+                      <>
+                        <div className="text-primary-cream font-bold">
+                          <h4 className="font-bold">{formula.title}</h4>
+                        </div>
+                        {hasCoupon ? (
+                          <div className="flex items-center gap-2">
+                            <p className="text-primary-cream line-through">
+                              {formula.price}€
+                            </p>
+                            <p className="text-primary-coral">
+                              {calculateDiscountedPrice(formula.price)}€
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-primary-cream">{formula.price}€</p>
+                        )}
+                      </>
                     )}
-                    {formula.duration && (
-                      <p className="text-primary-cream/70 text-sm">
-                        {formula.duration}
-                      </p>
+
+                    {getFormulas().length === 1 && (
+                      <div className="space-y-1">
+                        {formula.duration && (
+                          <p className="text-primary-cream">
+                            {formula.duration}
+                          </p>
+                        )}
+                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                        {formula.sessionLength && (
+                          <p className="text-primary-cream/80 text-sm">
+                            {formula.sessionLength}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {getFormulas().length > 1 && (
+                      <>
+                        {formula.priceDetails && (
+                          <p className="text-primary-cream/70 text-sm">
+                            {formula.priceDetails}
+                          </p>
+                        )}
+                        {formula.duration && (
+                          <p className="text-primary-cream/70 text-sm">
+                            {formula.duration}
+                          </p>
+                        )}
+                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                        {formula.sessionLength && (
+                          <p className="text-primary-cream/70 text-sm">
+                            {formula.sessionLength}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 ))}
@@ -401,13 +541,45 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   <div className="text-primary-cream text-sm space-y-1">
                     {option.pricing.couple && (
                       <p>
-                        Couple: {option.pricing.couple.price}€/
+                        Couple:{' '}
+                        {hasCoupon ? (
+                          <span>
+                            <span className="line-through">
+                              {option.pricing.couple.price}€
+                            </span>{' '}
+                            <span className="text-primary-coral">
+                              {calculateDiscountedPrice(
+                                option.pricing.couple.price,
+                              )}
+                              €
+                            </span>
+                          </span>
+                        ) : (
+                          option.pricing.couple.price
+                        )}
+                        €/
                         {option.pricing.couple.duration || 'séance'}
                       </p>
                     )}
                     {option.pricing.individual && (
                       <p>
-                        Individuel: {option.pricing.individual.price}€/
+                        Individuel:{' '}
+                        {hasCoupon ? (
+                          <span>
+                            <span className="line-through">
+                              {option.pricing.individual.price}€
+                            </span>{' '}
+                            <span className="text-primary-coral">
+                              {calculateDiscountedPrice(
+                                option.pricing.individual.price,
+                              )}
+                              €
+                            </span>
+                          </span>
+                        ) : (
+                          option.pricing.individual.price
+                        )}
+                        €/
                         {option.pricing.individual.duration || 'séance'}
                       </p>
                     )}
@@ -450,6 +622,13 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           En savoir plus
         </button>
       </div>
+
+      {/* Coupon notification */}
+      {hasCoupon && (
+        <div className="absolute top-3 right-3 bg-primary-coral px-3 py-1 rounded-full text-xs text-primary-cream">
+          Code promo COEUR180 (-10%) appliqué !
+        </div>
+      )}
     </div>
   )
 }
