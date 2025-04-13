@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 
 import { ClientNavbar } from '@/components/global/Navbar/ClientNavbar'
 import CapsulesPage from '@/components/pages/capsules/CapsulesPage'
-import { loadSettings } from '@/sanity/loader/loadQuery'
 
 export const metadata: Metadata = {
   title: 'Capsules Audio - Anne Yvonne Relations',
@@ -11,11 +10,9 @@ export const metadata: Metadata = {
 }
 
 export default async function Capsules() {
-  const initial = await loadSettings()
-
   return (
     <>
-      <ClientNavbar data={initial.data} />
+      <ClientNavbar />
       <CapsulesPage />
     </>
   )

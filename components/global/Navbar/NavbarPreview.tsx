@@ -9,7 +9,8 @@ type Props = {
 }
 
 export default function NavbarPreview(props: Props) {
-  const { data } = useSettings(props.initial)
+  // We still use useSettings to trigger live preview updates
+  useSettings(props.initial)
 
-  return <NavbarLayout data={data!} />
+  return <NavbarLayout />
 }
