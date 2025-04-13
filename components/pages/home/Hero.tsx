@@ -100,7 +100,10 @@ export function Hero({ hero, data }: HeroProps) {
       </div> */}
 
       {/* Full height mobile tint */}
-      <div className="absolute inset-0 bg-[#0F1A17]/50 md:hidden" aria-hidden="true" />
+      <div
+        className="absolute inset-0 bg-[#0F1A17]/50 md:hidden"
+        aria-hidden="true"
+      />
 
       <div className="relative z-20 w-full">
         <div className="max-w-7xl mx-auto px-4 md:px-6">

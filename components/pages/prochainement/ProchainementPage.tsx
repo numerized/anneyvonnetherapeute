@@ -10,8 +10,8 @@ import { toast } from 'sonner'
 import { Stats } from '@/components/shared/Stats'
 import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 
-import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
 import PaymentSuccess from './PaymentSuccess'
+import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
 
 export function ProchainementPage({ data, settings }: any) {
   const [isClient, setIsClient] = useState(false)
@@ -104,7 +104,7 @@ export function ProchainementPage({ data, settings }: any) {
   }
 
   const scrollToQuestionnaire = () => {
-    questionnaireSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    questionnaireSectionRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   if (!data?.hero) {
@@ -139,9 +139,12 @@ export function ProchainementPage({ data, settings }: any) {
                 title="Une approche unique de la thérapie relationnelle"
                 items={statsItems}
               />
-              
+
               {/* Questionnaire Section */}
-              <div ref={questionnaireSectionRef} className="mt-16 mb-16 overflow-hidden rounded-[32px]">
+              <div
+                ref={questionnaireSectionRef}
+                className="mt-16 mb-16 overflow-hidden rounded-[32px]"
+              >
                 <TherapyQuestionnaireNew />
               </div>
 
