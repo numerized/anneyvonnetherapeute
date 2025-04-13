@@ -4,11 +4,7 @@ import { usePathname } from 'next/navigation'
 
 import NavbarLayout from './NavbarLayout'
 
-interface ClientNavbarProps {
-  data: any // Replace with proper type from your settings
-}
-
-export function ClientNavbar({ data }: ClientNavbarProps) {
+export function ClientNavbar() {
   const pathname = usePathname()
 
   // Don't show navbar on style guide and live pages
@@ -16,5 +12,5 @@ export function ClientNavbar({ data }: ClientNavbarProps) {
     return null
   }
 
-  return <NavbarLayout data={data} />
+  return <NavbarLayout />
 }

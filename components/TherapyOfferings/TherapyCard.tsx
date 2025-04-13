@@ -32,7 +32,8 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   }, [])
 
   // Calculate discounted price (10% off)
-  const calculateDiscountedPrice = (price: number) => {
+  const calculateDiscountedPrice = (price: number | undefined) => {
+    if (price === undefined) return 0
     return Math.round(price * 0.9)
   }
 

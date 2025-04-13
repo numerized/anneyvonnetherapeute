@@ -44,6 +44,7 @@ export interface TherapyFormula {
   price: number
   priceDetails?: string
   note?: string
+  sessionLength?: string
 }
 
 export interface TherapyMainOffering {
