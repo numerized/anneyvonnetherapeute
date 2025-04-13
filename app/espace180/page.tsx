@@ -5,15 +5,16 @@ import Espace180Page from '@/components/pages/espace180/Espace180Page'
 import { capsules } from '@/components/pages/espace180/data/capsules'
 
 type Props = {
+  params: { [key: string]: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
 export async function generateMetadata(
-  { searchParams }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // Extract the capsule parameter from the URL
-  const capsuleId = searchParams.capsule as string | undefined
+  const capsuleId = props.searchParams.capsule as string | undefined
   
   // If no capsule parameter, return default metadata
   if (!capsuleId) {
