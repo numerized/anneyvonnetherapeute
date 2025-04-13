@@ -44,11 +44,11 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({
       return null
 
     return (
-      <div className="mb-8">
+      <div className="space-y-6 mt-8">
         <h3 className="text-xl font-medium mb-4 text-primary-coral">
           Ce que je te promets
         </h3>
-        <div className="space-y-4">
+        <div className="space-y-2">
           {coaching.mainOffering.promises.map((promise, index) => (
             <div key={index} className="flex items-start gap-2">
               <span className="text-primary-coral text-lg">✓</span>
@@ -150,13 +150,13 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({
 
     if (Array.isArray(coaching.mainOffering.uniqueBenefits)) {
       return (
-        <div className="space-y-8 mt-12">
-          <h3 className="text-primary-cream text-xl font-bold">
+        <div className="space-y-6 mt-8">
+          <h3 className="text-xl font-medium mb-4 text-primary-coral">
             Les avantages
           </h3>
-          <div className="space-y-6">
+          <div className="space-y-2">
             {coaching.mainOffering.uniqueBenefits.map((benefit, idx) => (
-              <div key={idx} className="flex items-start gap-4">
+              <div key={idx} className="flex items-start gap-2">
                 <div className="text-primary-coral mt-1">
                   {getBenefitIcon(benefit)}
                 </div>
@@ -171,18 +171,18 @@ export const CoachingModal: React.FC<CoachingModalProps> = ({
     } else {
       // Handle object-style benefits
       return (
-        <div className="space-y-8 mt-12">
-          <h3 className="text-primary-cream text-xl font-bold">
+        <div className="space-y-6 mt-8">
+          <h3 className="text-xl font-medium mb-4 text-primary-coral">
             {coaching.mainOffering.uniqueBenefits.title}
           </h3>
           {coaching.mainOffering.uniqueBenefits.intro && (
-            <p className="text-primary-cream/70">
+            <p className="text-primary-cream/90 mb-4">
               {coaching.mainOffering.uniqueBenefits.intro}
             </p>
           )}
-          <div className="space-y-6">
+          <div className="space-y-2">
             {coaching.mainOffering.uniqueBenefits.list.map((benefit, idx) => (
-              <div key={idx} className="flex items-start gap-4">
+              <div key={idx} className="flex items-start gap-2">
                 <div className="text-primary-coral mt-1">
                   {getBenefitIcon(benefit)}
                 </div>
