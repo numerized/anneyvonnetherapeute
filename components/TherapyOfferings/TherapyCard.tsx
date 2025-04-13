@@ -246,21 +246,6 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     return mainOfferingInclusions
   }
 
-  // Generate a short title from the therapy title for use in the pricing section
-  const getShortTitle = (): string => {
-    // Extract first word or first two words if very short
-    const words = therapy.title.split(' ')
-    if (words.length === 0) return 'OFFRE'
-
-    // If it's a single word or the first word is very short, use it
-    if (words.length === 1 || words[0].length > 3) {
-      return words[0].toUpperCase()
-    }
-
-    // Otherwise use the first two words
-    return `${words[0]} ${words[1]}`.toUpperCase()
-  }
-
   // Get appropriate icon for different benefit types
   const getBenefitIcon = (benefit: string) => {
     const lowerBenefit = benefit.toLowerCase()
@@ -360,7 +345,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
               {therapy.mainOffering.details?.title ||
-                `VOTRE ${getShortTitle()}`}
+                `NOTRE OFFRE`}
             </h3>
 
             {/* Main offering price */}
@@ -388,7 +373,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         <p>{therapy.mainOffering.details.duration}</p>
                       )}
                       {therapy.mainOffering.details.sessionLength && (
-                        <p>{therapy.mainOffering.details.sessionLength}</p>
+                        <p className="text-primary-cream/80 text-sm">{therapy.mainOffering.details.sessionLength}</p>
                       )}
                     </div>
                   )}
@@ -436,35 +421,63 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
             {/* Formulas if available */}
             {getFormulas().length > 0 && (
               <div className="space-y-3 mt-3">
-                <p className="text-xl text-primary-cream font-light">
-                  Formules disponibles:
-                </p>
+                {getFormulas().length > 1 && (
+                  <p className="text-xl text-primary-cream font-light">
+                    Formules disponibles:
+                  </p>
+                )}
                 {getFormulas().map((formula, idx) => (
                   <div
                     key={idx}
                     className="bg-primary-dark/30 p-3 rounded-[16px]"
                   >
-                    <div className="text-primary-cream font-bold">
-                      <h4 className="font-bold">{formula.title}</h4>
-                    </div>
-                    {hasCoupon ? (
-                      <div className="flex items-center gap-2">
-                        <p className="text-primary-cream line-through">{formula.price}€</p>
-                        <p className="text-primary-coral">{calculateDiscountedPrice(formula.price)}€</p>
+                    {getFormulas().length > 1 && (
+                      <>
+                        <div className="text-primary-cream font-bold">
+                          <h4 className="font-bold">{formula.title}</h4>
+                        </div>
+                        {hasCoupon ? (
+                          <div className="flex items-center gap-2">
+                            <p className="text-primary-cream line-through">{formula.price}€</p>
+                            <p className="text-primary-coral">{calculateDiscountedPrice(formula.price)}€</p>
+                          </div>
+                        ) : (
+                          <p className="text-primary-cream">{formula.price}€</p>
+                        )}
+                      </>
+                    )}
+                    
+                    {getFormulas().length === 1 && (
+                      <div className="space-y-1">
+                        {formula.duration && (
+                          <p className="text-primary-cream">{formula.duration}</p>
+                        )}
+                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                        {formula.sessionLength && (
+                          <p className="text-primary-cream/80 text-sm">{formula.sessionLength}</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className="text-primary-cream">{formula.price}€</p>
                     )}
-
-                    {formula.priceDetails && (
-                      <p className="text-primary-cream/70 text-sm">
-                        {formula.priceDetails}
-                      </p>
-                    )}
-                    {formula.duration && (
-                      <p className="text-primary-cream/70 text-sm">
-                        {formula.duration}
-                      </p>
+                    
+                    {getFormulas().length > 1 && (
+                      <>
+                        {formula.priceDetails && (
+                          <p className="text-primary-cream/70 text-sm">
+                            {formula.priceDetails}
+                          </p>
+                        )}
+                        {formula.duration && (
+                          <p className="text-primary-cream/70 text-sm">
+                            {formula.duration}
+                          </p>
+                        )}
+                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                        {formula.sessionLength && (
+                          <p className="text-primary-cream/70 text-sm">
+                            {formula.sessionLength}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 ))}
