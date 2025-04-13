@@ -40,7 +40,7 @@ export function NavLinks({
         className="text-white hover:text-white/80 transition-colors duration-200"
         onClick={() => setIsMenuOpen(false)}
       >
-        Therapies
+        Thérapies
       </Link>
 
       <Link
