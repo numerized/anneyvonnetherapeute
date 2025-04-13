@@ -22,6 +22,7 @@ export default function Espace180Page() {
   const [currentTime, setCurrentTime] = useState<{ [key: number]: number }>({})
   const [duration, setDuration] = useState<{ [key: number]: number }>({})
   const [isDragging, setIsDragging] = useState<{ [key: number]: boolean }>({})
+  const [copiedCapsule, setCopiedCapsule] = useState<number | null>(null)
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({})
   const audioRefs = useRef<{ [key: number]: HTMLAudioElement | null }>({})
   const progressRefs = useRef<{ [key: number]: HTMLDivElement | null }>({})
@@ -787,14 +788,18 @@ export default function Espace180Page() {
                 // Copy to clipboard
                 navigator.clipboard.writeText(shareUrl).then(
                   () => {
-                    alert('Lien copié dans le presse-papier ! Vous pouvez maintenant le partager.');
+                    setCopiedCapsule(capsule.id);
+                    // Reset the button text after 3 seconds
+                    setTimeout(() => {
+                      setCopiedCapsule(null);
+                    }, 3000);
                   },
                   (err) => {
                     console.error('Erreur lors de la copie du lien:', err);
                   }
                 );
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
               aria-label="Copier le lien de partage"
               style={{ pointerEvents: 'auto' }}
             >
@@ -803,7 +808,7 @@ export default function Espace180Page() {
                 <polyline points="16 6 12 2 8 6" />
                 <line x1="12" x2="12" y1="2" y2="15" />
               </svg>
-              <span>Copier le lien</span>
+              <span>{copiedCapsule === capsule.id ? 'Copié dans le presse-papier' : 'Copier le lien'}</span>
             </button>
           </div>
 
