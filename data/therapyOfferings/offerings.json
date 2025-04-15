@@ -183,6 +183,14 @@
         "Accompagnement enrichi avec des modules spécifiques à thèmes adaptés à chaque étape.",
         "Support et outils variés pour accompagner votre transformation."
       ],
+      "options": [
+        {
+          "id": "neurotribu",
+          "title": "Option NeuroTribu",
+          "headline": "Thérapie adaptée aux couples neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+          "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
+        }
+      ],
       "formulas": [
         {
           "id": "couple-therapy",
