@@ -400,15 +400,15 @@
         "themes": [
           {
             "title": "Alchimie et désir",
-            "description": "Comment nourrir l'attirance et l'intensité dans le temps ?"
+            "description": "Comment nourrir l'attirance et maintenir l'intensité dans le temps ?"
           },
           {
             "title": "Relation consciente",
-            "description": "Construire des liens basés sur l'authenticité et la liberté."
+            "description": "Construire des liens basés sur l'authenticité, la liberté et le respect mutuel."
           },
           {
             "title": "Les territoires du plaisir",
-            "description": "Explorer sans tabou l'expression de ses envies et limites."
+            "description": "Explorer sans tabou l'expression de vos envies, vos désirs et vos limites."
           }
         ],
         "proverbs": [
@@ -422,7 +422,8 @@
           ]
         },
         "modalBenefits": [
-          "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment."
+          "Approche entièrement personnalisée : Chaque séance est ajustée à vos besoins et à votre situation.",
+          "Flexibilité dans le rythme des séances : Vous ajustez votre parcours selon vos envies et votre évolution."
         ],
         "formulas": [
           {
@@ -442,9 +443,88 @@
         ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
         "additionalBenefits": [
-          "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
+          "Flexibilité dans le rythme des séances : Vous choisissez le rythme des séances au fur et à mesure du processus."
         ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations.",
+        "moreInfos": {
+          "title": "En savoir plus sur la Thérapie VIT à la Carte",
+          "headline": "Explorer la Relations Amoureuse et Désirante dans tous ses aspects",
+          "description": "La thérapie VIT est un parcours adaptatif qui vous permet d'explorer en profondeur la relation amoureuse et sexuelle, selon vos questionnements et à votre rythme. Vous êtes libre de choisir les thèmes qui vous intéressent, pour une exploration intime et sans contraintes.",
+          "sagesse": {
+            "title": "Sagesse partagée",
+            "quotes": [
+              "L'amour est une invitation à la découverte, et non une promesse de sécurité.",
+              "Aimer, c'est offrir à l'autre un espace pour se déployer."
+            ]
+          },
+          "themes": {
+            "title": "Thèmes abordés",
+            "items": [
+              {
+                "title": "Alchimie et désir",
+                "description": "Comment nourrir l'attirance et maintenir l'intensité dans le temps ?"
+              },
+              {
+                "title": "Relation consciente",
+                "description": "Construire des liens basés sur l'authenticité, la liberté et le respect mutuel."
+              },
+              {
+                "title": "Les territoires du plaisir",
+                "description": "Explorer sans tabou l'expression de vos envies, vos désirs et vos limites."
+              }
+            ]
+          },
+          "benefits": {
+            "title": "Avantages supplémentaires",
+            "items": [
+              "Approche entièrement personnalisée : Chaque séance est ajustée à vos besoins et à votre situation.",
+              "Flexibilité dans le rythme des séances : Vous ajustez votre parcours selon vos envies et votre évolution."
+            ]
+          },
+          "formulas": [
+            {
+              "title": "SÉANCE INDIVIDUELLE",
+              "price": "210€",
+              "duration": "60 minutes",
+              "details": "Séance individuelle à la carte, agenda flexible, thème au choix"
+            },
+            {
+              "title": "SÉANCE COUPLE",
+              "price": "240€",
+              "duration": "60 minutes",
+              "details": "Séance de couple à la carte, agenda flexible, thème au choix"
+            }
+          ],
+          "options": [
+            {
+              "title": "Thème sur mesure",
+              "headline": "à partir du \"Test : Définissez vos objectifs\"",
+              "sections": [
+                {
+                  "content": "Ce test vous permet de définir vos objectifs thérapeutiques et d'ajuster votre parcours en fonction de vos besoins personnels."
+                }
+              ]
+            },
+            {
+              "title": "Caractéristiques",
+              "headline": "Modalités et spécificités de la thérapie VIT à la carte",
+              "sections": [
+                {
+                  "content": "Accès exclusif : seulement 3 places disponibles par mois."
+                },
+                {
+                  "content": "Agenda Flex : Vous choisissez le rythme des séances au fur et à mesure du processus."
+                },
+                {
+                  "content": "En Visio, en présentiel au Cabinet de Neuchâtel (Suisse) ou dans la nature (Suisse et Ibiza)."
+                },
+                {
+                  "content": "Ajustez vos objectifs et thèmes en fonction de votre situation et de vos besoins à chaque étape."
+                }
+              ]
+            }
+          ]
+        }
       },
       "process": {
         "title": "Organisation et Structure",
@@ -455,7 +535,7 @@
         ]
       },
       "uniqueBenefits": [
-        "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment.",
+        "Approche entièrement personnalisée : Chaque séance est ajustée à vos besoins et à votre situation.",
         "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
       ],
       "formulas": [
