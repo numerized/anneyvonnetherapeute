@@ -42,7 +42,7 @@ export const CommonBenefits: React.FC<CommonBenefitsProps> = ({ benefits }) => {
     <div className="mt-16">
       <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-8">
         <h2 className="text-3xl text-primary-coral font-light mb-8 text-center">
-          Avantages inclus avec toutes nos thérapies
+          Avantages Communs à Toutes les Offres
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
