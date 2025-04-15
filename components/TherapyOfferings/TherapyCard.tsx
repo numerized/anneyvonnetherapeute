@@ -37,8 +37,29 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     return Math.round(price * 0.9)
   }
 
+  // Get proverbs or other quotes based on offering type
+  const getQuotes = () => {
+    // First check cardInfo
+    if ('cardInfo' in therapy && therapy.cardInfo?.proverbs) {
+      return therapy.cardInfo.proverbs;
+    } 
+    // Fall back to root level properties
+    else if ((therapy as TherapyType).proverbs) {
+      return (therapy as TherapyType).proverbs
+    } else if ((therapy as CoachingType).promises) {
+      return (therapy as CoachingType).promises
+    }
+
+    return []
+  }
+
   // Get price display
   const getPriceDisplay = () => {
+    // Check if this therapy has multiple formulas
+    const hasMultipleFormulas = 
+      (therapy.formulas && therapy.formulas.length > 1) ||
+      (therapy.mainOffering?.formulas && therapy.mainOffering.formulas.length > 1);
+      
     // First check root level formulas if available
     if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
       const minPrice = Math.min(
@@ -47,13 +68,30 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(minPrice)
         return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-primary-cream line-through">{minPrice}€</span>
-            <span className="text-primary-coral">{discountedPrice}€</span>
+          <div className="flex flex-col items-center">
+            {hasMultipleFormulas && (
+              <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+            )}
+            <div className="flex items-baseline gap-2">
+              <span className="text-primary-cream line-through">{minPrice}€</span>
+              <span className="text-primary-coral">{discountedPrice}€</span>
+            </div>
           </div>
         )
       }
-      return `${minPrice}€`
+      
+      if (hasMultipleFormulas) {
+        return (
+          <div className="flex flex-col items-center">
+            <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+            <div className="text-primary-cream">
+              {minPrice}€
+            </div>
+          </div>
+        )
+      } else {
+        return `${minPrice}€`
+      }
     } 
     // Fall back to mainOffering price
     else if ('price' in therapy.mainOffering) {
@@ -133,32 +171,33 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(minPrice)
         return (
-          <div className="flex items-baseline gap-2">
-            <span className="text-primary-cream/80">à partir de</span>
-            <span className="text-primary-cream line-through">{minPrice}€</span>
-            <span className="text-primary-coral">{discountedPrice}€</span>
+          <div className="flex flex-col items-center">
+            {hasMultipleFormulas && (
+              <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+            )}
+            <div className="flex items-baseline gap-2">
+              <span className="text-primary-cream line-through">{minPrice}€</span>
+              <span className="text-primary-coral">{discountedPrice}€</span>
+            </div>
           </div>
         )
       }
-      return `à partir de ${minPrice}€`
+      
+      if (hasMultipleFormulas) {
+        return (
+          <div className="flex flex-col items-center">
+            <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+            <div className="text-primary-cream">
+              {minPrice}€
+            </div>
+          </div>
+        )
+      } else {
+        return `${minPrice}€`
+      }
     } else {
       return 'Prix sur demande'
     }
-  }
-
-  // Get proverbs or other quotes based on offering type
-  const getQuotes = () => {
-    // First check cardInfo
-    if ('cardInfo' in therapy && therapy.cardInfo?.proverbs) {
-      return therapy.cardInfo.proverbs;
-    } 
-    // Fall back to root level properties
-    else if ((therapy as TherapyType).proverbs) {
-      return (therapy as TherapyType).proverbs
-    } else if ((therapy as CoachingType).promises) {
-      return (therapy as CoachingType).promises
-    }
-    return []
   }
 
   // Get price details text
