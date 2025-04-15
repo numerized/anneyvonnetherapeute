@@ -294,13 +294,26 @@
               "Modules d'accompagnement personnalisés : Des supports pratiques pour avancer à votre rythme."
             ]
           },
-          "formulas": {
-            "title": "Formules disponibles",
-            "details": {
-              "title": "Détails des offres",
-              "features": "MINI COMPACT : 720€ pour 1 mois, 4 x 60 minutes.\nCaractéristiques : Thème thérapeutique défini, check-list, objectifs, 4 séances sur 1 mois.\nCOMPACT : 2160€ pour 3 mois, 12 x 60 minutes.\nCaractéristiques : Thème thérapeutique défini, check-list, objectifs, 2 séances par mois.\nRELAX : 2160€ pour 6 mois, 12 x 60 minutes.\nCaractéristiques : Thème thérapeutique défini, check-list, objectifs, 1 séance par mois."
+          "formulas": [
+            {
+              "title": "MINI COMPACT",
+              "price": "720€",
+              "duration": "1 mois, 4 x 60 minutes",
+              "details": "Thème thérapeutique défini, check-list, objectifs, 4 séances sur 1 mois"
+            },
+            {
+              "title": "COMPACT",
+              "price": "2160€",
+              "duration": "3 mois, 12 x 60 minutes",
+              "details": "Thème thérapeutique défini, check-list, objectifs, 2 séances par mois"
+            },
+            {
+              "title": "RELAX",
+              "price": "2160€",
+              "duration": "6 mois, 12 x 60 minutes",
+              "details": "Thème thérapeutique défini, check-list, objectifs, 1 séance par mois"
             }
-          },
+          ],
           "options": [
             {
               "title": "Thème sur mesure à partir du \"Test : Définissez vos objectifs\"",

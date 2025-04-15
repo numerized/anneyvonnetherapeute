@@ -45,8 +45,15 @@ export interface MoreInfosOption {
   }[]
 }
 
-export interface MoreInfos {
+export interface MoreInfosFormula {
   title: string
+  price: string
+  duration: string
+  details: string
+}
+
+export interface MoreInfos {
+  title?: string
   headline?: string
   description?: string
   sagesse?: {
@@ -70,7 +77,7 @@ export interface MoreInfos {
   }
   commonBenefits?: string[]
   options?: MoreInfosOption[]
-  formulas?: {
+  formulas?: MoreInfosFormula[] | {
     title?: string
     price?: string
     details?: {

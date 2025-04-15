@@ -171,16 +171,18 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
         {moreInfos.formulas && (
           <div className="space-y-8 mt-8">
             <h3 className="text-xl font-medium mb-4 text-primary-coral">
-              {moreInfos.formulas.title || "Formules disponibles"}
+              Formules disponibles
             </h3>
             <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[16px] p-6">
-              {moreInfos.formulas.price && (
+              {/* Handle formulas as an object with details */}
+              {!Array.isArray(moreInfos.formulas) && moreInfos.formulas.price && (
                 <p className="text-primary-cream font-bold text-lg mb-4">
                   {moreInfos.formulas.price}
                 </p>
               )}
               
-              {moreInfos.formulas.details && (
+              {/* Handle formulas as an object with details */}
+              {!Array.isArray(moreInfos.formulas) && moreInfos.formulas.details && (
                 <div className="space-y-4">
                   {moreInfos.formulas.details.title && (
                     <h4 className="text-lg font-medium text-primary-cream">
@@ -193,6 +195,34 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
                   {moreInfos.formulas.details.features && (
                     <p className="text-primary-cream/90">{moreInfos.formulas.details.features}</p>
                   )}
+                </div>
+              )}
+              
+              {/* Handle formulas as an array */}
+              {Array.isArray(moreInfos.formulas) && (
+                <div className="space-y-6">
+                  {moreInfos.formulas.map((formula, index) => (
+                    <div key={index} className="border-b border-primary-cream/20 pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0">
+                      <h4 className="text-lg font-bold text-primary-cream mb-2">{formula.title}</h4>
+                      <div className="space-y-2">
+                        {formula.price && (
+                          <p className="text-primary-cream/90">
+                            <span className="text-primary-coral">Prix:</span> {formula.price}
+                          </p>
+                        )}
+                        {formula.duration && (
+                          <p className="text-primary-cream/90">
+                            <span className="text-primary-coral">Durée:</span> {formula.duration}
+                          </p>
+                        )}
+                        {formula.details && (
+                          <p className="text-primary-cream/90">
+                            <span className="text-primary-coral">Caractéristiques:</span> {formula.details}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
