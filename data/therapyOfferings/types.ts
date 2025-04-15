@@ -77,15 +77,17 @@ export interface MoreInfos {
   }
   commonBenefits?: string[]
   options?: MoreInfosOption[]
-  formulas?: MoreInfosFormula[] | {
-    title?: string
-    price?: string
-    details?: {
-      title?: string
-      duration?: string
-      features?: string
-    }
-  }
+  formulas?:
+    | MoreInfosFormula[]
+    | {
+        title?: string
+        price?: string
+        details?: {
+          title?: string
+          duration?: string
+          features?: string
+        }
+      }
 }
 
 export interface TherapyFormula {

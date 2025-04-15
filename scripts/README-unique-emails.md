@@ -10,11 +10,13 @@ This script analyzes the Firestore `newsletter` collection to count unique email
 ## Setup
 
 1. Install the required dependencies:
+
    ```bash
    npm install firebase-admin
    ```
 
 2. Get your Firebase service account key:
+
    - Go to the [Firebase Console](https://console.firebase.google.com/)
    - Select your project
    - Click on the gear icon (⚙️) > Project settings > Service accounts

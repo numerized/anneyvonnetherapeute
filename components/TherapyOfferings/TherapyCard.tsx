@@ -41,8 +41,8 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   const getQuotes = () => {
     // First check cardInfo
     if ('cardInfo' in therapy && therapy.cardInfo?.proverbs) {
-      return therapy.cardInfo.proverbs;
-    } 
+      return therapy.cardInfo.proverbs
+    }
     // Fall back to root level properties
     else if ((therapy as TherapyType).proverbs) {
       return (therapy as TherapyType).proverbs
@@ -56,51 +56,62 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   // Get price display
   const getPriceDisplay = () => {
     // Check if this therapy has multiple formulas
-    const hasMultipleFormulas = 
+    const hasMultipleFormulas =
       (therapy.formulas && therapy.formulas.length > 1) ||
-      (therapy.mainOffering?.formulas && therapy.mainOffering.formulas.length > 1);
-      
+      (therapy.mainOffering?.formulas &&
+        therapy.mainOffering.formulas.length > 1)
+
     // First check root level formulas if available
-    if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
-      const minPrice = Math.min(
-        ...therapy.formulas.map((f) => f.price),
-      )
+    if (
+      therapy.formulas &&
+      Array.isArray(therapy.formulas) &&
+      therapy.formulas.length > 0
+    ) {
+      const minPrice = Math.min(...therapy.formulas.map((f) => f.price))
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(minPrice)
         return (
           <div className="flex flex-col items-end">
             {hasMultipleFormulas && (
-              <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+              <div className="text-xs text-primary-cream/70 mb-0.5">
+                À Partir de
+              </div>
             )}
             <div className="flex items-baseline gap-2">
               <span className="text-primary-cream line-through">
-                {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                {minPrice}{' '}
+                <span className="text-sm text-primary-cream">CHF / EUR</span>
               </span>
               <span className="text-primary-coral">
-                {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                {discountedPrice}{' '}
+                <span className="text-sm text-primary-cream">CHF / EUR</span>
               </span>
             </div>
           </div>
         )
       }
-      
+
       if (hasMultipleFormulas) {
         return (
           <div className="flex flex-col items-end">
-            <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+            <div className="text-xs text-primary-cream/70 mb-0.5">
+              À Partir de
+            </div>
             <div className="text-primary-cream text-right">
-              {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {minPrice}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </div>
           </div>
         )
       } else {
         return (
           <span className="text-primary-cream text-right block">
-            {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            {minPrice}{' '}
+            <span className="text-sm text-primary-cream">CHF / EUR</span>
           </span>
         )
       }
-    } 
+    }
     // Fall back to mainOffering price
     else if ('price' in therapy.mainOffering) {
       const price = therapy.mainOffering.price
@@ -109,10 +120,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         return (
           <div className="flex items-baseline gap-2">
             <span className="text-primary-cream line-through">
-              {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {price}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </span>
             <span className="text-primary-coral">
-              {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {discountedPrice}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </span>
           </div>
         )
@@ -129,10 +142,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         return (
           <div className="flex items-baseline gap-2">
             <span className="text-primary-cream line-through">
-              {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {price}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </span>
             <span className="text-primary-coral">
-              {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {discountedPrice}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </span>
           </div>
         )
@@ -155,19 +170,23 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
             <div className="flex flex-col">
               <div className="flex items-baseline gap-2">
                 <span className="text-primary-cream line-through">
-                  {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                  {therapy.pricing.couple}{' '}
+                  <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
                 <span className="text-primary-coral">
-                  {discountedCouple} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                  {discountedCouple}{' '}
+                  <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
                 <span className="text-primary-cream/80">/couple</span>
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-primary-cream line-through">
-                  {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                  {therapy.pricing.individual}{' '}
+                  <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
                 <span className="text-primary-coral">
-                  {discountedIndividual} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                  {discountedIndividual}{' '}
+                  <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
                 <span className="text-primary-cream/80">/individuel</span>
               </div>
@@ -176,7 +195,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         }
         return (
           <span className="text-primary-cream">
-            {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>/couple · {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>/individuel
+            {therapy.pricing.couple}{' '}
+            <span className="text-sm text-primary-cream">CHF / EUR</span>/couple
+            · {therapy.pricing.individual}{' '}
+            <span className="text-sm text-primary-cream">CHF / EUR</span>
+            /individuel
           </span>
         )
       }
@@ -186,10 +209,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         return (
           <div className="flex items-baseline gap-2">
             <span className="text-primary-cream line-through">
-              {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {price}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </span>
             <span className="text-primary-coral">
-              {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {discountedPrice}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </span>
           </div>
         )
@@ -211,33 +236,41 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         return (
           <div className="flex flex-col items-end">
             {hasMultipleFormulas && (
-              <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+              <div className="text-xs text-primary-cream/70 mb-0.5">
+                À Partir de
+              </div>
             )}
             <div className="flex items-baseline gap-2">
               <span className="text-primary-cream line-through">
-                {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                {minPrice}{' '}
+                <span className="text-sm text-primary-cream">CHF / EUR</span>
               </span>
               <span className="text-primary-coral">
-                {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                {discountedPrice}{' '}
+                <span className="text-sm text-primary-cream">CHF / EUR</span>
               </span>
             </div>
           </div>
         )
       }
-      
+
       if (hasMultipleFormulas) {
         return (
           <div className="flex flex-col items-end">
-            <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
+            <div className="text-xs text-primary-cream/70 mb-0.5">
+              À Partir de
+            </div>
             <div className="text-primary-cream text-right">
-              {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              {minPrice}{' '}
+              <span className="text-sm text-primary-cream">CHF / EUR</span>
             </div>
           </div>
         )
       } else {
         return (
           <span className="text-primary-cream text-right block">
-            {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            {minPrice}{' '}
+            <span className="text-sm text-primary-cream">CHF / EUR</span>
           </span>
         )
       }
@@ -249,16 +282,20 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   // Get price details text
   const getPriceDetails = () => {
     if (!therapy) return null
-    
+
     // Check formulas at root level
-    if (therapy.formulas && therapy.formulas.length > 0 && therapy.formulas[0].priceDetails) {
+    if (
+      therapy.formulas &&
+      therapy.formulas.length > 0 &&
+      therapy.formulas[0].priceDetails
+    ) {
       return (
         <div className="text-primary-cream/70 text-sm mt-1 text-right">
           {therapy.formulas[0].priceDetails}
         </div>
       )
     }
-    
+
     // Use alternative properties from mainOffering if available
     if (therapy.mainOffering?.note) {
       return (
@@ -267,27 +304,32 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         </div>
       )
     }
-    
+
     // For programs with a fixed price, show "pour le programme complet"
-    if (therapy.mainOffering?.details?.price && !therapy.mainOffering?.formulas) {
+    if (
+      therapy.mainOffering?.details?.price &&
+      !therapy.mainOffering?.formulas
+    ) {
       return (
         <div className="text-primary-cream/70 text-sm mt-1 text-right">
           pour le programme complet
         </div>
       )
     }
-    
+
     // Check formulas within mainOffering
-    if (therapy.mainOffering?.formulas && 
-        therapy.mainOffering.formulas.length > 0 && 
-        therapy.mainOffering.formulas[0].priceDetails) {
+    if (
+      therapy.mainOffering?.formulas &&
+      therapy.mainOffering.formulas.length > 0 &&
+      therapy.mainOffering.formulas[0].priceDetails
+    ) {
       return (
         <div className="text-primary-cream/70 text-sm mt-1 text-right">
           {therapy.mainOffering.formulas[0].priceDetails}
         </div>
       )
     }
-    
+
     return null
   }
 
@@ -295,22 +337,22 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   const getOrganizationPoints = () => {
     // First check process at root level
     if (therapy.process?.details) {
-      return therapy.process.details;
+      return therapy.process.details
     }
     // Fall back to mainOffering
     else if (therapy.mainOffering.process?.details) {
-      return therapy.mainOffering.process.details;
+      return therapy.mainOffering.process.details
     }
-    
+
     // If no process details are found, return an empty array (no defaults)
-    return [];
+    return []
   }
 
   // Get unique benefits/features specific to this therapy
   const getUniqueBenefits = () => {
     // First check uniqueBenefits at root level
     if (Array.isArray(therapy.uniqueBenefits)) {
-      return therapy.uniqueBenefits;
+      return therapy.uniqueBenefits
     }
     // Fall back to mainOffering
     else if (Array.isArray(therapy.mainOffering.uniqueBenefits)) {
@@ -342,8 +384,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   // Get all formulas if available
   const getFormulas = () => {
     // First check formulas at root level
-    if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
-      return therapy.formulas;
+    if (
+      therapy.formulas &&
+      Array.isArray(therapy.formulas) &&
+      therapy.formulas.length > 0
+    ) {
+      return therapy.formulas
     }
     // Fall back to mainOffering
     else if (
@@ -359,35 +405,35 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   const getOptions = () => {
     // Only check options at root level
     if (therapy.options && therapy.options.length > 0) {
-      return therapy.options;
+      return therapy.options
     }
-    return [];
+    return []
   }
 
-  // Get themes 
+  // Get themes
   const getThemes = () => {
     // First check cardInfo
     if ('cardInfo' in therapy && therapy.cardInfo?.themes) {
-      return therapy.cardInfo.themes;
+      return therapy.cardInfo.themes
     }
     // Fall back to root level
     else if ((therapy as TherapyType).themes) {
-      return (therapy as TherapyType).themes;
+      return (therapy as TherapyType).themes
     }
-    return [];
+    return []
   }
 
   // Get description
   const getDescription = () => {
     // First check cardInfo
     if ('cardInfo' in therapy && therapy.cardInfo?.description) {
-      return therapy.cardInfo.description;
+      return therapy.cardInfo.description
     }
     // Fall back to root level
     else if ((therapy as any).description) {
-      return (therapy as any).description;
+      return (therapy as any).description
     }
-    return '';
+    return ''
   }
 
   // Get organization sections
@@ -404,21 +450,23 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     }
 
     // Fall back to mainOffering
-    const mainOfferingInclusions = 
-      therapy.mainOffering?.inclusions || []
-    
+    const mainOfferingInclusions = therapy.mainOffering?.inclusions || []
+
     // Check if there are any formulas with inclusions in mainOffering
-    if (therapy.mainOffering?.formulas && therapy.mainOffering.formulas.length > 0) {
+    if (
+      therapy.mainOffering?.formulas &&
+      therapy.mainOffering.formulas.length > 0
+    ) {
       // Get all inclusions from all formulas
       const formulaInclusions = therapy.mainOffering.formulas
-        .flatMap(formula => formula.inclusions || [])
+        .flatMap((formula) => formula.inclusions || [])
         .filter(Boolean)
-      
+
       if (formulaInclusions.length > 0) {
         return [...new Set([...mainOfferingInclusions, ...formulaInclusions])]
       }
     }
-    
+
     return mainOfferingInclusions
   }
 
@@ -450,31 +498,31 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get quote or proverb
   const getQuote = () => {
-    const quotes = getQuotes();
+    const quotes = getQuotes()
     if (quotes && quotes.length > 0) {
-      return quotes[0];
+      return quotes[0]
     }
 
     // Fallback to mainOffering.quote if available
     if (therapy.mainOffering?.quote) {
-      return therapy.mainOffering.quote;
+      return therapy.mainOffering.quote
     }
-    return '';
+    return ''
   }
 
   // Get subtitle (either from therapy subtitle or category)
   const getSubtitle = () => {
     if (therapy.subtitle) {
-      return therapy.subtitle;
+      return therapy.subtitle
     } else if (therapy.category) {
-      return therapy.category;
+      return therapy.category
     }
-    return '';
+    return ''
   }
 
   // Get therapy or coaching type label
   const getTypeLabel = () => {
-    return therapy.type === 'coaching' ? 'COACHING' : 'THÉRAPIE';
+    return therapy.type === 'coaching' ? 'COACHING' : 'THÉRAPIE'
   }
 
   return (
@@ -549,13 +597,17 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         <div className="bg-primary-forest/30 rounded-[24px] p-6">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
-              {therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0 
-                ? therapy.formulas[0].title 
+              {therapy.formulas &&
+              Array.isArray(therapy.formulas) &&
+              therapy.formulas.length > 0
+                ? therapy.formulas[0].title
                 : therapy.mainOffering.details?.title || `NOTRE OFFRE`}
             </h3>
 
             {/* Main offering price */}
-            {(therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0 || 
+            {((therapy.formulas &&
+              Array.isArray(therapy.formulas) &&
+              therapy.formulas.length > 0) ||
               'price' in therapy.mainOffering ||
               therapy.mainOffering.details?.price) && (
               <div className="flex flex-col gap-1">
@@ -576,7 +628,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   therapy.mainOffering.details && (
                     <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
                       {therapy.mainOffering.details.duration && (
-                        <p className="text-primary-cream">{therapy.mainOffering.details.duration}</p>
+                        <p className="text-primary-cream">
+                          {therapy.mainOffering.details.duration}
+                        </p>
                       )}
                       {therapy.mainOffering.details.sessionLength && (
                         <p className="text-primary-cream/80 text-sm">
@@ -598,28 +652,46 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   <>
                     <div className="flex items-center justify-end gap-2">
                       <p className="text-sm text-primary-cream/90 line-through">
-                        Couple: {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                        Couple: {therapy.pricing.couple}{' '}
+                        <span className="text-sm text-primary-cream">
+                          CHF / EUR
+                        </span>
                       </p>
                       <p className="text-sm text-primary-coral">
-                        {calculateDiscountedPrice(therapy.pricing.couple)} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                        {calculateDiscountedPrice(therapy.pricing.couple)}{' '}
+                        <span className="text-sm text-primary-cream">
+                          CHF / EUR
+                        </span>
                       </p>
                     </div>
                     <div className="flex items-center justify-end gap-2">
                       <p className="text-sm text-primary-cream/90 line-through">
-                        Individuel: {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                        Individuel: {therapy.pricing.individual}{' '}
+                        <span className="text-sm text-primary-cream">
+                          CHF / EUR
+                        </span>
                       </p>
                       <p className="text-sm text-primary-coral">
-                        {calculateDiscountedPrice(therapy.pricing.individual)} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                        {calculateDiscountedPrice(therapy.pricing.individual)}{' '}
+                        <span className="text-sm text-primary-cream">
+                          CHF / EUR
+                        </span>
                       </p>
                     </div>
                   </>
                 ) : (
                   <>
                     <p className="text-sm text-primary-cream/90">
-                      Couple: {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                      Couple: {therapy.pricing.couple}{' '}
+                      <span className="text-sm text-primary-cream">
+                        CHF / EUR
+                      </span>
                     </p>
                     <p className="text-sm text-primary-cream/90">
-                      Individuel: {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                      Individuel: {therapy.pricing.individual}{' '}
+                      <span className="text-sm text-primary-cream">
+                        CHF / EUR
+                      </span>
                     </p>
                   </>
                 )}
@@ -647,15 +719,24 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         {hasCoupon ? (
                           <div className="flex items-center gap-2">
                             <p className="text-primary-cream line-through">
-                              {formula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                              {formula.price}{' '}
+                              <span className="text-sm text-primary-cream">
+                                CHF / EUR
+                              </span>
                             </p>
                             <p className="text-primary-coral">
-                              {calculateDiscountedPrice(formula.price)} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                              {calculateDiscountedPrice(formula.price)}{' '}
+                              <span className="text-sm text-primary-cream">
+                                CHF / EUR
+                              </span>
                             </p>
                           </div>
                         ) : (
                           <p className="text-primary-cream">
-                            {formula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                            {formula.price}{' '}
+                            <span className="text-sm text-primary-cream">
+                              CHF / EUR
+                            </span>
                           </p>
                         )}
                       </>
@@ -743,19 +824,27 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         {hasCoupon ? (
                           <span>
                             <span className="line-through">
-                              {option.pricing.couple.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                              {option.pricing.couple.price}{' '}
+                              <span className="text-sm text-primary-cream">
+                                CHF / EUR
+                              </span>
                             </span>{' '}
                             <span className="text-primary-coral">
                               {calculateDiscountedPrice(
                                 option.pricing.couple.price,
-                              )} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                              )}{' '}
+                              <span className="text-sm text-primary-cream">
+                                CHF / EUR
+                              </span>
                             </span>
                           </span>
                         ) : (
                           option.pricing.couple.price
                         )}
-                        <span className="text-sm text-primary-cream">CHF / EUR</span>/
-                        {option.pricing.couple.duration || 'séance'}
+                        <span className="text-sm text-primary-cream">
+                          CHF / EUR
+                        </span>
+                        /{option.pricing.couple.duration || 'séance'}
                       </p>
                     )}
                     {option.pricing.individual && (
@@ -764,19 +853,27 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         {hasCoupon ? (
                           <span>
                             <span className="line-through">
-                              {option.pricing.individual.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                              {option.pricing.individual.price}{' '}
+                              <span className="text-sm text-primary-cream">
+                                CHF / EUR
+                              </span>
                             </span>{' '}
                             <span className="text-primary-coral">
                               {calculateDiscountedPrice(
                                 option.pricing.individual.price,
-                              )} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                              )}{' '}
+                              <span className="text-sm text-primary-cream">
+                                CHF / EUR
+                              </span>
                             </span>
                           </span>
                         ) : (
                           option.pricing.individual.price
                         )}
-                        <span className="text-sm text-primary-cream">CHF / EUR</span>/
-                        {option.pricing.individual.duration || 'séance'}
+                        <span className="text-sm text-primary-cream">
+                          CHF / EUR
+                        </span>
+                        /{option.pricing.individual.duration || 'séance'}
                       </p>
                     )}
                   </div>
