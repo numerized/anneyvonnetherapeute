@@ -40,38 +40,6 @@
         ],
         "proverbs": [
           "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble."
-        ],
-        "process": {
-          "title": "Organisation et Structure",
-          "details": [
-            "Option personnalisée : Accompagnement sur mesure adapté à vos besoins.",
-            "Objectifs prédéfinis : Clarification des objectifs pour une relation plus épanouie.",
-            "Cartographie de la relation : Découverte de vos schémas relationnels."
-          ]
-        },
-        "uniqueBenefits": [
-          "Accompagnement enrichi avec des modules spécifiques à thèmes adaptés à chaque étape.",
-          "Support et outils variés pour accompagner votre transformation."
-        ],
-        "formulas": [
-          {
-            "id": "couple-therapy",
-            "title": "VOTRE THÉRAPIE DE COUPLE",
-            "duration": "Séances alternées sur 20 à 24 semaines (maximum 6 mois)",
-            "price": 2250,
-            "priceDetails": "pour le programme complet",
-            "inclusions": [
-              "Séances individuelles (60 min) : 6 séances pour chaque membre du couple",
-              "Séances en couple (90 min) : 2 séances pour travailler ensemble"
-            ]
-          }
-        ],
-        "options": [
-          {
-            "id": "neurotribu",
-            "title": "Option NeuroTribu : Thérapie adaptée aux couples neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
-            "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
-          }
         ]
       },
       "modalInfo": {
@@ -108,9 +76,13 @@
           {
             "id": "couple-therapy",
             "title": "VOTRE THÉRAPIE DE COUPLE",
-            "duration": "5 à 6 mois d'accompagnement avec des séances individuelles (60 min) et en couple (90 min)",
+            "duration": "Séances alternées sur 20 à 24 semaines (maximum 6 mois)",
             "price": 2250,
-            "priceDetails": "pour le programme complet"
+            "priceDetails": "pour le programme complet",
+            "inclusions": [
+              "Séances individuelles (60 min) : 6 séances pour chaque membre du couple",
+              "Séances en couple (90 min) : 2 séances pour travailler ensemble"
+            ]
           }
         ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
@@ -131,92 +103,99 @@
             ],
             "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
           }
-        ]
-      },
-      "mainOffering": {
-        "title": "THERAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
-        "tagline": "Harmonisez votre relation à deux grâce à une approche innovante et transformative",
-        "quote": "On ne change pas une relation sans d'abord transformer ceux qui la vivent",
-        "process": {
-          "title": "Organisation et Structure",
-          "details": [
-            "Option personnalisée : Accompagnement sur mesure adapté à vos besoins.",
-            "Objectifs prédéfinis : Clarification des objectifs pour une relation plus épanouie.",
-            "Cartographie de la relation : Découverte de vos schémas relationnels."
-          ]
-        },
-        "uniqueBenefits": [
-          "Accompagnement enrichi avec des modules spécifiques à thèmes adaptés à chaque étape.",
-          "Support et outils variés pour accompagner votre transformation."
         ],
-        "motto": "Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !",
-        "idealFor": "Parcours idéal pour les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre.",
-        "alternativeTaglines": [
-          "Un chemin vers l'harmonie – Pour les couples qui souhaitent mieux s'entendre, se comprendre et retrouver un équilibre profond.",
-          "Réinventer le dialogue – Un parcours dédié aux couples en quête d'harmonie et d'une relation plus fluide et authentique.",
-          "De la compréhension à la connexion – Pour ceux qui veulent dépasser les incompréhensions et créer une relation plus apaisée et épanouissante.",
-          "Retrouver l'accord essentiel – Une exploration à deux pour mieux s'entendre, mieux se comprendre et renforcer le lien.",
-          "Harmoniser la relation – Une approche pour les couples désireux d'un échange plus profond et d'une complicité renouvelée."
-        ],
-        "price": 2250,
-        "formulas": [
-          {
-            "id": "couple-therapy",
-            "title": "VOTRE THÉRAPIE DE COUPLE",
-            "duration": "Séances alternées sur 20 à 24 semaines (maximum 6 mois)",
-            "price": 2250,
-            "priceDetails": "pour le programme complet",
-            "inclusions": [
-              "Séances individuelles (60 min) : 6 séances pour chaque membre du couple",
-              "Séances en couple (90 min) : 2 séances pour travailler ensemble"
+        "moreInfos": {
+          "title": "En savoir plus sur la Thérapie Relationnelle de Couple",
+          "headline": "L'aventure à deux : explorer, comprendre et évoluer",
+          "description": "La thérapie vous invite à comprendre vos fonctionnements, à déceler les obstacles invisibles et à redéfinir ensemble votre direction.",
+          "sagesse": {
+            "title": "Sagesse partagée",
+            "quotes": [
+              "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble.",
+              "Aimer, ce n'est pas se regarder l'un l'autre, c'est regarder ensemble dans la même direction."
             ]
-          }
-        ]
-      },
-      "options": [
-        {
-          "id": "neurotribu",
-          "title": "Option NeuroTribu : Thérapie adaptée aux couples neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
-          "headline": "Équilibre & Connexion : Thérapie de couple et individuelle pour profils neuroatypiques",
-          "description": "Certaines personnes pensent, ressentent, aiment et communiquent autrement. C'est pourquoi la thérapie NeuroTribu propose un cadre spécifiquement conçu pour les personnes neuroatypiques (TSA, HPI, TDAH, hypersensibilité, dys...).",
-          "sections": [
+          },
+          "themes": {
+            "title": "Thèmes abordés",
+            "items": [
+              {
+                "title": "Cartographier les schémas relationnels",
+                "description": "Identifier les dynamiques répétitives dans la relation."
+              },
+              {
+                "title": "Naviguer les émotions et les attentes",
+                "description": "Apprendre à communiquer sans heurter ni s'effacer."
+              },
+              {
+                "title": "Explorer l'intimité et le désir",
+                "description": "Redécouvrir la complicité et nourrir la connexion."
+              }
+            ]
+          },
+          "process": {
+            "title": "Processus complet",
+            "details": [
+              "8 séances : 2 séances de couple et 6 séances individuelles.",
+              "Bilans et introspections : Avant et après chaque séance pour suivre votre progression."
+            ]
+          },
+          "benefits": {
+            "title": "Avantages supplémentaires",
+            "items": [
+              "Accompagnement enrichi avec des modules thématiques pour chaque étape."
+            ]
+          },
+          "options": [
             {
-              "title": "Pourquoi une thérapie spécifique ?",
-              "content": "Les thérapies classiques ne prennent pas toujours en compte les différences de perception, de régulation émotionnelle, ou les besoins sensoriels spécifiques. Un accompagnement inadapté peut accentuer frustration et incompréhension."
-            },
-            {
-              "title": "Cette approche propose au contraire de :",
-              "bulletPoints": [
-                "valoriser les forces du couple ou de l'individu,",
-                "accueillir les singularités sans les réduire,",
-                "construire une dynamique relationnelle propre à chacun."
+              "title": "Thérapie NeuroTribu",
+              "headline": "La thérapie NeuroTribu est conçue pour répondre aux besoins des personnes avec des profils neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+              "sections": [
+                {
+                  "title": "Pourquoi une thérapie spécifique ?",
+                  "content": "Les thérapies classiques ne tiennent pas compte des différences dans la perception, la régulation émotionnelle ou les besoins sensoriels."
+                },
+                {
+                  "content": "Valorisation des forces du couple ou de l'individu en intégrant les singularités comme ressources dans la relation. Construire une dynamique relationnelle propre à chaque couple ou individu."
+                }
               ]
             }
           ],
-          "commitments": [
-            "Un cadre thérapeutique pensé pour les profils neuroatypiques",
-            "Une posture respectueuse et non normative",
-            "Des outils concrets pour restaurer une compréhension mutuelle et une intimité ajustée"
-          ],
-          "themes": [
-            "Comprendre les différences neurologiques et leur impact sur la relation",
-            "Adapter la communication pour éviter les malentendus",
-            "Gérer les attentes et besoins sensoriels spécifiques",
-            "Co-créer un modèle relationnel qui respecte le rythme et les repères de chacun",
-            "Aborder l'intimité sans pression, avec des clés de décodage et de coopération"
-          ],
-          "targetAudience": [
-            "Couples où l'un ou les deux partenaires sont neurodivers",
-            "Personnes individuelles cherchant un cadre thérapeutique plus ajusté à leur fonctionnement",
-            "Partenaires en quête d'un espace sécurisant pour se comprendre sans jugement"
-          ],
-          "availability": "Consultations disponibles en ligne ou en présentiel à partir de mars 2025",
-          "reservation": "Réservez avec l'option « Neurodivers » sur notre site",
-          "audio": "Audio de présentation disponible bientôt",
-          "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
+          "formulas": {
+            "title": "Formules disponibles",
+            "price": "2250€ pour le programme complet avec un suivi sur 20 à 24 semaines.",
+            "details": {
+              "title": "Détails du prix",
+              "duration": "Durée : 5 à 6 mois d'accompagnement avec des séances individuelles (60 min) et en couple (90 min).",
+              "features": "Caractéristiques : Un agenda fixe et structuré pour garantir un suivi régulier."
+            }
+          }
         }
+      },
+      "process": {
+        "title": "Organisation et Structure",
+        "details": [
+          "Option personnalisée : Accompagnement sur mesure adapté à vos besoins.",
+          "Objectifs prédéfinis : Clarification des objectifs pour une relation plus épanouie.",
+          "Cartographie de la relation : Découverte de vos schémas relationnels."
+        ]
+      },
+      "uniqueBenefits": [
+        "Accompagnement enrichi avec des modules spécifiques à thèmes adaptés à chaque étape.",
+        "Support et outils variés pour accompagner votre transformation."
       ],
-      "hasAudioPresentation": true
+      "formulas": [
+        {
+          "id": "couple-therapy",
+          "title": "VOTRE THÉRAPIE DE COUPLE",
+          "duration": "Séances alternées sur 20 à 24 semaines (maximum 6 mois)",
+          "price": 2250,
+          "priceDetails": "pour le programme complet",
+          "inclusions": [
+            "Séances individuelles (60 min) : 6 séances pour chaque membre du couple",
+            "Séances en couple (90 min) : 2 séances pour travailler ensemble"
+          ]
+        }
+      ]
     },
     {
       "id": "individual",
@@ -244,43 +223,7 @@
         "proverbs": [
           "Le plus grand voyage est celui qui mène à soi.",
           "Celui qui regarde dedans s'éveille."
-        ],
-        "process": {
-          "title": "Organisation et Structure",
-          "details": [
-            "Définissez votre thème thérapeutique pour un parcours totalement personnalisé.",
-            "Check-list et objectifs clairs à établir avant chaque séance pour travailler de manière ciblée."
-          ]
-        },
-        "formulas": [
-          {
-            "id": "mini-compact",
-            "title": "MINI COMPACT",
-            "duration": "1 mois - 4 x 60 minutes",
-            "price": 720.0,
-            "priceDetails": "pour le programme complet"
-          },
-          {
-            "id": "compact",
-            "title": "COMPACT",
-            "duration": "3 mois - 12 x 60 minutes",
-            "price": 2160.0,
-            "priceDetails": "pour le programme complet"
-          },
-          {
-            "id": "relax",
-            "title": "RELAX",
-            "duration": "6 mois - 12 x 60 minutes",
-            "price": 2160.0,
-            "priceDetails": "pour le programme complet"
-          }
-        ],
-        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "uniqueBenefits": [
-          "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur.",
-          "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
-        ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+        ]
       },
       "modalInfo": {
         "description": "Un voyage au cœur de votre paysage intime : identifier vos blessures, vos croyances et vos aspirations profondes pour transformer ce qui entrave votre relation à vous-même et aux autres.",
@@ -341,47 +284,40 @@
         ],
         "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
-      "mainOffering": {
-        "tagline": "RETROUVEZ L'HARMONIE EN VOUS GRÂCE À UNE APPROCHE SIMPLE ET RADICALE",
-        "quote": "Changer sa vie, c'est d'abord se reconnecter à son corps et à soi.",
-        "process": {
-          "title": "Organisation et Structure",
-          "details": [
-            "Définissez votre thème thérapeutique pour un parcours totalement personnalisé.",
-            "Check-list et objectifs clairs à établir avant chaque séance pour travailler de manière ciblée."
-          ]
-        },
-        "formulas": [
-          {
-            "id": "mini-compact",
-            "title": "MINI COMPACT",
-            "duration": "1 mois - 4 x 60 minutes",
-            "price": 720.0,
-            "priceDetails": "pour le programme complet"
-          },
-          {
-            "id": "compact",
-            "title": "COMPACT",
-            "duration": "3 mois - 12 x 60 minutes",
-            "price": 2160.0,
-            "priceDetails": "pour le programme complet"
-          },
-          {
-            "id": "relax",
-            "title": "RELAX",
-            "duration": "6 mois - 12 x 60 minutes",
-            "price": 2160.0,
-            "priceDetails": "pour le programme complet"
-          }
-        ],
-        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "uniqueBenefits": [
-          "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur.",
-          "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
-        ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      "process": {
+        "title": "Organisation et Structure",
+        "details": [
+          "Définissez votre thème thérapeutique pour un parcours totalement personnalisé.",
+          "Check-list et objectifs clairs à établir avant chaque séance pour travailler de manière ciblée."
+        ]
       },
-      "hasAudioPresentation": true
+      "uniqueBenefits": [
+        "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur.",
+        "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
+      ],
+      "formulas": [
+        {
+          "id": "mini-compact",
+          "title": "MINI COMPACT",
+          "duration": "1 mois - 4 x 60 minutes",
+          "price": 720.0,
+          "priceDetails": "pour le programme complet"
+        },
+        {
+          "id": "compact",
+          "title": "COMPACT",
+          "duration": "3 mois - 12 x 60 minutes",
+          "price": 2160.0,
+          "priceDetails": "pour le programme complet"
+        },
+        {
+          "id": "relax",
+          "title": "RELAX",
+          "duration": "6 mois - 12 x 60 minutes",
+          "price": 2160.0,
+          "priceDetails": "pour le programme complet"
+        }
+      ]
     },
     {
       "id": "vit-a-la-carte",
@@ -406,37 +342,7 @@
         ],
         "proverbs": [
           "L'amour est une invitation à la découverte, et non une promesse de sécurité."
-        ],
-        "process": {
-          "title": "Organisation et Structure",
-          "details": [
-            "Programme détaillé : Accompagnement personnalisé, conçu pour répondre à vos besoins spécifiques.",
-            "Organisation flexible : Vous ajustez le rythme des séances en fonction de votre propre processus.",
-            "Séances individuelles ou couple à la carte"
-          ]
-        },
-        "formulas": [
-          {
-            "id": "vit-individual",
-            "title": "SÉANCE INDIVIDUELLE",
-            "duration": "60 minutes",
-            "price": 210.0,
-            "priceDetails": "par séance"
-          },
-          {
-            "id": "vit-couple",
-            "title": "SÉANCE COUPLE",
-            "duration": "90 minutes",
-            "price": 240.0,
-            "priceDetails": "par séance"
-          }
-        ],
-        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "uniqueBenefits": [
-          "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment.",
-          "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
-        ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+        ]
       },
       "modalInfo": {
         "description": "Une expédition sur-mesure pour les passionnés de la relation : explorer l'amour sous toutes ses formes, en fonction de vos questionnements du moment.",
@@ -489,41 +395,34 @@
         ],
         "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
-      "mainOffering": {
-        "title": "NOTRE OFFRE",
-        "process": {
-          "title": "Organisation et Structure",
-          "details": [
-            "Programme détaillé : Accompagnement personnalisé, conçu pour répondre à vos besoins spécifiques.",
-            "Organisation flexible : Vous ajustez le rythme des séances en fonction de votre propre processus.",
-            "Séances individuelles ou couple à la carte"
-          ]
-        },
-        "formulas": [
-          {
-            "id": "vit-individual",
-            "title": "SÉANCE INDIVIDUELLE",
-            "duration": "60 minutes",
-            "price": 210.0,
-            "priceDetails": "par séance"
-          },
-          {
-            "id": "vit-couple",
-            "title": "SÉANCE COUPLE",
-            "duration": "90 minutes",
-            "price": 240.0,
-            "priceDetails": "par séance"
-          }
-        ],
-        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "uniqueBenefits": [
-          "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment.",
-          "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
-        ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      "process": {
+        "title": "Organisation et Structure",
+        "details": [
+          "Programme détaillé : Accompagnement personnalisé, conçu pour répondre à vos besoins spécifiques.",
+          "Organisation flexible : Vous ajustez le rythme des séances en fonction de votre propre processus.",
+          "Séances individuelles ou couple à la carte"
+        ]
       },
-      "hasTest": true,
-      "hasAudioPresentation": true
+      "uniqueBenefits": [
+        "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment.",
+        "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
+      ],
+      "formulas": [
+        {
+          "id": "vit-individual",
+          "title": "SÉANCE INDIVIDUELLE",
+          "duration": "60 minutes",
+          "price": 210.0,
+          "priceDetails": "par séance"
+        },
+        {
+          "id": "vit-couple",
+          "title": "SÉANCE COUPLE",
+          "duration": "90 minutes",
+          "price": 240.0,
+          "priceDetails": "par séance"
+        }
+      ]
     }
   ]
 }

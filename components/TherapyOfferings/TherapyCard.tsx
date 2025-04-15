@@ -39,14 +39,10 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get price display
   const getPriceDisplay = () => {
-    // First check cardInfo formulas if available
-    if (
-      'cardInfo' in therapy && 
-      therapy.cardInfo?.formulas && 
-      therapy.cardInfo.formulas.length > 0
-    ) {
+    // First check root level formulas if available
+    if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
       const minPrice = Math.min(
-        ...therapy.cardInfo.formulas.map((f) => f.price),
+        ...therapy.formulas.map((f) => f.price),
       )
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(minPrice)
@@ -167,12 +163,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get price details text
   const getPriceDetails = () => {
-    // First check cardInfo
-    if ('cardInfo' in therapy && 
-        therapy.cardInfo?.formulas && 
-        therapy.cardInfo.formulas.length > 0 &&
-        therapy.cardInfo.formulas[0].priceDetails) {
-      return therapy.cardInfo.formulas[0].priceDetails;
+    // First check formulas at root level
+    if (therapy.formulas && 
+        therapy.formulas.length > 0 &&
+        therapy.formulas[0].priceDetails) {
+      return therapy.formulas[0].priceDetails;
     }
     // Fall back to mainOffering
     else if (therapy.mainOffering.note) {
@@ -191,9 +186,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get organization points
   const getOrganizationPoints = () => {
-    // First check cardInfo
-    if ('cardInfo' in therapy && therapy.cardInfo?.process?.details) {
-      return therapy.cardInfo.process.details;
+    // First check process at root level
+    if (therapy.process?.details) {
+      return therapy.process.details;
     }
     // Fall back to mainOffering
     else if (therapy.mainOffering.process?.details) {
@@ -206,9 +201,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get unique benefits/features specific to this therapy
   const getUniqueBenefits = () => {
-    // First check cardInfo
-    if ('cardInfo' in therapy && Array.isArray(therapy.cardInfo?.uniqueBenefits)) {
-      return therapy.cardInfo.uniqueBenefits;
+    // First check uniqueBenefits at root level
+    if (Array.isArray(therapy.uniqueBenefits)) {
+      return therapy.uniqueBenefits;
     }
     // Fall back to mainOffering
     else if (Array.isArray(therapy.mainOffering.uniqueBenefits)) {
@@ -239,11 +234,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get all formulas if available
   const getFormulas = () => {
-    // First check cardInfo
-    if ('cardInfo' in therapy && 
-        therapy.cardInfo?.formulas && 
-        therapy.cardInfo.formulas.length > 0) {
-      return therapy.cardInfo.formulas;
+    // First check formulas at root level
+    if (therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0) {
+      return therapy.formulas;
     }
     // Fall back to mainOffering
     else if (
@@ -253,6 +246,15 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       return therapy.mainOffering.formulas
     }
     return []
+  }
+
+  // Get all options if available
+  const getOptions = () => {
+    // Only check options at root level
+    if (therapy.options && therapy.options.length > 0) {
+      return therapy.options;
+    }
+    return [];
   }
 
   // Get themes 
@@ -287,16 +289,27 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   const commonBenefitsArray =
     commonBenefits.length > 0 ? commonBenefits : getDefaultCommonBenefits()
 
-  // Get resources/inclusions
+  // Function to get resources (inclusions)
   const getResources = () => {
-    const mainOfferingInclusions =
-      therapy.mainOffering.details?.inclusions || []
+    // First check if we have inclusions directly in the therapy
+    if (therapy.inclusions && therapy.inclusions.length > 0) {
+      return therapy.inclusions
+    }
+
+    // Fall back to mainOffering
+    const mainOfferingInclusions = 
+      therapy.mainOffering?.inclusions || []
     
-    // Check if there are any formulas with inclusions
-    if (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0) {
-      // Get inclusions from the first formula if available
-      const formulaInclusions = therapy.mainOffering.formulas[0].inclusions || []
-      return formulaInclusions
+    // Check if there are any formulas with inclusions in mainOffering
+    if (therapy.mainOffering?.formulas && therapy.mainOffering.formulas.length > 0) {
+      // Get all inclusions from all formulas
+      const formulaInclusions = therapy.mainOffering.formulas
+        .flatMap(formula => formula.inclusions || [])
+        .filter(Boolean)
+      
+      if (formulaInclusions.length > 0) {
+        return [...new Set([...mainOfferingInclusions, ...formulaInclusions])]
+      }
     }
     
     return mainOfferingInclusions
@@ -326,19 +339,6 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     } else {
       return <Calendar size={24} />
     }
-  }
-
-  // Get all options if available
-  const getOptions = () => {
-    // First check cardInfo
-    if ('cardInfo' in therapy && therapy.cardInfo?.options && therapy.cardInfo.options.length > 0) {
-      return therapy.cardInfo.options;
-    }
-    // Fall back to root level
-    else if (therapy.options && therapy.options.length > 0) {
-      return therapy.options;
-    }
-    return [];
   }
 
   // Get quote or proverb
@@ -442,11 +442,14 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         <div className="bg-primary-forest/30 rounded-[24px] p-6">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
-              {therapy.mainOffering.details?.title || `NOTRE OFFRE`}
+              {therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0 
+                ? therapy.formulas[0].title 
+                : therapy.mainOffering.details?.title || `NOTRE OFFRE`}
             </h3>
 
             {/* Main offering price */}
-            {('price' in therapy.mainOffering ||
+            {(therapy.formulas && Array.isArray(therapy.formulas) && therapy.formulas.length > 0 || 
+              'price' in therapy.mainOffering ||
               therapy.mainOffering.details?.price) && (
               <div className="flex flex-col gap-1">
                 <div className="flex items-end gap-1 justify-start">

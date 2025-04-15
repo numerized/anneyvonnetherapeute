@@ -36,6 +36,51 @@ export interface TherapyOption {
   tagline?: string
 }
 
+export interface MoreInfosOption {
+  title: string
+  headline?: string
+  sections?: {
+    title?: string
+    content?: string
+  }[]
+}
+
+export interface MoreInfos {
+  title: string
+  headline?: string
+  description?: string
+  sagesse?: {
+    title?: string
+    quotes: string[]
+  }
+  themes?: {
+    title?: string
+    items: {
+      title: string
+      description: string
+    }[]
+  }
+  process?: {
+    title?: string
+    details: string[]
+  }
+  benefits?: {
+    title?: string
+    items: string[]
+  }
+  commonBenefits?: string[]
+  options?: MoreInfosOption[]
+  formulas?: {
+    title?: string
+    price?: string
+    details?: {
+      title?: string
+      duration?: string
+      features?: string
+    }
+  }
+}
+
 export interface TherapyFormula {
   id: string
   title: string
@@ -52,13 +97,6 @@ export interface TherapyCardInfo {
   description?: string
   themes?: TherapyTheme[]
   proverbs?: string[]
-  process?: {
-    title: string
-    details: string[]
-  }
-  uniqueBenefits?: string[]
-  formulas?: TherapyFormula[]
-  options?: TherapyOption[]
   motto?: string
   targetAudience?: string
 }
@@ -67,16 +105,17 @@ export interface TherapyModalInfo {
   description?: string
   themes?: TherapyTheme[]
   proverbs?: string[]
+  modalBenefits?: string[]
+  additionalBenefits?: string[]
+  motto?: string
+  targetAudience?: string
+  options?: TherapyOption[]
+  formulas?: TherapyFormula[]
   process?: {
     title: string
     details: string[]
   }
-  modalBenefits?: string[]
-  additionalBenefits?: string[]
-  formulas?: TherapyFormula[]
-  options?: TherapyOption[]
-  motto?: string
-  targetAudience?: string
+  moreInfos?: MoreInfos
 }
 
 export interface TherapyMainOffering {
@@ -111,6 +150,8 @@ export interface TherapyMainOffering {
   note?: string
   targetAudience?: string
   promises?: string[] // Added for coaching offerings
+  commonBenefits?: string[]
+  inclusions?: string[]
 }
 
 export interface BaseOffering {
@@ -124,7 +165,7 @@ export interface BaseOffering {
   themes?: TherapyTheme[]
   mainOffering: TherapyMainOffering
   options?: TherapyOption[]
-  hasAudioPresentation: boolean
+  hasAudioPresentation?: boolean
   hasTest?: boolean
   pricing?: {
     couple: number
@@ -132,10 +173,18 @@ export interface BaseOffering {
   }
   cardInfo?: TherapyCardInfo
   modalInfo?: TherapyModalInfo
+  process?: {
+    title: string
+    details: string[]
+  }
+  uniqueBenefits?: string[]
+  formulas?: TherapyFormula[]
+  inclusions?: string[]
 }
 
 export interface TherapyType extends BaseOffering {
   proverbs?: string[]
+  commonBenefits?: string[]
 }
 
 export interface CoachingType extends BaseOffering {
