@@ -6,8 +6,8 @@ export interface TherapyTheme {
 export interface TherapyOption {
   id: string
   title: string
-  headline: string
-  description: string
+  headline?: string
+  description?: string
   sections?: {
     title: string
     content?: string
@@ -46,6 +46,37 @@ export interface TherapyFormula {
   note?: string
   sessionLength?: string
   inclusions?: string[]
+}
+
+export interface TherapyCardInfo {
+  description?: string
+  themes?: TherapyTheme[]
+  proverbs?: string[]
+  process?: {
+    title: string
+    details: string[]
+  }
+  uniqueBenefits?: string[]
+  formulas?: TherapyFormula[]
+  options?: TherapyOption[]
+  motto?: string
+  targetAudience?: string
+}
+
+export interface TherapyModalInfo {
+  description?: string
+  themes?: TherapyTheme[]
+  proverbs?: string[]
+  process?: {
+    title: string
+    details: string[]
+  }
+  modalBenefits?: string[]
+  additionalBenefits?: string[]
+  formulas?: TherapyFormula[]
+  options?: TherapyOption[]
+  motto?: string
+  targetAudience?: string
 }
 
 export interface TherapyMainOffering {
@@ -89,8 +120,8 @@ export interface BaseOffering {
   subtitle?: string
   category: string
   headline: string
-  description: string
-  themes: TherapyTheme[]
+  description?: string
+  themes?: TherapyTheme[]
   mainOffering: TherapyMainOffering
   options?: TherapyOption[]
   hasAudioPresentation: boolean
@@ -99,10 +130,12 @@ export interface BaseOffering {
     couple: number
     individual: number
   }
+  cardInfo?: TherapyCardInfo
+  modalInfo?: TherapyModalInfo
 }
 
 export interface TherapyType extends BaseOffering {
-  proverbs: string[]
+  proverbs?: string[]
 }
 
 export interface CoachingType extends BaseOffering {

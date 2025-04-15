@@ -22,24 +22,117 @@
       "subtitle": "De Cœur et de Corps",
       "category": "THERAPIES DE LA RELATION AMOUREUSE ET SEXUELLE",
       "headline": "Une traversée au cœur de votre relation",
-      "description": "L'aventure à deux n'est jamais un long fleuve tranquille. Entre courants souterrains et vents contraires, chaque couple traverse des zones d'ombre et de lumière. Cette exploration vous invite à mettre en lumière vos fonctionnements, à comprendre les obstacles invisibles et à redéfinir votre cap, ensemble.",
-      "themes": [
-        {
-          "title": "Cartographier les schémas relationnels",
-          "description": "Décrypter les dynamiques répétitives et leur impact sur votre couple."
+      "cardInfo": {
+        "description": "L'aventure à deux n'est jamais un long fleuve tranquille. Entre courants souterrains et vents contraires, chaque couple traverse des zones d'ombre et de lumière. Cette exploration vous invite à mettre en lumière vos fonctionnements, à comprendre les obstacles invisibles et à redéfinir votre cap, ensemble.",
+        "themes": [
+          {
+            "title": "Cartographier les schémas relationnels",
+            "description": "Décrypter les dynamiques répétitives et leur impact sur votre couple."
+          },
+          {
+            "title": "Naviguer les émotions et les attentes",
+            "description": "Apprendre à communiquer sans heurter ni s'effacer."
+          },
+          {
+            "title": "Explorer l'intimité et le désir",
+            "description": "Redécouvrir votre complicité et nourrir la connexion."
+          }
+        ],
+        "proverbs": [
+          "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble."
+        ],
+        "process": {
+          "title": "Organisation et Structure",
+          "details": [
+            "Option personnalisée : Accompagnement sur mesure adapté à vos besoins.",
+            "Objectifs prédéfinis : Clarification des objectifs pour une relation plus épanouie.",
+            "Cartographie de la relation : Découverte de vos schémas relationnels."
+          ]
         },
-        {
-          "title": "Naviguer les émotions et les attentes",
-          "description": "Apprendre à communiquer sans heurter ni s'effacer."
+        "uniqueBenefits": [
+          "Accompagnement enrichi avec des modules spécifiques à thèmes adaptés à chaque étape.",
+          "Support et outils variés pour accompagner votre transformation."
+        ],
+        "formulas": [
+          {
+            "id": "couple-therapy",
+            "title": "VOTRE THÉRAPIE DE COUPLE",
+            "duration": "Séances alternées sur 20 à 24 semaines (maximum 6 mois)",
+            "price": 2250,
+            "priceDetails": "pour le programme complet",
+            "inclusions": [
+              "Séances individuelles (60 min) : 6 séances pour chaque membre du couple",
+              "Séances en couple (90 min) : 2 séances pour travailler ensemble"
+            ]
+          }
+        ],
+        "options": [
+          {
+            "id": "neurotribu",
+            "title": "Option NeuroTribu : Thérapie adaptée aux couples neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+            "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
+          }
+        ]
+      },
+      "modalInfo": {
+        "description": "L'aventure à deux : explorer, comprendre et évoluer. La thérapie vous invite à comprendre vos fonctionnements, à déceler les obstacles invisibles et à redéfinir ensemble votre direction.",
+        "themes": [
+          {
+            "title": "Cartographier les schémas relationnels",
+            "description": "Identifier les dynamiques répétitives dans la relation."
+          },
+          {
+            "title": "Naviguer les émotions et les attentes",
+            "description": "Apprendre à communiquer sans heurter ni s'effacer."
+          },
+          {
+            "title": "Explorer l'intimité et le désir",
+            "description": "Redécouvrir la complicité et nourrir la connexion."
+          }
+        ],
+        "proverbs": [
+          "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble.",
+          "Aimer, ce n'est pas se regarder l'un l'autre, c'est regarder ensemble dans la même direction."
+        ],
+        "process": {
+          "title": "Processus complet",
+          "details": [
+            "8 séances : 2 séances de couple et 6 séances individuelles.",
+            "Bilans et introspections : Avant et après chaque séance pour suivre votre progression."
+          ]
         },
-        {
-          "title": "Explorer l'intimité et le désir",
-          "description": "Redécouvrir votre complicité et nourrir la connexion."
-        }
-      ],
-      "proverbs": [
-        "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble."
-      ],
+        "modalBenefits": [
+          "Accompagnement enrichi avec des modules thématiques pour chaque étape."
+        ],
+        "formulas": [
+          {
+            "id": "couple-therapy",
+            "title": "VOTRE THÉRAPIE DE COUPLE",
+            "duration": "5 à 6 mois d'accompagnement avec des séances individuelles (60 min) et en couple (90 min)",
+            "price": 2250,
+            "priceDetails": "pour le programme complet"
+          }
+        ],
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "additionalBenefits": [
+          "Support et outils variés pour accompagner votre transformation."
+        ],
+        "options": [
+          {
+            "id": "neurotribu",
+            "title": "Option NeuroTribu : Thérapie adaptée aux couples neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+            "headline": "La thérapie NeuroTribu est conçue pour répondre aux besoins des personnes avec des profils neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+            "description": "Pourquoi une thérapie spécifique ? Les thérapies classiques ne tiennent pas compte des différences dans la perception, la régulation émotionnelle ou les besoins sensoriels.",
+            "sections": [
+              {
+                "title": "Notre approche",
+                "content": "Valorisation des forces du couple ou de l'individu en intégrant les singularités comme ressources dans la relation. Construire une dynamique relationnelle propre à chaque couple ou individu."
+              }
+            ],
+            "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
+          }
+        ]
+      },
       "mainOffering": {
         "title": "THERAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
         "tagline": "Harmonisez votre relation à deux grâce à une approche innovante et transformative",
@@ -132,25 +225,122 @@
       "subtitle": "Accords à Corps",
       "category": "THÉRAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
       "headline": "Un voyage au cœur de votre paysage intime",
-      "description": "Se comprendre soi-même est la première étape pour créer des relations saines et authentiques. Cette exploration vous aide à identifier vos blessures, vos croyances et vos aspirations profondes, pour transformer ce qui entrave votre relation à vous-même et aux autres.",
-      "themes": [
-        {
-          "title": "Les empreintes du passé",
-          "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+      "cardInfo": {
+        "description": "Se comprendre soi-même est la première étape pour créer des relations saines et authentiques. Cette exploration vous aide à identifier vos blessures, vos croyances et vos aspirations profondes, pour transformer ce qui entrave votre relation à vous-même et aux autres.",
+        "themes": [
+          {
+            "title": "Les empreintes du passé",
+            "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+          },
+          {
+            "title": "Clarifier ses désirs",
+            "description": "Différencier les attentes héritées des envies réelles."
+          },
+          {
+            "title": "Se repositionner",
+            "description": "Apprendre à poser ses limites et à affirmer ses besoins."
+          }
+        ],
+        "proverbs": [
+          "Le plus grand voyage est celui qui mène à soi.",
+          "Celui qui regarde dedans s'éveille."
+        ],
+        "process": {
+          "title": "Organisation et Structure",
+          "details": [
+            "Définissez votre thème thérapeutique pour un parcours totalement personnalisé.",
+            "Check-list et objectifs clairs à établir avant chaque séance pour travailler de manière ciblée."
+          ]
         },
-        {
-          "title": "Clarifier ses désirs",
-          "description": "Différencier les attentes héritées des envies réelles."
+        "formulas": [
+          {
+            "id": "mini-compact",
+            "title": "MINI COMPACT",
+            "duration": "1 mois - 4 x 60 minutes",
+            "price": 720.0,
+            "priceDetails": "pour le programme complet"
+          },
+          {
+            "id": "compact",
+            "title": "COMPACT",
+            "duration": "3 mois - 12 x 60 minutes",
+            "price": 2160.0,
+            "priceDetails": "pour le programme complet"
+          },
+          {
+            "id": "relax",
+            "title": "RELAX",
+            "duration": "6 mois - 12 x 60 minutes",
+            "price": 2160.0,
+            "priceDetails": "pour le programme complet"
+          }
+        ],
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "uniqueBenefits": [
+          "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur.",
+          "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
+        ],
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      },
+      "modalInfo": {
+        "description": "Un voyage au cœur de votre paysage intime : identifier vos blessures, vos croyances et vos aspirations profondes pour transformer ce qui entrave votre relation à vous-même et aux autres.",
+        "themes": [
+          {
+            "title": "Les empreintes du passé",
+            "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+          },
+          {
+            "title": "Clarifier ses désirs",
+            "description": "Différencier les attentes héritées des envies réelles."
+          },
+          {
+            "title": "Se repositionner",
+            "description": "Apprendre à poser ses limites et à affirmer ses besoins."
+          }
+        ],
+        "proverbs": [
+          "Le plus grand voyage est celui qui mène à soi.",
+          "Celui qui regarde dedans s'éveille."
+        ],
+        "process": {
+          "title": "Processus complet",
+          "details": [
+            "8 séances : 2 séances de couple et 6 séances individuelles.",
+            "Bilans et introspections : Avant et après chaque séance pour suivre votre progression."
+          ]
         },
-        {
-          "title": "Se repositionner",
-          "description": "Apprendre à poser ses limites et à affirmer ses besoins."
-        }
-      ],
-      "proverbs": [
-        "Le plus grand voyage est celui qui mène à soi.",
-        "Celui qui regarde dedans s'éveille."
-      ],
+        "modalBenefits": [
+          "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur."
+        ],
+        "formulas": [
+          {
+            "id": "mini-compact",
+            "title": "MINI COMPACT",
+            "duration": "1 mois - 4 x 60 minutes",
+            "price": 720.0,
+            "priceDetails": "pour le programme complet"
+          },
+          {
+            "id": "compact",
+            "title": "COMPACT",
+            "duration": "3 mois - 12 x 60 minutes",
+            "price": 2160.0,
+            "priceDetails": "pour le programme complet"
+          },
+          {
+            "id": "relax",
+            "title": "RELAX",
+            "duration": "6 mois - 12 x 60 minutes",
+            "price": 2160.0,
+            "priceDetails": "pour le programme complet"
+          }
+        ],
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "additionalBenefits": [
+          "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
+        ],
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      },
       "mainOffering": {
         "tagline": "RETROUVEZ L'HARMONIE EN VOUS GRÂCE À UNE APPROCHE SIMPLE ET RADICALE",
         "quote": "Changer sa vie, c'est d'abord se reconnecter à son corps et à soi.",
@@ -198,24 +388,107 @@
       "type": "therapy",
       "title": "THÉRAPIE VIT À LA CARTE - SELON VOS DÉSIRS",
       "headline": "Une expédition sur-mesure pour les passionnés de la relation",
-      "description": "Pour ceux qui veulent explorer l'amour sous toutes ses formes, cette thérapie est un parcours adaptatif, en fonction de vos questionnements du moment. Elle permet de plonger dans les eaux profondes de la relation amoureuse et sexuelle, en toute liberté et selon votre rythme.",
-      "themes": [
-        {
-          "title": "Alchimie et désir",
-          "description": "Comment nourrir l'attirance et l'intensité dans le temps ?"
+      "cardInfo": {
+        "description": "Pour ceux qui veulent explorer l'amour sous toutes ses formes, cette thérapie est un parcours adaptatif, en fonction de vos questionnements du moment. Elle permet de plonger dans les eaux profondes de la relation amoureuse et sexuelle, en toute liberté et selon votre rythme.",
+        "themes": [
+          {
+            "title": "Alchimie et désir",
+            "description": "Comment nourrir l'attirance et l'intensité dans le temps ?"
+          },
+          {
+            "title": "Relation consciente",
+            "description": "Construire des liens basés sur l'authenticité et la liberté."
+          },
+          {
+            "title": "Les territoires du plaisir",
+            "description": "Explorer sans tabou l'expression de ses envies et limites."
+          }
+        ],
+        "proverbs": [
+          "L'amour est une invitation à la découverte, et non une promesse de sécurité."
+        ],
+        "process": {
+          "title": "Organisation et Structure",
+          "details": [
+            "Programme détaillé : Accompagnement personnalisé, conçu pour répondre à vos besoins spécifiques.",
+            "Organisation flexible : Vous ajustez le rythme des séances en fonction de votre propre processus.",
+            "Séances individuelles ou couple à la carte"
+          ]
         },
-        {
-          "title": "Relation consciente",
-          "description": "Construire des liens basés sur l'authenticité et la liberté."
+        "formulas": [
+          {
+            "id": "vit-individual",
+            "title": "SÉANCE INDIVIDUELLE",
+            "duration": "60 minutes",
+            "price": 210.0,
+            "priceDetails": "par séance"
+          },
+          {
+            "id": "vit-couple",
+            "title": "SÉANCE COUPLE",
+            "duration": "90 minutes",
+            "price": 240.0,
+            "priceDetails": "par séance"
+          }
+        ],
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "uniqueBenefits": [
+          "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment.",
+          "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
+        ],
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      },
+      "modalInfo": {
+        "description": "Une expédition sur-mesure pour les passionnés de la relation : explorer l'amour sous toutes ses formes, en fonction de vos questionnements du moment.",
+        "themes": [
+          {
+            "title": "Alchimie et désir",
+            "description": "Comment nourrir l'attirance et l'intensité dans le temps ?"
+          },
+          {
+            "title": "Relation consciente",
+            "description": "Construire des liens basés sur l'authenticité et la liberté."
+          },
+          {
+            "title": "Les territoires du plaisir",
+            "description": "Explorer sans tabou l'expression de ses envies et limites."
+          }
+        ],
+        "proverbs": [
+          "L'amour est une invitation à la découverte, et non une promesse de sécurité."
+        ],
+        "process": {
+          "title": "Processus complet",
+          "details": [
+            "8 séances : 2 séances de couple et 6 séances individuelles.",
+            "Bilans et introspections : Avant et après chaque séance pour suivre votre progression."
+          ]
         },
-        {
-          "title": "Les territoires du plaisir",
-          "description": "Explorer sans tabou l'expression de ses envies et limites."
-        }
-      ],
-      "proverbs": [
-        "L'amour est une invitation à la découverte, et non une promesse de sécurité."
-      ],
+        "modalBenefits": [
+          "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment."
+        ],
+        "formulas": [
+          {
+            "id": "vit-individual",
+            "title": "SÉANCE INDIVIDUELLE",
+            "duration": "60 minutes",
+            "price": 210.0,
+            "priceDetails": "par séance"
+          },
+          {
+            "id": "vit-couple",
+            "title": "SÉANCE COUPLE",
+            "duration": "90 minutes",
+            "price": 240.0,
+            "priceDetails": "par séance"
+          }
+        ],
+        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
+        "additionalBenefits": [
+          "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
+        ],
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+      },
       "mainOffering": {
         "title": "NOTRE OFFRE",
         "process": {

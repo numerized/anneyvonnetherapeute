@@ -39,7 +39,28 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get price display
   const getPriceDisplay = () => {
-    if ('price' in therapy.mainOffering) {
+    // First check cardInfo formulas if available
+    if (
+      'cardInfo' in therapy && 
+      therapy.cardInfo?.formulas && 
+      therapy.cardInfo.formulas.length > 0
+    ) {
+      const minPrice = Math.min(
+        ...therapy.cardInfo.formulas.map((f) => f.price),
+      )
+      if (hasCoupon) {
+        const discountedPrice = calculateDiscountedPrice(minPrice)
+        return (
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary-cream line-through">{minPrice}€</span>
+            <span className="text-primary-coral">{discountedPrice}€</span>
+          </div>
+        )
+      }
+      return `${minPrice}€`
+    } 
+    // Fall back to mainOffering price
+    else if ('price' in therapy.mainOffering) {
       const price = therapy.mainOffering.price
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(price)
@@ -131,7 +152,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get proverbs or other quotes based on offering type
   const getQuotes = () => {
-    if ((therapy as TherapyType).proverbs) {
+    // First check cardInfo
+    if ('cardInfo' in therapy && therapy.cardInfo?.proverbs) {
+      return therapy.cardInfo.proverbs;
+    } 
+    // Fall back to root level properties
+    else if ((therapy as TherapyType).proverbs) {
       return (therapy as TherapyType).proverbs
     } else if ((therapy as CoachingType).promises) {
       return (therapy as CoachingType).promises
@@ -141,7 +167,15 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get price details text
   const getPriceDetails = () => {
-    if (therapy.mainOffering.note) {
+    // First check cardInfo
+    if ('cardInfo' in therapy && 
+        therapy.cardInfo?.formulas && 
+        therapy.cardInfo.formulas.length > 0 &&
+        therapy.cardInfo.formulas[0].priceDetails) {
+      return therapy.cardInfo.formulas[0].priceDetails;
+    }
+    // Fall back to mainOffering
+    else if (therapy.mainOffering.note) {
       return therapy.mainOffering.note
     } else if (therapy.mainOffering.details?.price) {
       return 'pour le programme complet'
@@ -157,8 +191,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get organization points
   const getOrganizationPoints = () => {
-    // Only use process.details from the mainOffering if available
-    if (therapy.mainOffering.process?.details) {
+    // First check cardInfo
+    if ('cardInfo' in therapy && therapy.cardInfo?.process?.details) {
+      return therapy.cardInfo.process.details;
+    }
+    // Fall back to mainOffering
+    else if (therapy.mainOffering.process?.details) {
       return therapy.mainOffering.process.details;
     }
     
@@ -168,7 +206,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get unique benefits/features specific to this therapy
   const getUniqueBenefits = () => {
-    if (Array.isArray(therapy.mainOffering.uniqueBenefits)) {
+    // First check cardInfo
+    if ('cardInfo' in therapy && Array.isArray(therapy.cardInfo?.uniqueBenefits)) {
+      return therapy.cardInfo.uniqueBenefits;
+    }
+    // Fall back to mainOffering
+    else if (Array.isArray(therapy.mainOffering.uniqueBenefits)) {
       return therapy.mainOffering.uniqueBenefits
     } else if (
       therapy.mainOffering.uniqueBenefits &&
@@ -196,7 +239,14 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get all formulas if available
   const getFormulas = () => {
-    if (
+    // First check cardInfo
+    if ('cardInfo' in therapy && 
+        therapy.cardInfo?.formulas && 
+        therapy.cardInfo.formulas.length > 0) {
+      return therapy.cardInfo.formulas;
+    }
+    // Fall back to mainOffering
+    else if (
       therapy.mainOffering.formulas &&
       therapy.mainOffering.formulas.length > 0
     ) {
@@ -205,40 +255,30 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     return []
   }
 
-  // Get all options if available
-  const getOptions = () => {
-    if (therapy.options && therapy.options.length > 0) {
-      return therapy.options
+  // Get themes 
+  const getThemes = () => {
+    // First check cardInfo
+    if ('cardInfo' in therapy && therapy.cardInfo?.themes) {
+      return therapy.cardInfo.themes;
     }
-    return []
+    // Fall back to root level
+    else if ((therapy as TherapyType).themes) {
+      return (therapy as TherapyType).themes;
+    }
+    return [];
   }
 
-  // Get quote or proverb
-  const getQuote = () => {
-    const quotes = getQuotes()
-    if (quotes && quotes.length > 0) {
-      return quotes[0]
+  // Get description
+  const getDescription = () => {
+    // First check cardInfo
+    if ('cardInfo' in therapy && therapy.cardInfo?.description) {
+      return therapy.cardInfo.description;
     }
-    // Fallback to mainOffering.quote if available
-    if (therapy.mainOffering.quote) {
-      return therapy.mainOffering.quote
+    // Fall back to root level
+    else if ((therapy as any).description) {
+      return (therapy as any).description;
     }
-    return ''
-  }
-
-  // Get subtitle (either from therapy subtitle or category)
-  const getSubtitle = () => {
-    if (therapy.subtitle) {
-      return therapy.subtitle
-    } else if (therapy.category) {
-      return therapy.category
-    }
-    return ''
-  }
-
-  // Get therapy or coaching type label
-  const getTypeLabel = () => {
-    return therapy.type === 'coaching' ? 'COACHING' : 'THÉRAPIE'
+    return '';
   }
 
   // Get organization sections
@@ -286,6 +326,48 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     } else {
       return <Calendar size={24} />
     }
+  }
+
+  // Get all options if available
+  const getOptions = () => {
+    // First check cardInfo
+    if ('cardInfo' in therapy && therapy.cardInfo?.options && therapy.cardInfo.options.length > 0) {
+      return therapy.cardInfo.options;
+    }
+    // Fall back to root level
+    else if (therapy.options && therapy.options.length > 0) {
+      return therapy.options;
+    }
+    return [];
+  }
+
+  // Get quote or proverb
+  const getQuote = () => {
+    const quotes = getQuotes();
+    if (quotes && quotes.length > 0) {
+      return quotes[0];
+    }
+
+    // Fallback to mainOffering.quote if available
+    if (therapy.mainOffering.quote) {
+      return therapy.mainOffering.quote;
+    }
+    return '';
+  }
+
+  // Get subtitle (either from therapy subtitle or category)
+  const getSubtitle = () => {
+    if (therapy.subtitle) {
+      return therapy.subtitle;
+    } else if (therapy.category) {
+      return therapy.category;
+    }
+    return '';
+  }
+
+  // Get therapy or coaching type label
+  const getTypeLabel = () => {
+    return therapy.type === 'coaching' ? 'COACHING' : 'THÉRAPIE';
   }
 
   return (

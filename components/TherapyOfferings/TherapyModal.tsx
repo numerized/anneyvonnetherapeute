@@ -22,21 +22,28 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
   if (!isOpen || !therapy) return null
 
   // Helper function to determine if the therapy has options
-  const hasOptions = therapy.options && therapy.options.length > 0
+  const hasOptions = 
+    ('modalInfo' in therapy && therapy.modalInfo?.options && therapy.modalInfo.options.length > 0) || 
+    (therapy.options && therapy.options.length > 0)
 
   // Helper function to determine if the therapy has formulas
   const hasFormulas =
-    therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0
+    ('modalInfo' in therapy && therapy.modalInfo?.formulas && therapy.modalInfo.formulas.length > 0) ||
+    (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0)
 
   // Helper function to render proverbs section
   const renderProverbs = () => {
-    if (!therapy.proverbs || therapy.proverbs.length === 0) return null
+    const proverbs = ('modalInfo' in therapy && therapy.modalInfo?.proverbs) 
+      ? therapy.modalInfo.proverbs 
+      : therapy.proverbs
+
+    if (!proverbs || proverbs.length === 0) return null
 
     return (
       <div className="mb-8">
         <h3 className="text-xl font-medium mb-4 text-primary-coral">Sagesse</h3>
         <div className="space-y-4">
-          {therapy.proverbs.map((proverb, index) => (
+          {proverbs.map((proverb, index) => (
             <blockquote
               key={index}
               className="border-l-4 border-primary-coral pl-4 italic text-primary-cream/90"
@@ -51,7 +58,11 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
 
   // Helper function to render themes section
   const renderThemes = () => {
-    if (!therapy.themes || therapy.themes.length === 0) return null
+    const themes = ('modalInfo' in therapy && therapy.modalInfo?.themes) 
+      ? therapy.modalInfo.themes 
+      : therapy.themes
+
+    if (!themes || themes.length === 0) return null
 
     return (
       <div className="mb-8">
@@ -59,7 +70,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
           Thèmes abordés
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {therapy.themes.map((theme, index) => (
+          {themes.map((theme, index) => (
             <div
               key={index}
               className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]"
@@ -70,6 +81,209 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
               <p className="text-primary-cream/80">{theme.description}</p>
             </div>
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  // Helper function to render process section
+  const renderProcess = () => {
+    const process = ('modalInfo' in therapy && therapy.modalInfo?.process) 
+      ? therapy.modalInfo.process 
+      : therapy.mainOffering.process
+
+    if (!process) return null
+
+    return (
+      <div className="mb-8">
+        <h3 className="text-xl font-medium mb-4 text-primary-coral">
+          {process.title || 'Processus'}
+        </h3>
+        <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
+          <ul className="space-y-3">
+            {process.details.map((detail, index) => (
+              <li key={index} className="flex items-start">
+                <span className="text-primary-coral mr-2 mt-1">♦</span>
+                <span className="text-primary-cream/90">{detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+
+  // Helper function to render benefits section
+  const renderBenefits = () => {
+    // First try to get benefits from modalInfo 
+    if ('modalInfo' in therapy && therapy.modalInfo) {
+      // Check for modalBenefits in modalInfo
+      if (therapy.modalInfo.modalBenefits && therapy.modalInfo.modalBenefits.length > 0) {
+        return (
+          <div className="space-y-8 mt-12">
+            <h3 className="text-primary-cream text-xl font-bold">
+              Avantages Uniques
+            </h3>
+            <div className="space-y-6">
+              {therapy.modalInfo.modalBenefits.map((benefit, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <div className="text-primary-coral mt-1">
+                    ♦
+                  </div>
+                  <div className="text-primary-cream/90">{benefit}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      // Add additionalBenefits if they exist
+      if (therapy.modalInfo.additionalBenefits && therapy.modalInfo.additionalBenefits.length > 0) {
+        return (
+          <div className="space-y-8 mt-12">
+            <h3 className="text-primary-cream text-xl font-bold">
+              Avantages Supplémentaires
+            </h3>
+            <div className="space-y-6">
+              {therapy.modalInfo.additionalBenefits.map((benefit, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <div className="text-primary-coral mt-1">
+                    ♦
+                  </div>
+                  <div className="text-primary-cream/90">{benefit}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    }
+
+    // Fall back to mainOffering benefits if no modalInfo benefits found
+    const benefits = therapy.mainOffering.uniqueBenefits;
+
+    if (!benefits) return null
+
+    if (Array.isArray(benefits)) {
+      return (
+        <div className="space-y-8 mt-12">
+          <h3 className="text-primary-cream text-xl font-bold">
+            Avantages Uniques
+          </h3>
+          <div className="space-y-6">
+            {benefits.map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <div className="text-primary-coral mt-1">
+                  ♦
+                </div>
+                <div className="text-primary-cream/90">{benefit}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div className="space-y-8 mt-12">
+          <h3 className="text-primary-cream text-xl font-bold">
+            {benefits.title}
+          </h3>
+          {benefits.intro && (
+            <p className="text-primary-cream/70">
+              {benefits.intro}
+            </p>
+          )}
+          <div className="space-y-6">
+            {benefits.list.map((benefit, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <div className="text-primary-coral mt-1">
+                  ♦
+                </div>
+                <div className="text-primary-cream/90">{benefit}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
+  }
+
+  // Helper function to render main offering details
+  const renderMainOfferingDetails = () => {
+    // Check modalInfo formulas first
+    if ('modalInfo' in therapy && 
+        therapy.modalInfo?.formulas && 
+        therapy.modalInfo.formulas.length > 0) {
+      
+      // Use the first formula for main details
+      const firstFormula = therapy.modalInfo.formulas[0];
+      
+      return (
+        <div className="mb-8">
+          <h3 className="text-xl font-medium mb-4 text-primary-coral">
+            Détails de l'offre
+          </h3>
+          <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
+            <div className="mb-4">
+              <span className="text-primary-coral">Durée : </span>
+              <span className="text-primary-cream/90">{firstFormula.duration}</span>
+            </div>
+            <div className="mb-4">
+              <span className="text-primary-coral">Prix : </span>
+              <span className="text-primary-cream/90">{firstFormula.price}€ {firstFormula.priceDetails || ''}</span>
+            </div>
+            {firstFormula.inclusions && firstFormula.inclusions.length > 0 && (
+              <div>
+                <span className="text-primary-coral block mb-2">Inclus : </span>
+                <ul className="list-disc list-inside space-y-2 text-primary-cream/90">
+                  {firstFormula.inclusions.map((inclusion, idx) => (
+                    <li key={idx}>{inclusion}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Fall back to mainOffering details
+    const details = therapy.mainOffering.details;
+    if (!details) return null;
+
+    return (
+      <div className="mb-8">
+        <h3 className="text-xl font-medium mb-4 text-primary-coral">
+          Détails de l'offre
+        </h3>
+        <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
+          <div className="mb-4">
+            <span className="text-primary-coral">Durée : </span>
+            <span className="text-primary-cream/90">{details.duration}</span>
+          </div>
+          <div className="mb-4">
+            <span className="text-primary-coral">Planning : </span>
+            <span className="text-primary-cream/90">{details.schedule}</span>
+          </div>
+          <div className="mb-4">
+            <span className="text-primary-coral">Durée de séance : </span>
+            <span className="text-primary-cream/90">{details.sessionLength}</span>
+          </div>
+          <div className="mb-4">
+            <span className="text-primary-coral">Prix : </span>
+            <span className="text-primary-cream/90">{details.price}€</span>
+          </div>
+          {details.inclusions && (
+            <div>
+              <span className="text-primary-coral block mb-2">Inclus : </span>
+              <ul className="list-disc list-inside space-y-2 text-primary-cream/90">
+                {details.inclusions.map((inclusion, idx) => (
+                  <li key={idx}>{inclusion}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     )
@@ -106,133 +320,6 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
     }
 
     return priceText
-  }
-
-  // Helper function to render process section
-  const renderProcess = () => {
-    if (!therapy.mainOffering.process) return null
-
-    return (
-      <div className="mb-8">
-        <h3 className="text-xl font-medium mb-4 text-primary-coral">
-          {therapy.mainOffering.process.title || 'Processus'}
-        </h3>
-        <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
-          <ul className="space-y-3">
-            {therapy.mainOffering.process.details.map((detail, index) => (
-              <li key={index} className="flex items-start">
-                <span className="text-primary-coral mr-2 mt-1">♦</span>
-                <span className="text-primary-cream/90">{detail}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    )
-  }
-
-  // Helper function to render benefits section
-  const renderBenefits = () => {
-    if (!therapy.mainOffering) return null
-
-    if (!therapy.mainOffering.uniqueBenefits) return null
-
-    if (Array.isArray(therapy.mainOffering.uniqueBenefits)) {
-      return (
-        <div className="space-y-8 mt-12">
-          <h3 className="text-primary-cream text-xl font-bold">
-            Les avantages
-          </h3>
-          <div className="space-y-6">
-            {therapy.mainOffering.uniqueBenefits.map((benefit, idx) => (
-              <div key={idx} className="flex items-start gap-4">
-                <div className="text-primary-coral mt-1">
-                  {/* Add logic to return the correct icon based on the benefit */}
-                  {/* For now, just return a placeholder icon */}
-                  <span>✓</span>
-                </div>
-                <div>
-                  <p className="text-primary-cream/90">{benefit}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    } else {
-      // Handle object-style benefits
-      return (
-        <div className="space-y-8 mt-12">
-          <h3 className="text-primary-cream text-xl font-bold">
-            {therapy.mainOffering.uniqueBenefits.title}
-          </h3>
-          {therapy.mainOffering.uniqueBenefits.intro && (
-            <p className="text-primary-cream/70">
-              {therapy.mainOffering.uniqueBenefits.intro}
-            </p>
-          )}
-          <div className="space-y-6">
-            {therapy.mainOffering.uniqueBenefits.list.map((benefit, idx) => (
-              <div key={idx} className="flex items-start gap-4">
-                <div className="text-primary-coral mt-1">
-                  {/* Add logic to return the correct icon based on the benefit */}
-                  {/* For now, just return a placeholder icon */}
-                  <span>✓</span>
-                </div>
-                <div>
-                  <p className="text-primary-cream/90">{benefit}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    }
-  }
-
-  // Helper function to render main offering details
-  const renderMainOfferingDetails = () => {
-    if (!therapy.mainOffering.details) return null
-    const details = therapy.mainOffering.details
-
-    return (
-      <div className="mb-8">
-        <h3 className="text-xl font-medium mb-4 text-primary-coral">
-          {details.title || 'Détails'}
-        </h3>
-        <div className="bg-primary-dark/30 backdrop-blur-sm p-4 rounded-[16px]">
-          {details.schedule && (
-            <p className="text-primary-cream mb-2">{details.schedule}</p>
-          )}
-
-          <div className="flex flex-col mb-4">
-            <p className="text-3xl font-light text-primary-coral mb-2">
-              {formatPriceDisplay(
-                details.price,
-                '',
-                'pour le programme complet',
-              )}
-            </p>
-            <p className="text-primary-cream/90">{details.duration}</p>
-            <p className="text-primary-cream/90">{details.sessionLength}</p>
-          </div>
-
-          {details.inclusions && (
-            <div>
-              <p className="text-primary-cream font-bold mb-2">Inclus:</p>
-              <ul className="space-y-1">
-                {details.inclusions.map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-primary-coral mr-2">✓</span>
-                    <span className="text-primary-cream/90">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </div>
-    )
   }
 
   return (
