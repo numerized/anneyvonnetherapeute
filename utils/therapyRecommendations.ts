@@ -99,8 +99,34 @@ export const prepareTherapyOfferings = (): TherapyOption[] => {
     let hasFormulas = false
     let formulas: any[] = []
 
+    // Check if formulas exist directly on the therapy object
+    if (therapy.formulas && therapy.formulas.length > 0) {
+      hasFormulas = true
+      formulas = therapy.formulas
+
+      // Use the first formula's price as the main price display
+      const firstFormula = therapy.formulas[0]
+      price = firstFormula.price
+
+      // Extract session length directly if available in formula
+      if (firstFormula.sessionLength) {
+        sessionLength = firstFormula.sessionLength
+      } else if (firstFormula.duration && firstFormula.duration.includes('x')) {
+        const parts = firstFormula.duration.split(' x ')
+        if (parts.length > 1) {
+          sessionLength = parts[1]
+        }
+      }
+
+      // Set price details
+      if (formulas.length > 1) {
+        priceDetails = 'plusieurs formules disponibles'
+      } else if (firstFormula.priceDetails) {
+        priceDetails = firstFormula.priceDetails
+      }
+    }
     // HARMONIZED APPROACH: Check for formulas first (preferred structure)
-    if (therapy.mainOffering?.formulas?.length > 0) {
+    else if (therapy.mainOffering?.formulas?.length > 0) {
       // Store formulas information
       hasFormulas = true
       formulas = therapy.mainOffering.formulas

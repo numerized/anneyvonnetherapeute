@@ -200,7 +200,7 @@ const TherapyQuestionnaireNew = () => {
     }
   }
 
-  // Handler for challenge selection
+  // Handler for challenge selection & generate results
   const handleChallengeSelect = (challenge: string) => {
     // Generate recommendation based on answers
     const recommendedOptions = generateRecommendedOptions(
@@ -856,10 +856,24 @@ const TherapyQuestionnaireNew = () => {
                               </span>
                             </div>
                           )}
-                          {!option.price && !option.priceDetails && (
+                          {!option.price && !option.priceDetails && option.hasFormulas && option.formulas && option.formulas.length > 0 && (
                             <div className="text-right">
                               <span className="text-sm font-medium">
-                                Tarif sur demande
+                                À partir de {option.formulas[0].price}€ {option.formulas[0].priceDetails && `(${option.formulas[0].priceDetails})`}
+                              </span>
+                            </div>
+                          )}
+                          {!option.price && !option.priceDetails && (!option.hasFormulas || !option.formulas || option.formulas.length === 0) && (
+                            <div className="text-right">
+                              <span className="text-sm font-medium">
+                                {option.type === 'individual' 
+                                  ? 'À partir de 720€ (programme complet)'
+                                  : option.type === 'vit' || option.therapyId === 'vit-a-la-carte' 
+                                    ? 'À partir de 210€ par séance'
+                                    : option.type === 'couple' || option.therapyId === 'couple'
+                                      ? '2250€ (programme complet)'
+                                      : 'Tarif sur demande'
+                                }
                               </span>
                             </div>
                           )}
