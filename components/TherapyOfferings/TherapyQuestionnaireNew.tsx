@@ -835,7 +835,13 @@ const TherapyQuestionnaireNew = () => {
                       <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
                         {/* Price section */}
                         <div className="text-primary-cream/90">
-                          {option.price && (
+                          {option.offeringType === 'therapy' && option.hasFormulas && option.formulas && option.formulas.length > 1 ? (
+                            <div className="text-right">
+                              <span className="text-sm font-medium">
+                                Plusieurs formules disponibles
+                              </span>
+                            </div>
+                          ) : option.price && (
                             <div className="text-right">
                               {hasCoupon ? (
                                 <span className="text-sm font-medium">
@@ -859,14 +865,14 @@ const TherapyQuestionnaireNew = () => {
                               )}
                             </div>
                           )}
-                          {!option.price && option.priceDetails && (
+                          {!option.price && option.priceDetails && !(option.offeringType === 'therapy' && option.hasFormulas && option.formulas && option.formulas.length > 1) && (
                             <div className="text-right whitespace-pre-line">
                               <span className="text-sm font-medium">
                                 {option.priceDetails}
                               </span>
                             </div>
                           )}
-                          {!option.price && !option.priceDetails && option.hasFormulas && option.formulas && option.formulas.length > 0 && (
+                          {!option.price && !option.priceDetails && option.hasFormulas && option.formulas && option.formulas.length === 1 && (
                             <div className="text-right">
                               <span className="text-sm font-medium">
                                 À partir de {option.formulas[0].price} CHF / EUR {option.formulas[0].priceDetails && `(${option.formulas[0].priceDetails})`}
@@ -877,7 +883,7 @@ const TherapyQuestionnaireNew = () => {
                             <div className="text-right">
                               <span className="text-sm font-medium">
                                 {option.type === 'individual' 
-                                  ? 'À partir de 720 CHF / EUR (programme complet)'
+                                  ? (option.offeringType === 'therapy' ? 'Plusieurs formules disponibles' : 'À partir de 720 CHF / EUR (programme complet)')
                                   : option.type === 'vit' || option.therapyId === 'vit-a-la-carte' 
                                     ? 'À partir de 210 CHF / EUR par séance'
                                     : option.type === 'couple' || option.therapyId === 'couple'
