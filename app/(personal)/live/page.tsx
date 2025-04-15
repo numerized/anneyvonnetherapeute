@@ -20,38 +20,43 @@ export default function LivePage() {
   useEffect(() => {
     const updateTimeUntilLive = () => {
       const now = new Date()
-      const liveDate = new Date('2025-04-15T20:00:00+02:00')
-      const diff = liveDate.getTime() - now.getTime()
+      // Event time is 20:00, but we go live 15 minutes before
+      const mainEventTime = new Date('2025-04-15T20:00:00+02:00')
+      const liveStart = new Date(mainEventTime.getTime() - 15 * 60 * 1000) // 15 minutes before event
+      const liveEnd = new Date('2025-04-15T23:00:00+02:00')
 
-      // Check if live is active (within the 1-hour session)
-      const isActive = diff <= 0 && diff > -3600000 // -3600000 ms = -1 hour
+      // Check if live is active
+      const isActive = now >= liveStart && now <= liveEnd
       setIsLiveActive(isActive)
 
-      if (diff <= 0) {
+      // Calculate countdown only if not yet live
+      if (now < liveStart) {
+        const diff = liveStart.getTime() - now.getTime()
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+        const hours = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        )
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+
+        const parts: string[] = []
+        if (days > 0) {
+          parts.push(`${days} jour${days > 1 ? 's' : ''}`)
+        }
+        if (hours > 0 || days > 0) {
+          parts.push(`${hours} heure${hours > 1 ? 's' : ''}`)
+        }
+        parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`)
+
+        setTimeUntilLive(parts.join(' et '))
+      } else {
         setTimeUntilLive('Le live commence maintenant!')
-        return
       }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-      const hours = Math.floor(
-        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      )
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-
-      const parts: string[] = []
-      if (days > 0) {
-        parts.push(`${days} jour${days > 1 ? 's' : ''}`)
-      }
-      if (hours > 0 || days > 0) {
-        parts.push(`${hours} heure${hours > 1 ? 's' : ''}`)
-      }
-      parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`)
-
-      setTimeUntilLive(parts.join(' et '))
     }
 
     updateTimeUntilLive()
-    const interval = setInterval(updateTimeUntilLive, 60000)
+    // Check more frequently (every 5 seconds)
+    const interval = setInterval(updateTimeUntilLive, 5000)
     return () => clearInterval(interval)
   }, [])
 

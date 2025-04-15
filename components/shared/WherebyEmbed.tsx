@@ -14,17 +14,37 @@ export function WherebyEmbed({ className }: WherebyEmbedProps) {
   useEffect(() => {
     const checkLiveStatus = () => {
       const now = new Date()
-      const liveStart = new Date('2025-04-15T19:45:00+02:00')
+      // Event time is 20:00, but we go live 15 minutes before
+      const mainEventTime = new Date('2025-04-15T20:00:00+02:00')
+      const liveStart = new Date(mainEventTime.getTime() - 15 * 60 * 1000) // 15 minutes before event
       const liveEnd = new Date('2025-04-15T23:00:00+02:00')
-      setIsLiveActive(now >= liveStart && now <= liveEnd)
+
+      // Calculate time difference in minutes
+      const minutesUntilLive = Math.floor(
+        (liveStart.getTime() - now.getTime()) / (60 * 1000),
+      )
+
+      // Check if it's live time
+      const isNowLiveActive = now >= liveStart && now <= liveEnd
+
+      setIsLiveActive(isNowLiveActive)
       setIsLiveFinished(now > liveEnd)
+
+      // More frequent checks when approaching the live time
+      if (minutesUntilLive > 0 && minutesUntilLive <= 15) {
+        // Reload the page when we reach the start time (only if not already live)
+        if (minutesUntilLive <= 0.1 && !isNowLiveActive) {
+          window.location.reload()
+        }
+      }
     }
 
-    // Check initially
+    // Initial check
     checkLiveStatus()
 
-    // Check every minute
-    const interval = setInterval(checkLiveStatus, 60000)
+    // Set interval - every 5 seconds by default for more responsive transitions
+    const intervalFrequency = 5000
+    const interval = setInterval(checkLiveStatus, intervalFrequency)
 
     return () => clearInterval(interval)
   }, [])

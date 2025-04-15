@@ -189,7 +189,7 @@ const TherapyQuestionnaireNew = () => {
       skippedChallengeStep: shouldSkipChallenge,
       lastStep: 2,
     }
-    
+
     setAnswers(updatedAnswers)
 
     if (shouldSkipChallenge) {
@@ -203,7 +203,10 @@ const TherapyQuestionnaireNew = () => {
   }
 
   // Handler for challenge selection & generate results
-  const handleChallengeSelect = (challenge: string, currentAnswers = answers) => {
+  const handleChallengeSelect = (
+    challenge: string,
+    currentAnswers = answers,
+  ) => {
     // Generate recommendation based on answers
     const recommendedOptions = generateRecommendedOptions(
       currentAnswers.situation,
@@ -774,7 +777,7 @@ const TherapyQuestionnaireNew = () => {
               <button
                 onClick={() => {
                   // Always go back to the appropriate step based on the path taken
-                  setStep(answers.skippedChallengeStep ? 2 : 3);
+                  setStep(answers.skippedChallengeStep ? 2 : 3)
                 }}
                 className="mr-2 text-primary-coral"
               >
@@ -835,64 +838,91 @@ const TherapyQuestionnaireNew = () => {
                       <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
                         {/* Price section */}
                         <div className="text-primary-cream/90">
-                          {option.offeringType === 'therapy' && option.hasFormulas && option.formulas && option.formulas.length > 1 ? (
+                          {option.offeringType === 'therapy' &&
+                          option.hasFormulas &&
+                          option.formulas &&
+                          option.formulas.length > 1 ? (
                             <div className="text-right">
                               <span className="text-sm font-medium">
                                 Plusieurs formules disponibles
                               </span>
                             </div>
-                          ) : option.price && (
-                            <div className="text-right">
-                              {hasCoupon ? (
+                          ) : (
+                            option.price && (
+                              <div className="text-right">
+                                {hasCoupon ? (
+                                  <span className="text-sm font-medium">
+                                    <span className="line-through">
+                                      {option.price} CHF / EUR
+                                    </span>{' '}
+                                    <span className="text-primary-coral">
+                                      {calculateDiscountedPrice(option.price)}{' '}
+                                      CHF / EUR
+                                    </span>{' '}
+                                    {option.priceDetails && (
+                                      <span>({option.priceDetails})</span>
+                                    )}
+                                  </span>
+                                ) : (
+                                  <span className="text-sm font-medium">
+                                    {option.price} CHF / EUR{' '}
+                                    {option.priceDetails && (
+                                      <span>({option.priceDetails})</span>
+                                    )}
+                                  </span>
+                                )}
+                              </div>
+                            )
+                          )}
+                          {!option.price &&
+                            option.priceDetails &&
+                            !(
+                              option.offeringType === 'therapy' &&
+                              option.hasFormulas &&
+                              option.formulas &&
+                              option.formulas.length > 1
+                            ) && (
+                              <div className="text-right whitespace-pre-line">
                                 <span className="text-sm font-medium">
-                                  <span className="line-through">
-                                    {option.price} CHF / EUR
-                                  </span>{' '}
-                                  <span className="text-primary-coral">
-                                    {calculateDiscountedPrice(option.price)} CHF / EUR
-                                  </span>{' '}
-                                  {option.priceDetails && (
-                                    <span>({option.priceDetails})</span>
-                                  )}
+                                  {option.priceDetails}
                                 </span>
-                              ) : (
+                              </div>
+                            )}
+                          {!option.price &&
+                            !option.priceDetails &&
+                            option.hasFormulas &&
+                            option.formulas &&
+                            option.formulas.length === 1 && (
+                              <div className="text-right">
                                 <span className="text-sm font-medium">
-                                  {option.price} CHF / EUR{' '}
-                                  {option.priceDetails && (
-                                    <span>({option.priceDetails})</span>
-                                  )}
+                                  À partir de {option.formulas[0].price} CHF /
+                                  EUR{' '}
+                                  {option.formulas[0].priceDetails &&
+                                    `(${option.formulas[0].priceDetails})`}
                                 </span>
-                              )}
-                            </div>
-                          )}
-                          {!option.price && option.priceDetails && !(option.offeringType === 'therapy' && option.hasFormulas && option.formulas && option.formulas.length > 1) && (
-                            <div className="text-right whitespace-pre-line">
-                              <span className="text-sm font-medium">
-                                {option.priceDetails}
-                              </span>
-                            </div>
-                          )}
-                          {!option.price && !option.priceDetails && option.hasFormulas && option.formulas && option.formulas.length === 1 && (
-                            <div className="text-right">
-                              <span className="text-sm font-medium">
-                                À partir de {option.formulas[0].price} CHF / EUR {option.formulas[0].priceDetails && `(${option.formulas[0].priceDetails})`}
-                              </span>
-                            </div>
-                          )}
-                          {!option.price && !option.priceDetails && (!option.hasFormulas || !option.formulas || option.formulas.length === 0) && (
-                            <div className="text-right">
-                              <span className="text-sm font-medium">
-                                {option.type === 'individual' 
-                                  ? (option.offeringType === 'therapy' ? 'Plusieurs formules disponibles' : 'À partir de 720 CHF / EUR (programme complet)')
-                                  : option.type === 'vit' || option.therapyId === 'vit-a-la-carte' 
-                                    ? 'À partir de 210 CHF / EUR par séance'
-                                    : option.type === 'couple' || option.therapyId === 'couple'
-                                      ? '2250 CHF / EUR (programme complet)'
-                                      : 'Tarif sur demande'
-                                }
-                              </span>
-                            </div>
-                          )}
+                              </div>
+                            )}
+                          {!option.price &&
+                            !option.priceDetails &&
+                            (!option.hasFormulas ||
+                              !option.formulas ||
+                              option.formulas.length === 0) && (
+                              <div className="text-right">
+                                <span className="text-sm font-medium">
+                                  {option.type === 'individual'
+                                    ? option.offeringType === 'therapy'
+                                      ? 'Plusieurs formules disponibles'
+                                      : 'À partir de 720 CHF / EUR (programme complet)'
+                                    : option.type === 'vit' ||
+                                        option.therapyId === 'vit-a-la-carte'
+                                      ? 'À partir de 210 CHF / EUR par séance'
+                                      : option.type === 'couple' ||
+                                          option.therapyId === 'couple'
+                                        ? '2250 CHF / EUR (programme complet)'
+                                        : 'Tarif sur demande'}
+                                </span>
+                              </div>
+                            )}
                         </div>
 
                         {/* Session length section */}
@@ -901,7 +931,8 @@ const TherapyQuestionnaireNew = () => {
                             <div className="flex items-center gap-2">
                               <Clock className="text-primary-coral" size={18} />
                               <p className="text-sm text-primary-cream/90">
-                                {option.type === 'individual' || option.therapyId === 'individual'
+                                {option.type === 'individual' ||
+                                option.therapyId === 'individual'
                                   ? `${option.sessionLength} par séance`
                                   : option.sessionLength}
                               </p>
@@ -936,7 +967,8 @@ const TherapyQuestionnaireNew = () => {
                                           <span className="text-primary-coral">
                                             {calculateDiscountedPrice(
                                               formula.price,
-                                            )} CHF / EUR
+                                            )}{' '}
+                                            CHF / EUR
                                           </span>
                                         </>
                                       ) : (
