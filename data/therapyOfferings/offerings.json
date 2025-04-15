@@ -189,11 +189,7 @@
     {
       "id": "vit-a-la-carte",
       "type": "therapy",
-      "title": "THÉRAPIE VIT À LA CARTE - POUR LES AMOUREUX DE L'AMOUR",
-      "pricing": {
-        "couple": 260,
-        "individual": 210
-      },
+      "title": "THÉRAPIE VIT À LA CARTE - SELON VOS DÉSIRS",
       "headline": "Une expédition sur-mesure pour les passionnés de la relation",
       "description": "Pour ceux qui veulent explorer l'amour sous toutes ses formes, cette thérapie est un parcours adaptatif, en fonction de vos questionnements du moment. Elle permet de plonger dans les eaux profondes de la relation amoureuse et sexuelle, en toute liberté et selon votre rythme.",
       "themes": [
@@ -211,17 +207,38 @@
         }
       ],
       "proverbs": [
-        "L'amour est une invitation à la découverte, et non une promesse de sécurité.",
-        "Aimer, c'est offrir à l'autre un espace pour se déployer."
+        "L'amour est une invitation à la découverte, et non une promesse de sécurité."
       ],
       "mainOffering": {
-        "title": "VIT LUXUS INDIVIDUEL",
-        "price": 210.0,
-        "note": "par séance",
+        "title": "NOTRE OFFRE",
+        "process": {
+          "title": "Organisation et Structure",
+          "details": [
+            "Programme détaillé : Accompagnement personnalisé, conçu pour répondre à vos besoins spécifiques.",
+            "Organisation flexible : Vous ajustez le rythme des séances en fonction de votre propre processus.",
+            "Séances individuelles ou couple à la carte"
+          ]
+        },
+        "formulas": [
+          {
+            "id": "vit-individual",
+            "title": "SÉANCE INDIVIDUELLE",
+            "duration": "60 minutes",
+            "price": 210.0,
+            "priceDetails": "par séance"
+          },
+          {
+            "id": "vit-couple",
+            "title": "SÉANCE COUPLE",
+            "duration": "90 minutes",
+            "price": 240.0,
+            "priceDetails": "par séance"
+          }
+        ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
         "uniqueBenefits": [
-          "Approche entièrement personnalisée",
-          "Flexibilité dans le rythme des séances"
+          "Approche entièrement personnalisée : Un suivi sur mesure, en fonction de vos envies et de vos besoins du moment.",
+          "Flexibilité dans le rythme des séances : Vous choisissez votre rythme au fur et à mesure du processus."
         ],
         "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
