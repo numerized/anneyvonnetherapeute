@@ -157,12 +157,13 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get organization points
   const getOrganizationPoints = () => {
+    // Use process.details from the mainOffering if available for any therapy type
+    if (therapy.mainOffering.process?.details) {
+      return therapy.mainOffering.process.details;
+    }
+    
+    // Fallback values based on therapy type
     if (therapy.id === 'individual') {
-      // Use process.details from the mainOffering if available
-      if (therapy.mainOffering.process?.details) {
-        return therapy.mainOffering.process.details;
-      }
-      // Fallback to default values if process.details is not available
       return [
         'Définissez votre thème thérapeutique',
         'Check-list + notes préalables et objectifs - à faire',
@@ -259,6 +260,14 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   const getResources = () => {
     const mainOfferingInclusions =
       therapy.mainOffering.details?.inclusions || []
+    
+    // Check if there are any formulas with inclusions
+    if (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0) {
+      // Get inclusions from the first formula if available
+      const formulaInclusions = therapy.mainOffering.formulas[0].inclusions || []
+      return formulaInclusions
+    }
+    
     return mainOfferingInclusions
   }
 

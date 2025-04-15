@@ -39,12 +39,13 @@ export interface TherapyOption {
 export interface TherapyFormula {
   id: string
   title: string
-  features: string[]
+  features?: string[]
   duration?: string
   price: number
   priceDetails?: string
   note?: string
   sessionLength?: string
+  inclusions?: string[]
 }
 
 export interface TherapyMainOffering {

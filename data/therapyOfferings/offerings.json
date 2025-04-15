@@ -12,7 +12,7 @@
       "id": "couple",
       "type": "therapy",
       "title": "THÉRAPIE RELATIONNELLE DE COUPLE",
-      "subtitle": "de cœur et de corps",
+      "subtitle": "De Cœur et de Corps",
       "category": "THERAPIES DE LA RELATION AMOUREUSE ET SEXUELLE",
       "headline": "Une traversée au cœur de votre relation",
       "description": "L'aventure à deux n'est jamais un long fleuve tranquille. Entre courants souterrains et vents contraires, chaque couple traverse des zones d'ombre et de lumière. Cette exploration vous invite à mettre en lumière vos fonctionnements, à comprendre les obstacles invisibles et à redéfinir votre cap, ensemble.",
@@ -31,22 +31,23 @@
         }
       ],
       "proverbs": [
-        "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble.",
-        "Aimer, ce n'est pas se regarder l'un l'autre, c'est regarder ensemble dans la même direction."
+        "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble."
       ],
       "mainOffering": {
         "title": "THERAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
         "tagline": "Harmonisez votre relation à deux grâce à une approche innovante et transformative",
         "quote": "On ne change pas une relation sans d'abord transformer ceux qui la vivent",
         "process": {
-          "title": "Processus complet",
+          "title": "Organisation et Structure",
           "details": [
-            "8 séances : 2 séances de couple et 6 séances individuelles",
-            "Bilans et introspections avant et après chaque séance."
+            "Option personnalisée : Accompagnement sur mesure adapté à vos besoins.",
+            "Objectifs prédéfinis : Clarification des objectifs pour une relation plus épanouie.",
+            "Cartographie de la relation : Découverte de vos schémas relationnels."
           ]
         },
         "uniqueBenefits": [
-          "Accompagnement et support avec des modules spécifiques à thèmes"
+          "Accompagnement enrichi avec des modules spécifiques à thèmes adaptés à chaque étape.",
+          "Support et outils variés pour accompagner votre transformation."
         ],
         "motto": "Rien n'a plus de valeur que l'amour, investissez dans la qualité de vos relations !",
         "idealFor": "Parcours idéal pour les couples en désir d'harmonie, qui ont le désir de mieux s'entendre et de mieux se comprendre.",
@@ -62,12 +63,12 @@
           {
             "id": "couple-therapy",
             "title": "VOTRE THÉRAPIE DE COUPLE",
-            "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
+            "duration": "Séances alternées sur 20 à 24 semaines (maximum 6 mois)",
             "price": 2250,
             "priceDetails": "pour le programme complet",
             "inclusions": [
-              "un entretien préalable 20'",
-              "un audio \"à l'avenir\" de fin de cycle thérapie"
+              "Séances individuelles (60 min) : 6 séances pour chaque membre du couple",
+              "Séances en couple (90 min) : 2 séances pour travailler ensemble"
             ]
           }
         ]
@@ -75,7 +76,7 @@
       "options": [
         {
           "id": "neurotribu",
-          "title": "Option NeuroTribu – Une thérapie adaptée aux profils neurodivers",
+          "title": "Option NeuroTribu : Thérapie adaptée aux couples neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
           "headline": "Équilibre & Connexion : Thérapie de couple et individuelle pour profils neuroatypiques",
           "description": "Certaines personnes pensent, ressentent, aiment et communiquent autrement. C'est pourquoi la thérapie NeuroTribu propose un cadre spécifiquement conçu pour les personnes neuroatypiques (TSA, HPI, TDAH, hypersensibilité, dys...).",
           "sections": [
@@ -112,7 +113,7 @@
           "availability": "Consultations disponibles en ligne ou en présentiel à partir de mars 2025",
           "reservation": "Réservez avec l'option « Neurodivers » sur notre site",
           "audio": "Audio de présentation disponible bientôt",
-          "pricing": "TARIF IDENTIQUES POUR LES THERAPIES NEUROTRIBU"
+          "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les couples neurodivers."
         }
       ],
       "hasAudioPresentation": true
