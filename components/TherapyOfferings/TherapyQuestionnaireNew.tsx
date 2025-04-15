@@ -895,7 +895,9 @@ const TherapyQuestionnaireNew = () => {
                             <div className="flex items-center gap-2">
                               <Clock className="text-primary-coral" size={18} />
                               <p className="text-sm text-primary-cream/90">
-                                {option.sessionLength}
+                                {option.type === 'individual' || option.therapyId === 'individual'
+                                  ? `${option.sessionLength} par séance`
+                                  : option.sessionLength}
                               </p>
                             </div>
                           </div>
