@@ -162,7 +162,8 @@
           ],
           "formulas": {
             "title": "Formules disponibles",
-            "price": "2250€ pour le programme complet avec un suivi sur 20 à 24 semaines.",
+            "price": "2250 CHF / EUR pour le programme complet avec un suivi sur 20 à 24 semaines.",
+            "currency": "CHF / EUR",
             "details": {
               "title": "Détails du prix",
               "duration": "Durée : 5 à 6 mois d'accompagnement avec des séances individuelles (60 min) et en couple (90 min).",
@@ -227,6 +228,9 @@
             "title": "Clarifier vos besoins",
             "description": "Identifier ce qui est essentiel pour votre équilibre."
           }
+        ],
+        "proverbs": [
+          "Le plus grand voyage est celui qui mène à soi."
         ]
       },
       "modalInfo": {
@@ -297,19 +301,19 @@
           "formulas": [
             {
               "title": "MINI COMPACT",
-              "price": "720€",
+              "price": "720 CHF / EUR",
               "duration": "1 mois, 4 x 60 minutes",
               "details": "Thème thérapeutique défini, check-list, objectifs, 4 séances sur 1 mois"
             },
             {
               "title": "COMPACT",
-              "price": "2160€",
+              "price": "2160 CHF / EUR",
               "duration": "3 mois, 12 x 60 minutes",
               "details": "Thème thérapeutique défini, check-list, objectifs, 2 séances par mois"
             },
             {
               "title": "RELAX",
-              "price": "2160€",
+              "price": "2160 CHF / EUR",
               "duration": "6 mois, 12 x 60 minutes",
               "details": "Thème thérapeutique défini, check-list, objectifs, 1 séance par mois"
             }
@@ -484,13 +488,13 @@
           "formulas": [
             {
               "title": "SÉANCE INDIVIDUELLE",
-              "price": "210€",
+              "price": "210 CHF / EUR",
               "duration": "60 minutes",
               "details": "Séance individuelle à la carte, agenda flexible, thème au choix"
             },
             {
               "title": "SÉANCE COUPLE",
-              "price": "240€",
+              "price": "240 CHF / EUR",
               "duration": "60 minutes",
               "details": "Séance de couple à la carte, agenda flexible, thème au choix"
             }

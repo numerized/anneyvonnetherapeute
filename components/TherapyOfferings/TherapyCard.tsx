@@ -73,8 +73,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
             )}
             <div className="flex items-baseline gap-2">
-              <span className="text-primary-cream line-through">{minPrice}€</span>
-              <span className="text-primary-coral">{discountedPrice}€</span>
+              <span className="text-primary-cream line-through">
+                {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              </span>
+              <span className="text-primary-coral">
+                {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              </span>
             </div>
           </div>
         )
@@ -85,12 +89,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           <div className="flex flex-col items-center">
             <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
             <div className="text-primary-cream">
-              {minPrice}€
+              {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
             </div>
           </div>
         )
       } else {
-        return `${minPrice}€`
+        return (
+          <span className="text-primary-cream">
+            {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+          </span>
+        )
       }
     } 
     // Fall back to mainOffering price
@@ -100,24 +108,40 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         const discountedPrice = calculateDiscountedPrice(price)
         return (
           <div className="flex items-baseline gap-2">
-            <span className="text-primary-cream line-through">{price}€</span>
-            <span className="text-primary-coral">{discountedPrice}€</span>
+            <span className="text-primary-cream line-through">
+              {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            </span>
+            <span className="text-primary-coral">
+              {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            </span>
           </div>
         )
       }
-      return `${price}€`
+      return (
+        <span className="text-primary-cream">
+          {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+        </span>
+      )
     } else if (therapy.mainOffering.details?.price) {
       const price = therapy.mainOffering.details.price
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(price)
         return (
           <div className="flex items-baseline gap-2">
-            <span className="text-primary-cream line-through">{price}€</span>
-            <span className="text-primary-coral">{discountedPrice}€</span>
+            <span className="text-primary-cream line-through">
+              {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            </span>
+            <span className="text-primary-coral">
+              {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            </span>
           </div>
         )
       }
-      return `${price}€`
+      return (
+        <span className="text-primary-cream">
+          {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+        </span>
+      )
     } else if (therapy.pricing) {
       if (typeof therapy.pricing === 'object') {
         if (hasCoupon) {
@@ -131,36 +155,50 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
             <div className="flex flex-col">
               <div className="flex items-baseline gap-2">
                 <span className="text-primary-cream line-through">
-                  {therapy.pricing.couple}€
+                  {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
-                <span className="text-primary-coral">{discountedCouple}€</span>
+                <span className="text-primary-coral">
+                  {discountedCouple} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                </span>
                 <span className="text-primary-cream/80">/couple</span>
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-primary-cream line-through">
-                  {therapy.pricing.individual}€
+                  {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
                 <span className="text-primary-coral">
-                  {discountedIndividual}€
+                  {discountedIndividual} <span className="text-sm text-primary-cream">CHF / EUR</span>
                 </span>
                 <span className="text-primary-cream/80">/individuel</span>
               </div>
             </div>
           )
         }
-        return `${therapy.pricing.couple}€/couple · ${therapy.pricing.individual}€/individuel`
+        return (
+          <span className="text-primary-cream">
+            {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>/couple · {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>/individuel
+          </span>
+        )
       }
       const price = therapy.pricing
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(price)
         return (
           <div className="flex items-baseline gap-2">
-            <span className="text-primary-cream line-through">{price}€</span>
-            <span className="text-primary-coral">{discountedPrice}€</span>
+            <span className="text-primary-cream line-through">
+              {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            </span>
+            <span className="text-primary-coral">
+              {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+            </span>
           </div>
         )
       }
-      return `${price}€`
+      return (
+        <span className="text-primary-cream">
+          {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+        </span>
+      )
     } else if (
       therapy.mainOffering.formulas &&
       therapy.mainOffering.formulas.length > 0
@@ -176,8 +214,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
             )}
             <div className="flex items-baseline gap-2">
-              <span className="text-primary-cream line-through">{minPrice}€</span>
-              <span className="text-primary-coral">{discountedPrice}€</span>
+              <span className="text-primary-cream line-through">
+                {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              </span>
+              <span className="text-primary-coral">
+                {discountedPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+              </span>
             </div>
           </div>
         )
@@ -188,12 +230,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           <div className="flex flex-col items-center">
             <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
             <div className="text-primary-cream">
-              {minPrice}€
+              {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
             </div>
           </div>
         )
       } else {
-        return `${minPrice}€`
+        return (
+          <span className="text-primary-cream">
+            {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
+          </span>
+        )
       }
     } else {
       return 'Prix sur demande'
@@ -202,25 +248,47 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get price details text
   const getPriceDetails = () => {
-    // First check formulas at root level
-    if (therapy.formulas && 
-        therapy.formulas.length > 0 &&
-        therapy.formulas[0].priceDetails) {
-      return therapy.formulas[0].priceDetails;
+    if (!therapy) return null
+    
+    // Check formulas at root level
+    if (therapy.formulas && therapy.formulas.length > 0 && therapy.formulas[0].priceDetails) {
+      return (
+        <div className="text-primary-cream/70 text-sm mt-1">
+          {therapy.formulas[0].priceDetails}
+        </div>
+      )
     }
-    // Fall back to mainOffering
-    else if (therapy.mainOffering.note) {
-      return therapy.mainOffering.note
-    } else if (therapy.mainOffering.details?.price) {
-      return 'pour le programme complet'
-    } else if (
-      therapy.mainOffering.formulas &&
-      therapy.mainOffering.formulas.length > 0 &&
-      therapy.mainOffering.formulas[0].priceDetails
-    ) {
-      return therapy.mainOffering.formulas[0].priceDetails
+    
+    // Use alternative properties from mainOffering if available
+    if (therapy.mainOffering?.note) {
+      return (
+        <div className="text-primary-cream/70 text-sm mt-1">
+          {therapy.mainOffering.note}
+        </div>
+      )
     }
-    return ''
+    
+    // For programs with a fixed price, show "pour le programme complet"
+    if (therapy.mainOffering?.details?.price && !therapy.mainOffering?.formulas) {
+      return (
+        <div className="text-primary-cream/70 text-sm mt-1">
+          pour le programme complet
+        </div>
+      )
+    }
+    
+    // Check formulas within mainOffering
+    if (therapy.mainOffering?.formulas && 
+        therapy.mainOffering.formulas.length > 0 && 
+        therapy.mainOffering.formulas[0].priceDetails) {
+      return (
+        <div className="text-primary-cream/70 text-sm mt-1">
+          {therapy.mainOffering.formulas[0].priceDetails}
+        </div>
+      )
+    }
+    
+    return null
   }
 
   // Get organization points
@@ -493,23 +561,22 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               <div className="flex flex-col gap-1">
                 <div className="flex items-end gap-1 justify-start">
                   {typeof getPriceDisplay() === 'string' ? (
-                    <p className="text-4xl text-primary-cream font-light">
+                    <div className="text-4xl text-primary-cream font-light">
                       {getPriceDisplay()}
-                    </p>
+                      {getPriceDetails()}
+                    </div>
                   ) : (
                     <div className="text-4xl font-light">
                       {getPriceDisplay()}
+                      {getPriceDetails()}
                     </div>
                   )}
-                  <p className="text-primary-cream/70 pb-1">
-                    {getPriceDetails()}
-                  </p>
                 </div>
                 {therapy.type === 'coaching' &&
                   therapy.mainOffering.details && (
                     <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
                       {therapy.mainOffering.details.duration && (
-                        <p>{therapy.mainOffering.details.duration}</p>
+                        <p className="text-primary-cream">{therapy.mainOffering.details.duration}</p>
                       )}
                       {therapy.mainOffering.details.sessionLength && (
                         <p className="text-primary-cream/80 text-sm">
@@ -531,28 +598,28 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   <>
                     <div className="flex items-center justify-end gap-2">
                       <p className="text-sm text-primary-cream/90 line-through">
-                        Couple: {therapy.pricing.couple}€
+                        Couple: {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>
                       </p>
                       <p className="text-sm text-primary-coral">
-                        {calculateDiscountedPrice(therapy.pricing.couple)}€
+                        {calculateDiscountedPrice(therapy.pricing.couple)} <span className="text-sm text-primary-cream">CHF / EUR</span>
                       </p>
                     </div>
                     <div className="flex items-center justify-end gap-2">
                       <p className="text-sm text-primary-cream/90 line-through">
-                        Individuel: {therapy.pricing.individual}€
+                        Individuel: {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>
                       </p>
                       <p className="text-sm text-primary-coral">
-                        {calculateDiscountedPrice(therapy.pricing.individual)}€
+                        {calculateDiscountedPrice(therapy.pricing.individual)} <span className="text-sm text-primary-cream">CHF / EUR</span>
                       </p>
                     </div>
                   </>
                 ) : (
                   <>
                     <p className="text-sm text-primary-cream/90">
-                      Couple: {therapy.pricing.couple}€
+                      Couple: {therapy.pricing.couple} <span className="text-sm text-primary-cream">CHF / EUR</span>
                     </p>
                     <p className="text-sm text-primary-cream/90">
-                      Individuel: {therapy.pricing.individual}€
+                      Individuel: {therapy.pricing.individual} <span className="text-sm text-primary-cream">CHF / EUR</span>
                     </p>
                   </>
                 )}
@@ -580,14 +647,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         {hasCoupon ? (
                           <div className="flex items-center gap-2">
                             <p className="text-primary-cream line-through">
-                              {formula.price}€
+                              {formula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
                             </p>
                             <p className="text-primary-coral">
-                              {calculateDiscountedPrice(formula.price)}€
+                              {calculateDiscountedPrice(formula.price)} <span className="text-sm text-primary-cream">CHF / EUR</span>
                             </p>
                           </div>
                         ) : (
-                          <p className="text-primary-cream">{formula.price}€</p>
+                          <p className="text-primary-cream">
+                            {formula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                          </p>
                         )}
                       </>
                     )}
@@ -674,19 +743,18 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         {hasCoupon ? (
                           <span>
                             <span className="line-through">
-                              {option.pricing.couple.price}€
+                              {option.pricing.couple.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
                             </span>{' '}
                             <span className="text-primary-coral">
                               {calculateDiscountedPrice(
                                 option.pricing.couple.price,
-                              )}
-                              €
+                              )} <span className="text-sm text-primary-cream">CHF / EUR</span>
                             </span>
                           </span>
                         ) : (
                           option.pricing.couple.price
                         )}
-                        €/
+                        <span className="text-sm text-primary-cream">CHF / EUR</span>/
                         {option.pricing.couple.duration || 'séance'}
                       </p>
                     )}
@@ -696,19 +764,18 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         {hasCoupon ? (
                           <span>
                             <span className="line-through">
-                              {option.pricing.individual.price}€
+                              {option.pricing.individual.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
                             </span>{' '}
                             <span className="text-primary-coral">
                               {calculateDiscountedPrice(
                                 option.pricing.individual.price,
-                              )}
-                              €
+                              )} <span className="text-sm text-primary-cream">CHF / EUR</span>
                             </span>
                           </span>
                         ) : (
                           option.pricing.individual.price
                         )}
-                        €/
+                        <span className="text-sm text-primary-cream">CHF / EUR</span>/
                         {option.pricing.individual.duration || 'séance'}
                       </p>
                     )}

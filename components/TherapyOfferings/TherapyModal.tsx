@@ -176,9 +176,12 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
             <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[16px] p-6">
               {/* Handle formulas as an object with details */}
               {!Array.isArray(moreInfos.formulas) && moreInfos.formulas.price && (
-                <p className="text-primary-cream font-bold text-lg mb-4">
-                  {moreInfos.formulas.price}
-                </p>
+                <div className="text-primary-cream font-bold text-lg mb-4">
+                  {moreInfos.formulas.price.split('pour')[0]}<span className="text-sm text-primary-cream">CHF / EUR</span>
+                  {moreInfos.formulas.price.includes('pour') && 
+                    <div className="text-primary-cream/70 text-sm mt-1">pour le programme complet</div>
+                  }
+                </div>
               )}
               
               {/* Handle formulas as an object with details */}
@@ -207,7 +210,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
                       <div className="space-y-2">
                         {formula.price && (
                           <p className="text-primary-cream/90">
-                            <span className="text-primary-coral">Prix:</span> {formula.price}
+                            <span className="text-primary-coral">Prix:</span> {formatPrice(formula.price)} 
                           </p>
                         )}
                         {formula.duration && (
@@ -433,7 +436,12 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
             </div>
             <div className="mb-4">
               <span className="text-primary-coral">Prix : </span>
-              <span className="text-primary-cream/90">{firstFormula.price}€ {firstFormula.priceDetails || ''}</span>
+              <span className="text-primary-cream">
+                {firstFormula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                {firstFormula.priceDetails && 
+                  <div className="text-primary-cream/70 text-sm mt-1">{firstFormula.priceDetails}</div>
+                }
+              </span>
             </div>
             {firstFormula.inclusions && firstFormula.inclusions.length > 0 && (
               <div>
@@ -474,7 +482,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
           </div>
           <div className="mb-4">
             <span className="text-primary-coral">Prix : </span>
-            <span className="text-primary-cream/90">{details.price}€</span>
+            <span className="text-primary-cream">{formatPrice(details.price)} </span>
           </div>
           {details.inclusions && (
             <div>
@@ -506,22 +514,22 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
   }
 
   // Helper function to format pricing display with details
-  const formatPriceDisplay = (
-    price: number,
+  const formatPrice = (
+    price: number | string | undefined,
     note?: string,
     priceDetails?: string,
   ) => {
-    let priceText = `${price}€`
-
-    if (note) {
-      return `${priceText} (${note})`
-    }
-
-    if (priceDetails) {
-      return `${priceText} ${priceDetails}`
-    }
-
-    return priceText
+    if (!price) return null;
+    
+    return (
+      <div className="text-primary-cream">
+        <div>
+          {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+        </div>
+        {note && <div className="text-primary-cream/70 text-sm mt-1">({note})</div>}
+        {priceDetails && <div className="text-primary-cream/70 text-sm mt-1">{priceDetails}</div>}
+      </div>
+    );
   }
 
   return (
@@ -634,13 +642,16 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
                           className="bg-primary-dark/30 backdrop-blur-sm rounded-[16px] p-6"
                         >
                           <div className="mb-4">
-                            <h4 className="text-xl font-bold text-primary-cream">
+                            <h4 className="text-lg font-bold text-primary-cream">
                               {formula.title}
                             </h4>
                             {formula.price && (
-                              <p className="text-primary-cream/70 text-lg font-light">
-                                {formula.price}€
-                              </p>
+                              <div className="text-primary-cream text-lg font-light">
+                                {formula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
+                                {formula.priceDetails && 
+                                  <div className="text-primary-cream/70 text-sm mt-1">{formula.priceDetails}</div>
+                                }
+                              </div>
                             )}
                           </div>
 
