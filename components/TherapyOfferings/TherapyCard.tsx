@@ -68,7 +68,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(minPrice)
         return (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-end">
             {hasMultipleFormulas && (
               <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
             )}
@@ -86,16 +86,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       
       if (hasMultipleFormulas) {
         return (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-end">
             <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
-            <div className="text-primary-cream">
+            <div className="text-primary-cream text-right">
               {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
             </div>
           </div>
         )
       } else {
         return (
-          <span className="text-primary-cream">
+          <span className="text-primary-cream text-right block">
             {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
           </span>
         )
@@ -209,7 +209,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(minPrice)
         return (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-end">
             {hasMultipleFormulas && (
               <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
             )}
@@ -227,16 +227,16 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
       
       if (hasMultipleFormulas) {
         return (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-end">
             <div className="text-xs text-primary-cream/70 mb-0.5">À Partir de</div>
-            <div className="text-primary-cream">
+            <div className="text-primary-cream text-right">
               {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
             </div>
           </div>
         )
       } else {
         return (
-          <span className="text-primary-cream">
+          <span className="text-primary-cream text-right block">
             {minPrice} <span className="text-sm text-primary-cream">CHF / EUR</span>
           </span>
         )
@@ -253,7 +253,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     // Check formulas at root level
     if (therapy.formulas && therapy.formulas.length > 0 && therapy.formulas[0].priceDetails) {
       return (
-        <div className="text-primary-cream/70 text-sm mt-1">
+        <div className="text-primary-cream/70 text-sm mt-1 text-right">
           {therapy.formulas[0].priceDetails}
         </div>
       )
@@ -262,7 +262,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     // Use alternative properties from mainOffering if available
     if (therapy.mainOffering?.note) {
       return (
-        <div className="text-primary-cream/70 text-sm mt-1">
+        <div className="text-primary-cream/70 text-sm mt-1 text-right">
           {therapy.mainOffering.note}
         </div>
       )
@@ -271,7 +271,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     // For programs with a fixed price, show "pour le programme complet"
     if (therapy.mainOffering?.details?.price && !therapy.mainOffering?.formulas) {
       return (
-        <div className="text-primary-cream/70 text-sm mt-1">
+        <div className="text-primary-cream/70 text-sm mt-1 text-right">
           pour le programme complet
         </div>
       )
@@ -282,7 +282,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         therapy.mainOffering.formulas.length > 0 && 
         therapy.mainOffering.formulas[0].priceDetails) {
       return (
-        <div className="text-primary-cream/70 text-sm mt-1">
+        <div className="text-primary-cream/70 text-sm mt-1 text-right">
           {therapy.mainOffering.formulas[0].priceDetails}
         </div>
       )
@@ -559,14 +559,14 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               'price' in therapy.mainOffering ||
               therapy.mainOffering.details?.price) && (
               <div className="flex flex-col gap-1">
-                <div className="flex items-end gap-1 justify-start">
+                <div className="flex items-end justify-end gap-1">
                   {typeof getPriceDisplay() === 'string' ? (
-                    <div className="text-4xl text-primary-cream font-light">
+                    <div className="text-4xl text-primary-cream font-light text-right">
                       {getPriceDisplay()}
                       {getPriceDetails()}
                     </div>
                   ) : (
-                    <div className="text-4xl font-light">
+                    <div className="text-4xl font-light text-right">
                       {getPriceDisplay()}
                       {getPriceDetails()}
                     </div>

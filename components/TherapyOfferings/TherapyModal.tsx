@@ -176,7 +176,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
             <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[16px] p-6">
               {/* Handle formulas as an object with details */}
               {!Array.isArray(moreInfos.formulas) && moreInfos.formulas.price && (
-                <div className="text-primary-cream font-bold text-lg mb-4">
+                <div className="text-primary-cream font-bold text-lg mb-4 text-right">
                   {moreInfos.formulas.price.split('pour')[0]}<span className="text-sm text-primary-cream">CHF / EUR</span>
                   {moreInfos.formulas.price.includes('pour') && 
                     <div className="text-primary-cream/70 text-sm mt-1">pour le programme complet</div>
@@ -209,7 +209,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
                       <h4 className="text-lg font-bold text-primary-cream mb-2">{formula.title}</h4>
                       <div className="space-y-2">
                         {formula.price && (
-                          <p className="text-primary-cream/90">
+                          <p className="text-primary-cream/90 text-right">
                             <span className="text-primary-coral">Prix:</span> {formatPrice(formula.price)} 
                           </p>
                         )}
@@ -436,7 +436,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
             </div>
             <div className="mb-4">
               <span className="text-primary-coral">Prix : </span>
-              <span className="text-primary-cream">
+              <span className="text-primary-cream text-right">
                 {firstFormula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
                 {firstFormula.priceDetails && 
                   <div className="text-primary-cream/70 text-sm mt-1">{firstFormula.priceDetails}</div>
@@ -482,7 +482,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
           </div>
           <div className="mb-4">
             <span className="text-primary-coral">Prix : </span>
-            <span className="text-primary-cream">{formatPrice(details.price)} </span>
+            <span className="text-primary-cream text-right">{formatPrice(details.price)} </span>
           </div>
           {details.inclusions && (
             <div>
@@ -522,7 +522,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
     if (!price) return null;
     
     return (
-      <div className="text-primary-cream">
+      <div className="text-primary-cream text-right">
         <div>
           {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
         </div>
@@ -646,7 +646,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
                               {formula.title}
                             </h4>
                             {formula.price && (
-                              <div className="text-primary-cream text-lg font-light">
+                              <div className="text-primary-cream text-lg font-light text-right">
                                 {formula.price} <span className="text-sm text-primary-cream">CHF / EUR</span>
                                 {formula.priceDetails && 
                                   <div className="text-primary-cream/70 text-sm mt-1">{formula.priceDetails}</div>
