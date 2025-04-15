@@ -62,14 +62,9 @@
           {
             "id": "couple-therapy",
             "title": "VOTRE THÉRAPIE DE COUPLE",
-            "features": [
-              "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
-              "Mise en place d'un agenda fixe"
-            ],
             "duration": "Séances alternées sur 20 - 24 semaines (max. 6 mois)",
             "price": 2250,
             "priceDetails": "pour le programme complet",
-            "sessionLength": "60 minutes par séance (individuelles) - 90 minutes par séance (couple)",
             "inclusions": [
               "un entretien préalable 20'",
               "un audio \"à l'avenir\" de fin de cycle thérapie"
@@ -126,7 +121,7 @@
       "id": "individual",
       "type": "therapy",
       "title": "THÉRAPIE RELATIONNELLE INDIVIDUELLE",
-      "subtitle": "Accords à corps",
+      "subtitle": "Accords à Corps",
       "category": "THÉRAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
       "headline": "Un voyage au cœur de votre paysage intime",
       "description": "Se comprendre soi-même est la première étape pour créer des relations saines et authentiques. Cette exploration vous aide à identifier vos blessures, vos croyances et vos aspirations profondes, pour transformer ce qui entrave votre relation à vous-même et aux autres.",
@@ -146,56 +141,45 @@
       ],
       "proverbs": [
         "Le plus grand voyage est celui qui mène à soi.",
-        "Celui qui regarde dehors rêve, celui qui regarde dedans s'éveille."
+        "Celui qui regarde dedans s'éveille."
       ],
       "mainOffering": {
         "tagline": "RETROUVEZ L'HARMONIE EN VOUS GRÂCE À UNE APPROCHE SIMPLE ET RADICALE",
         "quote": "Changer sa vie, c'est d'abord se reconnecter à son corps et à soi.",
+        "process": {
+          "title": "Organisation et Structure",
+          "details": [
+            "Définissez votre thème thérapeutique pour un parcours totalement personnalisé.",
+            "Check-list et objectifs clairs à établir avant chaque séance pour travailler de manière ciblée."
+          ]
+        },
         "formulas": [
           {
             "id": "mini-compact",
             "title": "MINI COMPACT",
-            "features": [
-              "Définissez votre thème thérapeutique",
-              "Check-list + notes préalables et objectifs - à faire",
-              "Agenda fixe 4 séances sur 1 mois"
-            ],
-            "duration": "1 mois - 4 x 60'",
+            "duration": "1 mois - 4 x 60 minutes",
             "price": 720.0,
-            "priceDetails": "pour le programme complet",
-            "sessionLength": "60 minutes par séance"
+            "priceDetails": "pour le programme complet"
           },
           {
             "id": "compact",
             "title": "COMPACT",
-            "features": [
-              "Définissez votre thème thérapeutique",
-              "Check-list + notes préalables et objectifs - à faire",
-              "Agenda fixe : 2 séances par mois"
-            ],
-            "duration": "3 mois - 12 x 60'",
+            "duration": "3 mois - 12 x 60 minutes",
             "price": 2160.0,
-            "priceDetails": "(3 X 720) pour le programme complet",
-            "sessionLength": "60 minutes par séance"
+            "priceDetails": "pour le programme complet"
           },
           {
             "id": "relax",
             "title": "RELAX",
-            "features": [
-              "Définissez votre thème thérapeutique",
-              "Check-list + notes préalables et objectifs - à faire",
-              "Agenda fixe : 1 séance par mois"
-            ],
-            "duration": "6 mois - 12 x 60'",
+            "duration": "6 mois - 12 x 60 minutes",
             "price": 2160.0,
-            "priceDetails": "(3 X 720) pour le programme complet",
-            "sessionLength": "60 minutes par séance"
+            "priceDetails": "pour le programme complet"
           }
         ],
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
         "uniqueBenefits": [
-          "Outil d'introspection et de transformation personnelle",
-          "Modules d'accompagnement personnalisés selon vos besoins"
+          "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur.",
+          "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
         ],
         "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
@@ -231,11 +215,6 @@
       ],
       "mainOffering": {
         "title": "VIT LUXUS INDIVIDUEL",
-        "features": [
-          "Séances à l'unité et à choix selon calendrier",
-          "Visuel et/ou Présentiel au Cabinet de Neuchâtel ou Can Xesc Therapie à Ibiza",
-          "Flexible pour Very Important Therapy"
-        ],
         "price": 210.0,
         "note": "par séance",
         "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
@@ -243,8 +222,7 @@
           "Approche entièrement personnalisée",
           "Flexibilité dans le rythme des séances"
         ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations.",
-        "sessionLength": "60 minutes par séance"
+        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
       },
       "hasTest": true,
       "hasAudioPresentation": true

@@ -158,6 +158,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   // Get organization points
   const getOrganizationPoints = () => {
     if (therapy.id === 'individual') {
+      // Use process.details from the mainOffering if available
+      if (therapy.mainOffering.process?.details) {
+        return therapy.mainOffering.process.details;
+      }
+      // Fallback to default values if process.details is not available
       return [
         'Définissez votre thème thérapeutique',
         'Check-list + notes préalables et objectifs - à faire',
@@ -336,7 +341,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
             <div className="space-y-6">
               <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
                 <p className="text-primary-cream/90 mb-2">
-                  <strong>Organisation</strong>
+                  <strong>Organisation et Structure</strong>
                 </p>
                 <ul className="text-sm text-primary-cream/70 space-y-2 list-none m-0 p-0">
                   {organizationPoints.map((point, idx) => (
