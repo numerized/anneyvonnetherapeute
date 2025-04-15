@@ -34,7 +34,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
   // Helper function to determine if the therapy has formulas
   const hasFormulas =
     ('modalInfo' in therapy && therapy.modalInfo?.formulas && therapy.modalInfo.formulas.length > 0) ||
-    (therapy.mainOffering.formulas && therapy.mainOffering.formulas.length > 0)
+    (therapy.mainOffering?.formulas && therapy.mainOffering.formulas.length > 0)
 
   // Helper function to render specialized More Infos content
   const renderMoreInfos = () => {
@@ -591,7 +591,7 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
                 )}
 
                 {/* Formulas section if available */}
-                {hasFormulas && therapy.mainOffering.formulas && (
+                {hasFormulas && therapy.mainOffering?.formulas && (
                   <div className="space-y-8 mt-8">
                     <h3 className="text-xl font-medium mb-4 text-primary-coral">
                       Formules disponibles

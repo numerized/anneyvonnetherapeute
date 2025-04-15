@@ -201,88 +201,118 @@
       "id": "individual",
       "type": "therapy",
       "title": "THÉRAPIE RELATIONNELLE INDIVIDUELLE",
-      "subtitle": "Accords à Corps",
-      "category": "THÉRAPIE DE LA RELATION AMOUREUSE ET SEXUELLE",
-      "headline": "Un voyage au cœur de votre paysage intime",
+      "subtitle": "Exploration sur mesure",
+      "category": "THÉRAPIE RELATIONNELLE PERSONNELLE",
+      "headline": "Une thérapie centrée sur vos besoins personnels",
       "cardInfo": {
-        "description": "Se comprendre soi-même est la première étape pour créer des relations saines et authentiques. Cette exploration vous aide à identifier vos blessures, vos croyances et vos aspirations profondes, pour transformer ce qui entrave votre relation à vous-même et aux autres.",
+        "description": "Une thérapie relationnelle qui vous aide à mieux vous connaître et à établir des relations plus saines avec vous-même et les autres. Explorer vos schémas relationnels et comprendre vos besoins profonds pour un épanouissement durable.",
         "themes": [
           {
-            "title": "Les empreintes du passé",
-            "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+            "title": "Explorer les schémas relationnels",
+            "description": "Comprendre vos modèles de relations."
           },
           {
-            "title": "Clarifier ses désirs",
-            "description": "Différencier les attentes héritées des envies réelles."
+            "title": "Renforcer l'estime de soi",
+            "description": "Développer une relation positive avec vous-même."
           },
           {
-            "title": "Se repositionner",
-            "description": "Apprendre à poser ses limites et à affirmer ses besoins."
+            "title": "Clarifier vos besoins",
+            "description": "Identifier ce qui est essentiel pour votre équilibre."
           }
-        ],
-        "proverbs": [
-          "Le plus grand voyage est celui qui mène à soi.",
-          "Celui qui regarde dedans s'éveille."
         ]
       },
       "modalInfo": {
-        "description": "Un voyage au cœur de votre paysage intime : identifier vos blessures, vos croyances et vos aspirations profondes pour transformer ce qui entrave votre relation à vous-même et aux autres.",
+        "description": "Une thérapie relationnelle qui vous aide à mieux vous connaître et à établir des relations plus saines avec vous-même et les autres.",
         "themes": [
           {
-            "title": "Les empreintes du passé",
-            "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+            "title": "Comprendre vos schémas relationnels",
+            "description": "Identifier et modifier les modèles qui se répètent dans vos relations."
           },
           {
-            "title": "Clarifier ses désirs",
-            "description": "Différencier les attentes héritées des envies réelles."
+            "title": "Développer l'estime de soi",
+            "description": "Cultiver une relation bienveillante avec vous-même."
           },
           {
-            "title": "Se repositionner",
-            "description": "Apprendre à poser ses limites et à affirmer ses besoins."
+            "title": "Affirmation personnelle",
+            "description": "Apprendre à exprimer vos besoins et à poser vos limites."
           }
         ],
-        "proverbs": [
-          "Le plus grand voyage est celui qui mène à soi.",
-          "Celui qui regarde dedans s'éveille."
+        "options": [
+          {
+            "id": "neurotribu-individual",
+            "title": "Option NeuroTribu : Thérapie adaptée aux profils neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+            "headline": "La thérapie NeuroTribu est conçue pour répondre aux besoins des personnes avec des profils neurodivers.",
+            "description": "Cette approche tient compte de votre fonctionnement spécifique et valorise vos forces uniques.",
+            "sections": [
+              {
+                "title": "Notre approche",
+                "content": "Une thérapie qui respecte vos particularités et transforme vos différences en ressources."
+              }
+            ],
+            "pricing": "Tarifs identiques pour la thérapie NeuroTribu : Aucun supplément pour les personnes neurodiverses."
+          }
         ],
-        "process": {
-          "title": "Processus complet",
-          "details": [
-            "8 séances : 2 séances de couple et 6 séances individuelles.",
-            "Bilans et introspections : Avant et après chaque séance pour suivre votre progression."
+        "moreInfos": {
+          "headline": "Accords à corps : comprendre et se redéfinir",
+          "description": "Se comprendre soi-même est essentiel pour créer des relations authentiques. Cette exploration vous aide à identifier vos blessures, croyances et aspirations, pour transformer ce qui empêche une meilleure relation à vous-même et aux autres.",
+          "sagesse": {
+            "title": "Sagesse partagée",
+            "quotes": [
+              "Le plus grand voyage est celui qui mène à soi.",
+              "Celui qui regarde dehors rêve, celui qui regarde dedans s'éveille."
+            ]
+          },
+          "themes": {
+            "title": "Thèmes abordés",
+            "items": [
+              {
+                "title": "Les empreintes du passé",
+                "description": "Identifier les modèles familiaux et sociétaux qui influencent vos choix."
+              },
+              {
+                "title": "Clarifier ses désirs",
+                "description": "Distinguer les attentes héritées de vos véritables envies."
+              },
+              {
+                "title": "Se repositionner",
+                "description": "Apprendre à poser vos limites et à affirmer vos besoins pour mieux vous connaître."
+              }
+            ]
+          },
+          "benefits": {
+            "title": "Avantages supplémentaires",
+            "items": [
+              "Outil d'introspection et transformation personnelle : Un processus guidé pour votre transformation intérieure.",
+              "Modules d'accompagnement personnalisés : Des supports pratiques pour avancer à votre rythme."
+            ]
+          },
+          "formulas": {
+            "title": "Formules disponibles",
+            "details": {
+              "title": "Détails des offres",
+              "features": "MINI COMPACT : 720€ pour 1 mois, 4 x 60 minutes.\nCaractéristiques : Thème thérapeutique défini, check-list, objectifs, 4 séances sur 1 mois.\nCOMPACT : 2160€ pour 3 mois, 12 x 60 minutes.\nCaractéristiques : Thème thérapeutique défini, check-list, objectifs, 2 séances par mois.\nRELAX : 2160€ pour 6 mois, 12 x 60 minutes.\nCaractéristiques : Thème thérapeutique défini, check-list, objectifs, 1 séance par mois."
+            }
+          },
+          "options": [
+            {
+              "title": "Thème sur mesure à partir du \"Test : Définissez vos objectifs\"",
+              "headline": "Ce test vous permet de définir vos objectifs thérapeutiques avec précision, vous garantissant un parcours entièrement personnalisé pour répondre à vos attentes profondes."
+            },
+            {
+              "title": "Thérapie NeuroTribu",
+              "headline": "La thérapie NeuroTribu est conçue pour répondre aux besoins des personnes avec des profils neurodivers (TSA, HPI, TDAH, hypersensibilité, dys...).",
+              "sections": [
+                {
+                  "title": "Pourquoi une thérapie spécifique ?",
+                  "content": "Les thérapies classiques ne tiennent pas compte des différences dans la perception, la régulation émotionnelle ou les besoins sensoriels."
+                },
+                {
+                  "content": "Valorisation des forces du couple ou de l'individu en intégrant les singularités comme ressources dans la relation. Construire une dynamique relationnelle propre à chaque couple ou individu."
+                }
+              ]
+            }
           ]
-        },
-        "modalBenefits": [
-          "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur."
-        ],
-        "formulas": [
-          {
-            "id": "mini-compact",
-            "title": "MINI COMPACT",
-            "duration": "1 mois - 4 x 60 minutes",
-            "price": 720.0,
-            "priceDetails": "pour le programme complet"
-          },
-          {
-            "id": "compact",
-            "title": "COMPACT",
-            "duration": "3 mois - 12 x 60 minutes",
-            "price": 2160.0,
-            "priceDetails": "pour le programme complet"
-          },
-          {
-            "id": "relax",
-            "title": "RELAX",
-            "duration": "6 mois - 12 x 60 minutes",
-            "price": 2160.0,
-            "priceDetails": "pour le programme complet"
-          }
-        ],
-        "motto": "Rien n'a plus de valeur que votre équilibre intérieur, investissez en vous-même !",
-        "additionalBenefits": [
-          "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
-        ],
-        "targetAudience": "Un parcours conçu pour celles et ceux qui aspirent à une compréhension AUTHENTIQUE d'eux-mêmes et à un alignement véritable, tant dans leur vie que dans leurs relations."
+        }
       },
       "process": {
         "title": "Organisation et Structure",
@@ -292,8 +322,8 @@
         ]
       },
       "uniqueBenefits": [
-        "Outil d'introspection et de transformation personnelle : Un accompagnement pour vous aider à vous découvrir et à vous transformer en profondeur.",
-        "Modules personnalisés selon vos besoins : Chaque séance est adaptée à vos spécificités et à vos objectifs personnels."
+        "Outil d'introspection et de transformation personnelle : Un processus guidé pour votre transformation intérieure.",
+        "Modules d'accompagnement personnalisés : Des supports pratiques pour avancer à votre rythme."
       ],
       "formulas": [
         {

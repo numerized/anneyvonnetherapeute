@@ -349,7 +349,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     }
 
     // Fallback to mainOffering.quote if available
-    if (therapy.mainOffering.quote) {
+    if (therapy.mainOffering?.quote) {
       return therapy.mainOffering.quote;
     }
     return '';
