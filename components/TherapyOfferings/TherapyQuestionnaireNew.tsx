@@ -840,10 +840,10 @@ const TherapyQuestionnaireNew = () => {
                               {hasCoupon ? (
                                 <span className="text-sm font-medium">
                                   <span className="line-through">
-                                    {option.price}€
+                                    {option.price} CHF / EUR
                                   </span>{' '}
                                   <span className="text-primary-coral">
-                                    {calculateDiscountedPrice(option.price)}€
+                                    {calculateDiscountedPrice(option.price)} CHF / EUR
                                   </span>{' '}
                                   {option.priceDetails && (
                                     <span>({option.priceDetails})</span>
@@ -851,7 +851,7 @@ const TherapyQuestionnaireNew = () => {
                                 </span>
                               ) : (
                                 <span className="text-sm font-medium">
-                                  {option.price}€{' '}
+                                  {option.price} CHF / EUR{' '}
                                   {option.priceDetails && (
                                     <span>({option.priceDetails})</span>
                                   )}
@@ -869,7 +869,7 @@ const TherapyQuestionnaireNew = () => {
                           {!option.price && !option.priceDetails && option.hasFormulas && option.formulas && option.formulas.length > 0 && (
                             <div className="text-right">
                               <span className="text-sm font-medium">
-                                À partir de {option.formulas[0].price}€ {option.formulas[0].priceDetails && `(${option.formulas[0].priceDetails})`}
+                                À partir de {option.formulas[0].price} CHF / EUR {option.formulas[0].priceDetails && `(${option.formulas[0].priceDetails})`}
                               </span>
                             </div>
                           )}
@@ -877,11 +877,11 @@ const TherapyQuestionnaireNew = () => {
                             <div className="text-right">
                               <span className="text-sm font-medium">
                                 {option.type === 'individual' 
-                                  ? 'À partir de 720€ (programme complet)'
+                                  ? 'À partir de 720 CHF / EUR (programme complet)'
                                   : option.type === 'vit' || option.therapyId === 'vit-a-la-carte' 
-                                    ? 'À partir de 210€ par séance'
+                                    ? 'À partir de 210 CHF / EUR par séance'
                                     : option.type === 'couple' || option.therapyId === 'couple'
-                                      ? '2250€ (programme complet)'
+                                      ? '2250 CHF / EUR (programme complet)'
                                       : 'Tarif sur demande'
                                 }
                               </span>
@@ -925,17 +925,16 @@ const TherapyQuestionnaireNew = () => {
                                       {hasCoupon ? (
                                         <>
                                           <span className="line-through">
-                                            {formula.price}€
+                                            {formula.price} CHF / EUR
                                           </span>{' '}
                                           <span className="text-primary-coral">
                                             {calculateDiscountedPrice(
                                               formula.price,
-                                            )}
-                                            €
+                                            )} CHF / EUR
                                           </span>
                                         </>
                                       ) : (
-                                        `${formula.price}€`
+                                        <>{formula.price} CHF / EUR</>
                                       )}
                                       {formula.duration && (
                                         <span> ({formula.duration})</span>
