@@ -75,6 +75,7 @@ const TherapyQuestionnaireNew = () => {
     challenge: string
     intention: string
     skippedChallengeStep: boolean
+    lastStep?: number
   }>({
     situation: '',
     priority: '',
@@ -177,23 +178,24 @@ const TherapyQuestionnaireNew = () => {
 
   // Handler for priority selection
   const handlePrioritySelect = (priority: string) => {
-    setAnswers({ ...answers, priority })
-
     // Check if we should skip the challenge step
     const skipChallengeForPriorities = ['A1', 'A2', 'B1', 'D1', 'D2']
     const shouldSkipChallenge = skipChallengeForPriorities.includes(priority)
 
-    // Store whether we skipped for back button logic
-    setAnswers((prev) => ({
-      ...prev,
+    // Update state with the new priority and skippedChallengeStep flag
+    const updatedAnswers = {
+      ...answers,
       priority,
       skippedChallengeStep: shouldSkipChallenge,
-    }))
+      lastStep: 2,
+    }
+    
+    setAnswers(updatedAnswers)
 
     if (shouldSkipChallenge) {
       // Skip directly to results with a default challenge
       const defaultChallenge = `${priority}.1`
-      handleChallengeSelect(defaultChallenge)
+      handleChallengeSelect(defaultChallenge, updatedAnswers)
     } else {
       // Continue to challenge step as normal
       setStep(3)
@@ -201,18 +203,23 @@ const TherapyQuestionnaireNew = () => {
   }
 
   // Handler for challenge selection & generate results
-  const handleChallengeSelect = (challenge: string) => {
+  const handleChallengeSelect = (challenge: string, currentAnswers = answers) => {
     // Generate recommendation based on answers
     const recommendedOptions = generateRecommendedOptions(
-      answers.situation,
-      answers.priority,
+      currentAnswers.situation,
+      currentAnswers.priority,
       challenge,
     )
 
     // Generate intention text
-    const intention = getIntentionText(answers.priority, challenge)
+    const intention = getIntentionText(currentAnswers.priority, challenge)
 
-    const updatedAnswers = { ...answers, challenge, intention }
+    const updatedAnswers = {
+      ...currentAnswers,
+      challenge,
+      intention,
+      lastStep: currentAnswers.skippedChallengeStep ? 2 : 3,
+    }
 
     // Update state
     setRecommendations(recommendedOptions)
@@ -518,7 +525,7 @@ const TherapyQuestionnaireNew = () => {
         )}
 
         {/* Step 3: Main Challenge */}
-        {step === 3 && (
+        {step === 3 && !answers.skippedChallengeStep && (
           <div className="mb-8">
             <div className="flex items-center mb-6">
               <button
@@ -765,7 +772,10 @@ const TherapyQuestionnaireNew = () => {
           <div className="mb-8">
             <div className="flex items-center mb-6">
               <button
-                onClick={() => setStep(answers.skippedChallengeStep ? 2 : 3)}
+                onClick={() => {
+                  // Always go back to the appropriate step based on the path taken
+                  setStep(answers.skippedChallengeStep ? 2 : 3);
+                }}
                 className="mr-2 text-primary-coral"
               >
                 <ArrowLeft className="w-5 h-5" />
