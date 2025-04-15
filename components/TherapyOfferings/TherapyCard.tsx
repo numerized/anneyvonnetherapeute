@@ -157,22 +157,13 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Get organization points
   const getOrganizationPoints = () => {
-    // Use process.details from the mainOffering if available for any therapy type
+    // Only use process.details from the mainOffering if available
     if (therapy.mainOffering.process?.details) {
       return therapy.mainOffering.process.details;
     }
     
-    // Fallback values based on therapy type
-    if (therapy.id === 'individual') {
-      return [
-        'Définissez votre thème thérapeutique',
-        'Check-list + notes préalables et objectifs - à faire',
-      ]
-    }
-
-    return therapy.options && therapy.options.length > 0
-      ? ['Option personnalisée', 'Objectifs prédéfinis']
-      : ['Programme détaillé', 'Organisation flexible']
+    // If no process details are found, return an empty array (no defaults)
+    return [];
   }
 
   // Get unique benefits/features specific to this therapy
