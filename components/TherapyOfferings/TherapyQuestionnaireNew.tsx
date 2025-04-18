@@ -329,74 +329,76 @@ const TherapyQuestionnaireNew = () => {
 
         {/* Step 1: Current Situation */}
         {step === 1 && (
-          <motion.div
-            key="step1"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-6"
-          >
-            <div className="mb-6">
-              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
-                Quelle est votre situation actuelle?
-              </h3>
-            </div>
-            <div
-              className={`space-y-4 ${isHomePage ? 'md:mx-auto' : ''}`}
+          <div className="lg:pl-[120px] lg:pr-[120px]">
+            <motion.div
+              key="step1"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
             >
-              <button
-                onClick={() => handleSituationSelect('A')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+              <div className="mb-6">
+                <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
+                  Quelle est votre situation actuelle?
+                </h3>
+              </div>
+              <div
+                className={`space-y-4 ${isHomePage ? 'md:mx-auto' : ''}`}
               >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <Heart className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je suis en couple et souhaite améliorer ma relation.
-                </h4>
-              </button>
-              <button
-                onClick={() => handleSituationSelect('B')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <HeartCrack className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je traverse des difficultés dans mon couple.
-                </h4>
-              </button>
-              <button
-                onClick={() => handleSituationSelect('C')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <Target className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je me questionne sur l'avenir de ma relation.
-                </h4>
-              </button>
-              <button
-                onClick={() => handleSituationSelect('D')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <User className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je souhaite travailler sur moi-même et ma façon d'être en
-                  relation.
-                </h4>
-              </button>
-            </div>
-          </motion.div>
+                <button
+                  onClick={() => handleSituationSelect('A')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <Heart className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je suis en couple et souhaite améliorer ma relation.
+                  </h4>
+                </button>
+                <button
+                  onClick={() => handleSituationSelect('B')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <HeartCrack className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je traverse des difficultés dans mon couple.
+                  </h4>
+                </button>
+                <button
+                  onClick={() => handleSituationSelect('C')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <Target className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je me questionne sur l'avenir de ma relation.
+                  </h4>
+                </button>
+                <button
+                  onClick={() => handleSituationSelect('D')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <User className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je souhaite travailler sur moi-même et ma façon d'être en
+                    relation.
+                  </h4>
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
 
         {/* Step 2: Current Priority */}
         {step === 2 && (
-          <div className="mb-8">
+          <div className="lg:pl-[120px] lg:pr-[120px] mb-8">
             <div className="mb-6">
               <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 {answers.situation === 'A'
@@ -547,7 +549,7 @@ const TherapyQuestionnaireNew = () => {
 
         {/* Step 3: Main Challenge */}
         {step === 3 && !answers.skippedChallengeStep && (
-          <div className="mb-8">
+          <div className="lg:pl-[120px] lg:pr-[120px] mb-8">
             <div className="mb-6">
               <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 Quel est votre principal défi ?
