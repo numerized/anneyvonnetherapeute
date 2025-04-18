@@ -349,11 +349,8 @@ export function CustomCapsuleMiroirCard({
             Écoutez nos capsules partout, à la maison ou en déplacement, pour
             explorer des thèmes essentiels sur qui nous sommes.
           </p>
-          <a
-            href="/login"
-            className="mt-8 w-full inline-block text-center px-6 py-3 bg-primary-dark text-white font-semibold rounded-full shadow hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-opacity-50 transition"
-          >
-            S'enregistrer
+          <a className="mt-8 w-full inline-block text-center px-6 py-3 bg-primary-dark text-white font-semibold rounded-full shadow hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-opacity-50 transition">
+            Prochainement!
           </a>
         </div>
       </div>

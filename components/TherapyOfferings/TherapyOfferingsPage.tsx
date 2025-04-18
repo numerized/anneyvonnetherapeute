@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
 import { BaseOffering } from '@/data/therapyOfferings/types'
 import {
   getAllCoachingTypes,
@@ -11,7 +12,6 @@ import {
   getTherapyOfferings,
 } from '@/data/therapyOfferings/utils'
 
-import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
 import { CommonBenefits } from './CommonBenefits'
 import { TherapyGrid } from './TherapyGrid'
 
@@ -52,7 +52,9 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
 
   // --- Payment Modal State (copied from TherapyQuestionnaireNew) ---
   const [showPurchaseModal, setShowPurchaseModal] = React.useState(false)
-  const [purchaseCurrency, setPurchaseCurrency] = React.useState<'eur' | 'chf'>('chf')
+  const [purchaseCurrency, setPurchaseCurrency] = React.useState<'eur' | 'chf'>(
+    'chf',
+  )
   const [purchaseDetails, setPurchaseDetails] = React.useState<any | null>(null)
 
   // Wrapper functions to handle type compatibility with TherapyGrid/TherapyCard

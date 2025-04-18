@@ -35,12 +35,13 @@ if (!apps.length) {
     // Ensure private key is properly formatted
     if (privateKey) {
       // Remove any existing BEGIN/END markers to standardize
-      privateKey = privateKey.replace(/-----BEGIN PRIVATE KEY-----/g, '')
-                             .replace(/-----END PRIVATE KEY-----/g, '')
-                             .replace(/\\n/g, '')
-                             .replace(/\n/g, '')
-                             .trim()
-      
+      privateKey = privateKey
+        .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+        .replace(/-----END PRIVATE KEY-----/g, '')
+        .replace(/\\n/g, '')
+        .replace(/\n/g, '')
+        .trim()
+
       // Now add back the markers in the correct format
       privateKey = `-----BEGIN PRIVATE KEY-----\n${privateKey}\n-----END PRIVATE KEY-----`
     }

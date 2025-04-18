@@ -939,7 +939,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
             className="px-4 py-2 bg-primary-coral text-white rounded-full text-sm font-semibold hover:bg-primary-coral/90 transition-colors shadow-md"
             style={{ minWidth: '150px' }}
             onClick={() => {
-              if (setPurchaseDetails && setPurchaseCurrency && setShowPurchaseModal) {
+              if (
+                setPurchaseDetails &&
+                setPurchaseCurrency &&
+                setShowPurchaseModal
+              ) {
                 setPurchaseDetails({
                   ...therapy,
                   price:
