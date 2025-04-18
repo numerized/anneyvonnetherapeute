@@ -96,7 +96,7 @@ export function NavLinks({
         className="px-4 py-2 rounded-full border-2 border-white text-white hover:bg-white/10 transition-colors duration-200"
         onClick={() => setIsMenuOpen(false)}
       >
-        {isLoggedIn ? 'Espace Privé' : 'Se loguer'}
+        {isLoggedIn ? 'Espace Privé' : 'Espace Privé'}
       </Link>
     </>
   )

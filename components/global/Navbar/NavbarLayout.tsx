@@ -210,17 +210,15 @@ export default function NavbarLayout() {
                 </div>
               )}
               {/* Desktop Navigation */}
-              {(!isProchainement || isTherapies || isCoaching) && (
-                <div className="hidden md:flex items-center space-x-8">
-                  <NavLinks
-                    setIsMenuOpen={setIsMenuOpen}
-                    setShowAppointmentModal={setShowCalendlyModal}
-                    isLoggedIn={isLoggedIn}
-                    appointmentScheduled={appointmentScheduled}
-                    appointmentDate={appointmentDate}
-                  />
-                </div>
-              )}
+              <div className="hidden md:flex items-center space-x-8">
+                <NavLinks
+                  setIsMenuOpen={setIsMenuOpen}
+                  setShowAppointmentModal={setShowCalendlyModal}
+                  isLoggedIn={isLoggedIn}
+                  appointmentScheduled={appointmentScheduled}
+                  appointmentDate={appointmentDate}
+                />
+              </div>
             </div>
           </nav>
         </div>

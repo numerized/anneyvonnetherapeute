@@ -67,7 +67,7 @@ export function WebinarHero({ hero, data }: HeroProps) {
           href={isLoggedIn ? '/dashboard' : '/login'}
           className="inline-block px-3 py-1 text-sm rounded-full transition-all duration-200 bg-primary-coral text-white font-bold hover:bg-primary-coral/90 hover:scale-105 whitespace-nowrap"
         >
-          {isLoggedIn ? 'Espace Privé' : 'Se loguer'}
+          {isLoggedIn ? 'Espace Privé' : 'Espace Privé'}
         </Link>
       </div> */}
 
