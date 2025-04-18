@@ -311,7 +311,7 @@ const TherapyQuestionnaireNew = () => {
   return (
     <section id="questionnaire" className="py-16" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
       <div
-        className={`mx-auto p-6 text-primary-cream/90 ${isHomePage ? 'max-w-6xl' : 'max-w-4xl'}`}
+        className="w-full md:w-full p-6 text-primary-cream/90 md:px-16"
       >
         {/* Header */}
         <div className="text-center mb-12">
