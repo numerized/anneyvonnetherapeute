@@ -309,7 +309,7 @@ const TherapyQuestionnaireNew = () => {
   }
 
   return (
-    <section id="questionnaire" className="bg-primary-dark py-16">
+    <section id="questionnaire" className="py-16" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
       <div
         className={`mx-auto p-6 text-primary-cream/90 ${isHomePage ? 'max-w-6xl' : 'max-w-4xl'}`}
       >
@@ -322,7 +322,7 @@ const TherapyQuestionnaireNew = () => {
             Quelle Offre sera la vôtre ?
           </h2>
           <p className="text-primary-cream/80">
-            Répondez à deux questions simples pour découvrir nos recommandations
+            Répondez à quelques questions simples pour découvrir nos recommandations
             personnalisées
           </p>
         </div>
@@ -813,68 +813,80 @@ const TherapyQuestionnaireNew = () => {
               Offres recommandées pour vous :
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {recommendations.map((option, index) => (
-                <div
-                  key={index}
-                  className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors"
-                >
-                  <div className="space-y-12">
-                    <div className="text-right">
-                      <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
-                        {option.offeringType === 'therapy'
-                          ? 'Thérapie'
-                          : 'Coaching'}
-                      </span>
-                      <h4 className="text-2xl text-primary-coral font-light mb-2">
-                        {option.title}
-                      </h4>
-                    </div>
+              {recommendations.map((option, index) => {
+                let therapyDescription: string | null = null;
+                if (option.offeringType === 'therapy' && option.therapyId) {
+                  const { getTherapyTypeById } = require('@/data/therapyOfferings/utils');
+                  const therapy = getTherapyTypeById(option.therapyId);
+                  if (therapy && therapy.modalInfo && therapy.modalInfo.moreInfos && therapy.modalInfo.moreInfos.description) {
+                    therapyDescription = therapy.modalInfo.moreInfos.description;
+                  }
+                }
+                return (
+                  <div
+                    key={index}
+                    className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors"
+                  >
+                    <div className="space-y-12">
+                      <div className="text-right">
+                        <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
+                          {option.offeringType === 'therapy'
+                            ? 'Thérapie'
+                            : 'Coaching'}
+                        </span>
+                        <h4 className="text-2xl text-primary-coral font-light mb-2">
+                          {option.title}
+                        </h4>
+                      </div>
 
-                    <div className="space-y-6">
-                      <p className="text-primary-cream/90">
-                        {option.description}
-                      </p>
+                      <div className="space-y-6">
+                        {option.offeringType === 'therapy' && therapyDescription && (
+                          <p className="text-primary-cream/90">{therapyDescription}</p>
+                        )}
+                        {option.offeringType !== 'therapy' && (
+                          <p className="text-primary-cream/90">{option.description}</p>
+                        )}
 
-                      <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
-                        {/* Price section */}
-                        <div className="text-primary-cream/90">
-                          {option.offeringType === 'therapy' &&
-                          option.hasFormulas &&
-                          option.formulas &&
-                          option.formulas.length > 1 ? (
-                            <div className="text-right">
-                              <span className="text-sm font-medium">
-                                Plusieurs formules disponibles
-                              </span>
-                            </div>
-                          ) : (
-                            option.price && (
+                        <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+                          {/* Price section */}
+                          <div className="text-primary-cream/90">
+                            {option.offeringType === 'therapy' &&
+                            option.hasFormulas &&
+                            option.formulas &&
+                            option.formulas.length > 1 ? (
                               <div className="text-right">
-                                {hasCoupon ? (
-                                  <span className="text-sm font-medium">
-                                    <span className="line-through">
-                                      {option.price} CHF / EUR
-                                    </span>{' '}
-                                    <span className="text-primary-coral">
-                                      {calculateDiscountedPrice(option.price)}{' '}
-                                      CHF / EUR
-                                    </span>{' '}
-                                    {option.priceDetails && (
-                                      <span>({option.priceDetails})</span>
-                                    )}
-                                  </span>
-                                ) : (
-                                  <span className="text-sm font-medium">
-                                    {option.price} CHF / EUR{' '}
-                                    {option.priceDetails && (
-                                      <span>({option.priceDetails})</span>
-                                    )}
-                                  </span>
-                                )}
+                                <span className="text-sm font-medium">
+                                  Plusieurs formules disponibles
+                                </span>
                               </div>
-                            )
-                          )}
-                          {!option.price &&
+                            ) : (
+                              option.price && (
+                                <div className="text-right">
+                                  {hasCoupon ? (
+                                    <span className="text-sm font-medium">
+                                      <span className="line-through">
+                                        {option.price} CHF / EUR
+                                      </span>{' '}
+                                      <span className="text-primary-coral">
+                                        {calculateDiscountedPrice(option.price)}{' '}
+                                        CHF / EUR
+                                      </span>{' '}
+                                      {option.priceDetails && (
+                                        <span>({option.priceDetails})</span>
+                                      )}
+                                    </span>
+                                  ) : (
+                                    <span className="text-sm font-medium">
+                                      {option.price} CHF / EUR{' '}
+                                      {option.priceDetails && (
+                                        <span>({option.priceDetails})</span>
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                              )
+                            )}
+                            {!option.price &&
                             option.priceDetails &&
                             !(
                               option.offeringType === 'therapy' &&
@@ -888,7 +900,7 @@ const TherapyQuestionnaireNew = () => {
                                 </span>
                               </div>
                             )}
-                          {!option.price &&
+                            {!option.price &&
                             !option.priceDetails &&
                             option.hasFormulas &&
                             option.formulas &&
@@ -902,7 +914,7 @@ const TherapyQuestionnaireNew = () => {
                                 </span>
                               </div>
                             )}
-                          {!option.price &&
+                            {!option.price &&
                             !option.priceDetails &&
                             (!option.hasFormulas ||
                               !option.formulas ||
@@ -923,25 +935,25 @@ const TherapyQuestionnaireNew = () => {
                                 </span>
                               </div>
                             )}
-                        </div>
-
-                        {/* Session length section */}
-                        {option.sessionLength && (
-                          <div className="mt-3 pt-3 border-t border-primary-cream/20">
-                            <div className="flex items-center gap-2">
-                              <Clock className="text-primary-coral" size={18} />
-                              <p className="text-sm text-primary-cream/90">
-                                {option.type === 'individual' ||
-                                option.therapyId === 'individual'
-                                  ? `${option.sessionLength} par séance`
-                                  : option.sessionLength}
-                              </p>
-                            </div>
                           </div>
-                        )}
 
-                        {/* Formulas section */}
-                        {option.hasFormulas &&
+                          {/* Session length section */}
+                          {option.sessionLength && (
+                            <div className="mt-3 pt-3 border-t border-primary-cream/20">
+                              <div className="flex items-center gap-2">
+                                <Clock className="text-primary-coral" size={18} />
+                                <p className="text-sm text-primary-cream/90">
+                                  {option.type === 'individual' ||
+                                  option.therapyId === 'individual'
+                                    ? `${option.sessionLength} par séance`
+                                    : option.sessionLength}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Formulas section */}
+                          {option.hasFormulas &&
                           option.formulas &&
                           option.formulas.length > 0 && (
                             <div className="mt-4 pt-3 border-t border-primary-cream/20">
@@ -983,15 +995,16 @@ const TherapyQuestionnaireNew = () => {
                               </div>
                             </div>
                           )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Message about the journey */}
-            <div className="mt-8 mb-8 bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] text-center">
+            <div className="mt-8 mb-8 p-6 rounded-[24px] text-center" style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}>
               <p className="mb-2 font-bold text-lg text-primary-coral">
                 Votre voyage commence ici. Prêt(e) à embarquer ?
               </p>
