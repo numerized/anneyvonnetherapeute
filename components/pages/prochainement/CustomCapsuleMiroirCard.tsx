@@ -12,6 +12,7 @@ export function CustomCapsuleMiroirCard() {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const progressTrackRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const video = videoRef.current
@@ -26,6 +27,54 @@ export function CustomCapsuleMiroirCard() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!isDragging) return
+    const handleDocumentMouseMove = (e: MouseEvent) => {
+      if (!progressTrackRef.current) return
+      const rect = progressTrackRef.current.getBoundingClientRect()
+      let position = (e.clientX - rect.left) / rect.width
+      position = Math.max(0, Math.min(1, position))
+      if (videoRef.current && duration) {
+        const newTime = position * duration
+        videoRef.current.currentTime = newTime
+        setCurrentTime(newTime)
+      }
+    }
+    const handleDocumentMouseUp = () => {
+      setIsDragging(false)
+    }
+    document.addEventListener('mousemove', handleDocumentMouseMove)
+    document.addEventListener('mouseup', handleDocumentMouseUp)
+    return () => {
+      document.removeEventListener('mousemove', handleDocumentMouseMove)
+      document.removeEventListener('mouseup', handleDocumentMouseUp)
+    }
+  }, [isDragging, duration])
+
+  useEffect(() => {
+    if (!isDragging) return
+    const handleDocumentTouchMove = (e: TouchEvent) => {
+      if (!progressTrackRef.current) return
+      const rect = progressTrackRef.current.getBoundingClientRect()
+      let position = (e.touches[0].clientX - rect.left) / rect.width
+      position = Math.max(0, Math.min(1, position))
+      if (videoRef.current && duration) {
+        const newTime = position * duration
+        videoRef.current.currentTime = newTime
+        setCurrentTime(newTime)
+      }
+    }
+    const handleDocumentTouchEnd = () => {
+      setIsDragging(false)
+    }
+    document.addEventListener('touchmove', handleDocumentTouchMove)
+    document.addEventListener('touchend', handleDocumentTouchEnd)
+    return () => {
+      document.removeEventListener('touchmove', handleDocumentTouchMove)
+      document.removeEventListener('touchend', handleDocumentTouchEnd)
+    }
+  }, [isDragging, duration])
+
   const togglePlay = () => {
     const video = videoRef.current
     if (!video) return
@@ -38,16 +87,22 @@ export function CustomCapsuleMiroirCard() {
     }
   }
 
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const bar = e.currentTarget
-    const rect = bar.getBoundingClientRect()
-    const clickX = e.clientX - rect.left
-    const percent = clickX / rect.width
-    const video = videoRef.current
-    if (video && duration) {
-      video.currentTime = percent * duration
-      setCurrentTime(video.currentTime)
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (!progressTrackRef.current) return
+    const rect = progressTrackRef.current.getBoundingClientRect()
+    let clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    let position = (clientX - rect.left) / rect.width
+    position = Math.max(0, Math.min(1, position))
+    if (videoRef.current && duration) {
+      const newTime = position * duration
+      videoRef.current.currentTime = newTime
+      setCurrentTime(newTime)
     }
+  }
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    handleSeek(e)
+    setIsDragging(true)
   }
 
   const formatTime = (t: number) => {
@@ -105,7 +160,10 @@ export function CustomCapsuleMiroirCard() {
               <span>{formatTime(duration)}</span>
             </div>
             <div
-              className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors select-none"
+              ref={progressTrackRef}
+              className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors select-none z-10"
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleMouseDown}
               onClick={handleSeek}
             >
               {/* Background track with gradient */}
@@ -114,7 +172,7 @@ export function CustomCapsuleMiroirCard() {
               <div
                 className="absolute left-0 top-0 h-full bg-white/60 rounded-full transition-all duration-100"
                 style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
-              />
+              ></div>
               {/* Progress handle */}
               <div
                 className="h-5 w-5 bg-white rounded-full absolute top-1/2 -translate-y-1/2 -ml-2.5 shadow-md transition-transform duration-150 transform hover:scale-110"
@@ -123,8 +181,12 @@ export function CustomCapsuleMiroirCard() {
                   display: duration ? 'block' : 'none',
                   opacity: isDragging ? '1' : '0.7',
                   transform: isDragging ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%)',
+                  pointerEvents: 'auto',
+                  zIndex: 20,
                 }}
-              />
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleMouseDown}
+              ></div>
             </div>
           </div>
           {/* Capsule Info */}
@@ -152,7 +214,7 @@ export function CustomCapsuleMiroirCard() {
         <div className="h-full bg-white/10 rounded-[32px] p-8 flex flex-col justify-center min-h-[350px]">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Espace 180</h3>
           <p className="text-white text-lg leading-relaxed">
-            Espace 180 Degrées de Conversion d'Amour, c'est un centre de ressources audio en évolution, accessible à tous les patients. Écoutez nos capsules partout, à la maison ou en déplacement, pour explorer des thèmes essentiels sur qui nous sommes.
+            <span className="text-primary-coral">Espace 180 Degrées de Conversion d'Amour</span>, c'est un centre de ressources audio en évolution, accessible à tous les patients. <br/><br/>Écoutez nos capsules partout, à la maison ou en déplacement, pour explorer des thèmes essentiels sur qui nous sommes.
           </p>
           <a
             href="/login"
