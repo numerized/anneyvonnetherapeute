@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 
 import { Stats } from '@/components/shared/Stats'
 import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
+import ProchainementVideoCapsule from "./ProchainementVideoCapsule";
 
 import PaymentSuccess from './PaymentSuccess'
 import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
@@ -130,7 +131,12 @@ export function ProchainementPage({ data, settings }: any) {
             onShowPurchase={scrollToQuestionnaire}
             customButtonText="Commencer le questionnaire"
           />
-
+          <ProchainementVideoCapsule
+            title="Présentation de l'accompagnement Coeur à Corps"
+            introduction="Découvrez la présentation vidéo de l'accompagnement Coeur à Corps."
+            videoUrl="/videos/PRESENTATION 3 THERAPIES.mp4"
+            posterUrl="/images/posters/PRESENTATION 3 THERAPIES.jpg"
+          />
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             <div className="max-w-4xl mx-auto px-6">
