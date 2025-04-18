@@ -27,7 +27,7 @@ export function PurchaseTicket({
   title,
 }: PurchaseTicketProps) {
   const [email, setEmail] = useState('')
-  const [currency, setCurrency] = useState(propCurrency || 'eur')
+  const [currency, setCurrency] = useState(propCurrency || 'chf')
   const [couponCode, setCouponCode] = useState(defaultCouponCode || '')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -131,31 +131,6 @@ export function PurchaseTicket({
               <div className="flex gap-8 justify-center">
                 <label className="flex flex-col items-center gap-3 cursor-pointer group">
                   <div
-                    className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
-                  >
-                    <input
-                      type="radio"
-                      name="currency"
-                      value="eur"
-                      checked={currency === 'eur'}
-                      onChange={(e) => setCurrency(e.target.value)}
-                      className="sr-only"
-                    />
-                    <span
-                      className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}
-                    >
-                      EUR
-                    </span>
-                  </div>
-                  <span
-                    className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
-                  >
-                    Euros
-                  </span>
-                </label>
-
-                <label className="flex flex-col items-center gap-3 cursor-pointer group">
-                  <div
                     className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'chf' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
                   >
                     <input
@@ -163,7 +138,7 @@ export function PurchaseTicket({
                       name="currency"
                       value="chf"
                       checked={currency === 'chf'}
-                      onChange={(e) => setCurrency(e.target.value)}
+                      onChange={(e) => setCurrency(e.target.value as 'eur' | 'chf')}
                       className="sr-only"
                     />
                     <span
@@ -176,6 +151,31 @@ export function PurchaseTicket({
                     className={`text-sm transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
                   >
                     Francs Suisses
+                  </span>
+                </label>
+
+                <label className="flex flex-col items-center gap-3 cursor-pointer group">
+                  <div
+                    className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
+                  >
+                    <input
+                      type="radio"
+                      name="currency"
+                      value="eur"
+                      checked={currency === 'eur'}
+                      onChange={(e) => setCurrency(e.target.value as 'eur' | 'chf')}
+                      className="sr-only"
+                    />
+                    <span
+                      className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}
+                    >
+                      EUR
+                    </span>
+                  </div>
+                  <span
+                    className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
+                  >
+                    Euros
                   </span>
                 </label>
               </div>

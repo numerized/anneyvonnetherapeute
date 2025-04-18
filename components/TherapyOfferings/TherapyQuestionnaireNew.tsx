@@ -26,7 +26,7 @@ import {
   Target,
   User,
 } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal'
@@ -113,6 +113,18 @@ const TherapyQuestionnaireNew = () => {
   const [purchasePrice, setPurchasePrice] = useState<number | null>(null)
   const [purchaseCurrency, setPurchaseCurrency] = useState<'eur' | 'chf'>('eur')
   const [purchaseTitle, setPurchaseTitle] = useState<string>('')
+
+  // State for passing coupon to modal
+  const [defaultCouponCode, setDefaultCouponCode] = useState<string>('');
+
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const couponFromUrl = searchParams?.get('coupon') || '';
+
+  useEffect(() => {
+    if (couponFromUrl && couponFromUrl.trim() !== '') {
+      setDefaultCouponCode(couponFromUrl);
+    }
+  }, [couponFromUrl]);
 
   // Check if we're on the home/accueil route
   const pathname = usePathname()
@@ -1170,6 +1182,7 @@ const TherapyQuestionnaireNew = () => {
           price={purchasePrice}
           currency={purchaseCurrency}
           title={purchaseTitle}
+          defaultCouponCode={defaultCouponCode}
         />
       )}
     </section>
