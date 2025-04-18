@@ -81,9 +81,14 @@ function ProchainementHeroContent({
       aria-labelledby="hero-title"
     >
       <div className="absolute inset-0">
+        {/* Existing horizontal gradient for subtle overall tint */}
         <div
-          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/40 via-50% to-primary-forest/10 z-10"
+          className="absolute inset-0 z-10"
           aria-hidden="true"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(15,26,23,0.45) 5%, rgba(31,54,44,0.18) 50%, rgba(31,54,44,0.05) 100%)',
+          }}
         />
         <Image
           src="/images/soon-back.jpg"
@@ -168,7 +173,7 @@ function ProchainementHeroContent({
               >
                 <button
                   onClick={handlePurchase}
-                  className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200 animate-glow"
+                  className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200 animate-glow font-bold text-lg"
                 >
                   {customButtonText || "Découvrir l'offre"}
                 </button>
@@ -192,8 +197,6 @@ function ProchainementHeroContent({
                             src="/videos/PRESENTATION 3 THERAPIES.mp4"
                             poster="/images/posters/PRESENTATION 3 THERAPIES.jpg"
                           />
-                          {/* Dark gradient overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-primary-dark/60 rounded-[32px]" />
                           {/* Frost bubbles */}
                           <div className="absolute top-4 right-4 flex gap-4 z-20">
                             {/* Title bubble */}
