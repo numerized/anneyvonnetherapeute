@@ -217,6 +217,7 @@ export default function NavbarLayout() {
                   isLoggedIn={isLoggedIn}
                   appointmentScheduled={appointmentScheduled}
                   appointmentDate={appointmentDate}
+                  mobileModal={isMenuOpen}
                 />
               </div>
             </div>
@@ -278,6 +279,7 @@ export default function NavbarLayout() {
                 isLoggedIn={isLoggedIn}
                 appointmentScheduled={appointmentScheduled}
                 appointmentDate={appointmentDate}
+                mobileModal={isMenuOpen}
               />
             </div>
           </div>

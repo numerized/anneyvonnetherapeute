@@ -38,7 +38,21 @@ export default function ProchainementVideoCapsule({
 
   return (
     <section className="w-full max-w-xl mx-auto flex flex-col items-center py-12 px-4">
-      <Header title={title} description={introduction} centered />
+      <Header
+        title=""
+        customTitle={
+          <>
+            <h2 className="text-primary-cream text-3xl md:text-4xl font-light text-center mb-2">
+              {title}
+            </h2>
+            <div className="text-primary-cream/70 text-lg md:text-xl text-center mb-8">
+              amours et sexualités, l'accord.
+            </div>
+          </>
+        }
+        description={introduction ? [introduction] : undefined}
+        centered
+      />
       <div className="relative w-full max-w-[480px] aspect-[4/3] rounded-[32px] overflow-hidden mt-8 shadow-xl px-2">
         <video
           ref={videoRef}
