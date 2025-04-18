@@ -45,6 +45,7 @@ export default function ProchainementVideoCapsule({
             <h2 className="text-primary-cream text-3xl md:text-4xl font-light text-center mb-2">
               {title}
             </h2>
+            <br/>
             <div className="text-primary-cream/70 text-lg md:text-xl text-center mb-8">
               amours et sexualités, l'accord.
             </div>
