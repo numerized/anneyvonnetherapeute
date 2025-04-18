@@ -337,11 +337,13 @@ const TherapyQuestionnaireNew = () => {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
-              Quelle est votre situation actuelle?
-            </h3>
+            <div className="mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
+                Quelle est votre situation actuelle?
+              </h3>
+            </div>
             <div
-              className={`space-y-4 ${isHomePage ? 'md:max-w-5xl md:mx-auto' : ''}`}
+              className={`space-y-4 ${isHomePage ? 'md:mx-auto' : ''}`}
             >
               <button
                 onClick={() => handleSituationSelect('A')}
