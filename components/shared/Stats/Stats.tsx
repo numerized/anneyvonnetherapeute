@@ -15,6 +15,12 @@ export function Stats({ title, items }: StatsProps) {
           {title}
         </h2>
 
+        <div className="max-w-2xl mx-auto mb-10">
+          <p className="text-primary-cream/80 text-center whitespace-pre-line text-base md:text-lg">
+            {`Tout commence par un autre regard.\nSur le lien, sur le désir, sur ce que tu appelles "toi".\n\nJe t’accompagne à travers des séances individuelles ou de couple pour questionner les fondements de ta façon d’aimer et désirer, et faire émerger une nouvelle cohérence.`}
+          </p>
+        </div>
+
         <div
           className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8"
           role="list"
