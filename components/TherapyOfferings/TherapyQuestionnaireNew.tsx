@@ -337,7 +337,7 @@ const TherapyQuestionnaireNew = () => {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <h3 className="text-xl font-medium mb-6 text-center">
+            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
               Quelle est votre situation actuelle?
             </h3>
             <div
@@ -402,7 +402,7 @@ const TherapyQuestionnaireNew = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h3 className="text-xl font-semibold text-primary-cream">
+              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
                 {answers.situation === 'A'
                   ? 'Quel est votre objectif principal ?'
                   : answers.situation === 'B'
@@ -537,7 +537,7 @@ const TherapyQuestionnaireNew = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h3 className="text-xl font-semibold text-primary-cream">
+              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
                 Quel est votre principal défi ?
               </h3>
             </div>
@@ -783,7 +783,7 @@ const TherapyQuestionnaireNew = () => {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h3 className="text-2xl font-semibold text-primary-coral">
+              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
                 Votre itinéraire personnalisé
               </h3>
             </div>
