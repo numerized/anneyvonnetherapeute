@@ -35,6 +35,8 @@ import {
   generateRecommendedOptions,
   getIntentionText,
 } from '@/utils/therapyRecommendations'
+import { TherapyModal } from './TherapyModal'
+import { CoachingModal } from './CoachingModal'
 
 type TherapyOption = {
   title: string
@@ -97,6 +99,13 @@ const TherapyQuestionnaireNew = () => {
 
   // State for coupon
   const [hasCoupon, setHasCoupon] = useState(false)
+
+  // State for En Savoir Plus modal
+  const [showPromoModal, setShowPromoModal] = useState(false)
+  const [selectedPromoId, setSelectedPromoId] = useState<string | null>(null)
+  const [selectedPromoType, setSelectedPromoType] = useState<
+    'therapy' | 'coaching' | null
+  >(null)
 
   // Check if we're on the home/accueil route
   const pathname = usePathname()
@@ -869,156 +878,169 @@ const TherapyQuestionnaireNew = () => {
                           {option.offeringType !== 'therapy' && (
                             <p className="text-primary-cream/90">{option.description}</p>
                           )}
+                          <div className="flex justify-end mt-2">
+                            <button
+                              className="px-3 py-1 border border-primary-cream text-primary-cream rounded-full text-sm font-medium hover:bg-primary-cream hover:text-primary-forest transition-colors"
+                              style={{ minWidth: 140 }}
+                              onClick={() => {
+                                setSelectedPromoId(option.therapyId)
+                                setSelectedPromoType(option.offeringType)
+                                setShowPromoModal(true)
+                              }}
+                            >
+                              En Savoir Plus
+                            </button>
+                          </div>
+                        </div>
 
-                          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
-                            {/* Price section */}
-                            <div className="text-primary-cream/90">
-                              {option.offeringType === 'therapy' &&
+                        <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+                          {/* Price section */}
+                          <div className="text-primary-cream/90">
+                            {option.offeringType === 'therapy' &&
+                            option.hasFormulas &&
+                            option.formulas &&
+                            option.formulas.length > 1 ? (
+                              <div className="text-right">
+                                <span className="text-sm font-medium">
+                                  Plusieurs formules disponibles
+                                </span>
+                              </div>
+                            ) : (
+                              option.price && (
+                                <div className="text-right">
+                                  {hasCoupon ? (
+                                    <span className="text-sm font-medium">
+                                      <span className="line-through">
+                                        {option.price} CHF / EUR
+                                      </span>{' '}
+                                      <span className="text-primary-coral">
+                                        {calculateDiscountedPrice(option.price)}{' '}
+                                        CHF / EUR
+                                      </span>{' '}
+                                      {option.priceDetails && (
+                                        <span>({option.priceDetails})</span>
+                                      )}
+                                    </span>
+                                  ) : (
+                                    <span className="text-sm font-medium">
+                                      {option.price} CHF / EUR{' '}
+                                      {option.priceDetails && (
+                                        <span>({option.priceDetails})</span>
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                              )
+                            )}
+                            {!option.price &&
+                            option.priceDetails &&
+                            !(
+                              option.offeringType === 'therapy' &&
                               option.hasFormulas &&
                               option.formulas &&
-                              option.formulas.length > 1 ? (
-                                <div className="text-right">
-                                  <span className="text-sm font-medium">
-                                    Plusieurs formules disponibles
-                                  </span>
-                                </div>
-                              ) : (
-                                option.price && (
-                                  <div className="text-right">
-                                    {hasCoupon ? (
-                                      <span className="text-sm font-medium">
-                                        <span className="line-through">
-                                          {option.price} CHF / EUR
-                                        </span>{' '}
-                                        <span className="text-primary-coral">
-                                          {calculateDiscountedPrice(option.price)}{' '}
-                                          CHF / EUR
-                                        </span>{' '}
-                                        {option.priceDetails && (
-                                          <span>({option.priceDetails})</span>
-                                        )}
-                                      </span>
-                                    ) : (
-                                      <span className="text-sm font-medium">
-                                        {option.price} CHF / EUR{' '}
-                                        {option.priceDetails && (
-                                          <span>({option.priceDetails})</span>
-                                        )}
-                                      </span>
-                                    )}
-                                  </div>
-                                )
-                              )}
-                              {!option.price &&
-                              option.priceDetails &&
-                              !(
-                                option.offeringType === 'therapy' &&
-                                option.hasFormulas &&
-                                option.formulas &&
-                                option.formulas.length > 1
-                              ) && (
-                                <div className="text-right whitespace-pre-line">
-                                  <span className="text-sm font-medium">
-                                    {option.priceDetails}
-                                  </span>
-                                </div>
-                              )}
-                              {!option.price &&
-                              !option.priceDetails &&
-                              option.hasFormulas &&
-                              option.formulas &&
-                              option.formulas.length === 1 && (
-                                <div className="text-right">
-                                  <span className="text-sm font-medium">
-                                    À partir de {option.formulas[0].price} CHF /
-                                    EUR{' '}
-                                    {option.formulas[0].priceDetails &&
-                                      `(${option.formulas[0].priceDetails})`}
-                                  </span>
-                                </div>
-                              )}
-                              {!option.price &&
-                              !option.priceDetails &&
-                              (!option.hasFormulas ||
-                                !option.formulas ||
-                                option.formulas.length === 0) && (
-                                <div className="text-right">
-                                  <span className="text-sm font-medium">
-                                    {option.type === 'individual'
-                                      ? option.offeringType === 'therapy'
-                                        ? 'Plusieurs formules disponibles'
-                                        : 'À partir de 720 CHF / EUR (programme complet)'
-                                      : option.type === 'vit' ||
-                                          option.therapyId === 'vit-a-la-carte'
-                                        ? 'À partir de 210 CHF / EUR par séance'
-                                        : option.type === 'couple' ||
-                                            option.therapyId === 'couple'
-                                          ? '2250 CHF / EUR (programme complet)'
-                                          : 'Tarif sur demande'}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Session length section */}
-                            {option.sessionLength && (
-                              <div className="mt-3 pt-3 border-t border-primary-cream/20">
-                                <div className="flex items-center gap-2">
-                                  <Clock className="text-primary-coral" size={18} />
-                                  <p className="text-sm text-primary-cream/90">
-                                    {option.type === 'individual' ||
-                                    option.therapyId === 'individual'
-                                      ? `${option.sessionLength} par séance`
-                                      : option.sessionLength}
-                                  </p>
-                                </div>
+                              option.formulas.length > 1
+                            ) && (
+                              <div className="text-right whitespace-pre-line">
+                                <span className="text-sm font-medium">
+                                  {option.priceDetails}
+                                </span>
                               </div>
                             )}
-
-                            {/* Formulas section */}
-                            {option.hasFormulas &&
+                            {!option.price &&
+                            !option.priceDetails &&
+                            option.hasFormulas &&
                             option.formulas &&
-                            option.formulas.length > 0 && (
-                              <div className="mt-4 pt-3 border-t border-primary-cream/20">
-                                <p className="text-primary-cream/90 mb-2">
-                                  <strong>Formules disponibles</strong>
-                                </p>
-                                <div className="space-y-2">
-                                  {option.formulas.map((formula, idx) => (
-                                    <div
-                                      key={idx}
-                                      className="text-sm text-primary-cream/80 flex items-center gap-2"
-                                    >
-                                      <span className="text-primary-coral">
-                                        ♦
-                                      </span>
-                                      <span>
-                                        {formula.title}:{' '}
-                                        {hasCoupon ? (
-                                          <>
-                                            <span className="line-through">
-                                              {formula.price} CHF / EUR
-                                            </span>{' '}
-                                            <span className="text-primary-coral">
-                                              {calculateDiscountedPrice(
-                                                formula.price,
-                                              )}{' '}
-                                              CHF / EUR
-                                            </span>
-                                          </>
-                                        ) : (
-                                          <>{formula.price} CHF / EUR</>
-                                        )}
-                                        {formula.duration && (
-                                          <span> ({formula.duration})</span>
-                                        )}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
+                            option.formulas.length === 1 && (
+                              <div className="text-right">
+                                <span className="text-sm font-medium">
+                                  À partir de {option.formulas[0].price} CHF /
+                                  EUR{' '}
+                                  {option.formulas[0].priceDetails &&
+                                    `(${option.formulas[0].priceDetails})`}
+                                </span>
+                              </div>
+                            )}
+                            {!option.price &&
+                            !option.priceDetails &&
+                            (!option.hasFormulas ||
+                              !option.formulas ||
+                              option.formulas.length === 0) && (
+                              <div className="text-right">
+                                <span className="text-sm font-medium">
+                                  {option.type === 'individual'
+                                    ? option.offeringType === 'therapy'
+                                      ? 'Plusieurs formules disponibles'
+                                      : 'À partir de 720 CHF / EUR (programme complet)'
+                                    : option.type === 'vit' ||
+                                        option.therapyId === 'vit-a-la-carte'
+                                      ? 'À partir de 210 CHF / EUR par séance'
+                                      : option.type === 'couple' ||
+                                          option.therapyId === 'couple'
+                                        ? '2250 CHF / EUR (programme complet)'
+                                        : 'Tarif sur demande'}
+                                </span>
                               </div>
                             )}
                           </div>
+
+                          {/* Session length section */}
+                          {option.sessionLength && (
+                            <div className="mt-3 pt-3 border-t border-primary-cream/20">
+                              <div className="flex items-center gap-2">
+                                <Clock className="text-primary-coral" size={18} />
+                                <p className="text-sm text-primary-cream/90">
+                                  {option.type === 'individual' ||
+                                  option.therapyId === 'individual'
+                                    ? `${option.sessionLength} par séance`
+                                    : option.sessionLength}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Formulas section */}
+                          {option.hasFormulas &&
+                          option.formulas &&
+                          option.formulas.length > 0 && (
+                            <div className="mt-4 pt-3 border-t border-primary-cream/20">
+                              <p className="text-primary-cream/90 mb-2">
+                                <strong>Formules disponibles</strong>
+                              </p>
+                              <div className="space-y-2">
+                                {option.formulas.map((formula, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="text-sm text-primary-cream/80 flex items-center gap-2"
+                                  >
+                                    <span className="text-primary-coral">
+                                      ♦
+                                    </span>
+                                    <span>
+                                      {formula.title}:{' '}
+                                      {hasCoupon ? (
+                                        <>
+                                          <span className="line-through">
+                                            {formula.price} CHF / EUR
+                                          </span>{' '}
+                                          <span className="text-primary-coral">
+                                            {calculateDiscountedPrice(
+                                              formula.price,
+                                            )}{' '}
+                                            CHF / EUR
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <>{formula.price} CHF / EUR</>
+                                      )}
+                                      {formula.duration && (
+                                        <span> ({formula.duration})</span>
+                                      )}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1099,6 +1121,25 @@ const TherapyQuestionnaireNew = () => {
         userEmail=""
         customUrl="https://calendly.com/numerized-ara/20min"
       />
+
+      {/* En Savoir Plus Modal */}
+      {showPromoModal && selectedPromoId && selectedPromoType && (
+        <>
+          {selectedPromoType === 'therapy' ? (
+            <TherapyModal
+              isOpen={showPromoModal}
+              onClose={() => setShowPromoModal(false)}
+              therapyId={selectedPromoId}
+            />
+          ) : (
+            <CoachingModal
+              isOpen={showPromoModal}
+              onClose={() => setShowPromoModal(false)}
+              coachingId={selectedPromoId}
+            />
+          )}
+        </>
+      )}
     </section>
   )
 }
