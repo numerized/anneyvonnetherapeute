@@ -73,7 +73,7 @@ export default function ProchainementVideoCapsule({
             </h2>
             <br />
             <div className="text-primary-cream/70 text-lg md:text-xl text-center mb-8">
-              Capsule Audio par Anne Yvonne Racine{' '}
+              Capsule Audio par Anne Yvonne Racine
             </div>
           </>
         }
