@@ -156,7 +156,7 @@ export function ProchainementPage({ data, settings }: any) {
             </div>
 
             {/* Presentation Section */}
-            <div className="mb-16 bg-primary-dark/30 rounded-[32px] overflow-hidden w-full lg:w-[60vw] mx-auto">
+            <div className="mb-16 bg-primary-dark/30 rounded-[32px] overflow-hidden max-w-[calc(100vw-48px)] w-full ml-6 mr-6 md:mx-auto md:w-4/5 lg:w-3/5">
               <div className="grid md:grid-cols-2 gap-6 p-6">
                 {/* Image Column */}
                 <div className="relative md:h-full">
@@ -185,7 +185,7 @@ export function ProchainementPage({ data, settings }: any) {
                 </div>
 
                 {/* Text Column */}
-                <div className="space-y-4 text-primary-cream">
+                <div className="space-y-4 text-primary-cream mx-6 lg:mx-0">
                   <div>
                     <h3 className="text-xl font-light text-primary-coral mb-1">
                       UNE HISTOIRE D'ENGAGEMENT
