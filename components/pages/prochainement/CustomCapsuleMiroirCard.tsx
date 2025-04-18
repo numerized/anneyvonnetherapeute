@@ -1,110 +1,148 @@
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 
-const VIDEO_URL = "/CAPSULES_MIROIR/L'amour d'ApreÌs_1.mp4"
+const VIDEO_URL = "/CAPSULES_MIROIR/lamour-dapres-1.mp4"
 const POSTER_URL = "/images/posters/lamour-dapres-miroir-poster.jpg"
 const TITLE = "L'amour d'Après — Capsule Prisme"
 const DESCRIPTION = "Une exploration intime de l'amour après la transformation. Découvrez cette capsule miroir."
 
 export function CustomCapsuleMiroirCard() {
-  const videoRef = useRef<HTMLVideoElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [videoError, setVideoError] = useState<string | null>(null)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
   const progressTrackRef = useRef<HTMLDivElement | null>(null)
 
+  // Set up video event listeners
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    const handleTimeUpdate = () => setCurrentTime(video.currentTime)
-    const handleLoadedMetadata = () => setDuration(video.duration)
+
+    const handleTimeUpdate = () => {
+      if (!isDragging) {
+        setCurrentTime(video.currentTime)
+      }
+    }
+
+    const handleLoadedMetadata = () => {
+      setDuration(video.duration)
+      setIsVideoLoaded(true)
+      console.log("Video loaded, duration:", video.duration)
+    }
+
+    const handleError = (e: Event) => {
+      console.error("Video error:", video.error, e)
+      setVideoError(`Erreur de chargement de la vidéo: ${video.error?.message || 'Vérifiez le chemin ou le fichier.'}`)
+    }
+
+    // Add event listeners
     video.addEventListener('timeupdate', handleTimeUpdate)
     video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('error', handleError)
+    video.addEventListener('loadeddata', () => console.log("Video data loaded"))
+
+    // Force load metadata if not already loaded
+    if (video.readyState >= 1) {
+      handleLoadedMetadata()
+    }
+    
+    // Clean up event listeners
     return () => {
       video.removeEventListener('timeupdate', handleTimeUpdate)
       video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('error', handleError)
+      video.removeEventListener('loadeddata', () => {})
     }
-  }, [])
+  }, [isDragging])
 
-  useEffect(() => {
-    if (!isDragging) return
-    const handleDocumentMouseMove = (e: MouseEvent) => {
-      if (!progressTrackRef.current) return
-      const rect = progressTrackRef.current.getBoundingClientRect()
-      let position = (e.clientX - rect.left) / rect.width
-      position = Math.max(0, Math.min(1, position))
-      if (videoRef.current && duration) {
-        const newTime = position * duration
-        videoRef.current.currentTime = newTime
-        setCurrentTime(newTime)
-      }
-    }
-    const handleDocumentMouseUp = () => {
-      setIsDragging(false)
-    }
-    document.addEventListener('mousemove', handleDocumentMouseMove)
-    document.addEventListener('mouseup', handleDocumentMouseUp)
-    return () => {
-      document.removeEventListener('mousemove', handleDocumentMouseMove)
-      document.removeEventListener('mouseup', handleDocumentMouseUp)
-    }
-  }, [isDragging, duration])
+  // Seek-to-position logic
+  const seekTo = (clientX: number) => {
+    const video = videoRef.current
+    const track = progressTrackRef.current
+    if (!video || !track) return
+    
+    const rect = track.getBoundingClientRect()
+    const clickPosition = (clientX - rect.left) / rect.width
+    const clampedPosition = Math.max(0, Math.min(1, clickPosition))
+    const seekTime = clampedPosition * duration
+    
+    video.currentTime = seekTime
+    setCurrentTime(seekTime)
+  }
 
-  useEffect(() => {
-    if (!isDragging) return
-    const handleDocumentTouchMove = (e: TouchEvent) => {
-      if (!progressTrackRef.current) return
-      const rect = progressTrackRef.current.getBoundingClientRect()
-      let position = (e.touches[0].clientX - rect.left) / rect.width
-      position = Math.max(0, Math.min(1, position))
-      if (videoRef.current && duration) {
-        const newTime = position * duration
-        videoRef.current.currentTime = newTime
-        setCurrentTime(newTime)
-      }
+  // Click event handler
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(true)
+    seekTo(e.clientX)
+    
+    // Add global mouse event listeners
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+  }
+  
+  // Drag handlers for mouse
+  const handleMouseMove = (e: MouseEvent) => {
+    if (isDragging) {
+      seekTo(e.clientX)
     }
-    const handleDocumentTouchEnd = () => {
-      setIsDragging(false)
+  }
+  
+  const handleMouseUp = () => {
+    setIsDragging(false)
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+  }
+  
+  // Touch events for mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(true)
+    seekTo(e.touches[0].clientX)
+    
+    // Add global touch event listeners
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    document.addEventListener('touchend', handleTouchEnd)
+  }
+  
+  const handleTouchMove = (e: TouchEvent) => {
+    if (isDragging) {
+      e.preventDefault()
+      seekTo(e.touches[0].clientX)
     }
-    document.addEventListener('touchmove', handleDocumentTouchMove)
-    document.addEventListener('touchend', handleDocumentTouchEnd)
-    return () => {
-      document.removeEventListener('touchmove', handleDocumentTouchMove)
-      document.removeEventListener('touchend', handleDocumentTouchEnd)
-    }
-  }, [isDragging, duration])
+  }
+  
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+    document.removeEventListener('touchmove', handleTouchMove)
+    document.removeEventListener('touchend', handleTouchEnd)
+  }
 
+  // Play/Pause toggle
   const togglePlay = () => {
     const video = videoRef.current
     if (!video) return
+    
     if (video.paused) {
-      video.play()
-      setIsPlaying(true)
+      const playPromise = video.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(error => {
+            console.error("Play error:", error)
+            setVideoError(`Erreur de lecture: ${error.message}`)
+          })
+      }
     } else {
       video.pause()
       setIsPlaying(false)
     }
   }
 
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    if (!progressTrackRef.current) return
-    const rect = progressTrackRef.current.getBoundingClientRect()
-    let clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    let position = (clientX - rect.left) / rect.width
-    position = Math.max(0, Math.min(1, position))
-    if (videoRef.current && duration) {
-      const newTime = position * duration
-      videoRef.current.currentTime = newTime
-      setCurrentTime(newTime)
-    }
-  }
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    handleSeek(e)
-    setIsDragging(true)
-  }
-
+  // Time formatter
   const formatTime = (t: number) => {
     if (!t || isNaN(t)) return '00:00'
     const m = Math.floor(t / 60)
@@ -124,9 +162,17 @@ export function CustomCapsuleMiroirCard() {
                 ref={videoRef}
                 className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
                 playsInline
+                preload="metadata"
                 webkit-playsinline="true"
+                controls={false}
                 src={VIDEO_URL}
                 poster={POSTER_URL}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error("Video error event:", e)
+                  setVideoError('Erreur de chargement de la vidéo. Vérifiez le chemin ou le fichier.')
+                }}
               />
               {/* Frost bubbles */}
               <div className="absolute top-4 right-4 flex gap-4 z-20">
@@ -155,6 +201,11 @@ export function CustomCapsuleMiroirCard() {
           </div>
           {/* Time scrubber */}
           <div className="mt-4 select-none">
+            {videoError && (
+              <div className="text-red-500 bg-white/80 rounded-lg px-4 py-2 mb-2 text-xs">
+                {videoError}
+              </div>
+            )}
             <div className="flex items-center justify-between text-xs text-white/70 mb-1">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
@@ -163,8 +214,8 @@ export function CustomCapsuleMiroirCard() {
               ref={progressTrackRef}
               className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors select-none z-10"
               onMouseDown={handleMouseDown}
-              onTouchStart={handleMouseDown}
-              onClick={handleSeek}
+              onTouchStart={handleTouchStart}
+              style={{ userSelect: 'none' }}
             >
               {/* Background track with gradient */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 rounded-full"></div>
@@ -185,7 +236,7 @@ export function CustomCapsuleMiroirCard() {
                   zIndex: 20,
                 }}
                 onMouseDown={handleMouseDown}
-                onTouchStart={handleMouseDown}
+                onTouchStart={handleTouchStart}
               ></div>
             </div>
           </div>

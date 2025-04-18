@@ -53,55 +53,42 @@ export default function ProchainementVideoCapsule({
         description={introduction ? [introduction] : undefined}
         centered
       />
-      <div className="relative w-full rounded-[32px] overflow-hidden mt-8 shadow-xl px-2">
-        <div className="relative pb-[56.25%]">
-          <video
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
-            src={videoUrl}
-            poster={posterUrl}
-            playsInline
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-          />
-        </div>
-        {/* Play/Pause button overlay */}
-        <button
-          onClick={handlePlayPause}
-          className="absolute right-4 bottom-4 z-20 w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
-          aria-label={isPlaying ? 'Pause video' : 'Play video'}
-          type="button"
-        >
-          <div className="w-6 h-6 flex items-center justify-center">
-            {isPlaying ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-6 h-6 text-white"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-6 h-6 text-white"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            )}
-          </div>
-        </button>
+      <div className="w-full overflow-hidden relative aspect-video rounded-[12px]">
+        {isClient && (
+          <>
+            <video
+              ref={videoRef}
+              src={videoUrl}
+              poster={posterUrl}
+              className="w-full h-full object-cover"
+              playsInline
+              webkit-playsinline="true"
+            />
+            {/* Match the play/pause button to the /espace180 capsules style */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/30">
+              {/* Left bottom positioned play button, matching /espace180 style */}
+              <div className="absolute left-4 bottom-4 z-20">
+                <button
+                  onClick={handlePlayPause}
+                  className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-white/30 cursor-pointer"
+                  aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    {isPlaying ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                        <path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white">
+                        <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
