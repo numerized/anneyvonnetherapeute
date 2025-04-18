@@ -179,7 +179,9 @@ export async function POST(req: Request) {
           price_data: {
             currency: currency.toLowerCase(),
             product_data: {
-              name: (offerTitle ? `${offerTitle} | Anne Yvonne Racine (coeur-a-corps.org)` : priceData.name),
+              name: offerTitle
+                ? `${offerTitle} | Anne Yvonne Racine (coeur-a-corps.org)`
+                : priceData.name,
               ...(discountMessage && { description: discountMessage }),
             },
             unit_amount: finalAmount,

@@ -129,7 +129,9 @@ export function PurchaseTicket({
         <h3 className="text-2xl font-light text-primary-cream mb-2">
           Réserver ma place
           {title && (
-            <div className="text-base font-semibold text-primary-coral mt-2">{title}</div>
+            <div className="text-base font-semibold text-primary-coral mt-2">
+              {title}
+            </div>
           )}
         </h3>
         {/* Removed description, priceDetails, sessionLength from modal display as requested */}
@@ -168,7 +170,9 @@ export function PurchaseTicket({
                       name="currency"
                       value="chf"
                       checked={currency === 'chf'}
-                      onChange={(e) => setCurrency(e.target.value as 'eur' | 'chf')}
+                      onChange={(e) =>
+                        setCurrency(e.target.value as 'eur' | 'chf')
+                      }
                       className="sr-only"
                     />
                     <span
@@ -193,7 +197,9 @@ export function PurchaseTicket({
                       name="currency"
                       value="eur"
                       checked={currency === 'eur'}
-                      onChange={(e) => setCurrency(e.target.value as 'eur' | 'chf')}
+                      onChange={(e) =>
+                        setCurrency(e.target.value as 'eur' | 'chf')
+                      }
                       className="sr-only"
                     />
                     <span
