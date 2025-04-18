@@ -311,7 +311,7 @@ const TherapyQuestionnaireNew = () => {
   return (
     <section id="questionnaire" className="py-16" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
       <div
-        className="w-full md:w-full p-6 text-primary-cream/90 md:px-16 mx-6"
+        className="w-full max-w-full box-border text-primary-cream/90 md:mx-0 py-6 p-6"
       >
         {/* Header */}
         <div className="text-center mb-12">
@@ -812,7 +812,7 @@ const TherapyQuestionnaireNew = () => {
             </div>
 
             {/* Intention section */}
-            <div className="bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] mb-8">
+            <div className="bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] mb-8 w-full box-border">
               <h4 className="font-semibold text-lg mb-3 text-primary-coral">
                 Votre intention profonde :
               </h4>
@@ -849,7 +849,7 @@ const TherapyQuestionnaireNew = () => {
                   return (
                     <div
                       key={index}
-                      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors"
+                      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors w-full box-border"
                     >
                       <div className="space-y-12">
                         <div className="text-right">
