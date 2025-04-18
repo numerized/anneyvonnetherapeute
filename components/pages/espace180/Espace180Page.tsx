@@ -959,7 +959,7 @@ export default function Espace180Page() {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl ml-auto text-right">
               <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
-                Espace 180° d'Amour : Ressources Vibrantes
+                Espace 180° d'Amour
               </h1>
               <p className="text-xl text-primary-cream/80">
                 Explorez l’Espace 180° d’Amour, un univers de ressources
