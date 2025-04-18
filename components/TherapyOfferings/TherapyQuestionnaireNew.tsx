@@ -117,6 +117,19 @@ const TherapyQuestionnaireNew = () => {
   // State for passing coupon to modal
   const [defaultCouponCode, setDefaultCouponCode] = useState<string>('');
 
+  // --- Add more info state for passing to modal ---
+  const [purchaseDetails, setPurchaseDetails] = useState<{
+    title: string
+    description: string
+    price: number
+    priceDetails?: string
+    sessionLength?: string
+    hasFormulas?: boolean
+    formulas?: any[]
+    type?: string
+    offeringType?: string
+  } | null>(null)
+
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const couponFromUrl = searchParams?.get('coupon') || '';
 
@@ -1067,9 +1080,11 @@ const TherapyQuestionnaireNew = () => {
                           className="px-4 py-2 bg-primary-coral text-white rounded-full text-sm font-semibold hover:bg-primary-coral/90 transition-colors shadow-md"
                           style={{ minWidth: 150 }}
                           onClick={() => {
-                            setPurchasePrice(option.price || (option.formulas && option.formulas[0]?.price) || 0)
+                            setPurchaseDetails({
+                              ...option,
+                              price: option.price || (option.formulas && option.formulas[0]?.price) || 0
+                            })
                             setPurchaseCurrency('chf') // default or infer
-                            setPurchaseTitle(option.title)
                             setShowPurchaseModal(true)
                           }}
                         >
@@ -1175,13 +1190,20 @@ const TherapyQuestionnaireNew = () => {
       )}
 
       {/* PurchaseTicket Modal */}
-      {showPurchaseModal && (
+      {showPurchaseModal && purchaseDetails && (
         <PurchaseTicket
           ticketType="standard"
           onClose={() => setShowPurchaseModal(false)}
-          price={purchasePrice}
+          price={purchaseDetails.price}
           currency={purchaseCurrency}
-          title={purchaseTitle}
+          title={purchaseDetails.title}
+          description={purchaseDetails.description}
+          priceDetails={purchaseDetails.priceDetails}
+          sessionLength={purchaseDetails.sessionLength}
+          hasFormulas={purchaseDetails.hasFormulas}
+          formulas={purchaseDetails.formulas}
+          offeringType={purchaseDetails.offeringType}
+          type={purchaseDetails.type}
           defaultCouponCode={defaultCouponCode}
         />
       )}

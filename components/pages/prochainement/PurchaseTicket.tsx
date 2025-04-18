@@ -16,6 +16,13 @@ interface PurchaseTicketProps {
   price?: number | null
   currency?: 'eur' | 'chf'
   title?: string
+  description?: string
+  priceDetails?: string
+  sessionLength?: string
+  hasFormulas?: boolean
+  formulas?: any[]
+  offeringType?: string
+  type?: string
 }
 
 export function PurchaseTicket({
@@ -25,6 +32,13 @@ export function PurchaseTicket({
   price,
   currency: propCurrency,
   title,
+  description,
+  priceDetails,
+  sessionLength,
+  hasFormulas,
+  formulas,
+  offeringType,
+  type,
 }: PurchaseTicketProps) {
   const [email, setEmail] = useState('')
   const [currency, setCurrency] = useState(propCurrency || 'chf')
@@ -65,6 +79,21 @@ export function PurchaseTicket({
           currency,
           hasDiscount,
           couponCode: couponCode || undefined,
+          price: getDisplayPrice(),
+          offerTitle: title,
+          metadata: {
+            offerTitle: title,
+            selectedCurrency: currency,
+            originalPrice: basePrice,
+            discounted: hasDiscount ? 'true' : 'false',
+            couponCode: couponCode || undefined,
+            priceDetails: priceDetails || '',
+            sessionLength: sessionLength || '',
+            hasFormulas: hasFormulas ? 'true' : 'false',
+            formulas: formulas ? JSON.stringify(formulas) : '',
+            offeringType: offeringType || '',
+            type: type || '',
+          },
         }),
       })
 
@@ -97,12 +126,13 @@ export function PurchaseTicket({
           ✕
         </button>
 
-        <h3 className="text-2xl font-light text-primary-cream mb-6">
+        <h3 className="text-2xl font-light text-primary-cream mb-2">
           Réserver ma place
           {title && (
             <div className="text-base font-semibold text-primary-coral mt-2">{title}</div>
           )}
         </h3>
+        {/* Removed description, priceDetails, sessionLength from modal display as requested */}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
