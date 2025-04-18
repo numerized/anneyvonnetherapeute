@@ -311,7 +311,7 @@ const TherapyQuestionnaireNew = () => {
   return (
     <section id="questionnaire" className="py-16" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
       <div
-        className="w-full md:w-full p-6 text-primary-cream/90 md:px-16"
+        className="w-full md:w-full p-6 text-primary-cream/90 md:px-16 mx-6"
       >
         {/* Header */}
         <div className="text-center mb-12">
@@ -337,7 +337,7 @@ const TherapyQuestionnaireNew = () => {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
+            <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
               Quelle est votre situation actuelle?
             </h3>
             <div
@@ -395,14 +395,8 @@ const TherapyQuestionnaireNew = () => {
         {/* Step 2: Current Priority */}
         {step === 2 && (
           <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <button
-                onClick={() => setStep(1)}
-                className="mr-2 text-primary-coral"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
+            <div className="mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 {answers.situation === 'A'
                   ? 'Quel est votre objectif principal ?'
                   : answers.situation === 'B'
@@ -524,20 +518,36 @@ const TherapyQuestionnaireNew = () => {
                 </>
               )}
             </div>
+            <div className="mt-8 text-center">
+              <span
+                onClick={() => {
+                  localStorage.removeItem('answers')
+                  localStorage.removeItem('recommendations')
+                  localStorage.removeItem('questionnaire_completed')
+                  setStep(1)
+                  setAnswers({
+                    situation: '',
+                    priority: '',
+                    challenge: '',
+                    intention: '',
+                    skippedChallengeStep: false,
+                  })
+                  setRecommendations([])
+                  scrollToSection('questionnaire')
+                }}
+                className="text-primary-cream cursor-pointer hover:text-primary-coral"
+              >
+                Recommencer le questionnaire
+              </span>
+            </div>
           </div>
         )}
 
         {/* Step 3: Main Challenge */}
         {step === 3 && !answers.skippedChallengeStep && (
           <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <button
-                onClick={() => setStep(2)}
-                className="mr-2 text-primary-coral"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
+            <div className="mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 Quel est votre principal défi ?
               </h3>
             </div>
@@ -767,23 +777,36 @@ const TherapyQuestionnaireNew = () => {
                 </>
               )}
             </div>
+            <div className="mt-8 text-center">
+              <span
+                onClick={() => {
+                  localStorage.removeItem('answers')
+                  localStorage.removeItem('recommendations')
+                  localStorage.removeItem('questionnaire_completed')
+                  setStep(1)
+                  setAnswers({
+                    situation: '',
+                    priority: '',
+                    challenge: '',
+                    intention: '',
+                    skippedChallengeStep: false,
+                  })
+                  setRecommendations([])
+                  scrollToSection('questionnaire')
+                }}
+                className="text-primary-cream cursor-pointer hover:text-primary-coral"
+              >
+                Recommencer le questionnaire
+              </span>
+            </div>
           </div>
         )}
 
         {/* Step 4: Results and Recommendations */}
         {step === 4 && (
           <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <button
-                onClick={() => {
-                  // Always go back to the appropriate step based on the path taken
-                  setStep(answers.skippedChallengeStep ? 2 : 3)
-                }}
-                className="mr-2 text-primary-coral"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary-coral">
+            <div className="mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 Votre itinéraire personnalisé
               </h3>
             </div>
@@ -812,195 +835,197 @@ const TherapyQuestionnaireNew = () => {
             <h4 className="font-semibold text-lg mb-4 text-primary-coral">
               Offres recommandées pour vous :
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {recommendations.map((option, index) => {
-                let therapyDescription: string | null = null;
-                if (option.offeringType === 'therapy' && option.therapyId) {
-                  const { getTherapyTypeById } = require('@/data/therapyOfferings/utils');
-                  const therapy = getTherapyTypeById(option.therapyId);
-                  if (therapy && therapy.modalInfo && therapy.modalInfo.moreInfos && therapy.modalInfo.moreInfos.description) {
-                    therapyDescription = therapy.modalInfo.moreInfos.description;
+            <div className="w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {recommendations.map((option, index) => {
+                  let therapyDescription: string | null = null;
+                  if (option.offeringType === 'therapy' && option.therapyId) {
+                    const { getTherapyTypeById } = require('@/data/therapyOfferings/utils');
+                    const therapy = getTherapyTypeById(option.therapyId);
+                    if (therapy && therapy.modalInfo && therapy.modalInfo.moreInfos && therapy.modalInfo.moreInfos.description) {
+                      therapyDescription = therapy.modalInfo.moreInfos.description;
+                    }
                   }
-                }
-                return (
-                  <div
-                    key={index}
-                    className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors"
-                  >
-                    <div className="space-y-12">
-                      <div className="text-right">
-                        <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
-                          {option.offeringType === 'therapy'
-                            ? 'Thérapie'
-                            : 'Coaching'}
-                        </span>
-                        <h4 className="text-2xl text-primary-coral font-light mb-2">
-                          {option.title}
-                        </h4>
-                      </div>
+                  return (
+                    <div
+                      key={index}
+                      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors"
+                    >
+                      <div className="space-y-12">
+                        <div className="text-right">
+                          <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
+                            {option.offeringType === 'therapy'
+                              ? 'Thérapie'
+                              : 'Coaching'}
+                          </span>
+                          <h4 className="text-2xl text-primary-coral font-light mb-2">
+                            {option.title}
+                          </h4>
+                        </div>
 
-                      <div className="space-y-6">
-                        {option.offeringType === 'therapy' && therapyDescription && (
-                          <p className="text-primary-cream/90">{therapyDescription}</p>
-                        )}
-                        {option.offeringType !== 'therapy' && (
-                          <p className="text-primary-cream/90">{option.description}</p>
-                        )}
+                        <div className="space-y-6">
+                          {option.offeringType === 'therapy' && therapyDescription && (
+                            <p className="text-primary-cream/90">{therapyDescription}</p>
+                          )}
+                          {option.offeringType !== 'therapy' && (
+                            <p className="text-primary-cream/90">{option.description}</p>
+                          )}
 
-                        <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
-                          {/* Price section */}
-                          <div className="text-primary-cream/90">
-                            {option.offeringType === 'therapy' &&
-                            option.hasFormulas &&
-                            option.formulas &&
-                            option.formulas.length > 1 ? (
-                              <div className="text-right">
-                                <span className="text-sm font-medium">
-                                  Plusieurs formules disponibles
-                                </span>
-                              </div>
-                            ) : (
-                              option.price && (
-                                <div className="text-right">
-                                  {hasCoupon ? (
-                                    <span className="text-sm font-medium">
-                                      <span className="line-through">
-                                        {option.price} CHF / EUR
-                                      </span>{' '}
-                                      <span className="text-primary-coral">
-                                        {calculateDiscountedPrice(option.price)}{' '}
-                                        CHF / EUR
-                                      </span>{' '}
-                                      {option.priceDetails && (
-                                        <span>({option.priceDetails})</span>
-                                      )}
-                                    </span>
-                                  ) : (
-                                    <span className="text-sm font-medium">
-                                      {option.price} CHF / EUR{' '}
-                                      {option.priceDetails && (
-                                        <span>({option.priceDetails})</span>
-                                      )}
-                                    </span>
-                                  )}
-                                </div>
-                              )
-                            )}
-                            {!option.price &&
-                            option.priceDetails &&
-                            !(
-                              option.offeringType === 'therapy' &&
+                          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+                            {/* Price section */}
+                            <div className="text-primary-cream/90">
+                              {option.offeringType === 'therapy' &&
                               option.hasFormulas &&
                               option.formulas &&
-                              option.formulas.length > 1
-                            ) && (
-                              <div className="text-right whitespace-pre-line">
-                                <span className="text-sm font-medium">
-                                  {option.priceDetails}
-                                </span>
+                              option.formulas.length > 1 ? (
+                                <div className="text-right">
+                                  <span className="text-sm font-medium">
+                                    Plusieurs formules disponibles
+                                  </span>
+                                </div>
+                              ) : (
+                                option.price && (
+                                  <div className="text-right">
+                                    {hasCoupon ? (
+                                      <span className="text-sm font-medium">
+                                        <span className="line-through">
+                                          {option.price} CHF / EUR
+                                        </span>{' '}
+                                        <span className="text-primary-coral">
+                                          {calculateDiscountedPrice(option.price)}{' '}
+                                          CHF / EUR
+                                        </span>{' '}
+                                        {option.priceDetails && (
+                                          <span>({option.priceDetails})</span>
+                                        )}
+                                      </span>
+                                    ) : (
+                                      <span className="text-sm font-medium">
+                                        {option.price} CHF / EUR{' '}
+                                        {option.priceDetails && (
+                                          <span>({option.priceDetails})</span>
+                                        )}
+                                      </span>
+                                    )}
+                                  </div>
+                                )
+                              )}
+                              {!option.price &&
+                              option.priceDetails &&
+                              !(
+                                option.offeringType === 'therapy' &&
+                                option.hasFormulas &&
+                                option.formulas &&
+                                option.formulas.length > 1
+                              ) && (
+                                <div className="text-right whitespace-pre-line">
+                                  <span className="text-sm font-medium">
+                                    {option.priceDetails}
+                                  </span>
+                                </div>
+                              )}
+                              {!option.price &&
+                              !option.priceDetails &&
+                              option.hasFormulas &&
+                              option.formulas &&
+                              option.formulas.length === 1 && (
+                                <div className="text-right">
+                                  <span className="text-sm font-medium">
+                                    À partir de {option.formulas[0].price} CHF /
+                                    EUR{' '}
+                                    {option.formulas[0].priceDetails &&
+                                      `(${option.formulas[0].priceDetails})`}
+                                  </span>
+                                </div>
+                              )}
+                              {!option.price &&
+                              !option.priceDetails &&
+                              (!option.hasFormulas ||
+                                !option.formulas ||
+                                option.formulas.length === 0) && (
+                                <div className="text-right">
+                                  <span className="text-sm font-medium">
+                                    {option.type === 'individual'
+                                      ? option.offeringType === 'therapy'
+                                        ? 'Plusieurs formules disponibles'
+                                        : 'À partir de 720 CHF / EUR (programme complet)'
+                                      : option.type === 'vit' ||
+                                          option.therapyId === 'vit-a-la-carte'
+                                        ? 'À partir de 210 CHF / EUR par séance'
+                                        : option.type === 'couple' ||
+                                            option.therapyId === 'couple'
+                                          ? '2250 CHF / EUR (programme complet)'
+                                          : 'Tarif sur demande'}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Session length section */}
+                            {option.sessionLength && (
+                              <div className="mt-3 pt-3 border-t border-primary-cream/20">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="text-primary-coral" size={18} />
+                                  <p className="text-sm text-primary-cream/90">
+                                    {option.type === 'individual' ||
+                                    option.therapyId === 'individual'
+                                      ? `${option.sessionLength} par séance`
+                                      : option.sessionLength}
+                                  </p>
+                                </div>
                               </div>
                             )}
-                            {!option.price &&
-                            !option.priceDetails &&
-                            option.hasFormulas &&
+
+                            {/* Formulas section */}
+                            {option.hasFormulas &&
                             option.formulas &&
-                            option.formulas.length === 1 && (
-                              <div className="text-right">
-                                <span className="text-sm font-medium">
-                                  À partir de {option.formulas[0].price} CHF /
-                                  EUR{' '}
-                                  {option.formulas[0].priceDetails &&
-                                    `(${option.formulas[0].priceDetails})`}
-                                </span>
-                              </div>
-                            )}
-                            {!option.price &&
-                            !option.priceDetails &&
-                            (!option.hasFormulas ||
-                              !option.formulas ||
-                              option.formulas.length === 0) && (
-                              <div className="text-right">
-                                <span className="text-sm font-medium">
-                                  {option.type === 'individual'
-                                    ? option.offeringType === 'therapy'
-                                      ? 'Plusieurs formules disponibles'
-                                      : 'À partir de 720 CHF / EUR (programme complet)'
-                                    : option.type === 'vit' ||
-                                        option.therapyId === 'vit-a-la-carte'
-                                      ? 'À partir de 210 CHF / EUR par séance'
-                                      : option.type === 'couple' ||
-                                          option.therapyId === 'couple'
-                                        ? '2250 CHF / EUR (programme complet)'
-                                        : 'Tarif sur demande'}
-                                </span>
+                            option.formulas.length > 0 && (
+                              <div className="mt-4 pt-3 border-t border-primary-cream/20">
+                                <p className="text-primary-cream/90 mb-2">
+                                  <strong>Formules disponibles</strong>
+                                </p>
+                                <div className="space-y-2">
+                                  {option.formulas.map((formula, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="text-sm text-primary-cream/80 flex items-center gap-2"
+                                    >
+                                      <span className="text-primary-coral">
+                                        ♦
+                                      </span>
+                                      <span>
+                                        {formula.title}:{' '}
+                                        {hasCoupon ? (
+                                          <>
+                                            <span className="line-through">
+                                              {formula.price} CHF / EUR
+                                            </span>{' '}
+                                            <span className="text-primary-coral">
+                                              {calculateDiscountedPrice(
+                                                formula.price,
+                                              )}{' '}
+                                              CHF / EUR
+                                            </span>
+                                          </>
+                                        ) : (
+                                          <>{formula.price} CHF / EUR</>
+                                        )}
+                                        {formula.duration && (
+                                          <span> ({formula.duration})</span>
+                                        )}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             )}
                           </div>
-
-                          {/* Session length section */}
-                          {option.sessionLength && (
-                            <div className="mt-3 pt-3 border-t border-primary-cream/20">
-                              <div className="flex items-center gap-2">
-                                <Clock className="text-primary-coral" size={18} />
-                                <p className="text-sm text-primary-cream/90">
-                                  {option.type === 'individual' ||
-                                  option.therapyId === 'individual'
-                                    ? `${option.sessionLength} par séance`
-                                    : option.sessionLength}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Formulas section */}
-                          {option.hasFormulas &&
-                          option.formulas &&
-                          option.formulas.length > 0 && (
-                            <div className="mt-4 pt-3 border-t border-primary-cream/20">
-                              <p className="text-primary-cream/90 mb-2">
-                                <strong>Formules disponibles</strong>
-                              </p>
-                              <div className="space-y-2">
-                                {option.formulas.map((formula, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="text-sm text-primary-cream/80 flex items-center gap-2"
-                                  >
-                                    <span className="text-primary-coral">
-                                      ♦
-                                    </span>
-                                    <span>
-                                      {formula.title}:{' '}
-                                      {hasCoupon ? (
-                                        <>
-                                          <span className="line-through">
-                                            {formula.price} CHF / EUR
-                                          </span>{' '}
-                                          <span className="text-primary-coral">
-                                            {calculateDiscountedPrice(
-                                              formula.price,
-                                            )}{' '}
-                                            CHF / EUR
-                                          </span>
-                                        </>
-                                      ) : (
-                                        <>{formula.price} CHF / EUR</>
-                                      )}
-                                      {formula.duration && (
-                                        <span> ({formula.duration})</span>
-                                      )}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
             {/* Message about the journey */}

@@ -150,7 +150,7 @@ export function ProchainementPage({ data, settings }: any) {
 
             {/* Questionnaire Section */}
             <div ref={questionnaireSectionRef} className="mt-16 mb-16 flex justify-center">
-              <div className="ml-6 mr-6 max-w-[calc(100vw-48px)] w-full md:w-full md:mx-auto lg:w-4/5 lg:mx-auto rounded-[32px] overflow-hidden bg-primary-forest/30 px-0 md:px-8 lg:px-16" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
+              <div className="w-full p-6 text-primary-cream/90 rounded-[32px] overflow-hidden bg-primary-forest/30" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
                 <TherapyQuestionnaireNew />
               </div>
             </div>
