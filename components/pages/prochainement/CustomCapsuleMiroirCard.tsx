@@ -92,7 +92,7 @@ export function CustomCapsuleMiroirCard({
       video.removeEventListener('error', handleError)
       video.removeEventListener('loadeddata', () => {})
     }
-  }, [isDragging])
+  }, [isDragging, videoRef])
 
   // Seek-to-position logic
   const seekTo = (clientX: number) => {

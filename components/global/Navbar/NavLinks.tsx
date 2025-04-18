@@ -66,23 +66,7 @@ export function NavLinks({
         Coachings
       </Link>
 
-      {isHomePage ? (
-        <a
-          href="#about"
-          className={linkClass}
-          onClick={(e) => handleAnchorClick(e, 'about')}
-        >
-          A Propos
-        </a>
-      ) : (
-        <Link
-          href="/accueil#about"
-          className={linkClass}
-          onClick={() => setIsMenuOpen(false)}
-        >
-          A Propos
-        </Link>
-      )}
+      {/* "A Propos" link removed as requested */}
 
       {/* Appointment section - hidden only on medium screens (md) */}
       <div className="block md:hidden lg:block">

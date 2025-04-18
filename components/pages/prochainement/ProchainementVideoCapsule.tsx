@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect,useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Header } from '@/components/shared/Header'
 
@@ -44,7 +44,7 @@ export default function ProchainementVideoCapsule({
 
   useEffect(() => {
     setIsClient(true)
-  }, [])
+  }, [setIsClient])
 
   const handlePlayPause = () => {
     if (!videoRef.current) return
