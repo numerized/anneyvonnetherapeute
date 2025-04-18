@@ -141,7 +141,7 @@ export function ProchainementPage({ data, settings }: any) {
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
             {/* Stats Section */}
-            <div className="px-6">
+            <div className="ml-6 mr-6 max-w-[calc(100vw-48px)] w-full md:w-full md:mx-auto lg:w-4/5 lg:mx-auto">
               <Stats
                 title="Une approche unique de la thérapie relationnelle"
                 items={statsItems}
