@@ -47,7 +47,7 @@ export default function ProchainementVideoCapsule({
             </h2>
             <br/>
             <div className="text-primary-cream/70 text-lg md:text-xl text-center mb-8">
-              amours et sexualités, l'accord.
+              Par Anne Yvonne Racine
             </div>
           </>
         }
