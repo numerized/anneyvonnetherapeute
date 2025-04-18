@@ -25,7 +25,7 @@ export function About() {
             <div className="space-y-6">
               <div className="space-y-4 text-primary-cream">
                 <div>
-                  <h3 className="text-xl font-light text-primary-coral mb-1">
+                  <h3 className="text-8xl md:text-[10rem] font-light text-primary-coral mb-1">
                     UNE HISTOIRE D'ENGAGEMENT
                   </h3>
                   <p className="text-base mb-3">

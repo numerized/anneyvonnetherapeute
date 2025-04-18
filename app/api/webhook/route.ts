@@ -50,12 +50,14 @@ export async function POST(req: Request) {
       event = stripe.webhooks.constructEvent(text, signature, webhookSecret)
       console.log('Webhook event constructed:', event.type)
     } catch (err: any) {
-      console.error('Webhook signature verification failed:', {
-        error: err.message,
-        type: err.type,
-        signature,
-        secretKey: webhookSecret ? 'present' : 'missing',
-      })
+      console.error(
+        'Webhook signature verification failed - see details below:',
+      )
+      console.error(
+        err
+          ? `Error message: ${err.message || 'Unknown error'}`
+          : 'No error details available (null)',
+      )
       return NextResponse.json(
         { error: 'Webhook signature verification failed' },
         { status: 400 },
@@ -123,28 +125,93 @@ export async function POST(req: Request) {
       // Send confirmation email first, before any Firebase operations
       try {
         console.log('Preparing to send confirmation email...')
-        const emailTemplate =
-          metadata.productType === 'prochainement'
-            ? createCoachingEmailTemplate(
-                customerEmail,
-                finalPrice,
-                currency,
-                isTestCoupon ? -1 : hasDiscount ? 10 : 0,
-              )
-            : metadata.productType === 'coaching-relationnel-en-groupe'
-              ? createGroupCoachingEmailTemplate(
-                  customerEmail,
-                  finalPrice,
-                  currency,
-                  isTestCoupon ? -1 : hasDiscount ? 10 : 0,
-                )
-              : createWebinarEmailTemplate(
-                  finalPrice,
-                  currency,
-                  isTestCoupon ? -1 : hasDiscount ? 10 : 0,
-                  calendarLinks,
-                  process.env.WHEREBY_LINK!,
-                )
+        let emailTemplate = ''
+
+        if (metadata.productType === 'prochainement') {
+          // Build offer details for email
+          const offerTitle = metadata.offerTitle || 'Votre offre'
+          let offerDetailsHtml = ''
+          if (metadata.formulas) {
+            try {
+              const formulas = JSON.parse(metadata.formulas)
+              if (Array.isArray(formulas) && formulas.length > 0) {
+                offerDetailsHtml += "<h3>Détails de l'offre choisie :</h3><ul>"
+                for (const formula of formulas) {
+                  offerDetailsHtml += `<li><strong>${formula.title}</strong> - ${formula.duration} : ${formula.price} ${currency} (${formula.priceDetails || ''})</li>`
+                }
+                offerDetailsHtml += '</ul>'
+              }
+            } catch (e) {
+              // fallback: show as text
+              offerDetailsHtml += `<p>${metadata.formulas}</p>`
+            }
+          }
+          if (metadata.priceDetails) {
+            offerDetailsHtml += `<p><strong>Détails du prix :</strong> ${metadata.priceDetails}</p>`
+          }
+          if (metadata.sessionLength) {
+            offerDetailsHtml += `<p><strong>Durée de la séance :</strong> ${metadata.sessionLength}</p>`
+          }
+
+          // Compose custom email template
+          emailTemplate = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <img src="https://coeur-a-corps.org/images/logo.png" 
+                   alt="Anne Yvonne Relations" 
+                   style="width: 120px; height: auto; margin-bottom: 30px;"
+              />
+              <h2 style="color: #E8927C;">Confirmation d'inscription - ${offerTitle}</h2>
+              <p>Merci pour votre achat ! Voici les détails de votre offre :</p>
+              <ul>
+                <li><strong>Offre :</strong> ${offerTitle}</li>
+                <li><strong>Montant réglé :</strong> ${finalPrice} ${currency} ${hasDiscount ? '(remise appliquée)' : ''}</li>
+              </ul>
+              ${offerDetailsHtml}
+              <h3>Prochaines étapes</h3>
+              <p>Je vous contacterai personnellement dans les 24 heures via l'adresse ${customerEmail} pour organiser la suite de votre accompagnement.</p>
+              <p>Pour toute question urgente, n'hésitez pas à me contacter via a.ra@bluewin.ch</p>
+              <p>Au plaisir de commencer cette transformation ensemble !</p>
+              <p>Anne Yvonne</p>
+  
+              <div style="background: #faf6e6; border-radius: 28px; padding: 28px 24px 24px 24px; margin: 24px 0 32px 0;">
+                <p style="color: #E8927C; font-size: 1.35rem; font-weight: bold; margin-bottom: 12px; font-family: Arial, sans-serif;">Nos Capsules Audio</p>
+                <p style="color: #333; font-size: 1.1rem; margin-bottom: 22px; font-family: Arial, sans-serif;">Je vous invite à découvrir dès maintenant nos capsules audio pour enrichir votre parcours relationnel.</p>
+                <a href="https://www.coeur-a-corps.org/espace180" target="_blank" style="display: inline-block; background: #E8927C; color: #fff; font-weight: bold; font-size: 1.35rem; border-radius: 40px; padding: 18px 38px; text-decoration: none; text-align: center; font-family: Arial, sans-serif;">Accéder aux Capsules</a>
+              </div>
+            </div>
+          `
+        } else if (metadata.productType === 'coaching-relationnel-en-groupe') {
+          emailTemplate = createGroupCoachingEmailTemplate(
+            customerEmail,
+            finalPrice,
+            currency,
+            isTestCoupon ? -1 : hasDiscount ? 10 : 0,
+          )
+          emailTemplate += `
+
+            <div style="background: #faf6e6; border-radius: 28px; padding: 28px 24px 24px 24px; margin: 24px 0 32px 0;">
+              <p style="color: #E8927C; font-size: 1.35rem; font-weight: bold; margin-bottom: 12px; font-family: Arial, sans-serif;">Nos Capsules Audio</p>
+              <p style="color: #333; font-size: 1.1rem; margin-bottom: 22px; font-family: Arial, sans-serif;">Je vous invite à découvrir dès maintenant nos capsules audio pour enrichir votre parcours relationnel.</p>
+              <a href="https://www.coeur-a-corps.org/espace180" target="_blank" style="display: inline-block; background: #E8927C; color: #fff; font-weight: bold; font-size: 1.35rem; border-radius: 40px; padding: 18px 38px; text-decoration: none; text-align: center; font-family: Arial, sans-serif;">Accéder aux Capsules</a>
+            </div>
+          `
+        } else {
+          emailTemplate = createWebinarEmailTemplate(
+            finalPrice,
+            currency,
+            isTestCoupon ? -1 : hasDiscount ? 10 : 0,
+            calendarLinks,
+            process.env.WHEREBY_LINK!,
+          )
+          emailTemplate += `
+
+            <div style="background: #faf6e6; border-radius: 28px; padding: 28px 24px 24px 24px; margin: 24px 0 32px 0;">
+              <p style="color: #E8927C; font-size: 1.35rem; font-weight: bold; margin-bottom: 12px; font-family: Arial, sans-serif;">Nos Capsules Audio</p>
+              <p style="color: #333; font-size: 1.1rem; margin-bottom: 22px; font-family: Arial, sans-serif;">Je vous invite à découvrir dès maintenant nos capsules audio pour enrichir votre parcours relationnel.</p>
+              <a href="https://www.coeur-a-corps.org/espace180" target="_blank" style="display: inline-block; background: #E8927C; color: #fff; font-weight: bold; font-size: 1.35rem; border-radius: 40px; padding: 18px 38px; text-decoration: none; text-align: center; font-family: Arial, sans-serif;">Accéder aux Capsules</a>
+            </div>
+          `
+        }
 
         if (!process.env.SENDGRID_API_KEY) {
           throw new Error('SendGrid API key missing')
@@ -159,7 +226,7 @@ export async function POST(req: Request) {
           },
           subject:
             metadata.productType === 'prochainement'
-              ? 'Confirmation de votre inscription au Coaching Relationnel'
+              ? `Confirmation de votre inscription - ${metadata.offerTitle || 'Votre offre'}`
               : metadata.productType === 'coaching-relationnel-en-groupe'
                 ? 'Confirmation de votre inscription au Coaching Relationnel en Groupe'
                 : 'Confirmation de votre inscription à la formation',
@@ -167,7 +234,12 @@ export async function POST(req: Request) {
         })
         console.log('Confirmation email sent successfully to:', customerEmail)
       } catch (error) {
-        console.error('Error sending confirmation email:', error)
+        console.error('Error sending confirmation email - see details below:')
+        console.error(
+          error
+            ? `Error message: ${error.message || 'Unknown error'}`
+            : 'No error details available (null)',
+        )
         throw error // Important to notify if email fails
       }
 
@@ -185,26 +257,48 @@ export async function POST(req: Request) {
 
           if (!querySnapshot.empty) {
             userId = querySnapshot.docs[0].id
-            console.log('Found existing user with ID:', userId)
+            console.log(
+              '✅ Found existing user with ID:',
+              userId,
+              'for email:',
+              customerEmail,
+            )
           } else {
             console.log(
-              'No user found with email:',
+              '❌ No user found with email:',
               customerEmail,
               '. Creating new user...',
             )
             // Create a new user document
-            const newUserDoc = await adminDb.collection('users').add({
+            const userPayload = {
               email: customerEmail,
               name: session.customer_details?.name || '',
               phone: session.customer_details?.phone || '',
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
-            })
-            userId = newUserDoc.id
-            console.log('Created new user with ID:', userId)
+            }
+            if (!userPayload.email) {
+              console.error('Cannot create user: missing email', userPayload)
+            } else {
+              const newUserDoc = await adminDb
+                .collection('users')
+                .add(userPayload)
+              userId = newUserDoc.id
+              console.log(
+                '🆕 Created new user with ID:',
+                userId,
+                'for email:',
+                customerEmail,
+              )
+            }
           }
         } catch (error) {
-          console.error('Error finding/creating user:', error)
+          console.error('Error finding/creating user - see details below:')
+          console.error(
+            error
+              ? `Error message: ${error.message || 'Unknown error'}`
+              : 'No error details available (null)',
+          )
           // Continue with purchase data, even if user operations fail
         }
 
@@ -246,17 +340,34 @@ export async function POST(req: Request) {
             timestamp: new Date(),
           }
 
-          const docRef = await adminDb.collection('purchases').add(purchaseData)
-          console.log(
-            'Purchase data stored successfully in Firestore, document ID:',
-            docRef.id,
-          )
+          // Defensive check: Make sure purchaseData is a valid object
+          if (!purchaseData || typeof purchaseData !== 'object') {
+            console.error('Invalid purchaseData for Firestore:', purchaseData)
+          } else {
+            const docRef = await adminDb
+              .collection('purchases')
+              .add(purchaseData)
+            console.log(
+              'Purchase data stored successfully in Firestore, document ID:',
+              docRef.id,
+            )
+          }
         } catch (error) {
-          console.error('Error storing purchase data:', error)
+          console.error('Error storing purchase data - see details below:')
+          console.error(
+            error
+              ? `Error message: ${error.message || 'Unknown error'}`
+              : 'No error details available (null)',
+          )
           // Don't throw here, as we've already sent the email
         }
       } catch (error) {
-        console.error('Error with Firebase operations:', error)
+        console.error('Error with Firebase operations - see details below:')
+        console.error(
+          error
+            ? `Error message: ${error.message || 'Unknown error'}`
+            : 'No error details available (null)',
+        )
         // Don't throw here, as we've already sent the email
       }
 
@@ -265,7 +376,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true })
   } catch (err) {
-    console.error('Webhook error:', err)
+    console.error('Webhook error - see details below:')
+    console.error(
+      err
+        ? `Error message: ${err.message || 'Unknown error'}`
+        : 'No error details available (null)',
+    )
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 400 },

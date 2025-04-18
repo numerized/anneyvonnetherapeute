@@ -13,21 +13,41 @@ interface PurchaseTicketProps {
   ticketType: 'standard' | 'vip'
   onClose: () => void
   defaultCouponCode?: string
+  price?: number | null
+  currency?: 'eur' | 'chf'
+  title?: string
+  description?: string
+  priceDetails?: string
+  sessionLength?: string
+  hasFormulas?: boolean
+  formulas?: any[]
+  offeringType?: string
+  type?: string
 }
 
 export function PurchaseTicket({
   ticketType,
   onClose,
   defaultCouponCode,
+  price,
+  currency: propCurrency,
+  title,
+  description,
+  priceDetails,
+  sessionLength,
+  hasFormulas,
+  formulas,
+  offeringType,
+  type,
 }: PurchaseTicketProps) {
   const [email, setEmail] = useState('')
-  const [currency, setCurrency] = useState('eur')
+  const [currency, setCurrency] = useState(propCurrency || 'chf')
   const [couponCode, setCouponCode] = useState(defaultCouponCode || '')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [hasDiscount, setHasDiscount] = useState(!!defaultCouponCode)
 
-  const basePrice = 999
+  const basePrice = price || 999
   const discountedPrice = Math.round(basePrice * 0.9) // 10% discount
   const testPrice = 1 // 1 EUR/CHF for test purchases
 
@@ -59,6 +79,21 @@ export function PurchaseTicket({
           currency,
           hasDiscount,
           couponCode: couponCode || undefined,
+          price: getDisplayPrice(),
+          offerTitle: title,
+          metadata: {
+            offerTitle: title,
+            selectedCurrency: currency,
+            originalPrice: basePrice,
+            discounted: hasDiscount ? 'true' : 'false',
+            couponCode: couponCode || undefined,
+            priceDetails: priceDetails || '',
+            sessionLength: sessionLength || '',
+            hasFormulas: hasFormulas ? 'true' : 'false',
+            formulas: formulas ? JSON.stringify(formulas) : '',
+            offeringType: offeringType || '',
+            type: type || '',
+          },
         }),
       })
 
@@ -91,9 +126,15 @@ export function PurchaseTicket({
           ✕
         </button>
 
-        <h3 className="text-2xl font-light text-primary-cream mb-6">
+        <h3 className="text-2xl font-light text-primary-cream mb-2">
           Réserver ma place
+          {title && (
+            <div className="text-base font-semibold text-primary-coral mt-2">
+              {title}
+            </div>
+          )}
         </h3>
+        {/* Removed description, priceDetails, sessionLength from modal display as requested */}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
@@ -122,31 +163,6 @@ export function PurchaseTicket({
               <div className="flex gap-8 justify-center">
                 <label className="flex flex-col items-center gap-3 cursor-pointer group">
                   <div
-                    className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
-                  >
-                    <input
-                      type="radio"
-                      name="currency"
-                      value="eur"
-                      checked={currency === 'eur'}
-                      onChange={(e) => setCurrency(e.target.value)}
-                      className="sr-only"
-                    />
-                    <span
-                      className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}
-                    >
-                      EUR
-                    </span>
-                  </div>
-                  <span
-                    className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
-                  >
-                    Euros
-                  </span>
-                </label>
-
-                <label className="flex flex-col items-center gap-3 cursor-pointer group">
-                  <div
                     className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'chf' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
                   >
                     <input
@@ -154,7 +170,9 @@ export function PurchaseTicket({
                       name="currency"
                       value="chf"
                       checked={currency === 'chf'}
-                      onChange={(e) => setCurrency(e.target.value)}
+                      onChange={(e) =>
+                        setCurrency(e.target.value as 'eur' | 'chf')
+                      }
                       className="sr-only"
                     />
                     <span
@@ -167,6 +185,33 @@ export function PurchaseTicket({
                     className={`text-sm transition-colors ${currency === 'chf' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
                   >
                     Francs Suisses
+                  </span>
+                </label>
+
+                <label className="flex flex-col items-center gap-3 cursor-pointer group">
+                  <div
+                    className={`w-20 h-20 rounded-2xl flex items-center justify-center border-2 transition-colors ${currency === 'eur' ? 'bg-primary-coral/20 border-primary-coral' : 'border-primary-cream/20 hover:border-primary-coral/50'}`}
+                  >
+                    <input
+                      type="radio"
+                      name="currency"
+                      value="eur"
+                      checked={currency === 'eur'}
+                      onChange={(e) =>
+                        setCurrency(e.target.value as 'eur' | 'chf')
+                      }
+                      className="sr-only"
+                    />
+                    <span
+                      className={`text-2xl font-bold transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/80 group-hover:text-primary-coral/80'}`}
+                    >
+                      EUR
+                    </span>
+                  </div>
+                  <span
+                    className={`text-sm transition-colors ${currency === 'eur' ? 'text-primary-coral' : 'text-primary-cream/60'}`}
+                  >
+                    Euros
                   </span>
                 </label>
               </div>

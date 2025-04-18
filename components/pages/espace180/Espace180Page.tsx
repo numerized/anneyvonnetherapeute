@@ -959,12 +959,14 @@ export default function Espace180Page() {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl ml-auto text-right">
               <h1 className="text-4xl md:text-5xl font-bold text-primary-cream mb-6">
-                Espace 180 Conversion d'Amour
+                Espace 180° d'Amour
               </h1>
               <p className="text-xl text-primary-cream/80">
-                Découvrez notre collection de méditations guidées et d'exercices
-                pratiques pour vous accompagner dans votre cheminement
-                personnel.
+                Explorez l’Espace 180° d’Amour, un univers de ressources
+                vibrantes pour accompagner votre déplacement intérieur.
+                Découvrez des méditations guidées, des exercices pratiques et
+                des contenus inspirants pour nourrir votre cheminement personnel
+                et relationnel.
               </p>
             </div>
           </div>

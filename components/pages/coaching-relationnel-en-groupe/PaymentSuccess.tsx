@@ -145,12 +145,11 @@ function PaymentSuccessContent() {
         Paiement réussi !
       </h2>
       <p className="text-primary-cream/80 mb-4">
-        Merci pour votre achat. Vous recevrez bientôt un email avec les détails
-        de votre billet.
+        Merci pour votre achat. Vous recevrez bientôt un email avec les détails.
       </p>
       <p className="text-primary-cream/60 text-sm mb-8">
-        Si vous ne recevez pas l&apos;email dans les prochaines minutes,
-        veuillez vérifier votre dossier spam.
+        Si vous ne recevez pas l&apos;email dans les prochaines heures, veuillez
+        vérifier votre dossier spam.
       </p>
       <Link
         href="/coaching-relationnel-en-groupe"

@@ -299,14 +299,17 @@ export function TherapyQuestionnaire() {
               </h2>
               {step !== 4 && (
                 <p className="text-lg mt-4">
-                  Répondez à deux questions simples pour découvrir nos
+                  Répondez à quelques questions simples pour découvrir nos
                   recommandations personnalisées
                 </p>
               )}
             </div>
           </div>
 
-          <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px]">
+          <div
+            className="rounded-[24px]"
+            style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}
+          >
             <AnimatePresence mode="wait">
               {step === 1 ? (
                 <motion.div

@@ -88,7 +88,10 @@ export async function POST(req: Request) {
       hasDiscount,
       couponCode,
       productType = 'prochainement',
+      price, // <-- get price from body
+      offerTitle, // <-- get offerTitle from body
     } = body
+    const extraMetadata = body.metadata || {}
     console.log('Request data:', {
       ticketType,
       email,
@@ -96,6 +99,8 @@ export async function POST(req: Request) {
       hasDiscount,
       couponCode,
       productType,
+      price,
+      offerTitle,
     })
 
     const headersList = await headers()
@@ -130,15 +135,20 @@ export async function POST(req: Request) {
     }
 
     // Get base amount first
-    const baseAmount =
+    let baseAmount =
       priceData.amount[currency.toLowerCase() as keyof typeof priceData.amount]
+    // If a price is provided from the frontend, use it (after validation)
+    if (typeof price === 'number' && price > 0) {
+      baseAmount = price * 100 === price ? price : Math.round(price * 100) // Accept both cents and decimal
+    }
 
     // Calculate amount with discount if applicable
     let amount = baseAmount
     if (
       hasDiscount &&
       'discountedAmount' in priceData &&
-      priceData.discountedAmount
+      priceData.discountedAmount &&
+      typeof price !== 'number' // Only use backend discount if frontend price not provided
     ) {
       const discountedAmount =
         priceData.discountedAmount[
@@ -156,6 +166,9 @@ export async function POST(req: Request) {
       discountMessage = `Test discount (1 ${currency.toUpperCase()})`
     }
 
+    // Make sure finalAmount is an integer
+    finalAmount = Math.round(finalAmount)
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types:
         currency.toLowerCase() === 'chf'
@@ -166,7 +179,9 @@ export async function POST(req: Request) {
           price_data: {
             currency: currency.toLowerCase(),
             product_data: {
-              name: priceData.name,
+              name: offerTitle
+                ? `${offerTitle} | Anne Yvonne Racine (coeur-a-corps.org)`
+                : priceData.name,
               ...(discountMessage && { description: discountMessage }),
             },
             unit_amount: finalAmount,
@@ -183,6 +198,9 @@ export async function POST(req: Request) {
         productType,
         hasDiscount: hasDiscount ? 'true' : 'false',
         testCoupon: couponCode === TEST_COUPON ? 'true' : 'false',
+        frontendPrice: price || '',
+        offerTitle: offerTitle || '',
+        ...extraMetadata,
       },
     })
 

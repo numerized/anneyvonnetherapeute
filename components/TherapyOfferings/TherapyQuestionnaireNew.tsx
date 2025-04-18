@@ -26,15 +26,19 @@ import {
   Target,
   User,
 } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { CalendlyModal } from '@/components/dashboard/CalendlyModal'
+import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
 import { scrollToSection } from '@/utils/scroll'
 import {
   generateRecommendedOptions,
   getIntentionText,
 } from '@/utils/therapyRecommendations'
+
+import { CoachingModal } from './CoachingModal'
+import { TherapyModal } from './TherapyModal'
 
 type TherapyOption = {
   title: string
@@ -97,6 +101,47 @@ const TherapyQuestionnaireNew = () => {
 
   // State for coupon
   const [hasCoupon, setHasCoupon] = useState(false)
+
+  // State for En Savoir Plus modal
+  const [showPromoModal, setShowPromoModal] = useState(false)
+  const [selectedPromoId, setSelectedPromoId] = useState<string | null>(null)
+  const [selectedPromoType, setSelectedPromoType] = useState<
+    'therapy' | 'coaching' | null
+  >(null)
+
+  // State for PurchaseTicket modal
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [purchasePrice, setPurchasePrice] = useState<number | null>(null)
+  const [purchaseCurrency, setPurchaseCurrency] = useState<'eur' | 'chf'>('chf')
+  const [purchaseTitle, setPurchaseTitle] = useState<string>('')
+
+  // State for passing coupon to modal
+  const [defaultCouponCode, setDefaultCouponCode] = useState<string>('')
+
+  // --- Add more info state for passing to modal ---
+  const [purchaseDetails, setPurchaseDetails] = useState<{
+    title: string
+    description: string
+    price: number
+    priceDetails?: string
+    sessionLength?: string
+    hasFormulas?: boolean
+    formulas?: any[]
+    type?: string
+    offeringType?: string
+  } | null>(null)
+
+  const searchParams =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search)
+      : null
+  const couponFromUrl = searchParams?.get('coupon') || ''
+
+  useEffect(() => {
+    if (couponFromUrl && couponFromUrl.trim() !== '') {
+      setDefaultCouponCode(couponFromUrl)
+    }
+  }, [couponFromUrl])
 
   // Check if we're on the home/accueil route
   const pathname = usePathname()
@@ -309,21 +354,23 @@ const TherapyQuestionnaireNew = () => {
   }
 
   return (
-    <section id="questionnaire" className="bg-primary-dark py-16">
-      <div
-        className={`mx-auto p-6 text-primary-cream/90 ${isHomePage ? 'max-w-6xl' : 'max-w-4xl'}`}
-      >
+    <section
+      id="questionnaire"
+      className="py-16"
+      style={{ backgroundColor: 'rgb(41, 58, 58)' }}
+    >
+      <div className="w-full max-w-full box-border text-primary-cream/90 md:mx-0 py-6 p-6">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-1 text-xs font-medium bg-primary-forest/50 text-primary-cream rounded-full mb-4">
             QUESTIONNAIRE
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-primary-cream">
-            Quelle offre vous correspond?
+            Quelle Offre sera la vôtre ?
           </h2>
           <p className="text-primary-cream/80">
-            Répondez à deux questions simples pour découvrir nos recommandations
-            personnalisées
+            Répondez à quelques questions simples pour découvrir nos
+            recommandations personnalisées
           </p>
         </div>
 
@@ -337,57 +384,59 @@ const TherapyQuestionnaireNew = () => {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <h3 className="text-xl font-medium mb-6 text-center">
-              Quelle est votre situation actuelle?
-            </h3>
-            <div
-              className={`space-y-4 ${isHomePage ? 'md:max-w-5xl md:mx-auto' : ''}`}
-            >
-              <button
-                onClick={() => handleSituationSelect('A')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <Heart className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je suis en couple et souhaite améliorer ma relation.
-                </h4>
-              </button>
-              <button
-                onClick={() => handleSituationSelect('B')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <HeartCrack className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je traverse des difficultés dans mon couple.
-                </h4>
-              </button>
-              <button
-                onClick={() => handleSituationSelect('C')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <Target className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je me questionne sur l'avenir de ma relation.
-                </h4>
-              </button>
-              <button
-                onClick={() => handleSituationSelect('D')}
-                className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
-              >
-                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
-                  <User className="w-5 h-5 text-primary-cream" />
-                </span>
-                <h4 className="font-medium">
-                  Je souhaite travailler sur moi-même et ma façon d'être en
-                  relation.
-                </h4>
-              </button>
+            <div className="px-0 md:px-0">
+              <h3 className="text-2xl md:text-3xl font-bold text-left md:max-w-5xl md:mx-auto text-primary-coral m-0">
+                Quelle est votre situation actuelle?
+                <br />
+                <br />
+              </h3>
+              <div className="space-y-4 md:max-w-5xl md:mx-auto">
+                <button
+                  onClick={() => handleSituationSelect('A')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <Heart className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je suis en couple et souhaite améliorer ma relation.
+                  </h4>
+                </button>
+                <button
+                  onClick={() => handleSituationSelect('B')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <HeartCrack className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je traverse des difficultés dans mon couple.
+                  </h4>
+                </button>
+                <button
+                  onClick={() => handleSituationSelect('C')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <Target className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je me questionne sur l'avenir de ma relation.
+                  </h4>
+                </button>
+                <button
+                  onClick={() => handleSituationSelect('D')}
+                  className="w-full text-left p-5 bg-primary-forest/30 hover:bg-primary-forest/40 transition-all rounded-lg flex items-center"
+                >
+                  <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-forest/50 mr-4">
+                    <User className="w-5 h-5 text-primary-cream" />
+                  </span>
+                  <h4 className="font-medium">
+                    Je souhaite travailler sur moi-même et ma façon d'être en
+                    relation.
+                  </h4>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -395,14 +444,8 @@ const TherapyQuestionnaireNew = () => {
         {/* Step 2: Current Priority */}
         {step === 2 && (
           <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <button
-                onClick={() => setStep(1)}
-                className="mr-2 text-primary-coral"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h3 className="text-xl font-semibold text-primary-cream">
+            <div className="mb-6 md:max-w-5xl md:mx-auto">
+              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 {answers.situation === 'A'
                   ? 'Quel est votre objectif principal ?'
                   : answers.situation === 'B'
@@ -413,7 +456,7 @@ const TherapyQuestionnaireNew = () => {
               </h3>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 md:max-w-5xl md:mx-auto">
               {answers.situation === 'A' && (
                 <>
                   <button
@@ -524,25 +567,41 @@ const TherapyQuestionnaireNew = () => {
                 </>
               )}
             </div>
+            <div className="mt-8 text-center">
+              <span
+                onClick={() => {
+                  localStorage.removeItem('answers')
+                  localStorage.removeItem('recommendations')
+                  localStorage.removeItem('questionnaire_completed')
+                  setStep(1)
+                  setAnswers({
+                    situation: '',
+                    priority: '',
+                    challenge: '',
+                    intention: '',
+                    skippedChallengeStep: false,
+                  })
+                  setRecommendations([])
+                  scrollToSection('questionnaire')
+                }}
+                className="text-primary-cream cursor-pointer hover:text-primary-coral"
+              >
+                Recommencer le questionnaire
+              </span>
+            </div>
           </div>
         )}
 
         {/* Step 3: Main Challenge */}
         {step === 3 && !answers.skippedChallengeStep && (
           <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <button
-                onClick={() => setStep(2)}
-                className="mr-2 text-primary-coral"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h3 className="text-xl font-semibold text-primary-cream">
+            <div className="mb-6 md:max-w-5xl md:mx-auto">
+              <h3 className="text-2xl md:text-3xl font-bold text-left text-primary-coral m-0">
                 Quel est votre principal défi ?
               </h3>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 md:max-w-5xl md:mx-auto">
               {answers.priority === 'A1' && (
                 <>
                   <button
@@ -767,29 +826,36 @@ const TherapyQuestionnaireNew = () => {
                 </>
               )}
             </div>
+            <div className="mt-8 text-center">
+              <span
+                onClick={() => {
+                  localStorage.removeItem('answers')
+                  localStorage.removeItem('recommendations')
+                  localStorage.removeItem('questionnaire_completed')
+                  setStep(1)
+                  setAnswers({
+                    situation: '',
+                    priority: '',
+                    challenge: '',
+                    intention: '',
+                    skippedChallengeStep: false,
+                  })
+                  setRecommendations([])
+                  scrollToSection('questionnaire')
+                }}
+                className="text-primary-cream cursor-pointer hover:text-primary-coral"
+              >
+                Recommencer le questionnaire
+              </span>
+            </div>
           </div>
         )}
 
         {/* Step 4: Results and Recommendations */}
         {step === 4 && (
           <div className="mb-8">
-            <div className="flex items-center mb-6">
-              <button
-                onClick={() => {
-                  // Always go back to the appropriate step based on the path taken
-                  setStep(answers.skippedChallengeStep ? 2 : 3)
-                }}
-                className="mr-2 text-primary-coral"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <h3 className="text-2xl font-semibold text-primary-coral">
-                Votre itinéraire personnalisé
-              </h3>
-            </div>
-
             {/* Intention section */}
-            <div className="bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] mb-8">
+            <div className="bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] mb-8 w-full box-border md:max-w-5xl md:mx-auto">
               <h4 className="font-semibold text-lg mb-3 text-primary-coral">
                 Votre intention profonde :
               </h4>
@@ -798,7 +864,7 @@ const TherapyQuestionnaireNew = () => {
 
             {/* Coupon notification */}
             {hasCoupon && (
-              <div className="bg-primary-coral/20 p-4 rounded-[24px] mb-6 flex items-center justify-between">
+              <div className="bg-primary-coral/20 p-4 rounded-[24px] mb-6 flex items-center justify-between md:max-w-5xl md:mx-auto">
                 <div className="flex items-center gap-2">
                   <Check className="text-primary-coral" size={18} />
                   <p className="text-primary-coral font-medium">
@@ -809,189 +875,256 @@ const TherapyQuestionnaireNew = () => {
             )}
 
             {/* Recommendations */}
-            <h4 className="font-semibold text-lg mb-4 text-primary-coral">
-              Offres recommandées pour vous :
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {recommendations.map((option, index) => (
-                <div
-                  key={index}
-                  className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors"
-                >
-                  <div className="space-y-12">
-                    <div className="text-right">
-                      <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
-                        {option.offeringType === 'therapy'
-                          ? 'Thérapie'
-                          : 'Coaching'}
-                      </span>
-                      <h4 className="text-2xl text-primary-coral font-light mb-2">
-                        {option.title}
-                      </h4>
-                    </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-center text-primary-cream mb-6 md:max-w-5xl md:mx-auto">
+              Offres recommandées pour vous
+            </h3>
+            <div className="w-full md:max-w-5xl md:mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {recommendations.map((option, index) => {
+                  let therapyDescription: string | null = null
+                  if (option.offeringType === 'therapy' && option.therapyId) {
+                    const {
+                      getTherapyTypeById,
+                    } = require('@/data/therapyOfferings/utils')
+                    const therapy = getTherapyTypeById(option.therapyId)
+                    if (
+                      therapy &&
+                      therapy.modalInfo &&
+                      therapy.modalInfo.moreInfos &&
+                      therapy.modalInfo.moreInfos.description
+                    ) {
+                      therapyDescription =
+                        therapy.modalInfo.moreInfos.description
+                    }
+                  }
+                  return (
+                    <div
+                      key={index}
+                      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors w-full box-border flex flex-col h-full"
+                    >
+                      <div className="flex-1 flex flex-col space-y-12">
+                        <div className="text-right">
+                          <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
+                            {option.offeringType === 'therapy'
+                              ? 'Thérapie'
+                              : 'Coaching'}
+                          </span>
+                          <h4 className="text-2xl text-primary-coral font-light mb-2">
+                            {option.title}
+                          </h4>
+                        </div>
 
-                    <div className="space-y-6">
-                      <p className="text-primary-cream/90">
-                        {option.description}
-                      </p>
-
-                      <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
-                        {/* Price section */}
-                        <div className="text-primary-cream/90">
+                        <div className="space-y-6">
                           {option.offeringType === 'therapy' &&
-                          option.hasFormulas &&
-                          option.formulas &&
-                          option.formulas.length > 1 ? (
-                            <div className="text-right">
-                              <span className="text-sm font-medium">
-                                Plusieurs formules disponibles
-                              </span>
-                            </div>
-                          ) : (
-                            option.price && (
-                              <div className="text-right">
-                                {hasCoupon ? (
-                                  <span className="text-sm font-medium">
-                                    <span className="line-through">
-                                      {option.price} CHF / EUR
-                                    </span>{' '}
-                                    <span className="text-primary-coral">
-                                      {calculateDiscountedPrice(option.price)}{' '}
-                                      CHF / EUR
-                                    </span>{' '}
-                                    {option.priceDetails && (
-                                      <span>({option.priceDetails})</span>
-                                    )}
-                                  </span>
-                                ) : (
-                                  <span className="text-sm font-medium">
-                                    {option.price} CHF / EUR{' '}
-                                    {option.priceDetails && (
-                                      <span>({option.priceDetails})</span>
-                                    )}
-                                  </span>
-                                )}
-                              </div>
-                            )
-                          )}
-                          {!option.price &&
-                            option.priceDetails &&
-                            !(
-                              option.offeringType === 'therapy' &&
-                              option.hasFormulas &&
-                              option.formulas &&
-                              option.formulas.length > 1
-                            ) && (
-                              <div className="text-right whitespace-pre-line">
-                                <span className="text-sm font-medium">
-                                  {option.priceDetails}
-                                </span>
-                              </div>
+                            therapyDescription && (
+                              <p className="text-primary-cream/90">
+                                {therapyDescription}
+                              </p>
                             )}
-                          {!option.price &&
-                            !option.priceDetails &&
+                          {option.offeringType !== 'therapy' && (
+                            <p className="text-primary-cream/90">
+                              {option.description}
+                            </p>
+                          )}
+                          <div className="flex justify-end mt-2">
+                            <button
+                              className="px-3 py-1 border border-primary-cream text-primary-cream rounded-full text-sm font-medium hover:bg-primary-cream hover:text-primary-forest transition-colors"
+                              style={{ minWidth: 140 }}
+                              onClick={() => {
+                                setSelectedPromoId(option.therapyId)
+                                setSelectedPromoType(option.offeringType)
+                                setShowPromoModal(true)
+                              }}
+                            >
+                              En Savoir Plus
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="bg-primary-dark/30 backdrop-blur-sm rounded-[24px] p-4">
+                          {/* Price section */}
+                          <div className="text-primary-cream/90">
+                            {option.offeringType === 'therapy' &&
                             option.hasFormulas &&
                             option.formulas &&
-                            option.formulas.length === 1 && (
+                            option.formulas.length > 1 ? (
                               <div className="text-right">
                                 <span className="text-sm font-medium">
-                                  À partir de {option.formulas[0].price} CHF /
-                                  EUR{' '}
-                                  {option.formulas[0].priceDetails &&
-                                    `(${option.formulas[0].priceDetails})`}
+                                  Plusieurs formules disponibles
                                 </span>
                               </div>
+                            ) : (
+                              option.price && (
+                                <div className="text-right">
+                                  {hasCoupon ? (
+                                    <span className="text-sm font-medium">
+                                      <span className="line-through">
+                                        {option.price} CHF / EUR
+                                      </span>{' '}
+                                      <span className="text-primary-coral">
+                                        {calculateDiscountedPrice(option.price)}{' '}
+                                        CHF / EUR
+                                      </span>{' '}
+                                      {option.priceDetails && (
+                                        <span>({option.priceDetails})</span>
+                                      )}
+                                    </span>
+                                  ) : (
+                                    <span className="text-sm font-medium">
+                                      {option.price} CHF / EUR{' '}
+                                      {option.priceDetails && (
+                                        <span>({option.priceDetails})</span>
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                              )
                             )}
-                          {!option.price &&
-                            !option.priceDetails &&
-                            (!option.hasFormulas ||
-                              !option.formulas ||
-                              option.formulas.length === 0) && (
-                              <div className="text-right">
-                                <span className="text-sm font-medium">
-                                  {option.type === 'individual'
-                                    ? option.offeringType === 'therapy'
-                                      ? 'Plusieurs formules disponibles'
-                                      : 'À partir de 720 CHF / EUR (programme complet)'
-                                    : option.type === 'vit' ||
-                                        option.therapyId === 'vit-a-la-carte'
-                                      ? 'À partir de 210 CHF / EUR par séance'
-                                      : option.type === 'couple' ||
-                                          option.therapyId === 'couple'
-                                        ? '2250 CHF / EUR (programme complet)'
-                                        : 'Tarif sur demande'}
-                                </span>
+                            {!option.price &&
+                              option.priceDetails &&
+                              !(
+                                option.offeringType === 'therapy' &&
+                                option.hasFormulas &&
+                                option.formulas &&
+                                option.formulas.length > 1
+                              ) && (
+                                <div className="text-right whitespace-pre-line">
+                                  <span className="text-sm font-medium">
+                                    {option.priceDetails}
+                                  </span>
+                                </div>
+                              )}
+                            {!option.price &&
+                              !option.priceDetails &&
+                              option.hasFormulas &&
+                              option.formulas &&
+                              option.formulas.length === 1 && (
+                                <div className="text-right">
+                                  <span className="text-sm font-medium">
+                                    À partir de {option.formulas[0].price} CHF /
+                                    EUR{' '}
+                                    {option.formulas[0].priceDetails &&
+                                      `(${option.formulas[0].priceDetails})`}
+                                  </span>
+                                </div>
+                              )}
+                            {!option.price &&
+                              !option.priceDetails &&
+                              (!option.hasFormulas ||
+                                !option.formulas ||
+                                option.formulas.length === 0) && (
+                                <div className="text-right">
+                                  <span className="text-sm font-medium">
+                                    {option.type === 'individual'
+                                      ? option.offeringType === 'therapy'
+                                        ? 'Plusieurs formules disponibles'
+                                        : 'À partir de 720 CHF / EUR (programme complet)'
+                                      : option.type === 'vit' ||
+                                          option.therapyId === 'vit-a-la-carte'
+                                        ? 'À partir de 210 CHF / EUR par séance'
+                                        : option.type === 'couple' ||
+                                            option.therapyId === 'couple'
+                                          ? '2250 CHF / EUR (programme complet)'
+                                          : 'Tarif sur demande'}
+                                  </span>
+                                </div>
+                              )}
+                          </div>
+
+                          {/* Session length section */}
+                          {option.sessionLength && (
+                            <div className="mt-3 pt-3 border-t border-primary-cream/20">
+                              <div className="flex items-center gap-2">
+                                <Clock
+                                  className="text-primary-coral"
+                                  size={18}
+                                />
+                                <p className="text-sm text-primary-cream/90">
+                                  {option.type === 'individual' ||
+                                  option.therapyId === 'individual'
+                                    ? `${option.sessionLength} par séance`
+                                    : option.sessionLength}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Formulas section */}
+                          {option.hasFormulas &&
+                            option.formulas &&
+                            option.formulas.length > 0 && (
+                              <div className="mt-4 pt-3 border-t border-primary-cream/20">
+                                <p className="text-primary-cream/90 mb-2">
+                                  <strong>Formules disponibles</strong>
+                                </p>
+                                <div className="space-y-2">
+                                  {option.formulas.map((formula, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="text-sm text-primary-cream/80 flex items-center gap-2"
+                                    >
+                                      <span className="text-primary-coral">
+                                        ♦
+                                      </span>
+                                      <span>
+                                        {formula.title}:{' '}
+                                        {hasCoupon ? (
+                                          <>
+                                            <span className="line-through">
+                                              {formula.price} CHF / EUR
+                                            </span>{' '}
+                                            <span className="text-primary-coral">
+                                              {calculateDiscountedPrice(
+                                                formula.price,
+                                              )}{' '}
+                                              CHF / EUR
+                                            </span>
+                                          </>
+                                        ) : (
+                                          <>{formula.price} CHF / EUR</>
+                                        )}
+                                        {formula.duration && (
+                                          <span> ({formula.duration})</span>
+                                        )}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             )}
                         </div>
-
-                        {/* Session length section */}
-                        {option.sessionLength && (
-                          <div className="mt-3 pt-3 border-t border-primary-cream/20">
-                            <div className="flex items-center gap-2">
-                              <Clock className="text-primary-coral" size={18} />
-                              <p className="text-sm text-primary-cream/90">
-                                {option.type === 'individual' ||
-                                option.therapyId === 'individual'
-                                  ? `${option.sessionLength} par séance`
-                                  : option.sessionLength}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Formulas section */}
-                        {option.hasFormulas &&
-                          option.formulas &&
-                          option.formulas.length > 0 && (
-                            <div className="mt-4 pt-3 border-t border-primary-cream/20">
-                              <p className="text-primary-cream/90 mb-2">
-                                <strong>Formules disponibles</strong>
-                              </p>
-                              <div className="space-y-2">
-                                {option.formulas.map((formula, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="text-sm text-primary-cream/80 flex items-center gap-2"
-                                  >
-                                    <span className="text-primary-coral">
-                                      ♦
-                                    </span>
-                                    <span>
-                                      {formula.title}:{' '}
-                                      {hasCoupon ? (
-                                        <>
-                                          <span className="line-through">
-                                            {formula.price} CHF / EUR
-                                          </span>{' '}
-                                          <span className="text-primary-coral">
-                                            {calculateDiscountedPrice(
-                                              formula.price,
-                                            )}{' '}
-                                            CHF / EUR
-                                          </span>
-                                        </>
-                                      ) : (
-                                        <>{formula.price} CHF / EUR</>
-                                      )}
-                                      {formula.duration && (
-                                        <span> ({formula.duration})</span>
-                                      )}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                      </div>
+                      <div className="flex justify-end mt-auto pt-6">
+                        <button
+                          className="px-4 py-2 bg-primary-coral text-white rounded-full text-sm font-semibold hover:bg-primary-coral/90 transition-colors shadow-md"
+                          style={{ minWidth: 150 }}
+                          onClick={() => {
+                            setPurchaseDetails({
+                              ...option,
+                              price:
+                                option.price ||
+                                (option.formulas &&
+                                  option.formulas[0]?.price) ||
+                                0,
+                            })
+                            setPurchaseCurrency('chf') // default or infer
+                            setShowPurchaseModal(true)
+                          }}
+                        >
+                          Réserver
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  )
+                })}
+              </div>
             </div>
 
             {/* Message about the journey */}
-            <div className="mt-8 mb-8 bg-primary-forest/30 backdrop-blur-sm p-6 rounded-[24px] text-center">
+            <div
+              className="mt-8 mb-8 p-6 rounded-[24px] text-center"
+              style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}
+            >
               <p className="mb-2 font-bold text-lg text-primary-coral">
                 Votre voyage commence ici. Prêt(e) à embarquer ?
               </p>
@@ -1062,6 +1195,44 @@ const TherapyQuestionnaireNew = () => {
         userEmail=""
         customUrl="https://calendly.com/numerized-ara/20min"
       />
+
+      {/* En Savoir Plus Modal */}
+      {showPromoModal && selectedPromoId && selectedPromoType && (
+        <>
+          {selectedPromoType === 'therapy' ? (
+            <TherapyModal
+              isOpen={showPromoModal}
+              onClose={() => setShowPromoModal(false)}
+              therapyId={selectedPromoId}
+            />
+          ) : (
+            <CoachingModal
+              isOpen={showPromoModal}
+              onClose={() => setShowPromoModal(false)}
+              coachingId={selectedPromoId}
+            />
+          )}
+        </>
+      )}
+
+      {/* PurchaseTicket Modal */}
+      {showPurchaseModal && purchaseDetails && (
+        <PurchaseTicket
+          ticketType="standard"
+          onClose={() => setShowPurchaseModal(false)}
+          price={purchaseDetails.price}
+          currency={purchaseCurrency}
+          title={purchaseDetails.title}
+          description={purchaseDetails.description}
+          priceDetails={purchaseDetails.priceDetails}
+          sessionLength={purchaseDetails.sessionLength}
+          hasFormulas={purchaseDetails.hasFormulas}
+          formulas={purchaseDetails.formulas}
+          offeringType={purchaseDetails.offeringType}
+          type={purchaseDetails.type}
+          defaultCouponCode={defaultCouponCode}
+        />
+      )}
     </section>
   )
 }

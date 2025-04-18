@@ -33,10 +33,16 @@ if (!apps.length) {
     }
 
     // Ensure private key is properly formatted
-    if (privateKey && !privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
-      console.warn(
-        'Private key is missing BEGIN marker, attempting to fix format...',
-      )
+    if (privateKey) {
+      // Remove any existing BEGIN/END markers to standardize
+      privateKey = privateKey
+        .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+        .replace(/-----END PRIVATE KEY-----/g, '')
+        .replace(/\\n/g, '')
+        .replace(/\n/g, '')
+        .trim()
+
+      // Now add back the markers in the correct format
       privateKey = `-----BEGIN PRIVATE KEY-----\n${privateKey}\n-----END PRIVATE KEY-----`
     }
 
@@ -44,9 +50,7 @@ if (!apps.length) {
       credential: cert({
         projectId,
         clientEmail,
-        privateKey: privateKey.includes('\\n')
-          ? privateKey.replace(/\\n/g, '\n')
-          : privateKey,
+        privateKey,
       }),
     })
 

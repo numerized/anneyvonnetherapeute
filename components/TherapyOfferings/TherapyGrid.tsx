@@ -20,6 +20,9 @@ interface TherapyGridProps {
   displayAll?: boolean
   displayIds?: string[]
   offeringType?: 'therapy' | 'coaching'
+  setPurchaseDetails?: (details: any) => void
+  setPurchaseCurrency?: (currency: string) => void
+  setShowPurchaseModal?: (show: boolean) => void
 }
 
 export const TherapyGrid: React.FC<TherapyGridProps> = ({
@@ -28,6 +31,9 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
   displayAll = true,
   displayIds = [],
   offeringType = 'therapy',
+  setPurchaseDetails,
+  setPurchaseCurrency,
+  setShowPurchaseModal,
 }) => {
   const [showPromoModal, setShowPromoModal] = useState(false)
   const [selectedTherapy, setSelectedTherapy] = useState<string | null>(null)
@@ -68,6 +74,9 @@ export const TherapyGrid: React.FC<TherapyGridProps> = ({
               index={index}
               onShowPromo={handleShowPromo}
               commonBenefits={commonBenefits}
+              setPurchaseDetails={setPurchaseDetails ?? undefined}
+              setPurchaseCurrency={setPurchaseCurrency ?? undefined}
+              setShowPurchaseModal={setShowPurchaseModal ?? undefined}
             />
           </div>
         ))}
