@@ -189,8 +189,8 @@ function ProchainementHeroContent({
                             className="absolute inset-0 w-full h-full object-cover"
                             playsInline
                             webkit-playsinline="true"
-                            src="/videos/INTRODUCTION AU DEVELOPPEMENT RELATIONNEL.mp4"
-                            poster="/videos/INTRODUCTION AU DEVELOPPEMENT RELATIONNEL.jpg"
+                            src="/videos/PRESENTATION 3 THERAPIES.mp4"
+                            poster="/images/posters/PRESENTATION 3 THERAPIES.jpg"
                           />
                           {/* Dark gradient overlay */}
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-primary-dark/60 rounded-[32px]" />
