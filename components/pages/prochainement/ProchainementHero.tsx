@@ -151,12 +151,12 @@ function ProchainementHeroContent({
               )}
               {hero?.subtitle && (
                 <motion.p
-                  className="text-sm text-primary-cream/80 mb-4"
+                  className="text-lg text-primary-cream/80 mb-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  {hero.subtitle}
+                  Thérapies et Coachings de la relation Amoureuse et Désirante.
                 </motion.p>
               )}
               {/* CTA Button */}
