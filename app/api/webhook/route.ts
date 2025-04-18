@@ -193,15 +193,20 @@ export async function POST(req: Request) {
               '. Creating new user...',
             )
             // Create a new user document
-            const newUserDoc = await adminDb.collection('users').add({
+            const userPayload = {
               email: customerEmail,
               name: session.customer_details?.name || '',
               phone: session.customer_details?.phone || '',
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
-            })
-            userId = newUserDoc.id
-            console.log('Created new user with ID:', userId)
+            }
+            if (!userPayload.email) {
+              console.error('Cannot create user: missing email', userPayload)
+            } else {
+              const newUserDoc = await adminDb.collection('users').add(userPayload)
+              userId = newUserDoc.id
+              console.log('Created new user with ID:', userId)
+            }
           }
         } catch (error) {
           console.error('Error finding/creating user:', error)
@@ -246,11 +251,16 @@ export async function POST(req: Request) {
             timestamp: new Date(),
           }
 
-          const docRef = await adminDb.collection('purchases').add(purchaseData)
-          console.log(
-            'Purchase data stored successfully in Firestore, document ID:',
-            docRef.id,
-          )
+          // Defensive check: Make sure purchaseData is a valid object
+          if (!purchaseData || typeof purchaseData !== 'object') {
+            console.error('Invalid purchaseData for Firestore:', purchaseData)
+          } else {
+            const docRef = await adminDb.collection('purchases').add(purchaseData)
+            console.log(
+              'Purchase data stored successfully in Firestore, document ID:',
+              docRef.id,
+            )
+          }
         } catch (error) {
           console.error('Error storing purchase data:', error)
           // Don't throw here, as we've already sent the email
