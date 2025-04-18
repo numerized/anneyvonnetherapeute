@@ -13,21 +13,27 @@ interface PurchaseTicketProps {
   ticketType: 'standard' | 'vip'
   onClose: () => void
   defaultCouponCode?: string
+  price?: number | null
+  currency?: 'eur' | 'chf'
+  title?: string
 }
 
 export function PurchaseTicket({
   ticketType,
   onClose,
   defaultCouponCode,
+  price,
+  currency: propCurrency,
+  title,
 }: PurchaseTicketProps) {
   const [email, setEmail] = useState('')
-  const [currency, setCurrency] = useState('eur')
+  const [currency, setCurrency] = useState(propCurrency || 'eur')
   const [couponCode, setCouponCode] = useState(defaultCouponCode || '')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [hasDiscount, setHasDiscount] = useState(!!defaultCouponCode)
 
-  const basePrice = 999
+  const basePrice = price || 999
   const discountedPrice = Math.round(basePrice * 0.9) // 10% discount
   const testPrice = 1 // 1 EUR/CHF for test purchases
 
@@ -93,6 +99,9 @@ export function PurchaseTicket({
 
         <h3 className="text-2xl font-light text-primary-cream mb-6">
           Réserver ma place
+          {title && (
+            <div className="text-base font-semibold text-primary-coral mt-2">{title}</div>
+          )}
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-6">

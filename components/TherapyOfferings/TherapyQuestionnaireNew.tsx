@@ -37,6 +37,7 @@ import {
 } from '@/utils/therapyRecommendations'
 import { TherapyModal } from './TherapyModal'
 import { CoachingModal } from './CoachingModal'
+import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
 
 type TherapyOption = {
   title: string
@@ -106,6 +107,12 @@ const TherapyQuestionnaireNew = () => {
   const [selectedPromoType, setSelectedPromoType] = useState<
     'therapy' | 'coaching' | null
   >(null)
+
+  // State for PurchaseTicket modal
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+  const [purchasePrice, setPurchasePrice] = useState<number | null>(null)
+  const [purchaseCurrency, setPurchaseCurrency] = useState<'eur' | 'chf'>('eur')
+  const [purchaseTitle, setPurchaseTitle] = useState<string>('')
 
   // Check if we're on the home/accueil route
   const pathname = usePathname()
@@ -1047,7 +1054,12 @@ const TherapyQuestionnaireNew = () => {
                         <button
                           className="px-4 py-2 bg-primary-coral text-white rounded-full text-sm font-semibold hover:bg-primary-coral/90 transition-colors shadow-md"
                           style={{ minWidth: 150 }}
-                          onClick={() => setShowCalendlyModal(true)}
+                          onClick={() => {
+                            setPurchasePrice(option.price || (option.formulas && option.formulas[0]?.price) || 0)
+                            setPurchaseCurrency('eur') // default or infer
+                            setPurchaseTitle(option.title)
+                            setShowPurchaseModal(true)
+                          }}
                         >
                           Réserver
                         </button>
@@ -1148,6 +1160,17 @@ const TherapyQuestionnaireNew = () => {
             />
           )}
         </>
+      )}
+
+      {/* PurchaseTicket Modal */}
+      {showPurchaseModal && (
+        <PurchaseTicket
+          ticketType="standard"
+          onClose={() => setShowPurchaseModal(false)}
+          price={purchasePrice}
+          currency={purchaseCurrency}
+          title={purchaseTitle}
+        />
       )}
     </section>
   )
