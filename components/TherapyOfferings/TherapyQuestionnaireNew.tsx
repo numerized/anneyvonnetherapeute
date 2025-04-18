@@ -857,9 +857,9 @@ const TherapyQuestionnaireNew = () => {
                   return (
                     <div
                       key={index}
-                      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors w-full box-border"
+                      className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors w-full box-border flex flex-col h-full"
                     >
-                      <div className="space-y-12">
+                      <div className="flex-1 flex flex-col space-y-12">
                         <div className="text-right">
                           <span className="inline-block bg-primary-dark text-primary-cream px-3 py-1 rounded-full text-sm mb-3">
                             {option.offeringType === 'therapy'
@@ -1042,6 +1042,15 @@ const TherapyQuestionnaireNew = () => {
                             </div>
                           )}
                         </div>
+                      </div>
+                      <div className="flex justify-end mt-auto pt-6">
+                        <button
+                          className="px-4 py-2 bg-primary-coral text-white rounded-full text-sm font-semibold hover:bg-primary-coral/90 transition-colors shadow-md"
+                          style={{ minWidth: 150 }}
+                          onClick={() => setShowCalendlyModal(true)}
+                        >
+                          Réserver
+                        </button>
                       </div>
                     </div>
                   );
