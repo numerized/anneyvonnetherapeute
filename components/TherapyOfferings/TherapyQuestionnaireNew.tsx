@@ -111,7 +111,7 @@ const TherapyQuestionnaireNew = () => {
   // State for PurchaseTicket modal
   const [showPurchaseModal, setShowPurchaseModal] = useState(false)
   const [purchasePrice, setPurchasePrice] = useState<number | null>(null)
-  const [purchaseCurrency, setPurchaseCurrency] = useState<'eur' | 'chf'>('eur')
+  const [purchaseCurrency, setPurchaseCurrency] = useState<'eur' | 'chf'>('chf')
   const [purchaseTitle, setPurchaseTitle] = useState<string>('')
 
   // State for passing coupon to modal
@@ -1068,7 +1068,7 @@ const TherapyQuestionnaireNew = () => {
                           style={{ minWidth: 150 }}
                           onClick={() => {
                             setPurchasePrice(option.price || (option.formulas && option.formulas[0]?.price) || 0)
-                            setPurchaseCurrency('eur') // default or infer
+                            setPurchaseCurrency('chf') // default or infer
                             setPurchaseTitle(option.title)
                             setShowPurchaseModal(true)
                           }}
