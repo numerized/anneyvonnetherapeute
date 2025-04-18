@@ -45,10 +45,9 @@ export default function ProchainementVideoCapsule({
             <h2 className="text-primary-cream text-3xl md:text-4xl font-light text-center mb-2">
               {title}
             </h2>
-            <br/>
+            <br />
             <div className="text-primary-cream/70 text-lg md:text-xl text-center mb-8">
-              Par Anne Yvonne Racine
-            </div>
+              Capsule Audio par Anne Yvonne Racine            </div>
           </>
         }
         description={introduction ? [introduction] : undefined}
