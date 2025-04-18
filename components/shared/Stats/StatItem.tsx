@@ -64,7 +64,8 @@ export function StatItem({ value, label }: StatItemProps) {
   return (
     <div
       ref={elementRef}
-      className="text-center p-6 rounded-[24px]" style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}
+      className="text-center p-6 rounded-[24px]"
+      style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}
       role="listitem"
     >
       <p

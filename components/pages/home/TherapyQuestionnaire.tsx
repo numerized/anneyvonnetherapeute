@@ -306,7 +306,10 @@ export function TherapyQuestionnaire() {
             </div>
           </div>
 
-          <div className="rounded-[24px]" style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}>
+          <div
+            className="rounded-[24px]"
+            style={{ backgroundColor: 'rgba(42, 58, 58, 0.3)' }}
+          >
             <AnimatePresence mode="wait">
               {step === 1 ? (
                 <motion.div

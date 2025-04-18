@@ -1,45 +1,54 @@
-import { useRef, useState, useEffect, RefObject, Dispatch, SetStateAction } from 'react'
 import Image from 'next/image'
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
-const VIDEO_URL = "/CAPSULES_MIROIR/lamour-dapres-1.mp4"
-const POSTER_URL = "/images/posters/lamour-dapres-miroir-poster.jpg"
+const VIDEO_URL = '/CAPSULES_MIROIR/lamour-dapres-1.mp4'
+const POSTER_URL = '/images/posters/lamour-dapres-miroir-poster.jpg'
 const TITLE = "L'amour d'Après — Capsule Prisme"
-const DESCRIPTION = "Une exploration intime de l'amour après la transformation. Découvrez cette capsule miroir."
+const DESCRIPTION =
+  "Une exploration intime de l'amour après la transformation. Découvrez cette capsule miroir."
 
 // Declare the global function on the window object
 declare global {
   interface Window {
-    stopAllProchainementVideos: (exceptId?: string) => void;
+    stopAllProchainementVideos: (exceptId?: string) => void
   }
 }
 
 interface CustomCapsuleMiroirCardProps {
-  videoRef?: RefObject<HTMLVideoElement | null>;
-  isPlaying?: boolean;
-  setIsPlaying?: Dispatch<SetStateAction<boolean>>;
+  videoRef?: RefObject<HTMLVideoElement | null>
+  isPlaying?: boolean
+  setIsPlaying?: Dispatch<SetStateAction<boolean>>
 }
 
-export function CustomCapsuleMiroirCard({ 
-  videoRef: externalVideoRef, 
-  isPlaying: externalIsPlaying, 
-  setIsPlaying: externalSetIsPlaying 
+export function CustomCapsuleMiroirCard({
+  videoRef: externalVideoRef,
+  isPlaying: externalIsPlaying,
+  setIsPlaying: externalSetIsPlaying,
 }: CustomCapsuleMiroirCardProps = {}) {
   // Use external state if provided, otherwise use internal state
-  const [internalIsPlaying, setInternalIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [videoError, setVideoError] = useState<string | null>(null);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  
+  const [internalIsPlaying, setInternalIsPlaying] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [videoError, setVideoError] = useState<string | null>(null)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+
   // Use external video ref if provided, otherwise use internal ref
-  const internalVideoRef = useRef<HTMLVideoElement | null>(null);
-  const videoRef = externalVideoRef || internalVideoRef;
-  const progressTrackRef = useRef<HTMLDivElement | null>(null);
+  const internalVideoRef = useRef<HTMLVideoElement | null>(null)
+  const videoRef = externalVideoRef || internalVideoRef
+  const progressTrackRef = useRef<HTMLDivElement | null>(null)
 
   // Determine which play state and setter to use
-  const isPlaying = externalIsPlaying !== undefined ? externalIsPlaying : internalIsPlaying;
-  const setIsPlaying = externalSetIsPlaying || setInternalIsPlaying;
+  const isPlaying =
+    externalIsPlaying !== undefined ? externalIsPlaying : internalIsPlaying
+  const setIsPlaying = externalSetIsPlaying || setInternalIsPlaying
 
   // Set up video event listeners
   useEffect(() => {
@@ -55,25 +64,27 @@ export function CustomCapsuleMiroirCard({
     const handleLoadedMetadata = () => {
       setDuration(video.duration)
       setIsVideoLoaded(true)
-      console.log("Video loaded, duration:", video.duration)
+      console.log('Video loaded, duration:', video.duration)
     }
 
     const handleError = (e: Event) => {
-      console.error("Video error:", video.error, e)
-      setVideoError(`Erreur de chargement de la vidéo: ${video.error?.message || 'Vérifiez le chemin ou le fichier.'}`)
+      console.error('Video error:', video.error, e)
+      setVideoError(
+        `Erreur de chargement de la vidéo: ${video.error?.message || 'Vérifiez le chemin ou le fichier.'}`,
+      )
     }
 
     // Add event listeners
     video.addEventListener('timeupdate', handleTimeUpdate)
     video.addEventListener('loadedmetadata', handleLoadedMetadata)
     video.addEventListener('error', handleError)
-    video.addEventListener('loadeddata', () => console.log("Video data loaded"))
+    video.addEventListener('loadeddata', () => console.log('Video data loaded'))
 
     // Force load metadata if not already loaded
     if (video.readyState >= 1) {
       handleLoadedMetadata()
     }
-    
+
     // Clean up event listeners
     return () => {
       video.removeEventListener('timeupdate', handleTimeUpdate)
@@ -88,12 +99,12 @@ export function CustomCapsuleMiroirCard({
     const video = videoRef.current
     const track = progressTrackRef.current
     if (!video || !track) return
-    
+
     const rect = track.getBoundingClientRect()
     const clickPosition = (clientX - rect.left) / rect.width
     const clampedPosition = Math.max(0, Math.min(1, clickPosition))
     const seekTime = clampedPosition * duration
-    
+
     video.currentTime = seekTime
     setCurrentTime(seekTime)
   }
@@ -103,43 +114,43 @@ export function CustomCapsuleMiroirCard({
     e.preventDefault()
     setIsDragging(true)
     seekTo(e.clientX)
-    
+
     // Add global mouse event listeners
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
   }
-  
+
   // Drag handlers for mouse
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging) {
       seekTo(e.clientX)
     }
   }
-  
+
   const handleMouseUp = () => {
     setIsDragging(false)
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
   }
-  
+
   // Touch events for mobile
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsDragging(true)
     seekTo(e.touches[0].clientX)
-    
+
     // Add global touch event listeners
     document.addEventListener('touchmove', handleTouchMove, { passive: false })
     document.addEventListener('touchend', handleTouchEnd)
   }
-  
+
   const handleTouchMove = (e: TouchEvent) => {
     if (isDragging) {
       e.preventDefault()
       seekTo(e.touches[0].clientX)
     }
   }
-  
+
   const handleTouchEnd = () => {
     setIsDragging(false)
     document.removeEventListener('touchmove', handleTouchMove)
@@ -150,20 +161,20 @@ export function CustomCapsuleMiroirCard({
   const togglePlay = () => {
     const video = videoRef.current
     if (!video) return
-    
+
     if (video.paused) {
       // Stop all other videos before playing this one
       // @ts-ignore - We're using a global function added to the window object
       if (window.stopAllProchainementVideos) {
-        window.stopAllProchainementVideos('capsuleMiroir');
+        window.stopAllProchainementVideos('capsuleMiroir')
       }
-    
+
       const playPromise = video.play()
       if (playPromise !== undefined) {
         playPromise
           .then(() => setIsPlaying(true))
-          .catch(error => {
-            console.error("Play error:", error)
+          .catch((error) => {
+            console.error('Play error:', error)
             setVideoError(`Erreur de lecture: ${error.message}`)
           })
       }
@@ -185,7 +196,10 @@ export function CustomCapsuleMiroirCard({
     <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto mb-12 items-stretch">
       {/* Capsule Card (left, 2/3 on desktop) */}
       <div className="md:w-2/3 w-full flex flex-col">
-        <div id="capsule-miroir" className="bg-primary-dark p-8 md:p-12 rounded-[32px] flex flex-col h-full">
+        <div
+          id="capsule-miroir"
+          className="bg-primary-dark p-8 md:p-12 rounded-[32px] flex flex-col h-full"
+        >
           {/* Media Container */}
           <div className="relative w-full rounded-[32px] overflow-hidden">
             <div className="relative pb-[56.25%]">
@@ -201,8 +215,10 @@ export function CustomCapsuleMiroirCard({
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 onError={(e) => {
-                  console.error("Video error event:", e)
-                  setVideoError('Erreur de chargement de la vidéo. Vérifiez le chemin ou le fichier.')
+                  console.error('Video error event:', e)
+                  setVideoError(
+                    'Erreur de chargement de la vidéo. Vérifiez le chemin ou le fichier.',
+                  )
                 }}
               />
               {/* Frost bubbles */}
@@ -221,9 +237,31 @@ export function CustomCapsuleMiroirCard({
                 >
                   <div className="w-6 h-6 flex items-center justify-center">
                     {isPlaying ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white"><path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-6 h-6 text-white"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7 0a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75h-1.5a.75.75 0 01-.75-.75V5.25z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
                     ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-white"><path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-6 h-6 text-white"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
                     )}
                   </div>
                 </button>
@@ -262,7 +300,9 @@ export function CustomCapsuleMiroirCard({
                   left: `${(currentTime / (duration || 1)) * 100}%`,
                   display: duration ? 'block' : 'none',
                   opacity: isDragging ? '1' : '0.7',
-                  transform: isDragging ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%)',
+                  transform: isDragging
+                    ? 'translateY(-50%) scale(1.1)'
+                    : 'translateY(-50%)',
                   pointerEvents: 'auto',
                   zIndex: 20,
                 }}
@@ -279,14 +319,16 @@ export function CustomCapsuleMiroirCard({
             <p className="text-white/80 mt-4">{DESCRIPTION}</p>
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-4">
-              {['Amour', 'Transformation', 'Podcast', 'Audio', 'Prisme'].map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 text-xs rounded-full bg-white/10 text-white font-medium inline-block"
-                >
-                  {tag}
-                </span>
-              ))}
+              {['Amour', 'Transformation', 'Podcast', 'Audio', 'Prisme'].map(
+                (tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 text-xs rounded-full bg-white/10 text-white font-medium inline-block"
+                  >
+                    {tag}
+                  </span>
+                ),
+              )}
             </div>
           </div>
         </div>
@@ -294,9 +336,18 @@ export function CustomCapsuleMiroirCard({
       {/* Explanatory Box (right, 1/3 on desktop) */}
       <div className="md:w-1/3 w-full flex flex-col justify-center">
         <div className="h-full bg-white/10 rounded-[32px] p-8 flex flex-col justify-center min-h-[350px]">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Espace 180</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            Espace 180
+          </h3>
           <p className="text-white text-lg leading-relaxed">
-            <span className="text-primary-coral">Espace 180 Degrées de Conversion d'Amour</span>, c'est un centre de ressources audio en constante évolution, accessible à tous les clients. <br/><br/>Écoutez nos capsules partout, à la maison ou en déplacement, pour explorer des thèmes essentiels sur qui nous sommes.
+            <span className="text-primary-coral">
+              Espace 180 Degrées de Conversion d'Amour
+            </span>
+            , c'est un centre de ressources audio en constante évolution,
+            accessible à tous les clients. <br />
+            <br />
+            Écoutez nos capsules partout, à la maison ou en déplacement, pour
+            explorer des thèmes essentiels sur qui nous sommes.
           </p>
           <a
             href="/login"

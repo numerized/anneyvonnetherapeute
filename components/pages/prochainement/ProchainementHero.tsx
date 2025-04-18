@@ -136,7 +136,9 @@ function ProchainementHeroContent({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  Thérapies et Coachings<br/>de la relation Amoureuse et Désirante.
+                  Thérapies et Coachings
+                  <br />
+                  de la relation Amoureuse et Désirante.
                 </motion.p>
               )}
               {/* CTA Button */}

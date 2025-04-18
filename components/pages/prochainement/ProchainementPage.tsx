@@ -9,16 +9,16 @@ import { toast } from 'sonner'
 
 import { Stats } from '@/components/shared/Stats'
 import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
-import ProchainementVideoCapsule from "./ProchainementVideoCapsule";
-import { CustomCapsuleMiroirCard } from './CustomCapsuleMiroirCard'
 
+import { CustomCapsuleMiroirCard } from './CustomCapsuleMiroirCard'
 import PaymentSuccess from './PaymentSuccess'
 import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
+import ProchainementVideoCapsule from './ProchainementVideoCapsule'
 
 // Declare the global function on the window object
 declare global {
   interface Window {
-    stopAllProchainementVideos: (exceptId?: string) => void;
+    stopAllProchainementVideos: (exceptId?: string) => void
   }
 }
 
@@ -56,51 +56,61 @@ export function ProchainementPage({ data, settings }: any) {
       }
     }
     window.addEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
-    
+
     // New event to coordinate between the two videos
     window.addEventListener('playVideo', (e: any) => {
-      const source = e.detail?.source;
-      
+      const source = e.detail?.source
+
       // Pause the presentation video if it's not the source
       if (source !== 'presentation' && videoRef.current && isPlaying) {
-        videoRef.current.pause();
-        setIsPlaying(false);
+        videoRef.current.pause()
+        setIsPlaying(false)
       }
-      
+
       // Pause the capsule mirror if it's not the source
       if (source !== 'capsuleMiroir' && videoRef2.current && isPlaying2) {
-        videoRef2.current.pause();
-        setIsPlaying2(false);
+        videoRef2.current.pause()
+        setIsPlaying2(false)
       }
-    });
+    })
 
     // Define a global function to stop all videos
     window.stopAllProchainementVideos = (exceptId?: string) => {
       // Stop the presentation video if it's not the exception
-      if (exceptId !== 'presentationVideo' && videoRef.current && !videoRef.current.paused) {
-        videoRef.current.pause();
-        setIsPlaying(false);
+      if (
+        exceptId !== 'presentationVideo' &&
+        videoRef.current &&
+        !videoRef.current.paused
+      ) {
+        videoRef.current.pause()
+        setIsPlaying(false)
       }
-      
+
       // Stop the capsule mirror video if it's not the exception
-      if (exceptId !== 'capsuleMiroir' && videoRef2.current && !videoRef2.current.paused) {
-        videoRef2.current.pause();
-        setIsPlaying2(false);
+      if (
+        exceptId !== 'capsuleMiroir' &&
+        videoRef2.current &&
+        !videoRef2.current.paused
+      ) {
+        videoRef2.current.pause()
+        setIsPlaying2(false)
       }
-      
+
       // Also stop the header video if present
-      const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement;
+      const headerVideo = document.querySelector(
+        'video[data-header-video]',
+      ) as HTMLVideoElement
       if (headerVideo) {
-        headerVideo.pause();
-        window.dispatchEvent(new CustomEvent('headerVideoPause'));
+        headerVideo.pause()
+        window.dispatchEvent(new CustomEvent('headerVideoPause'))
       }
-    };
-    
+    }
+
     return () => {
       window.removeEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
       window.removeEventListener('playVideo', () => {})
       // @ts-ignore
-      delete window.stopAllProchainementVideos;
+      delete window.stopAllProchainementVideos
     }
   }, [isPlaying, isPlaying2])
 
@@ -201,8 +211,14 @@ export function ProchainementPage({ data, settings }: any) {
             </div>
 
             {/* Questionnaire Section */}
-            <div ref={questionnaireSectionRef} className="mt-16 mb-16 flex justify-center">
-              <div className="w-full text-primary-cream/90 rounded-[32px] overflow-hidden bg-primary-forest/30" style={{ backgroundColor: 'rgb(41, 58, 58)' }}>
+            <div
+              ref={questionnaireSectionRef}
+              className="mt-16 mb-16 flex justify-center"
+            >
+              <div
+                className="w-full text-primary-cream/90 rounded-[32px] overflow-hidden bg-primary-forest/30"
+                style={{ backgroundColor: 'rgb(41, 58, 58)' }}
+              >
                 <TherapyQuestionnaireNew />
               </div>
             </div>
@@ -243,17 +259,16 @@ export function ProchainementPage({ data, settings }: any) {
                       UNE HISTOIRE D'ENGAGEMENT
                     </h3>
                     <p className="text-base mb-3">
-                      Anne Yvonne Racine et Cœurs à Corps, en quelques
-                      phrases.
+                      Anne Yvonne Racine et Cœurs à Corps, en quelques phrases.
                     </p>
                   </div>
 
                   <div className="space-y-3 text-primary-cream/90 text-sm">
                     <p>
                       Depuis plus de 50 ans, ma vie et mon parcours
-                      professionnel m'ont guidée vers une quête essentielle
-                      pour moi, de mieux: comprendre, d'explorer profondément
-                      et de transformer la manière dont nous nous relions à
+                      professionnel m'ont guidée vers une quête essentielle pour
+                      moi, de mieux: comprendre, d'explorer profondément et de
+                      transformer la manière dont nous nous relions à
                       nous-mêmes, aux autres et au monde.
                     </p>
                     <p>
@@ -266,22 +281,21 @@ export function ProchainementPage({ data, settings }: any) {
                     </p>
                     <p>
                       Cette démarche s'articule autour de trois axes
-                      fondamentaux : Amour, Désir et Esprit. Ensemble, ils
-                      nous invitent à retourner à la source de notre désir
-                      d'amour, à explorer ce qui nous anime vraiment et à
-                      grandir, à la fois individuellement et dans nos
-                      relations.
+                      fondamentaux : Amour, Désir et Esprit. Ensemble, ils nous
+                      invitent à retourner à la source de notre désir d'amour, à
+                      explorer ce qui nous anime vraiment et à grandir, à la
+                      fois individuellement et dans nos relations.
                     </p>
                     <p>
                       Cœur à Corps propose un espace unique,{' '}
                       <span className="font-medium">
                         UNE CONVERSION à 180 DEGRES D'AMOUR
                       </span>{' '}
-                      conçue avec des personnes incroyables dans une
-                      atmosphère que je ne pensais pas pouvoir un jour
-                      connaitre. Un espace conçu pour offrir à chacun la
-                      liberté et la tranquillité nécessaires d'avancer, à son
-                      rythme et là où il a le désir d'aller.
+                      conçue avec des personnes incroyables dans une atmosphère
+                      que je ne pensais pas pouvoir un jour connaitre. Un espace
+                      conçu pour offrir à chacun la liberté et la tranquillité
+                      nécessaires d'avancer, à son rythme et là où il a le désir
+                      d'aller.
                     </p>
                   </div>
                 </div>
@@ -292,7 +306,11 @@ export function ProchainementPage({ data, settings }: any) {
           </section>
           <div className="mt-12">
             {/* Custom Capsule Card for L'amour d'Après, matching /espace180 */}
-            <CustomCapsuleMiroirCard videoRef={videoRef2} isPlaying={isPlaying2} setIsPlaying={setIsPlaying2} />
+            <CustomCapsuleMiroirCard
+              videoRef={videoRef2}
+              isPlaying={isPlaying2}
+              setIsPlaying={setIsPlaying2}
+            />
           </div>
         </>
       )}
