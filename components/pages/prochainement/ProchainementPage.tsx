@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { Stats } from '@/components/shared/Stats'
 import TherapyQuestionnaireNew from '@/components/TherapyOfferings/TherapyQuestionnaireNew'
 import ProchainementVideoCapsule from "./ProchainementVideoCapsule";
+import { CustomCapsuleMiroirCard } from './CustomCapsuleMiroirCard'
 
 import PaymentSuccess from './PaymentSuccess'
 import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
@@ -238,6 +239,10 @@ export function ProchainementPage({ data, settings }: any) {
               {/* Audio Capsules Section */}
             </div>
           </section>
+          <div className="mt-12">
+            {/* Custom Capsule Card for L'amour d'Après, matching /espace180 */}
+            <CustomCapsuleMiroirCard />
+          </div>
         </>
       )}
     </main>
