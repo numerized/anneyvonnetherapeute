@@ -50,12 +50,8 @@ export async function POST(req: Request) {
       event = stripe.webhooks.constructEvent(text, signature, webhookSecret)
       console.log('Webhook event constructed:', event.type)
     } catch (err: any) {
-      console.error('Webhook signature verification failed:', {
-        error: err.message,
-        type: err.type,
-        signature,
-        secretKey: webhookSecret ? 'present' : 'missing',
-      })
+      console.error('Webhook signature verification failed - see details below:');
+      console.error(err ? `Error message: ${err.message || 'Unknown error'}` : 'No error details available (null)');
       return NextResponse.json(
         { error: 'Webhook signature verification failed' },
         { status: 400 },
@@ -167,7 +163,8 @@ export async function POST(req: Request) {
         })
         console.log('Confirmation email sent successfully to:', customerEmail)
       } catch (error) {
-        console.error('Error sending confirmation email:', error)
+        console.error('Error sending confirmation email - see details below:');
+        console.error(error ? `Error message: ${error.message || 'Unknown error'}` : 'No error details available (null)');
         throw error // Important to notify if email fails
       }
 
@@ -185,10 +182,10 @@ export async function POST(req: Request) {
 
           if (!querySnapshot.empty) {
             userId = querySnapshot.docs[0].id
-            console.log('Found existing user with ID:', userId)
+            console.log('✅ Found existing user with ID:', userId, 'for email:', customerEmail)
           } else {
             console.log(
-              'No user found with email:',
+              '❌ No user found with email:',
               customerEmail,
               '. Creating new user...',
             )
@@ -205,11 +202,12 @@ export async function POST(req: Request) {
             } else {
               const newUserDoc = await adminDb.collection('users').add(userPayload)
               userId = newUserDoc.id
-              console.log('Created new user with ID:', userId)
+              console.log('🆕 Created new user with ID:', userId, 'for email:', customerEmail)
             }
           }
         } catch (error) {
-          console.error('Error finding/creating user:', error)
+          console.error('Error finding/creating user - see details below:');
+          console.error(error ? `Error message: ${error.message || 'Unknown error'}` : 'No error details available (null)');
           // Continue with purchase data, even if user operations fail
         }
 
@@ -262,11 +260,13 @@ export async function POST(req: Request) {
             )
           }
         } catch (error) {
-          console.error('Error storing purchase data:', error)
+          console.error('Error storing purchase data - see details below:');
+          console.error(error ? `Error message: ${error.message || 'Unknown error'}` : 'No error details available (null)');
           // Don't throw here, as we've already sent the email
         }
       } catch (error) {
-        console.error('Error with Firebase operations:', error)
+        console.error('Error with Firebase operations - see details below:');
+        console.error(error ? `Error message: ${error.message || 'Unknown error'}` : 'No error details available (null)');
         // Don't throw here, as we've already sent the email
       }
 
@@ -275,7 +275,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true })
   } catch (err) {
-    console.error('Webhook error:', err)
+    console.error('Webhook error - see details below:');
+    console.error(err ? `Error message: ${err.message || 'Unknown error'}` : 'No error details available (null)');
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 400 },
