@@ -82,7 +82,7 @@ function ProchainementHeroContent({
     >
       <div className="absolute inset-0">
         <div
-          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10"
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/60 from-5% via-primary-forest/40 via-50% to-primary-forest/10 z-10"
           aria-hidden="true"
         />
         <Image
