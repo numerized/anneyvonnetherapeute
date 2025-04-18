@@ -214,7 +214,7 @@ export function CustomCapsuleMiroirCard() {
         <div className="h-full bg-white/10 rounded-[32px] p-8 flex flex-col justify-center min-h-[350px]">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Espace 180</h3>
           <p className="text-white text-lg leading-relaxed">
-            <span className="text-primary-coral">Espace 180 Degrées de Conversion d'Amour</span>, c'est un centre de ressources audio en évolution, accessible à tous les patients. <br/><br/>Écoutez nos capsules partout, à la maison ou en déplacement, pour explorer des thèmes essentiels sur qui nous sommes.
+            <span className="text-primary-coral">Espace 180 Degrées de Conversion d'Amour</span>, c'est un centre de ressources audio en constante évolution, accessible à tous les clients. <br/><br/>Écoutez nos capsules partout, à la maison ou en déplacement, pour explorer des thèmes essentiels sur qui nous sommes.
           </p>
           <a
             href="/login"

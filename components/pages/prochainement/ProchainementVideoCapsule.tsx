@@ -54,16 +54,18 @@ export default function ProchainementVideoCapsule({
         description={introduction ? [introduction] : undefined}
         centered
       />
-      <div className="relative w-full max-w-[480px] aspect-[4/3] rounded-[32px] overflow-hidden mt-8 shadow-xl px-2">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover rounded-[32px]"
-          src={videoUrl}
-          poster={posterUrl}
-          playsInline
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-        />
+      <div className="relative w-full rounded-[32px] overflow-hidden mt-8 shadow-xl px-2">
+        <div className="relative pb-[56.25%]">
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+            src={videoUrl}
+            poster={posterUrl}
+            playsInline
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+          />
+        </div>
         {/* Play/Pause button overlay */}
         <button
           onClick={handlePlayPause}
