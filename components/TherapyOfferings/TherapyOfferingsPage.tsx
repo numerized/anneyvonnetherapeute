@@ -11,6 +11,7 @@ import {
   getTherapyOfferings,
 } from '@/data/therapyOfferings/utils'
 
+import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
 import { CommonBenefits } from './CommonBenefits'
 import { TherapyGrid } from './TherapyGrid'
 
@@ -49,6 +50,24 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
   // Badge text based on offering type
   const badgeText = offeringType === 'therapy' ? 'THÉRAPIE' : 'COACHING'
 
+  // --- Payment Modal State (copied from TherapyQuestionnaireNew) ---
+  const [showPurchaseModal, setShowPurchaseModal] = React.useState(false)
+  const [purchaseCurrency, setPurchaseCurrency] = React.useState<'eur' | 'chf'>('chf')
+  const [purchaseDetails, setPurchaseDetails] = React.useState<any | null>(null)
+
+  // Wrapper functions to handle type compatibility with TherapyGrid/TherapyCard
+  const handleSetPurchaseCurrency = (currency: string) => {
+    setPurchaseCurrency(currency as 'eur' | 'chf')
+  }
+
+  const handleSetPurchaseDetails = (details: any) => {
+    setPurchaseDetails(details)
+  }
+
+  const handleSetShowPurchaseModal = (show: boolean) => {
+    setShowPurchaseModal(show)
+  }
+
   return (
     <div className="py-16 bg-[#2D3E3C]">
       <div className="max-w-7xl mx-auto px-6">
@@ -69,6 +88,9 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           displayAll={displayAll}
           displayIds={displayIds}
           offeringType={offeringType}
+          setPurchaseDetails={handleSetPurchaseDetails}
+          setPurchaseCurrency={handleSetPurchaseCurrency}
+          setShowPurchaseModal={handleSetShowPurchaseModal}
         />
 
         {/* Common Benefits Section */}
@@ -76,6 +98,24 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           <CommonBenefits benefits={commonBenefits} />
         )}
       </div>
+      {/* Payment Modal (conditionally render) */}
+      {showPurchaseModal && purchaseDetails && (
+        <PurchaseTicket
+          ticketType="standard"
+          onClose={() => setShowPurchaseModal(false)}
+          defaultCouponCode={undefined}
+          price={purchaseDetails.price}
+          currency={purchaseCurrency}
+          title={purchaseDetails.title}
+          description={purchaseDetails.description}
+          priceDetails={purchaseDetails.priceDetails}
+          sessionLength={purchaseDetails.sessionLength}
+          hasFormulas={purchaseDetails.hasFormulas}
+          formulas={purchaseDetails.formulas}
+          offeringType={offeringType}
+          type={purchaseDetails.type}
+        />
+      )}
     </div>
   )
 }

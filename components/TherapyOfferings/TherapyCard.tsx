@@ -14,6 +14,9 @@ interface TherapyCardProps {
   index: number
   onShowPromo: (therapyId: string) => void
   commonBenefits?: string[]
+  setPurchaseDetails?: (details: any) => void
+  setPurchaseCurrency?: (currency: string) => void
+  setShowPurchaseModal?: (show: boolean) => void
 }
 
 export const TherapyCard: React.FC<TherapyCardProps> = ({
@@ -21,6 +24,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   index,
   onShowPromo,
   commonBenefits = [],
+  setPurchaseDetails,
+  setPurchaseCurrency,
+  setShowPurchaseModal,
 }) => {
   const [hasCoupon, setHasCoupon] = useState(false)
 
@@ -225,7 +231,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         </span>
       )
     } else if (
-      therapy.mainOffering.formulas &&
+      therapy.mainOffering?.formulas &&
       therapy.mainOffering.formulas.length > 0
     ) {
       const minPrice = Math.min(
@@ -932,7 +938,21 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           <button
             className="px-4 py-2 bg-primary-coral text-white rounded-full text-sm font-semibold hover:bg-primary-coral/90 transition-colors shadow-md"
             style={{ minWidth: '150px' }}
-            onClick={() => {/* TODO: Implement reservation logic or link */}}
+            onClick={() => {
+              if (setPurchaseDetails && setPurchaseCurrency && setShowPurchaseModal) {
+                setPurchaseDetails({
+                  ...therapy,
+                  price:
+                    ('price' in therapy && therapy.price) ||
+                    (therapy.formulas && therapy.formulas[0]?.price) ||
+                    0,
+                })
+                setPurchaseCurrency('chf') // default or infer
+                setShowPurchaseModal(true)
+              } else {
+                onShowPromo(therapy.id)
+              }
+            }}
           >
             Réserver
           </button>
