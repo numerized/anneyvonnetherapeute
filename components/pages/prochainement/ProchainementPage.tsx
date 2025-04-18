@@ -15,6 +15,13 @@ import { CustomCapsuleMiroirCard } from './CustomCapsuleMiroirCard'
 import PaymentSuccess from './PaymentSuccess'
 import { ProchainementHeroWrapper as ProchainementHero } from './ProchainementHero'
 
+// Declare the global function on the window object
+declare global {
+  interface Window {
+    stopAllProchainementVideos: (exceptId?: string) => void;
+  }
+}
+
 export function ProchainementPage({ data, settings }: any) {
   const [isClient, setIsClient] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -49,9 +56,51 @@ export function ProchainementPage({ data, settings }: any) {
       }
     }
     window.addEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
+    
+    // New event to coordinate between the two videos
+    window.addEventListener('playVideo', (e: any) => {
+      const source = e.detail?.source;
+      
+      // Pause the presentation video if it's not the source
+      if (source !== 'presentation' && videoRef.current && isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+      
+      // Pause the capsule mirror if it's not the source
+      if (source !== 'capsuleMiroir' && videoRef2.current && isPlaying2) {
+        videoRef2.current.pause();
+        setIsPlaying2(false);
+      }
+    });
 
+    // Define a global function to stop all videos
+    window.stopAllProchainementVideos = (exceptId?: string) => {
+      // Stop the presentation video if it's not the exception
+      if (exceptId !== 'presentationVideo' && videoRef.current && !videoRef.current.paused) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+      
+      // Stop the capsule mirror video if it's not the exception
+      if (exceptId !== 'capsuleMiroir' && videoRef2.current && !videoRef2.current.paused) {
+        videoRef2.current.pause();
+        setIsPlaying2(false);
+      }
+      
+      // Also stop the header video if present
+      const headerVideo = document.querySelector('video[data-header-video]') as HTMLVideoElement;
+      if (headerVideo) {
+        headerVideo.pause();
+        window.dispatchEvent(new CustomEvent('headerVideoPause'));
+      }
+    };
+    
     return () => {
       window.removeEventListener('stopCapsuleVideos', handleStopCapsuleVideos)
+      window.removeEventListener('playVideo', () => {})
+      // @ts-ignore
+      delete window.stopAllProchainementVideos;
     }
   }, [isPlaying, isPlaying2])
 
@@ -137,6 +186,9 @@ export function ProchainementPage({ data, settings }: any) {
             introduction="Découvrez la présentation vidéo de l'accompagnement Coeur à Corps."
             videoUrl="/videos/PRESENTATION 3 THERAPIES.mp4"
             posterUrl="/images/posters/PRESENTATION 3 THERAPIES.jpg"
+            videoRef={videoRef}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
           />
           {/* Main Content Section */}
           <section className="py-24 bg-primary-forest/80 rounded-3xl">
@@ -240,7 +292,7 @@ export function ProchainementPage({ data, settings }: any) {
           </section>
           <div className="mt-12">
             {/* Custom Capsule Card for L'amour d'Après, matching /espace180 */}
-            <CustomCapsuleMiroirCard />
+            <CustomCapsuleMiroirCard videoRef={videoRef2} isPlaying={isPlaying2} setIsPlaying={setIsPlaying2} />
           </div>
         </>
       )}

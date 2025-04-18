@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, RefObject, Dispatch, SetStateAction } from 'react'
 import Image from 'next/image'
 
 const VIDEO_URL = "/CAPSULES_MIROIR/lamour-dapres-1.mp4"
@@ -6,15 +6,40 @@ const POSTER_URL = "/images/posters/lamour-dapres-miroir-poster.jpg"
 const TITLE = "L'amour d'Après — Capsule Prisme"
 const DESCRIPTION = "Une exploration intime de l'amour après la transformation. Découvrez cette capsule miroir."
 
-export function CustomCapsuleMiroirCard() {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
-  const [videoError, setVideoError] = useState<string | null>(null)
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-  const progressTrackRef = useRef<HTMLDivElement | null>(null)
+// Declare the global function on the window object
+declare global {
+  interface Window {
+    stopAllProchainementVideos: (exceptId?: string) => void;
+  }
+}
+
+interface CustomCapsuleMiroirCardProps {
+  videoRef?: RefObject<HTMLVideoElement | null>;
+  isPlaying?: boolean;
+  setIsPlaying?: Dispatch<SetStateAction<boolean>>;
+}
+
+export function CustomCapsuleMiroirCard({ 
+  videoRef: externalVideoRef, 
+  isPlaying: externalIsPlaying, 
+  setIsPlaying: externalSetIsPlaying 
+}: CustomCapsuleMiroirCardProps = {}) {
+  // Use external state if provided, otherwise use internal state
+  const [internalIsPlaying, setInternalIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  
+  // Use external video ref if provided, otherwise use internal ref
+  const internalVideoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRef = externalVideoRef || internalVideoRef;
+  const progressTrackRef = useRef<HTMLDivElement | null>(null);
+
+  // Determine which play state and setter to use
+  const isPlaying = externalIsPlaying !== undefined ? externalIsPlaying : internalIsPlaying;
+  const setIsPlaying = externalSetIsPlaying || setInternalIsPlaying;
 
   // Set up video event listeners
   useEffect(() => {
@@ -127,6 +152,12 @@ export function CustomCapsuleMiroirCard() {
     if (!video) return
     
     if (video.paused) {
+      // Stop all other videos before playing this one
+      // @ts-ignore - We're using a global function added to the window object
+      if (window.stopAllProchainementVideos) {
+        window.stopAllProchainementVideos('capsuleMiroir');
+      }
+    
       const playPromise = video.play()
       if (playPromise !== undefined) {
         playPromise

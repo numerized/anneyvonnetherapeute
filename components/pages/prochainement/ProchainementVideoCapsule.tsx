@@ -3,12 +3,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Header } from "@/components/shared/Header";
 
+// Declare the global function on the window object
+declare global {
+  interface Window {
+    stopAllProchainementVideos: (exceptId?: string) => void;
+  }
+}
+
 // This component is a minimal, centered capsule player for a single video, no tags or description
 export interface ProchainementVideoCapsuleProps {
   title: string;
   introduction?: string;
   videoUrl: string;
   posterUrl?: string;
+  videoRef?: React.RefObject<HTMLVideoElement | null>;
+  isPlaying?: boolean;
+  setIsPlaying?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ProchainementVideoCapsule({
@@ -16,10 +26,19 @@ export default function ProchainementVideoCapsule({
   introduction,
   videoUrl,
   posterUrl,
+  videoRef: externalVideoRef,
+  isPlaying: externalIsPlaying,
+  setIsPlaying: externalSetIsPlaying
 }: ProchainementVideoCapsuleProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  // Use internal refs and state if external ones aren't provided
+  const internalVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [internalIsPlaying, setInternalIsPlaying] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  
+  // Use external props if provided, otherwise use internal state
+  const videoRef = externalVideoRef || internalVideoRef;
+  const isPlaying = externalIsPlaying !== undefined ? externalIsPlaying : internalIsPlaying;
+  const setIsPlaying = externalSetIsPlaying || setInternalIsPlaying;
 
   useEffect(() => {
     setIsClient(true);
@@ -28,6 +47,11 @@ export default function ProchainementVideoCapsule({
   const handlePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
+      // Stop all other videos before playing this one
+      if (window.stopAllProchainementVideos) {
+        window.stopAllProchainementVideos('presentationVideo');
+      }
+      
       videoRef.current.play();
       setIsPlaying(true);
     } else {
