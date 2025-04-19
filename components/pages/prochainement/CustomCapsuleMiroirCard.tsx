@@ -9,10 +9,10 @@ import {
 } from 'react'
 
 const VIDEO_URL = '/videos/PRESENTATION ESPACE 180.mp4'
-const POSTER_URL = '/images/posters/lamour-dapres-miroir-poster.jpg'
-const TITLE = "L'amour d'Après — Capsule Prisme"
+const POSTER_URL = '/images/posters/presentation-espace-180-poster.jpg'
+const TITLE = "Présentation de l'Espace 180"
 const DESCRIPTION =
-  "Une exploration intime de l'amour après la transformation. Découvrez cette capsule miroir."
+  "Explorez l’Espace 180° d’Amour, un univers de ressources vibrantes pour accompagner votre déplacement intérieur. Découvrez des méditations guidées, des exercices pratiques et des contenus inspirants pour nourrir votre cheminement personnel et relationnel."
 
 // Declare the global function on the window object
 declare global {
@@ -202,7 +202,7 @@ export function CustomCapsuleMiroirCard({
         >
           {/* Media Container */}
           <div className="relative w-full rounded-[32px] overflow-hidden">
-            <div className="relative pb-[56.25%]">
+            <div className="relative pb-[56.25%] w-full">
               <video
                 ref={videoRef}
                 className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
@@ -225,7 +225,7 @@ export function CustomCapsuleMiroirCard({
               <div className="absolute top-4 right-4 flex gap-4 z-20">
                 {/* Capsule title bubble */}
                 <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                  <span className="text-white font-medium">Capsule Prisme</span>
+                  <span className="font-medium">Espace 180</span>
                 </div>
               </div>
               {/* Play button - Left side */}
@@ -340,7 +340,7 @@ export function CustomCapsuleMiroirCard({
             Espace 180
           </h3>
           <p className="text-white text-lg leading-relaxed">
-            <span className="text-primary-coral">
+            <span className="text-primary-gold">
               Espace 180 Degrées de Conversion d'Amour
             </span>
             , c'est un centre de ressources audio en constante évolution,
