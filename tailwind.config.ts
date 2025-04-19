@@ -25,7 +25,7 @@ const config = {
         aleo: ['var(--font-aleo)'],
       },
       colors: {
-        'primary-gold': '#D9B70D',
+        'primary-gold': '#ffbe00',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

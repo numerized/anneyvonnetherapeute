@@ -28,6 +28,7 @@ module.exports = {
           teal: '#7BA7BC',
           sky: '#89C5CC',
         },
+        'primary-gold': '#ffbe00',
       },
     },
   },

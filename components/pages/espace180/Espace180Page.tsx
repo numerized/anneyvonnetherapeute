@@ -648,6 +648,8 @@ export default function Espace180Page() {
   }
 
   const renderCapsule = (capsule: Capsule, isLarge: boolean) => {
+    // Determine aspect ratio and description display
+    const isVertical = capsule.proportions === '9:16'
     return (
       <div
         key={capsule.id}
@@ -656,13 +658,17 @@ export default function Espace180Page() {
         {/* Media Container */}
         <div className="relative w-full rounded-[32px] overflow-hidden">
           {/* Aspect ratio container */}
-          <div className="relative pb-[56.25%]">
+          <div
+            className={`relative ${isVertical ? 'pb-[177.77%]' : 'pb-[56.25%]'}`}
+          >
+            {' '}
+            {/* 9:16 = 177.77%, 16:9 = 56.25% */}
             {isClient && (
               <>
                 {capsule.mediaType === 'video' ? (
                   <video
                     ref={(el) => setMediaRef(el, capsule.id)}
-                    className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+                    className={`absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl ${isVertical ? 'object-contain bg-black' : ''}`}
                     playsInline
                     webkit-playsinline="true"
                     src={capsule.mediaUrl}
@@ -706,15 +712,19 @@ export default function Espace180Page() {
                 )}
                 {/* Frost bubbles */}
                 <div className="absolute top-4 right-4 flex gap-4 z-20">
-                  {/* Capsule title bubble */}
-                  <Link
-                    href={`/espace180/capsule/${capsule.uniqueId}`}
-                    className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all"
+                  {/* Capsule number bubble with redirect to espace180?capsule=... */}
+                  <button
+                    onClick={() => {
+                      window.location.href = `/espace180?capsule=${capsule.uniqueId}`
+                    }}
+                    className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all cursor-pointer"
+                    aria-label={`Voir la capsule #${capsule.id}`}
+                    style={{ border: 'none', outline: 'none' }}
                   >
                     <span className="text-white font-medium">
                       #{capsule.id}
                     </span>
-                  </Link>
+                  </button>
                 </div>
                 {/* Play button - Left side */}
                 <div className="absolute left-4 bottom-4 z-20">
@@ -835,11 +845,13 @@ export default function Espace180Page() {
 
         {/* Capsule Info */}
         <div className="flex-grow mt-6">
-          {/* Title and duration grouped without spacing */}
+          {/* Title on one row, date on the next row, duration right-aligned */}
           <div>
             <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
             {capsule.duration && (
-              <div className="text-sm text-white/60">{capsule.duration}</div>
+              <div className="text-sm text-white/60 whitespace-nowrap text-left">
+                {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
+              </div>
             )}
           </div>
 
@@ -848,7 +860,7 @@ export default function Espace180Page() {
 
           {/* Share Button */}
           <div
-            className="mt-4 flex items-center"
+            className="mt-2 flex justify-end"
             style={{ position: 'relative', zIndex: 40 }}
           >
             <button
@@ -870,14 +882,14 @@ export default function Espace180Page() {
                   },
                 )
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+              className="flex items-center gap-1 px-2 py-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
               aria-label="Copier le lien de partage"
               style={{ pointerEvents: 'auto' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="12"
+                height="12"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -891,17 +903,10 @@ export default function Espace180Page() {
                 <line x1="12" x2="12" y1="2" y2="15" />
               </svg>
               <span>
-                {copiedCapsule === capsule.id
-                  ? 'Copié dans le presse-papier'
-                  : 'Copier le lien'}
+                {copiedCapsule === capsule.id ? 'Copié' : 'Copier le lien'}
               </span>
             </button>
           </div>
-
-          {/* Date - Moved between description and tags */}
-          <p className="text-sm text-white/60 text-right mt-4">
-            {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
-          </p>
 
           {/* Tags */}
           <div
