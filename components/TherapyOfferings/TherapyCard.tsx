@@ -143,7 +143,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
         </span>
       )
-    } else if (therapy.mainOffering.details?.price) {
+    } else if (therapy.mainOffering?.details?.price) {
       const price = therapy.mainOffering.details.price
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(price)
@@ -533,6 +533,15 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     return therapy.type === 'coaching' ? 'COACHING' : 'THÉRAPIE'
   }
 
+  // Helper to get selected formula object
+  const getSelectedFormulaObj = () => {
+    const formulas = getFormulas();
+    if (!selectedFormula) return formulas[0];
+    return formulas.find(
+      formula => (formula.id || `${therapy.id}-formula-${formulas.indexOf(formula)}`) === selectedFormula
+    ) || formulas[0];
+  }
+
   return (
     <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
@@ -741,7 +750,8 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 {getFormulas().map((formula, idx) => (
                   <div
                     key={idx}
-                    className="bg-primary-dark/30 p-3 rounded-[16px] flex justify-between items-start"
+                    className="bg-primary-dark/30 p-3 rounded-[16px] flex justify-between items-start cursor-pointer"
+                    onClick={() => setSelectedFormula(formula.id || `${therapy.id}-formula-${idx}`)}
                   >
                     <div className="flex-1">
                       {getFormulas().length > 1 && (
@@ -968,17 +978,20 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 setPurchaseCurrency &&
                 setShowPurchaseModal
               ) {
+                // Only use the selected formula for Stripe metadata
+                const selectedFormulaObj = getSelectedFormulaObj();
                 setPurchaseDetails({
                   ...therapy,
-                  price:
-                    ('price' in therapy && therapy.price) ||
-                    (therapy.formulas && therapy.formulas[0]?.price) ||
-                    0,
-                })
-                setPurchaseCurrency('chf') // default or infer
-                setShowPurchaseModal(true)
+                  price: selectedFormulaObj?.price || therapy.price || 0,
+                  formulas: selectedFormulaObj ? [selectedFormulaObj] : [], // Only selected formula
+                  selectedFormulaId: selectedFormulaObj?.id || null,
+                  selectedFormulaTitle: selectedFormulaObj?.title || '',
+                  selectedFormulaPrice: selectedFormulaObj?.price || 0,
+                });
+                setPurchaseCurrency('chf'); // default or infer
+                setShowPurchaseModal(true);
               } else {
-                onShowPromo(therapy.id)
+                onShowPromo(therapy.id);
               }
             }}
           >
