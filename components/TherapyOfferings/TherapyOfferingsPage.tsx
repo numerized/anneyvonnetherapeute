@@ -14,6 +14,7 @@ import {
 
 import { CommonBenefits } from './CommonBenefits'
 import { TherapyGrid } from './TherapyGrid'
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
 
 interface TherapyOfferingsPageProps {
   displayAll?: boolean
@@ -83,7 +84,13 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           </h2>
           <p className="text-primary-cream">{headline}</p>
         </div>
-
+        {/* LightCapsule video component */}
+        <LightCapsule
+          videoUrl="/videos/PRESENTATION 3 THERAPIES.mp4"
+          posterUrl="/images/posters/PRESENTATION 3 THERAPIES.jpg"
+          title="Présentation des 3 Thérapies"
+          description="Découvrez la présentation vidéo des 3 approches thérapeutiques proposées par Coeur à Corps."
+        />
         {/* Therapy Grid */}
         <TherapyGrid
           therapies={offeringTypes as BaseOffering[]}

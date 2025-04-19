@@ -152,7 +152,7 @@ function ProchainementHeroContent({
                   onClick={handlePurchase}
                   className="bg-primary-coral hover:bg-primary-coral/90 text-white px-8 py-3 rounded-full transition-colors duration-200 animate-glow font-bold text-lg"
                 >
-                  {customButtonText || "Découvrir l'offre"}
+                  Quelle Offre sera la vôtre ?
                 </button>
               </motion.div>
             </div>

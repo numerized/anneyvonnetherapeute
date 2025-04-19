@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import {
   Dispatch,
@@ -7,12 +9,6 @@ import {
   useRef,
   useState,
 } from 'react'
-
-const VIDEO_URL = '/videos/PRESENTATION ESPACE 180.mp4'
-const POSTER_URL = '/images/posters/presentation-espace-180-poster.jpg'
-const TITLE = "Présentation de l'Espace 180"
-const DESCRIPTION =
-  'Explorez l’Espace 180° d’Amour, un univers de ressources vibrantes pour accompagner votre déplacement intérieur. Découvrez des méditations guidées, des exercices pratiques et des contenus inspirants pour nourrir votre cheminement personnel et relationnel.'
 
 // Declare the global function on the window object
 declare global {
@@ -25,12 +21,20 @@ interface CustomCapsuleMiroirCardProps {
   videoRef?: RefObject<HTMLVideoElement | null>
   isPlaying?: boolean
   setIsPlaying?: Dispatch<SetStateAction<boolean>>
+  videoUrl?: string
+  posterUrl?: string
+  title?: string
+  description?: string
 }
 
 export function CustomCapsuleMiroirCard({
   videoRef: externalVideoRef,
   isPlaying: externalIsPlaying,
   setIsPlaying: externalSetIsPlaying,
+  videoUrl,
+  posterUrl,
+  title,
+  description,
 }: CustomCapsuleMiroirCardProps = {}) {
   // Use external state if provided, otherwise use internal state
   const [internalIsPlaying, setInternalIsPlaying] = useState(false)
@@ -49,6 +53,13 @@ export function CustomCapsuleMiroirCard({
   const isPlaying =
     externalIsPlaying !== undefined ? externalIsPlaying : internalIsPlaying
   const setIsPlaying = externalSetIsPlaying || setInternalIsPlaying
+
+  // Use props if provided, otherwise fallback to defaults
+  const VIDEO_URL = videoUrl || '/videos/PRESENTATION ESPACE 180.mp4'
+  const POSTER_URL = posterUrl || '/images/posters/presentation-espace-180-poster.jpg'
+  const TITLE = title || "Présentation de l'Espace 180"
+  const DESCRIPTION = description ||
+    'Explorez l’Espace 180° d’Amour, un univers de ressources vibrantes pour accompagner votre déplacement intérieur. Découvrez des méditations guidées, des exercices pratiques et des contenus inspirants pour nourrir votre cheminement personnel et relationnel.'
 
   // Set up video event listeners
   useEffect(() => {
@@ -193,12 +204,12 @@ export function CustomCapsuleMiroirCard({
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto mb-12 items-stretch">
+    <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto mb-12 items-stretch bg-primary-forest rounded-[32px] p-4 md:p-8">
       {/* Capsule Card (left, 2/3 on desktop) */}
       <div className="md:w-2/3 w-full flex flex-col">
         <div
           id="capsule-miroir"
-          className="bg-primary-dark p-8 md:p-12 rounded-[32px] flex flex-col h-full"
+          className="bg-primary-forest p-8 md:p-12 rounded-[32px] flex flex-col h-full"
         >
           {/* Media Container */}
           <div className="relative w-full rounded-[32px] overflow-hidden">
@@ -335,7 +346,7 @@ export function CustomCapsuleMiroirCard({
       </div>
       {/* Explanatory Box (right, 1/3 on desktop) */}
       <div className="md:w-1/3 w-full flex flex-col justify-center">
-        <div className="h-full bg-white/10 rounded-[32px] p-8 flex flex-col justify-center min-h-[350px]">
+        <div className="h-full bg-primary-forest/80 rounded-[32px] p-8 flex flex-col justify-center min-h-[350px]">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Espace 180
           </h3>
