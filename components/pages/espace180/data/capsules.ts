@@ -12,6 +12,7 @@ export interface Capsule {
   tags: string[]
   mediaType: 'audio' | 'video'
   duration?: string
+  proportions: string
 }
 
 export const capsules: Capsule[] = [
@@ -28,6 +29,7 @@ export const capsules: Capsule[] = [
     tags: ['Créativité', 'Expression', 'Bien-être', 'Minute'],
     duration: '12min35s',
     mediaType: 'video',
+    proportions: '16:9',
   },
   {
     id: 2,
@@ -42,6 +44,22 @@ export const capsules: Capsule[] = [
     tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
     duration: '5min',
     mediaType: 'video',
+    proportions: '16:9',
+  },
+  {
+    id: 21,
+    uniqueId: 'zen-clic-copy-20250419',
+    title: 'Zen Clic',
+    description:
+      'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
+    date: new Date('2025-03-22'),
+    mediaUrl: '/CAPSULES_MINUTES/ZEN_CLICK.mp4',
+    posterUrl: '/images/posters/ZEN_CLIC_1-vertical-poster.jpg',
+    squarePosterUrl: '/images/posters/ZEN_CLIC_1-square-poster.jpg',
+    tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
+    duration: '5min',
+    mediaType: 'video',
+    proportions: '9:16',
   },
   {
     id: 3,
@@ -56,6 +74,7 @@ export const capsules: Capsule[] = [
     tags: ['Amour', 'Passion', 'Relation', 'Couple', 'Miroir'],
     duration: '6m16s',
     mediaType: 'audio',
+    proportions: '16:9',
   },
   {
     id: 4,
@@ -71,6 +90,7 @@ export const capsules: Capsule[] = [
     tags: ['Connaissance de soi', 'Exploration', 'Introspection', 'Miroir'],
     duration: '4m5s',
     mediaType: 'audio',
+    proportions: '16:9',
   },
   {
     id: 5,
@@ -86,6 +106,7 @@ export const capsules: Capsule[] = [
     tags: ['Relation', 'Couple', 'Évolution', 'Société', 'Miroir'],
     duration: '4m4s',
     mediaType: 'audio',
+    proportions: '16:9',
   },
   {
     id: 6,
@@ -110,6 +131,7 @@ export const capsules: Capsule[] = [
     ],
     duration: '6m21s',
     mediaType: 'audio',
+    proportions: '16:9',
   },
   {
     id: 7,
@@ -129,5 +151,6 @@ export const capsules: Capsule[] = [
     ],
     duration: '4m15s',
     mediaType: 'audio',
+    proportions: '16:9',
   },
 ]
