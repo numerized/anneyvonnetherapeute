@@ -37,7 +37,7 @@ export const capsules: Capsule[] = [
     title: 'Zen Clic',
     description:
       'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
-    date: new Date('2025-03-22'),
+    date: new Date('2025-03-26'),
     mediaUrl: '/CAPSULES_MINUTES/ZEN_CLICK.mp4',
     posterUrl: '/images/posters/ZEN_CLIC_1-vertical-poster.jpg',
     squarePosterUrl: '/images/posters/ZEN_CLIC_1-square-poster.jpg',
@@ -52,7 +52,7 @@ export const capsules: Capsule[] = [
     title: 'Zen Clic',
     description:
       'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
-    date: new Date('2025-03-22'),
+    date: new Date('2025-03-30'),
     mediaUrl: '/CAPSULES_MINUTES/ZEN_CLICK.mp4',
     posterUrl: '/images/posters/ZEN_CLIC_1-vertical-poster.jpg',
     squarePosterUrl: '/images/posters/ZEN_CLIC_1-square-poster.jpg',
@@ -67,7 +67,7 @@ export const capsules: Capsule[] = [
     title: 'Amour Passion',
     description:
       "Explorez les dimensions de l'amour passionnel et ses manifestations dans nos relations. Une réflexion sur l'intensité et la profondeur des liens amoureux.",
-    date: new Date('2025-03-22'),
+    date: new Date('2025-04-02'),
     mediaUrl: '/CAPSULES_MIROIR/Amour-passion.m4a',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir5.png',
     squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir5.png',
@@ -82,7 +82,7 @@ export const capsules: Capsule[] = [
     title: 'Capsule Connaître - Exploration',
     description:
       'Une invitation à explorer la connaissance de soi et des autres. Cette capsule audio vous guide dans une démarche introspective pour mieux vous comprendre et vous connecter à votre essence.',
-    date: new Date('2025-03-22'),
+    date: new Date('2025-04-06'),
     mediaUrl:
       '/CAPSULES_MIROIR/Capsule-connaitre---exploration-cac_Wind-Remover.mp3',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir6.png',
@@ -98,7 +98,7 @@ export const capsules: Capsule[] = [
     title: "Et si la relation amoureuse n'est plus faite pour durer",
     description:
       "Une réflexion sur l'évolution des relations amoureuses dans notre société contemporaine. Questionnez vos attentes et vos perceptions sur la durabilité des liens affectifs.",
-    date: new Date('2025-03-22'),
+    date: new Date('2025-04-10'),
     mediaUrl:
       '/CAPSULES_MIROIR/Et-si-la-relation-amoureuse-n_est-plus-faite-pour-durer.m4a',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir7.png',
@@ -114,7 +114,7 @@ export const capsules: Capsule[] = [
     title: 'La Pensée Orientée',
     description:
       "Découvrez comment aligner vos pensées vers des objectifs positifs et constructifs. Cette méditation guidée vous aide à structurer votre réflexion pour plus de clarté et d'efficacité.",
-    date: new Date('2025-03-22'),
+    date: new Date('2025-04-14'),
     mediaUrl: '/CAPSULES_MIROIR/La-pensee-orientee_Wind-Remover.mp3',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir8.png',
     squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir8.png',
@@ -139,7 +139,7 @@ export const capsules: Capsule[] = [
     title: 'Les Uns et Les Autres',
     description:
       'Une exploration des dynamiques relationnelles et des interactions entre individus. Cette capsule vous invite à porter un regard nouveau sur la façon dont nous nous connectons les uns aux autres.',
-    date: new Date('2025-03-22'),
+    date: new Date('2025-04-18'),
     mediaUrl: '/CAPSULES_MIROIR/Les-uns-et-les-autres.m4a',
     posterUrl: '/CAPSULES%20MIROIR_VISUELS/mirroir9.png',
     squarePosterUrl: '/CAPSULES%20MIROIR_VISUELS/square/mirroir9.png',
