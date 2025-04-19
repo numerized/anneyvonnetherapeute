@@ -90,6 +90,7 @@ export async function POST(req: Request) {
       productType = 'prochainement',
       price, // <-- get price from body
       offerTitle, // <-- get offerTitle from body
+      cancelPath = '/prochainement', // <-- get cancelPath from body
     } = body
     const extraMetadata = body.metadata || {}
     console.log('Request data:', {
@@ -101,6 +102,7 @@ export async function POST(req: Request) {
       productType,
       price,
       offerTitle,
+      cancelPath,
     })
 
     const headersList = await headers()
@@ -190,8 +192,8 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}/${productType}?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/${productType}?canceled=true`,
+      success_url: `${origin}${cancelPath}?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}${cancelPath}?canceled=true`,
       customer_email: email,
       metadata: {
         ticketType,

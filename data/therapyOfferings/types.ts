@@ -125,6 +125,10 @@ export interface TherapyModalInfo {
     details: string[]
   }
   moreInfos?: MoreInfos
+  video?: string
+  poster?: string
+  posterSquare?: string
+  videoDuration?: number
 }
 
 export interface TherapyMainOffering {

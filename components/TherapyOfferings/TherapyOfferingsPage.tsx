@@ -3,6 +3,7 @@
 import React from 'react'
 
 import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
 import { BaseOffering } from '@/data/therapyOfferings/types'
 import {
   getAllCoachingTypes,
@@ -74,17 +75,12 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
     <div className="py-16 bg-[#2D3E3C]">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
-            {badgeText}
-          </div>
+        <div className="text-center mb-8 mt-8">
           <h2 className="text-3xl md:text-4xl font-light mb-4 text-primary-coral">
             {title}
           </h2>
           <p className="text-primary-cream">{headline}</p>
         </div>
-
-        {/* Therapy Grid */}
         <TherapyGrid
           therapies={offeringTypes as BaseOffering[]}
           displayAll={displayAll}

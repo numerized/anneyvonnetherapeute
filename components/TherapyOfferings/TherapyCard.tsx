@@ -1,8 +1,9 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef,useState } from 'react'
 
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
 import {
   BaseOffering,
   CoachingType,
@@ -29,6 +30,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   setShowPurchaseModal,
 }) => {
   const [hasCoupon, setHasCoupon] = useState(false)
+  const [selectedFormula, setSelectedFormula] = useState<string | null>(null)
 
   // Check for coupon in URL
   useEffect(() => {
@@ -141,7 +143,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
         </span>
       )
-    } else if (therapy.mainOffering.details?.price) {
+    } else if (therapy.mainOffering?.details?.price) {
       const price = therapy.mainOffering.details.price
       if (hasCoupon) {
         const discountedPrice = calculateDiscountedPrice(price)
@@ -531,18 +533,48 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     return therapy.type === 'coaching' ? 'COACHING' : 'THÉRAPIE'
   }
 
+  // Helper to get selected formula object
+  const getSelectedFormulaObj = () => {
+    const formulas = getFormulas()
+    if (!selectedFormula) return formulas[0]
+    return (
+      formulas.find(
+        (formula) =>
+          (formula.id ||
+            `${therapy.id}-formula-${formulas.indexOf(formula)}`) ===
+          selectedFormula,
+      ) || formulas[0]
+    )
+  }
+
+  // Helper to get current path for Stripe cancel_url
+  const getCurrentPath = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname
+    }
+    return '/prochainement'
+  }
+
   return (
     <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
+        {/* Display video if available in therapy.modalInfo */}
+        {therapy.modalInfo?.video && therapy.modalInfo?.poster && (
+          <div className="mb-4">
+            <LightCapsule
+              videoUrl={therapy.modalInfo.video}
+              posterUrl={therapy.modalInfo.poster}
+              title={therapy.title}
+              description={
+                therapy.headline || therapy.cardInfo?.description || ''
+              }
+              className="mb-2 mt-0"
+              videoDuration={therapy.modalInfo.videoDuration}
+            />
+          </div>
+        )}
         {/* Title and Subtitle */}
         <div className="text-right">
-          <div
-            className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4"
-            role="presentation"
-            aria-label={getTypeLabel()}
-          >
-            {getTypeLabel()}
-          </div>
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             {therapy.title.toUpperCase()}
           </h3>
@@ -620,14 +652,12 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         )}
 
         {/* Price Section */}
-        <div className="bg-primary-forest/30 rounded-[24px] p-6">
+        <div className="bg-primary-forest/30 rounded-[24px] p-6 relative">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
               {therapy.formulas &&
-              Array.isArray(therapy.formulas) &&
-              therapy.formulas.length > 0
-                ? therapy.formulas[0].title
-                : therapy.mainOffering.details?.title || `NOTRE OFFRE`}
+                Array.isArray(therapy.formulas) &&
+                `NOTRE OFFRE`}
             </h3>
 
             {/* Main offering price */}
@@ -735,74 +765,104 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 {getFormulas().map((formula, idx) => (
                   <div
                     key={idx}
-                    className="bg-primary-dark/30 p-3 rounded-[16px]"
+                    className="bg-primary-dark/30 p-3 rounded-[16px] flex justify-between items-start cursor-pointer"
+                    onClick={() =>
+                      setSelectedFormula(
+                        formula.id || `${therapy.id}-formula-${idx}`,
+                      )
+                    }
                   >
-                    {getFormulas().length > 1 && (
-                      <>
-                        <div className="text-primary-cream font-bold">
-                          <h4 className="font-bold">{formula.title}</h4>
-                        </div>
-                        {hasCoupon ? (
-                          <div className="flex items-center gap-2">
-                            <p className="text-primary-cream line-through">
+                    <div className="flex-1">
+                      {getFormulas().length > 1 && (
+                        <>
+                          <div className="text-primary-cream font-bold">
+                            <h4 className="font-bold">{formula.title}</h4>
+                          </div>
+                          {hasCoupon ? (
+                            <div className="flex items-center gap-2">
+                              <p className="text-primary-cream line-through">
+                                {formula.price}{' '}
+                                <span className="text-sm text-primary-cream">
+                                  CHF / EUR
+                                </span>
+                              </p>
+                              <p className="text-primary-coral">
+                                {calculateDiscountedPrice(formula.price)}{' '}
+                                <span className="text-sm text-primary-cream">
+                                  CHF / EUR
+                                </span>
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-primary-cream">
                               {formula.price}{' '}
                               <span className="text-sm text-primary-cream">
                                 CHF / EUR
                               </span>
                             </p>
-                            <p className="text-primary-coral">
-                              {calculateDiscountedPrice(formula.price)}{' '}
-                              <span className="text-sm text-primary-cream">
-                                CHF / EUR
-                              </span>
+                          )}
+                        </>
+                      )}
+
+                      {getFormulas().length === 1 && (
+                        <div className="space-y-1">
+                          {formula.duration && (
+                            <p className="text-primary-cream">
+                              {formula.duration}
                             </p>
-                          </div>
-                        ) : (
-                          <p className="text-primary-cream">
-                            {formula.price}{' '}
-                            <span className="text-sm text-primary-cream">
-                              CHF / EUR
-                            </span>
-                          </p>
-                        )}
-                      </>
-                    )}
+                          )}
+                          {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                          {formula.sessionLength && (
+                            <p className="text-primary-cream/80 text-sm">
+                              {formula.sessionLength}
+                            </p>
+                          )}
+                        </div>
+                      )}
 
-                    {getFormulas().length === 1 && (
-                      <div className="space-y-1">
-                        {formula.duration && (
-                          <p className="text-primary-cream">
-                            {formula.duration}
-                          </p>
-                        )}
-                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
-                        {formula.sessionLength && (
-                          <p className="text-primary-cream/80 text-sm">
-                            {formula.sessionLength}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                      {getFormulas().length > 1 && (
+                        <>
+                          {formula.priceDetails && (
+                            <p className="text-primary-cream/70 text-sm">
+                              {formula.priceDetails}
+                            </p>
+                          )}
+                          {formula.duration && (
+                            <p className="text-primary-cream/70 text-sm">
+                              {formula.duration}
+                            </p>
+                          )}
+                          {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                          {formula.sessionLength && (
+                            <p className="text-primary-cream/70 text-sm">
+                              {formula.sessionLength}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
 
+                    {/* Radio button for formula selection */}
                     {getFormulas().length > 1 && (
-                      <>
-                        {formula.priceDetails && (
-                          <p className="text-primary-cream/70 text-sm">
-                            {formula.priceDetails}
-                          </p>
-                        )}
-                        {formula.duration && (
-                          <p className="text-primary-cream/70 text-sm">
-                            {formula.duration}
-                          </p>
-                        )}
-                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
-                        {formula.sessionLength && (
-                          <p className="text-primary-cream/70 text-sm">
-                            {formula.sessionLength}
-                          </p>
-                        )}
-                      </>
+                      <div className="ml-3 flex-shrink-0">
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name={`therapy-option-${therapy.id}`}
+                            value={formula.id || `${therapy.id}-formula-${idx}`}
+                            checked={
+                              selectedFormula ===
+                              (formula.id || `${therapy.id}-formula-${idx}`)
+                            }
+                            onChange={() =>
+                              setSelectedFormula(
+                                formula.id || `${therapy.id}-formula-${idx}`,
+                              )
+                            }
+                            className="form-radio h-5 w-5 accent-primary-coral border-primary-cream/50 focus:ring-primary-coral"
+                          />
+                        </label>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -944,12 +1004,22 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 setPurchaseCurrency &&
                 setShowPurchaseModal
               ) {
+                // Only use the selected formula for Stripe metadata
+                const selectedFormulaObj = getSelectedFormulaObj()
                 setPurchaseDetails({
                   ...therapy,
-                  price:
-                    ('price' in therapy && therapy.price) ||
-                    (therapy.formulas && therapy.formulas[0]?.price) ||
+                  price: selectedFormulaObj?.price ||
+                    therapy.mainOffering?.price ||
+                    therapy.mainOffering?.details?.price ||
+                    (therapy.pricing
+                      ? therapy.pricing.individual || therapy.pricing.couple
+                      : 0) ||
                     0,
+                  formulas: selectedFormulaObj ? [selectedFormulaObj] : [], // Only selected formula
+                  selectedFormulaId: selectedFormulaObj?.id || null,
+                  selectedFormulaTitle: selectedFormulaObj?.title || '',
+                  selectedFormulaPrice: selectedFormulaObj?.price || 0,
+                  cancelPath: getCurrentPath(), // Pass current path for cancel_url
                 })
                 setPurchaseCurrency('chf') // default or infer
                 setShowPurchaseModal(true)

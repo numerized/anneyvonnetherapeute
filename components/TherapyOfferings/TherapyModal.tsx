@@ -586,19 +586,21 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
     if (!price) return null
 
     return (
-      <div className="text-primary-cream text-right">
-        <div>
+      <span className="text-primary-cream text-right inline-block">
+        <span className="block">
           {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
-        </div>
+        </span>
         {note && (
-          <div className="text-primary-cream/70 text-sm mt-1">({note})</div>
+          <span className="text-primary-cream/70 text-sm mt-1 block">
+            ({note})
+          </span>
         )}
         {priceDetails && (
-          <div className="text-primary-cream/70 text-sm mt-1">
+          <span className="text-primary-cream/70 text-sm mt-1 block">
             {priceDetails}
-          </div>
+          </span>
         )}
-      </div>
+      </span>
     )
   }
 
