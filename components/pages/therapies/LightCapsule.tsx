@@ -7,6 +7,7 @@ interface LightCapsuleProps {
   posterUrl: string;
   title: string;
   description: string;
+  className?: string;
 }
 
 const LightCapsule: React.FC<LightCapsuleProps> = ({
@@ -14,6 +15,7 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
   posterUrl,
   title,
   description,
+  className = '',
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const progressTrackRef = useRef<HTMLDivElement | null>(null);
@@ -118,7 +120,7 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-8 bg-transparent rounded-3xl p-6 md:p-10 flex flex-col items-start">
+    <div className={`w-full max-w-3xl mx-auto mt-8 bg-transparent rounded-3xl p-6 md:p-10 flex flex-col items-start ${className}`}>
       <div className="w-full rounded-3xl overflow-hidden mb-6 relative">
         <div className="relative pb-[56.25%] w-full">
           <video

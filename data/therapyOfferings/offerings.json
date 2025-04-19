@@ -58,6 +58,9 @@
             "description": "Redécouvrir la complicité et nourrir la connexion."
           }
         ],
+        "video": "/videos/PRESENTATION THERAPIE COUPLE_ VOYAGE.mp4",
+        "poster": "/images/posters/COUPLE.jpg",
+        "posterSquare": "/images/posters/COUPLE-square.jpg",
         "proverbs": [
           "Ce n'est pas la destination qui compte, mais le chemin parcouru ensemble.",
           "Aimer, ce n'est pas se regarder l'un l'autre, c'est regarder ensemble dans la même direction."
@@ -247,6 +250,9 @@
             "description": "Apprendre à exprimer vos besoins et à poser vos limites."
           }
         ],
+        "video": "/videos/INTRODUCTION AU DEVELOPPEMENT RELATIONNEL.mp4",
+        "poster": "/images/posters/INDIVIDUEL.jpg",
+        "posterSquare": "/images/posters/INDIVIDUEL-square.jpg",
         "options": [
           {
             "id": "neurotribu-individual",
@@ -413,6 +419,9 @@
             "description": "Explorer sans tabou l'expression de vos envies, vos désirs et vos limites."
           }
         ],
+        "video": "/videos/PRESENTATION VERY IMPORTANT THERAPY.mp4",
+        "poster": "/images/posters/VIT.jpg",
+        "posterSquare": "/images/posters/VIT-square.jpg",
         "proverbs": [
           "L'amour est une invitation à la découverte, et non une promesse de sécurité."
         ],

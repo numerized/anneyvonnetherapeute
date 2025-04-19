@@ -75,7 +75,7 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
     <div className="py-16 bg-[#2D3E3C]">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 mt-8">
           <div className="inline-block bg-primary-teal text-primary-cream px-4 py-2 rounded-[24px] text-sm mb-4">
             {badgeText}
           </div>
@@ -85,12 +85,13 @@ const TherapyOfferingsPage: React.FC<TherapyOfferingsPageProps> = ({
           <p className="text-primary-cream">{headline}</p>
         </div>
         {/* LightCapsule video component */}
-        <LightCapsule
+        {/* <LightCapsule
           videoUrl="/videos/PRESENTATION 3 THERAPIES.mp4"
           posterUrl="/images/posters/PRESENTATION 3 THERAPIES.jpg"
           title="Présentation des 3 Thérapies"
           description="Découvrez la présentation vidéo des 3 approches thérapeutiques proposées par Coeur à Corps."
-        />
+          className="mt-0"
+        /> */}
         {/* Therapy Grid */}
         <TherapyGrid
           therapies={offeringTypes as BaseOffering[]}
