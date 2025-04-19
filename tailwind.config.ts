@@ -26,7 +26,6 @@ const config = {
       },
       colors: {
         'primary-gold': '#ffbe00',
-        'primary-gold': '#D9B70D',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
