@@ -1,7 +1,7 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import LightCapsule from '@/components/pages/therapies/LightCapsule'
 
 import {
@@ -30,6 +30,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   setShowPurchaseModal,
 }) => {
   const [hasCoupon, setHasCoupon] = useState(false)
+  const [selectedFormula, setSelectedFormula] = useState<string | null>(null)
 
   // Check for coupon in URL
   useEffect(() => {
@@ -627,7 +628,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         )}
 
         {/* Price Section */}
-        <div className="bg-primary-forest/30 rounded-[24px] p-6">
+        <div className="bg-primary-forest/30 rounded-[24px] p-6 relative">
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
               {therapy.formulas &&
@@ -740,74 +741,92 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 {getFormulas().map((formula, idx) => (
                   <div
                     key={idx}
-                    className="bg-primary-dark/30 p-3 rounded-[16px]"
+                    className="bg-primary-dark/30 p-3 rounded-[16px] flex justify-between items-start"
                   >
-                    {getFormulas().length > 1 && (
-                      <>
-                        <div className="text-primary-cream font-bold">
-                          <h4 className="font-bold">{formula.title}</h4>
-                        </div>
-                        {hasCoupon ? (
-                          <div className="flex items-center gap-2">
-                            <p className="text-primary-cream line-through">
+                    <div className="flex-1">
+                      {getFormulas().length > 1 && (
+                        <>
+                          <div className="text-primary-cream font-bold">
+                            <h4 className="font-bold">{formula.title}</h4>
+                          </div>
+                          {hasCoupon ? (
+                            <div className="flex items-center gap-2">
+                              <p className="text-primary-cream line-through">
+                                {formula.price}{' '}
+                                <span className="text-sm text-primary-cream">
+                                  CHF / EUR
+                                </span>
+                              </p>
+                              <p className="text-primary-coral">
+                                {calculateDiscountedPrice(formula.price)}{' '}
+                                <span className="text-sm text-primary-cream">
+                                  CHF / EUR
+                                </span>
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-primary-cream">
                               {formula.price}{' '}
                               <span className="text-sm text-primary-cream">
                                 CHF / EUR
                               </span>
                             </p>
-                            <p className="text-primary-coral">
-                              {calculateDiscountedPrice(formula.price)}{' '}
-                              <span className="text-sm text-primary-cream">
-                                CHF / EUR
-                              </span>
+                          )}
+                        </>
+                      )}
+
+                      {getFormulas().length === 1 && (
+                        <div className="space-y-1">
+                          {formula.duration && (
+                            <p className="text-primary-cream">
+                              {formula.duration}
                             </p>
-                          </div>
-                        ) : (
-                          <p className="text-primary-cream">
-                            {formula.price}{' '}
-                            <span className="text-sm text-primary-cream">
-                              CHF / EUR
-                            </span>
-                          </p>
-                        )}
-                      </>
-                    )}
+                          )}
+                          {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                          {formula.sessionLength && (
+                            <p className="text-primary-cream/80 text-sm">
+                              {formula.sessionLength}
+                            </p>
+                          )}
+                        </div>
+                      )}
 
-                    {getFormulas().length === 1 && (
-                      <div className="space-y-1">
-                        {formula.duration && (
-                          <p className="text-primary-cream">
-                            {formula.duration}
-                          </p>
-                        )}
-                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
-                        {formula.sessionLength && (
-                          <p className="text-primary-cream/80 text-sm">
-                            {formula.sessionLength}
-                          </p>
-                        )}
-                      </div>
-                    )}
-
+                      {getFormulas().length > 1 && (
+                        <>
+                          {formula.priceDetails && (
+                            <p className="text-primary-cream/70 text-sm">
+                              {formula.priceDetails}
+                            </p>
+                          )}
+                          {formula.duration && (
+                            <p className="text-primary-cream/70 text-sm">
+                              {formula.duration}
+                            </p>
+                          )}
+                          {/* @ts-ignore - Some coaching formulas have sessionLength property */}
+                          {formula.sessionLength && (
+                            <p className="text-primary-cream/70 text-sm">
+                              {formula.sessionLength}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    
+                    {/* Radio button for formula selection */}
                     {getFormulas().length > 1 && (
-                      <>
-                        {formula.priceDetails && (
-                          <p className="text-primary-cream/70 text-sm">
-                            {formula.priceDetails}
-                          </p>
-                        )}
-                        {formula.duration && (
-                          <p className="text-primary-cream/70 text-sm">
-                            {formula.duration}
-                          </p>
-                        )}
-                        {/* @ts-ignore - Some coaching formulas have sessionLength property */}
-                        {formula.sessionLength && (
-                          <p className="text-primary-cream/70 text-sm">
-                            {formula.sessionLength}
-                          </p>
-                        )}
-                      </>
+                      <div className="ml-3 flex-shrink-0">
+                        <label className="inline-flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name={`therapy-option-${therapy.id}`}
+                            value={formula.id || `${therapy.id}-formula-${idx}`}
+                            checked={selectedFormula === (formula.id || `${therapy.id}-formula-${idx}`)}
+                            onChange={() => setSelectedFormula(formula.id || `${therapy.id}-formula-${idx}`)}
+                            className="form-radio h-5 w-5 accent-primary-coral border-primary-cream/50 focus:ring-primary-coral"
+                          />
+                        </label>
+                      </div>
                     )}
                   </div>
                 ))}
