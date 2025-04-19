@@ -181,11 +181,7 @@ export default function NavbarLayout() {
         className="relative bg-primary-dark hidden md:block"
         role="banner"
       >
-        {isProchainement ? (
-          <NotificationBanner message="Lancement en 2025" />
-        ) : (
-          <NotificationBanner message="" />
-        )}
+        <NotificationBanner message="Lancement en 2025" />
         <div className="max-w-7xl mx-auto px-6">
           <nav
             className="relative py-4"
