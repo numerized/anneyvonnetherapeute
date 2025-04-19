@@ -60,6 +60,7 @@ export function PurchaseTicket({
           hasDiscount,
           couponCode: couponCode || undefined,
           productType: 'coaching-relationnel-en-groupe',
+          cancelPath: typeof window !== 'undefined' ? window.location.pathname : '/coaching-relationnel-en-groupe',
         }),
       })
 

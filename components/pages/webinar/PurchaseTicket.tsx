@@ -53,6 +53,7 @@ export function PurchaseTicket({ ticketType, onClose }: PurchaseTicketProps) {
           discount,
           couponCode: couponCode || undefined,
           productType: 'webinar',
+          cancelPath: typeof window !== 'undefined' ? window.location.pathname : '/webinar',
         }),
       })
 

@@ -94,6 +94,7 @@ export function PurchaseTicket({
             offeringType: offeringType || '',
             type: type || '',
           },
+          cancelPath: typeof window !== 'undefined' ? window.location.pathname : '/prochainement',
         }),
       })
 

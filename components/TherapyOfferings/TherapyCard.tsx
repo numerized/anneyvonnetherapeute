@@ -542,6 +542,14 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
     ) || formulas[0];
   }
 
+  // Helper to get current path for Stripe cancel_url
+  const getCurrentPath = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname;
+    }
+    return '/prochainement';
+  }
+
   return (
     <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
@@ -987,6 +995,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   selectedFormulaId: selectedFormulaObj?.id || null,
                   selectedFormulaTitle: selectedFormulaObj?.title || '',
                   selectedFormulaPrice: selectedFormulaObj?.price || 0,
+                  cancelPath: getCurrentPath(), // Pass current path for cancel_url
                 });
                 setPurchaseCurrency('chf'); // default or infer
                 setShowPurchaseModal(true);
