@@ -32,21 +32,6 @@ export const capsules: Capsule[] = [
     proportions: '16:9',
   },
   {
-    id: 2,
-    uniqueId: 'zen-clic-9a3d7e5f',
-    title: 'Zen Clic',
-    description:
-      'Un moment de détente et de recentrage pour retrouver votre équilibre intérieur. Cette capsule vous offre un espace de respiration dans votre quotidien.',
-    date: new Date('2025-03-26'),
-    mediaUrl: '/CAPSULES_MINUTES/ZEN_CLICK.mp4',
-    posterUrl: '/images/posters/ZEN_CLIC_1-vertical-poster.jpg',
-    squarePosterUrl: '/images/posters/ZEN_CLIC_1-square-poster.jpg',
-    tags: ['Méditation', 'Zen', 'Relaxation', 'Minute'],
-    duration: '5min',
-    mediaType: 'video',
-    proportions: '16:9',
-  },
-  {
     id: 21,
     uniqueId: 'zen-clic-copy-20250419',
     title: 'Zen Clic',
