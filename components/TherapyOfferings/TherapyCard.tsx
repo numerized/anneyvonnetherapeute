@@ -1008,7 +1008,13 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 const selectedFormulaObj = getSelectedFormulaObj()
                 setPurchaseDetails({
                   ...therapy,
-                  price: selectedFormulaObj?.price || therapy.price || 0,
+                  price: selectedFormulaObj?.price ||
+                    therapy.mainOffering?.price ||
+                    therapy.mainOffering?.details?.price ||
+                    (therapy.pricing
+                      ? therapy.pricing.individual || therapy.pricing.couple
+                      : 0) ||
+                    0,
                   formulas: selectedFormulaObj ? [selectedFormulaObj] : [], // Only selected formula
                   selectedFormulaId: selectedFormulaObj?.id || null,
                   selectedFormulaTitle: selectedFormulaObj?.title || '',
