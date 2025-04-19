@@ -2,6 +2,9 @@
 
 import React, { useRef, useState, useEffect } from "react";
 
+// Create a unique ID for each LightCapsule instance
+let nextVideoId = 0;
+
 interface LightCapsuleProps {
   videoUrl: string;
   posterUrl: string;
@@ -25,6 +28,8 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [videoError, setVideoError] = useState<string | null>(null);
+  // Unique ID for this video player instance
+  const videoId = useRef(`video-player-${nextVideoId++}`);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -34,17 +39,27 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
     const handleLoadedMetadata = () => setDuration(video.duration);
     const handleError = () => setVideoError("Erreur de chargement de la vidéo.");
 
+    // Listen for play events from other videos
+    const handleOtherVideoPlay = (e: CustomEvent) => {
+      if (e.detail.videoId !== videoId.current && isPlaying) {
+        video.pause();
+        setIsPlaying(false);
+      }
+    };
+
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     video.addEventListener("error", handleError);
+    document.addEventListener("videoPlay" as any, handleOtherVideoPlay as EventListener);
 
     // Clean up
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("error", handleError);
+      document.removeEventListener("videoPlay" as any, handleOtherVideoPlay as EventListener);
     };
-  }, []);
+  }, [isPlaying]);
 
   // Scrubber logic - simplified version
   const handleScrubberClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -68,7 +83,15 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise
-          .then(() => setIsPlaying(true))
+          .then(() => {
+            setIsPlaying(true);
+            // Broadcast that this video is playing to pause others
+            document.dispatchEvent(
+              new CustomEvent("videoPlay", {
+                detail: { videoId: videoId.current }
+              })
+            );
+          })
           .catch((error) => {
             setVideoError(`Erreur de lecture: ${error.message}`);
           });

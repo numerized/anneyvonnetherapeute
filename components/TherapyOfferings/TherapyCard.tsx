@@ -550,13 +550,6 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
         )}
         {/* Title and Subtitle */}
         <div className="text-right">
-          <div
-            className="inline-block bg-primary-teal/20 text-primary-cream px-3 py-1 md:px-4 md:py-2 rounded-[24px] text-xs md:text-sm mb-4"
-            role="presentation"
-            aria-label={getTypeLabel()}
-          >
-            {getTypeLabel()}
-          </div>
           <h3 className="text-2xl text-primary-cream font-light mb-2">
             {therapy.title.toUpperCase()}
           </h3>
@@ -638,10 +631,8 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-primary-coral font-light text-left">
               {therapy.formulas &&
-              Array.isArray(therapy.formulas) &&
-              therapy.formulas.length > 0
-                ? therapy.formulas[0].title
-                : therapy.mainOffering.details?.title || `NOTRE OFFRE`}
+                Array.isArray(therapy.formulas) &&
+                `NOTRE OFFRE`}
             </h3>
 
             {/* Main offering price */}
@@ -650,37 +641,37 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               therapy.formulas.length > 0) ||
               'price' in therapy.mainOffering ||
               therapy.mainOffering.details?.price) && (
-              <div className="flex flex-col gap-1">
-                <div className="flex items-end justify-end gap-1">
-                  {typeof getPriceDisplay() === 'string' ? (
-                    <div className="text-4xl text-primary-cream font-light text-right">
-                      {getPriceDisplay()}
-                      {getPriceDetails()}
-                    </div>
-                  ) : (
-                    <div className="text-4xl font-light text-right">
-                      {getPriceDisplay()}
-                      {getPriceDetails()}
-                    </div>
-                  )}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-end justify-end gap-1">
+                    {typeof getPriceDisplay() === 'string' ? (
+                      <div className="text-4xl text-primary-cream font-light text-right">
+                        {getPriceDisplay()}
+                        {getPriceDetails()}
+                      </div>
+                    ) : (
+                      <div className="text-4xl font-light text-right">
+                        {getPriceDisplay()}
+                        {getPriceDetails()}
+                      </div>
+                    )}
+                  </div>
+                  {therapy.type === 'coaching' &&
+                    therapy.mainOffering.details && (
+                      <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
+                        {therapy.mainOffering.details.duration && (
+                          <p className="text-primary-cream">
+                            {therapy.mainOffering.details.duration}
+                          </p>
+                        )}
+                        {therapy.mainOffering.details.sessionLength && (
+                          <p className="text-primary-cream/80 text-sm">
+                            {therapy.mainOffering.details.sessionLength}
+                          </p>
+                        )}
+                      </div>
+                    )}
                 </div>
-                {therapy.type === 'coaching' &&
-                  therapy.mainOffering.details && (
-                    <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
-                      {therapy.mainOffering.details.duration && (
-                        <p className="text-primary-cream">
-                          {therapy.mainOffering.details.duration}
-                        </p>
-                      )}
-                      {therapy.mainOffering.details.sessionLength && (
-                        <p className="text-primary-cream/80 text-sm">
-                          {therapy.mainOffering.details.sessionLength}
-                        </p>
-                      )}
-                    </div>
-                  )}
-              </div>
-            )}
+              )}
 
             {/* Pricing for VIT à la carte */}
             {therapy.pricing && typeof therapy.pricing === 'object' && (
