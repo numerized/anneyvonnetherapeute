@@ -658,7 +658,11 @@ export default function Espace180Page() {
         {/* Media Container */}
         <div className="relative w-full rounded-[32px] overflow-hidden">
           {/* Aspect ratio container */}
-          <div className={`relative ${isVertical ? 'pb-[177.77%]' : 'pb-[56.25%]'}`}> {/* 9:16 = 177.77%, 16:9 = 56.25% */}
+          <div
+            className={`relative ${isVertical ? 'pb-[177.77%]' : 'pb-[56.25%]'}`}
+          >
+            {' '}
+            {/* 9:16 = 177.77%, 16:9 = 56.25% */}
             {isClient && (
               <>
                 {capsule.mediaType === 'video' ? (
@@ -844,9 +848,11 @@ export default function Espace180Page() {
           {/* Title on one row, date on the next row, duration right-aligned */}
           <div>
             <h2 className="text-2xl font-bold text-white">{capsule.title}</h2>
-              {capsule.duration && (
-                <div className="text-sm text-white/60 whitespace-nowrap text-left">{format(capsule.date, 'dd MMMM yyyy', { locale: fr })}</div>
-              )}
+            {capsule.duration && (
+              <div className="text-sm text-white/60 whitespace-nowrap text-left">
+                {format(capsule.date, 'dd MMMM yyyy', { locale: fr })}
+              </div>
+            )}
           </div>
 
           {/* Description with spacing from title/duration group */}
@@ -897,9 +903,7 @@ export default function Espace180Page() {
                 <line x1="12" x2="12" y1="2" y2="15" />
               </svg>
               <span>
-                {copiedCapsule === capsule.id
-                  ? 'Copié'
-                  : 'Copier le lien'}
+                {copiedCapsule === capsule.id ? 'Copié' : 'Copier le lien'}
               </span>
             </button>
           </div>

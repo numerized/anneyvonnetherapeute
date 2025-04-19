@@ -12,7 +12,7 @@ const VIDEO_URL = '/videos/PRESENTATION ESPACE 180.mp4'
 const POSTER_URL = '/images/posters/presentation-espace-180-poster.jpg'
 const TITLE = "Présentation de l'Espace 180"
 const DESCRIPTION =
-  "Explorez l’Espace 180° d’Amour, un univers de ressources vibrantes pour accompagner votre déplacement intérieur. Découvrez des méditations guidées, des exercices pratiques et des contenus inspirants pour nourrir votre cheminement personnel et relationnel."
+  'Explorez l’Espace 180° d’Amour, un univers de ressources vibrantes pour accompagner votre déplacement intérieur. Découvrez des méditations guidées, des exercices pratiques et des contenus inspirants pour nourrir votre cheminement personnel et relationnel.'
 
 // Declare the global function on the window object
 declare global {
