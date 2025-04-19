@@ -61,7 +61,7 @@ export function Hero({ hero, data }: HeroProps) {
     >
       <div className="absolute inset-0">
         <div
-          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/90 from-5% via-primary-forest/65 via-50% to-primary-forest/30 z-10"
+          className="absolute inset-0 bg-gradient-to-r from-[#0F1A17]/30 from-5% via-[#0F1A17]/10 via-50% to-transparent z-10"
           aria-hidden="true"
         />
         {imageUrl && (
@@ -101,7 +101,7 @@ export function Hero({ hero, data }: HeroProps) {
 
       {/* Full height mobile tint */}
       <div
-        className="absolute inset-0 bg-[#0F1A17]/50 md:hidden"
+        className="absolute inset-0 bg-[#0F1A17]/20 md:hidden"
         aria-hidden="true"
       />
 
