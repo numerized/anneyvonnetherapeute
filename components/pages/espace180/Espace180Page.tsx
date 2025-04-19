@@ -852,7 +852,7 @@ export default function Espace180Page() {
 
           {/* Share Button */}
           <div
-            className="mt-4 flex items-center"
+            className="mt-2 flex justify-end"
             style={{ position: 'relative', zIndex: 40 }}
           >
             <button
@@ -874,14 +874,14 @@ export default function Espace180Page() {
                   },
                 )
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
+              className="flex items-center gap-1 px-2 py-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded-full transition-all cursor-pointer"
               aria-label="Copier le lien de partage"
               style={{ pointerEvents: 'auto' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="12"
+                height="12"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -896,7 +896,7 @@ export default function Espace180Page() {
               </svg>
               <span>
                 {copiedCapsule === capsule.id
-                  ? 'Copié dans le presse-papier'
+                  ? 'Copié'
                   : 'Copier le lien'}
               </span>
             </button>
