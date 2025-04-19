@@ -1142,16 +1142,7 @@ const TherapyQuestionnaireNew = () => {
                     </div>
                     <p className="text-sm">{appointmentDate}</p>
                   </div>
-                ) : (
-                  // Removed the button labeled 'Réserver une séance gratuite de 20min'
-                  // <button
-                  //   onClick={() => setShowCalendlyModal(true)}
-                  //   className="inline-flex items-center px-6 py-3 bg-primary-coral text-white rounded-lg hover:bg-primary-rust transition-all"
-                  // >
-                  //   Réserver une séance gratuite de 20min
-                  //   <ArrowUpRight className="ml-2 h-4 w-4" />
-                  // </button>
-                )}
+                ) : null}
               </div>
             </div>
 
