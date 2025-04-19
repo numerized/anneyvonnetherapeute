@@ -1,9 +1,9 @@
 'use client'
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
-import React, { useEffect, useState, useRef } from 'react'
-import LightCapsule from '@/components/pages/therapies/LightCapsule'
+import React, { useEffect, useRef,useState } from 'react'
 
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
 import {
   BaseOffering,
   CoachingType,
@@ -535,19 +535,24 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
 
   // Helper to get selected formula object
   const getSelectedFormulaObj = () => {
-    const formulas = getFormulas();
-    if (!selectedFormula) return formulas[0];
-    return formulas.find(
-      formula => (formula.id || `${therapy.id}-formula-${formulas.indexOf(formula)}`) === selectedFormula
-    ) || formulas[0];
+    const formulas = getFormulas()
+    if (!selectedFormula) return formulas[0]
+    return (
+      formulas.find(
+        (formula) =>
+          (formula.id ||
+            `${therapy.id}-formula-${formulas.indexOf(formula)}`) ===
+          selectedFormula,
+      ) || formulas[0]
+    )
   }
 
   // Helper to get current path for Stripe cancel_url
   const getCurrentPath = () => {
     if (typeof window !== 'undefined') {
-      return window.location.pathname;
+      return window.location.pathname
     }
-    return '/prochainement';
+    return '/prochainement'
   }
 
   return (
@@ -560,7 +565,9 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               videoUrl={therapy.modalInfo.video}
               posterUrl={therapy.modalInfo.poster}
               title={therapy.title}
-              description={therapy.headline || therapy.cardInfo?.description || ''}
+              description={
+                therapy.headline || therapy.cardInfo?.description || ''
+              }
               className="mb-2 mt-0"
               videoDuration={therapy.modalInfo.videoDuration}
             />
@@ -659,37 +666,37 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
               therapy.formulas.length > 0) ||
               'price' in therapy.mainOffering ||
               therapy.mainOffering.details?.price) && (
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-end justify-end gap-1">
-                    {typeof getPriceDisplay() === 'string' ? (
-                      <div className="text-4xl text-primary-cream font-light text-right">
-                        {getPriceDisplay()}
-                        {getPriceDetails()}
-                      </div>
-                    ) : (
-                      <div className="text-4xl font-light text-right">
-                        {getPriceDisplay()}
-                        {getPriceDetails()}
-                      </div>
-                    )}
-                  </div>
-                  {therapy.type === 'coaching' &&
-                    therapy.mainOffering.details && (
-                      <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
-                        {therapy.mainOffering.details.duration && (
-                          <p className="text-primary-cream">
-                            {therapy.mainOffering.details.duration}
-                          </p>
-                        )}
-                        {therapy.mainOffering.details.sessionLength && (
-                          <p className="text-primary-cream/80 text-sm">
-                            {therapy.mainOffering.details.sessionLength}
-                          </p>
-                        )}
-                      </div>
-                    )}
+              <div className="flex flex-col gap-1">
+                <div className="flex items-end justify-end gap-1">
+                  {typeof getPriceDisplay() === 'string' ? (
+                    <div className="text-4xl text-primary-cream font-light text-right">
+                      {getPriceDisplay()}
+                      {getPriceDetails()}
+                    </div>
+                  ) : (
+                    <div className="text-4xl font-light text-right">
+                      {getPriceDisplay()}
+                      {getPriceDetails()}
+                    </div>
+                  )}
                 </div>
-              )}
+                {therapy.type === 'coaching' &&
+                  therapy.mainOffering.details && (
+                    <div className="flex flex-col text-primary-cream/90 text-sm mt-1">
+                      {therapy.mainOffering.details.duration && (
+                        <p className="text-primary-cream">
+                          {therapy.mainOffering.details.duration}
+                        </p>
+                      )}
+                      {therapy.mainOffering.details.sessionLength && (
+                        <p className="text-primary-cream/80 text-sm">
+                          {therapy.mainOffering.details.sessionLength}
+                        </p>
+                      )}
+                    </div>
+                  )}
+              </div>
+            )}
 
             {/* Pricing for VIT à la carte */}
             {therapy.pricing && typeof therapy.pricing === 'object' && (
@@ -759,7 +766,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   <div
                     key={idx}
                     className="bg-primary-dark/30 p-3 rounded-[16px] flex justify-between items-start cursor-pointer"
-                    onClick={() => setSelectedFormula(formula.id || `${therapy.id}-formula-${idx}`)}
+                    onClick={() =>
+                      setSelectedFormula(
+                        formula.id || `${therapy.id}-formula-${idx}`,
+                      )
+                    }
                   >
                     <div className="flex-1">
                       {getFormulas().length > 1 && (
@@ -830,7 +841,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                         </>
                       )}
                     </div>
-                    
+
                     {/* Radio button for formula selection */}
                     {getFormulas().length > 1 && (
                       <div className="ml-3 flex-shrink-0">
@@ -839,8 +850,15 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                             type="radio"
                             name={`therapy-option-${therapy.id}`}
                             value={formula.id || `${therapy.id}-formula-${idx}`}
-                            checked={selectedFormula === (formula.id || `${therapy.id}-formula-${idx}`)}
-                            onChange={() => setSelectedFormula(formula.id || `${therapy.id}-formula-${idx}`)}
+                            checked={
+                              selectedFormula ===
+                              (formula.id || `${therapy.id}-formula-${idx}`)
+                            }
+                            onChange={() =>
+                              setSelectedFormula(
+                                formula.id || `${therapy.id}-formula-${idx}`,
+                              )
+                            }
                             className="form-radio h-5 w-5 accent-primary-coral border-primary-cream/50 focus:ring-primary-coral"
                           />
                         </label>
@@ -987,7 +1005,7 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                 setShowPurchaseModal
               ) {
                 // Only use the selected formula for Stripe metadata
-                const selectedFormulaObj = getSelectedFormulaObj();
+                const selectedFormulaObj = getSelectedFormulaObj()
                 setPurchaseDetails({
                   ...therapy,
                   price: selectedFormulaObj?.price || therapy.price || 0,
@@ -996,11 +1014,11 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
                   selectedFormulaTitle: selectedFormulaObj?.title || '',
                   selectedFormulaPrice: selectedFormulaObj?.price || 0,
                   cancelPath: getCurrentPath(), // Pass current path for cancel_url
-                });
-                setPurchaseCurrency('chf'); // default or infer
-                setShowPurchaseModal(true);
+                })
+                setPurchaseCurrency('chf') // default or infer
+                setShowPurchaseModal(true)
               } else {
-                onShowPromo(therapy.id);
+                onShowPromo(therapy.id)
               }
             }}
           >

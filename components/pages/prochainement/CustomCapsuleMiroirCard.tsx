@@ -56,9 +56,11 @@ export function CustomCapsuleMiroirCard({
 
   // Use props if provided, otherwise fallback to defaults
   const VIDEO_URL = videoUrl || '/videos/PRESENTATION ESPACE 180.mp4'
-  const POSTER_URL = posterUrl || '/images/posters/presentation-espace-180-poster.jpg'
+  const POSTER_URL =
+    posterUrl || '/images/posters/presentation-espace-180-poster.jpg'
   const TITLE = title || "Présentation de l'Espace 180"
-  const DESCRIPTION = description ||
+  const DESCRIPTION =
+    description ||
     'Explorez l’Espace 180° d’Amour, un univers de ressources vibrantes pour accompagner votre déplacement intérieur. Découvrez des méditations guidées, des exercices pratiques et des contenus inspirants pour nourrir votre cheminement personnel et relationnel.'
 
   // Set up video event listeners

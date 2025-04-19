@@ -1,8 +1,9 @@
 import React from 'react'
-import { CustomCapsuleMiroirCard } from '@/components/pages/prochainement/CustomCapsuleMiroirCard'
-import TherapyOfferingsPage from '@/components/TherapyOfferings/TherapyOfferingsPage'
-import LightCapsule from '@/components/pages/therapies/LightCapsule'
+
 import { Hero } from '@/components/pages/home/Hero'
+import { CustomCapsuleMiroirCard } from '@/components/pages/prochainement/CustomCapsuleMiroirCard'
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
+import TherapyOfferingsPage from '@/components/TherapyOfferings/TherapyOfferingsPage'
 
 // Provide static props for Hero as a fallback
 const heroProps = {

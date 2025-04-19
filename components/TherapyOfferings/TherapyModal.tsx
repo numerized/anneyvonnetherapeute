@@ -591,7 +591,9 @@ export const TherapyModal: React.FC<TherapyModalProps> = ({
           {price} <span className="text-sm text-primary-cream">CHF / EUR</span>
         </span>
         {note && (
-          <span className="text-primary-cream/70 text-sm mt-1 block">({note})</span>
+          <span className="text-primary-cream/70 text-sm mt-1 block">
+            ({note})
+          </span>
         )}
         {priceDetails && (
           <span className="text-primary-cream/70 text-sm mt-1 block">

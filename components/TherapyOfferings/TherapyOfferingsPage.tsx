@@ -3,6 +3,7 @@
 import React from 'react'
 
 import { PurchaseTicket } from '@/components/pages/prochainement/PurchaseTicket'
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
 import { BaseOffering } from '@/data/therapyOfferings/types'
 import {
   getAllCoachingTypes,
@@ -14,7 +15,6 @@ import {
 
 import { CommonBenefits } from './CommonBenefits'
 import { TherapyGrid } from './TherapyGrid'
-import LightCapsule from '@/components/pages/therapies/LightCapsule'
 
 interface TherapyOfferingsPageProps {
   displayAll?: boolean
