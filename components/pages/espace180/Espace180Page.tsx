@@ -708,15 +708,19 @@ export default function Espace180Page() {
                 )}
                 {/* Frost bubbles */}
                 <div className="absolute top-4 right-4 flex gap-4 z-20">
-                  {/* Capsule title bubble */}
-                  <Link
-                    href={`/espace180/capsule/${capsule.uniqueId}`}
-                    className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all"
+                  {/* Capsule number bubble with redirect to espace180?capsule=... */}
+                  <button
+                    onClick={() => {
+                      window.location.href = `/espace180?capsule=${capsule.uniqueId}`
+                    }}
+                    className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 hover:bg-white/30 transition-all cursor-pointer"
+                    aria-label={`Voir la capsule #${capsule.id}`}
+                    style={{ border: 'none', outline: 'none' }}
                   >
                     <span className="text-white font-medium">
                       #{capsule.id}
                     </span>
-                  </Link>
+                  </button>
                 </div>
                 {/* Play button - Left side */}
                 <div className="absolute left-4 bottom-4 z-20">
