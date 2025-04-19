@@ -55,7 +55,7 @@ export function NavLinks({
         className={linkClass}
         onClick={() => setIsMenuOpen(false)}
       >
-        Thérapies
+        Nos Thérapies
       </Link>
 
       <Link
@@ -63,32 +63,10 @@ export function NavLinks({
         className={linkClass}
         onClick={() => setIsMenuOpen(false)}
       >
-        Coachings
+        Nos Coachings
       </Link>
 
       {/* "A Propos" link removed as requested */}
-
-      {/* Appointment section - hidden only on medium screens (md) */}
-      <div className="block md:hidden lg:block">
-        {appointmentScheduled ? (
-          <div className={capsuleClass}>
-            <div className="flex items-center">
-              <span className="text-primary-coral mr-2">✓</span>
-              <span>Rendez-vous: {appointmentDate}</span>
-            </div>
-          </div>
-        ) : (
-          <button
-            onClick={() => {
-              setIsMenuOpen(false)
-              setShowAppointmentModal(true)
-            }}
-            className={btnClass}
-          >
-            Prendre Rendez-Vous
-          </button>
-        )}
-      </div>
 
       <Link
         href={isLoggedIn ? '/dashboard' : '/login'}
