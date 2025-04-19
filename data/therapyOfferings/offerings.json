@@ -59,6 +59,7 @@
           }
         ],
         "video": "/videos/PRESENTATION THERAPIE COUPLE_ VOYAGE.mp4",
+        "videoDuration": 205,
         "poster": "/images/posters/COUPLE.jpg",
         "posterSquare": "/images/posters/COUPLE-square.jpg",
         "proverbs": [
@@ -250,7 +251,8 @@
             "description": "Apprendre à exprimer vos besoins et à poser vos limites."
           }
         ],
-        "video": "/videos/INTRODUCTION AU DEVELOPPEMENT RELATIONNEL.mp4",
+        "video": "/videos/PRESENTATION THERAPIE INDIVIDUELLE - VOYAGE.mp4",
+        "videoDuration": 240,
         "poster": "/images/posters/INDIVIDUEL.jpg",
         "posterSquare": "/images/posters/INDIVIDUEL-square.jpg",
         "options": [
@@ -420,6 +422,7 @@
           }
         ],
         "video": "/videos/PRESENTATION VERY IMPORTANT THERAPY.mp4",
+        "videoDuration": 215,
         "poster": "/images/posters/VIT.jpg",
         "posterSquare": "/images/posters/VIT-square.jpg",
         "proverbs": [
@@ -508,13 +511,8 @@
           ],
           "options": [
             {
-              "title": "Thème sur mesure",
-              "headline": "à partir du \"Test : Définissez vos objectifs\"",
-              "sections": [
-                {
-                  "content": "Ce test vous permet de définir vos objectifs thérapeutiques et d'ajuster votre parcours en fonction de vos besoins personnels."
-                }
-              ]
+              "title": "Thème sur mesure à partir du \"Test : Définissez vos objectifs\"",
+              "headline": "Ce test vous permet de définir vos objectifs thérapeutiques avec précision, vous garantissant un parcours entièrement personnalisé pour répondre à vos attentes profondes."
             },
             {
               "title": "Caractéristiques",

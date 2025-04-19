@@ -8,6 +8,7 @@ interface LightCapsuleProps {
   title: string;
   description: string;
   className?: string;
+  videoDuration?: number;
 }
 
 const LightCapsule: React.FC<LightCapsuleProps> = ({
@@ -16,13 +17,13 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
   title,
   description,
   className = '',
+  videoDuration,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const progressTrackRef = useRef<HTMLDivElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,52 +46,18 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
     };
   }, []);
 
-  // Scrubber logic
-  const seekTo = (clientX: number) => {
+  // Scrubber logic - simplified version
+  const handleScrubberClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const video = videoRef.current;
     const track = progressTrackRef.current;
     if (!video || !track) return;
+    
     const rect = track.getBoundingClientRect();
-    const clickPosition = (clientX - rect.left) / rect.width;
-    const clampedPosition = Math.max(0, Math.min(1, clickPosition));
-    const seekTime = clampedPosition * duration;
-    video.currentTime = seekTime;
-    setCurrentTime(seekTime);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-    seekTo(e.clientX);
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging) seekTo(e.clientX);
-  };
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", handleMouseUp);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-    seekTo(e.touches[0].clientX);
-    document.addEventListener("touchmove", handleTouchMove, { passive: false });
-    document.addEventListener("touchend", handleTouchEnd);
-  };
-  const handleTouchMove = (e: TouchEvent) => {
-    if (isDragging) {
-      e.preventDefault();
-      seekTo(e.touches[0].clientX);
-    }
-  };
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    document.removeEventListener("touchmove", handleTouchMove);
-    document.removeEventListener("touchend", handleTouchEnd);
+    const position = (e.clientX - rect.left) / rect.width;
+    const clampedPosition = Math.max(0, Math.min(1, position));
+    
+    // Use actual duration from video element
+    video.currentTime = clampedPosition * video.duration;
   };
 
   // Play/Pause
@@ -119,8 +86,19 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  // Which duration to display on the right
+  const displayDuration = duration > 0 ? duration : (videoDuration || 0);
+
+  const handleVideoEnd = () => {
+    setIsPlaying(false);
+  };
+
+  const handleVideoError = () => {
+    setVideoError("Erreur de lecture de la vidéo.");
+  };
+
   return (
-    <div className={`w-full max-w-3xl mx-auto mt-8 bg-transparent rounded-3xl p-6 md:p-10 flex flex-col items-start ${className}`}>
+    <div className={`w-full max-w-3xl mx-auto mt-8 bg-transparent rounded-3xl flex flex-col items-start ${className}`}>
       <div className="w-full rounded-3xl overflow-hidden mb-6 relative">
         <div className="relative pb-[56.25%] w-full">
           <video
@@ -132,7 +110,8 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
             controls={false}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            onError={() => setVideoError("Erreur de chargement de la vidéo.")}
+            onEnded={handleVideoEnd}
+            onError={handleVideoError}
             style={{ background: '#3C5855' }}
           />
           {/* Play/Pause Button */}
@@ -164,13 +143,12 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
         )}
         <div className="flex items-center justify-between text-xs text-white/70 mb-1">
           <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
+          <span>{formatTime(displayDuration)}</span>
         </div>
         <div
           ref={progressTrackRef}
           className="h-3 bg-white/10 rounded-full cursor-pointer relative overflow-hidden hover:bg-white/15 transition-colors select-none z-10"
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
+          onClick={handleScrubberClick}
           style={{ userSelect: 'none' }}
         >
           {/* Background track with gradient */}
@@ -180,24 +158,8 @@ const LightCapsule: React.FC<LightCapsuleProps> = ({
             className="absolute left-0 top-0 h-full bg-white/60 rounded-full transition-all duration-100"
             style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
           ></div>
-          {/* Progress handle */}
-          <div
-            className="h-5 w-5 bg-white rounded-full absolute top-1/2 -translate-y-1/2 -ml-2.5 shadow-md transition-transform duration-150 transform hover:scale-110"
-            style={{
-              left: `${(currentTime / (duration || 1)) * 100}%`,
-              display: duration ? 'block' : 'none',
-              opacity: isDragging ? '1' : '0.7',
-              transform: isDragging ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%)',
-              pointerEvents: 'auto',
-              zIndex: 20,
-            }}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
-          ></div>
         </div>
       </div>
-      <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 mt-6">{title}</h2>
-      <p className="text-white/80 text-base md:text-lg mb-2">{description}</p>
     </div>
   );
 };

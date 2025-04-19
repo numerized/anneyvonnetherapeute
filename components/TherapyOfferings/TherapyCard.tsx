@@ -2,6 +2,7 @@
 
 import { BookOpen, Calendar, Heart, MessageSquare, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import LightCapsule from '@/components/pages/therapies/LightCapsule'
 
 import {
   BaseOffering,
@@ -534,6 +535,19 @@ export const TherapyCard: React.FC<TherapyCardProps> = ({
   return (
     <div className="relative overflow-hidden rounded-[32px] bg-primary-forest/30 p-8 hover:bg-primary-forest/40 transition-colors">
       <div className="space-y-12">
+        {/* Display video if available in therapy.modalInfo */}
+        {therapy.modalInfo?.video && therapy.modalInfo?.poster && (
+          <div className="mb-4">
+            <LightCapsule
+              videoUrl={therapy.modalInfo.video}
+              posterUrl={therapy.modalInfo.poster}
+              title={therapy.title}
+              description={therapy.headline || therapy.cardInfo?.description || ''}
+              className="mb-2 mt-0"
+              videoDuration={therapy.modalInfo.videoDuration}
+            />
+          </div>
+        )}
         {/* Title and Subtitle */}
         <div className="text-right">
           <div
