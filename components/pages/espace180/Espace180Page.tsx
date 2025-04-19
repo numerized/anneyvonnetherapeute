@@ -648,6 +648,8 @@ export default function Espace180Page() {
   }
 
   const renderCapsule = (capsule: Capsule, isLarge: boolean) => {
+    // Determine aspect ratio and description display
+    const isVertical = capsule.proportions === '9:16'
     return (
       <div
         key={capsule.id}
@@ -656,13 +658,13 @@ export default function Espace180Page() {
         {/* Media Container */}
         <div className="relative w-full rounded-[32px] overflow-hidden">
           {/* Aspect ratio container */}
-          <div className="relative pb-[56.25%]">
+          <div className={`relative ${isVertical ? 'pb-[177.77%]' : 'pb-[56.25%]'}`}> {/* 9:16 = 177.77%, 16:9 = 56.25% */}
             {isClient && (
               <>
                 {capsule.mediaType === 'video' ? (
                   <video
                     ref={(el) => setMediaRef(el, capsule.id)}
-                    className="absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl"
+                    className={`absolute inset-0 w-full h-full object-cover rounded-[32px] shadow-2xl ${isVertical ? 'object-contain bg-black' : ''}`}
                     playsInline
                     webkit-playsinline="true"
                     src={capsule.mediaUrl}
@@ -844,7 +846,9 @@ export default function Espace180Page() {
           </div>
 
           {/* Description with spacing from title/duration group */}
-          <p className="text-white/80 mt-4">{capsule.description}</p>
+          {!isVertical && (
+            <p className="text-white/80 mt-4">{capsule.description}</p>
+          )}
 
           {/* Share Button */}
           <div
