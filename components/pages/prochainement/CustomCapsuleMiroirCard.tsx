@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 
-const VIDEO_URL = '/CAPSULES_MIROIR/lamour-dapres-1.mp4'
+const VIDEO_URL = '/videos/PRESENTATION ESPACE 180.mp4'
 const POSTER_URL = '/images/posters/lamour-dapres-miroir-poster.jpg'
 const TITLE = "L'amour d'Après — Capsule Prisme"
 const DESCRIPTION =

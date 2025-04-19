@@ -138,4 +138,19 @@ export const capsules: Capsule[] = [
     mediaType: 'audio',
     proportions: '16:9',
   },
+  {
+    id: 8,
+    uniqueId: 'lamour-dapres-1-20250419',
+    title: "L'Amour d'Après (Miroir)",
+    description:
+      "Une réflexion sur l'amour après l'épreuve, la transformation des sentiments et la renaissance intérieure. Cette capsule vidéo vous invite à explorer la résilience et la beauté de l'amour renouvelé.",
+    date: new Date('2025-04-19'),
+    mediaUrl: '/CAPSULES_MIROIR/lamour-dapres-1.mp4',
+    posterUrl: '/images/posters/lamour-dapres-1-poster.jpg',
+    squarePosterUrl: '/images/posters/lamour-dapres-1-square-poster.jpg',
+    tags: ['Amour', 'Résilience', 'Transformation', 'Miroir'],
+    duration: '7m42s',
+    mediaType: 'video',
+    proportions: '16:9',
+  },
 ]

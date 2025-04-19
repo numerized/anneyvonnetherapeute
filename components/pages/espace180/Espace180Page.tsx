@@ -846,9 +846,7 @@ export default function Espace180Page() {
           </div>
 
           {/* Description with spacing from title/duration group */}
-          {!isVertical && (
-            <p className="text-white/80 mt-4">{capsule.description}</p>
-          )}
+          <p className="text-white/80 mt-4">{capsule.description}</p>
 
           {/* Share Button */}
           <div
